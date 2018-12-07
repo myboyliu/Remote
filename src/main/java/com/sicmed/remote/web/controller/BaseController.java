@@ -13,7 +13,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * controller基类
+ * @author YoonaLt
+ * @version Running JDK 1.8
+ * @description Controller基类
+ * @data 2018/12/7
  */
 public abstract class BaseController {
 
