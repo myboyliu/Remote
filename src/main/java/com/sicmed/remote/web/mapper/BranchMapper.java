@@ -2,7 +2,10 @@ package com.sicmed.remote.web.mapper;
 
 import com.sicmed.remote.web.entity.Branch;
 
+import java.util.List;
+
 public interface BranchMapper {
+
     int deleteByPrimaryKey(String id);
 
     int insert(Branch record);
@@ -14,4 +17,6 @@ public interface BranchMapper {
     int updateByPrimaryKeySelective(Branch record);
 
     int updateByPrimaryKey(Branch record);
+
+    List<Branch> findByDynamicParam(Branch branch);
 }
