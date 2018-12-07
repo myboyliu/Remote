@@ -1,6 +1,7 @@
 package com.sicmed.remote.web.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -8,11 +9,16 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
- * entity基类
+ *
+ * @author MaxCoder
+ * @version 1.0
  */
+@Data
 public abstract class BaseEntity implements Serializable {
+
     @JsonIgnore
     private int pageSize;
 
@@ -27,6 +33,27 @@ public abstract class BaseEntity implements Serializable {
 
     @JsonIgnore
     private final static int PAGE_NO = 0;
+
+    @JsonIgnore
+    private Date createTime;
+
+    @JsonIgnore
+    private String createUser;
+
+    @JsonIgnore
+    private Date updateTime;
+
+    @JsonIgnore
+    private Date deleteTime;
+
+    @JsonIgnore
+    private String updateUser;
+
+    @JsonIgnore
+    private String deleteUser;
+
+    @JsonIgnore
+    private String delFlag;
 
     public BaseEntity() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
