@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sicmed.remote.web.mapper.CaseRecordMapper">
+  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.CaseRecord">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="case_number" jdbcType="VARCHAR" property="caseNumber" />
+    <result column="patient_id" jdbcType="VARCHAR" property="patientId" />
+    <result column="main_suit" jdbcType="VARCHAR" property="mainSuit" />
+    <result column="past_medical_history" jdbcType="VARCHAR" property="pastMedicalHistory" />
+    <result column="existing_medical_history" jdbcType="VARCHAR" property="existingMedicalHistory" />
+    <result column="allergic_history" jdbcType="VARCHAR" property="allergicHistory" />
+    <result column="case_diagnosis" jdbcType="VARCHAR" property="caseDiagnosis" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime" />
+    <result column="delete_user" jdbcType="VARCHAR" property="deleteUser" />
+    <result column="del_flag" jdbcType="VARCHAR" property="delFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, case_number, patient_id, main_suit, past_medical_history, existing_medical_history, 
+    allergic_history, case_diagnosis, create_time, create_user, update_time, update_user, 
+    delete_time, delete_user, del_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from case_record
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from case_record
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sicmed.remote.web.entity.CaseRecord">
+    insert into case_record (id, case_number, patient_id, 
+      main_suit, past_medical_history, existing_medical_history, 
+      allergic_history, case_diagnosis, create_time, 
+      create_user, update_time, update_user, 
+      delete_time, delete_user, del_flag
+      )
+    values (#{id,jdbcType=VARCHAR}, #{caseNumber,jdbcType=VARCHAR}, #{patientId,jdbcType=VARCHAR}, 
+      #{mainSuit,jdbcType=VARCHAR}, #{pastMedicalHistory,jdbcType=VARCHAR}, #{existingMedicalHistory,jdbcType=VARCHAR}, 
+      #{allergicHistory,jdbcType=VARCHAR}, #{caseDiagnosis,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+      #{deleteTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR}, #{delFlag,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.CaseRecord">
+    insert into case_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="caseNumber != null">
+        case_number,
+      </if>
+      <if test="patientId != null">
+        patient_id,
+      </if>
+      <if test="mainSuit != null">
+        main_suit,
+      </if>
+      <if test="pastMedicalHistory != null">
+        past_medical_history,
+      </if>
+      <if test="existingMedicalHistory != null">
+        existing_medical_history,
+      </if>
+      <if test="allergicHistory != null">
+        allergic_history,
+      </if>
+      <if test="caseDiagnosis != null">
+        case_diagnosis,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="deleteTime != null">
+        delete_time,
+      </if>
+      <if test="deleteUser != null">
+        delete_user,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="caseNumber != null">
+        #{caseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="patientId != null">
+        #{patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="mainSuit != null">
+        #{mainSuit,jdbcType=VARCHAR},
+      </if>
+      <if test="pastMedicalHistory != null">
+        #{pastMedicalHistory,jdbcType=VARCHAR},
+      </if>
+      <if test="existingMedicalHistory != null">
+        #{existingMedicalHistory,jdbcType=VARCHAR},
+      </if>
+      <if test="allergicHistory != null">
+        #{allergicHistory,jdbcType=VARCHAR},
+      </if>
+      <if test="caseDiagnosis != null">
+        #{caseDiagnosis,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteTime != null">
+        #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteUser != null">
+        #{deleteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.CaseRecord">
+    update case_record
+    <set>
+      <if test="caseNumber != null">
+        case_number = #{caseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="patientId != null">
+        patient_id = #{patientId,jdbcType=VARCHAR},
+      </if>
+      <if test="mainSuit != null">
+        main_suit = #{mainSuit,jdbcType=VARCHAR},
+      </if>
+      <if test="pastMedicalHistory != null">
+        past_medical_history = #{pastMedicalHistory,jdbcType=VARCHAR},
+      </if>
+      <if test="existingMedicalHistory != null">
+        existing_medical_history = #{existingMedicalHistory,jdbcType=VARCHAR},
+      </if>
+      <if test="allergicHistory != null">
+        allergic_history = #{allergicHistory,jdbcType=VARCHAR},
+      </if>
+      <if test="caseDiagnosis != null">
+        case_diagnosis = #{caseDiagnosis,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteTime != null">
+        delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteUser != null">
+        delete_user = #{deleteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.CaseRecord">
+    update case_record
+    set case_number = #{caseNumber,jdbcType=VARCHAR},
+      patient_id = #{patientId,jdbcType=VARCHAR},
+      main_suit = #{mainSuit,jdbcType=VARCHAR},
+      past_medical_history = #{pastMedicalHistory,jdbcType=VARCHAR},
+      existing_medical_history = #{existingMedicalHistory,jdbcType=VARCHAR},
+      allergic_history = #{allergicHistory,jdbcType=VARCHAR},
+      case_diagnosis = #{caseDiagnosis,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      delete_user = #{deleteUser,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

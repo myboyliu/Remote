@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sicmed.remote.web.mapper.CaseConsultantMapper">
+  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.CaseConsultant">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="apply_user_id" jdbcType="VARCHAR" property="applyUserId" />
+    <result column="invite_user_id" jdbcType="VARCHAR" property="inviteUserId" />
+    <result column="consultant_user_list" jdbcType="VARCHAR" property="consultantUserList" />
+    <result column="consultant_start_time" jdbcType="TIMESTAMP" property="consultantStartTime" />
+    <result column="consultant_end_time" jdbcType="TIMESTAMP" property="consultantEndTime" />
+    <result column="consultant_report" jdbcType="VARCHAR" property="consultantReport" />
+    <result column="consultant_feedback" jdbcType="VARCHAR" property="consultantFeedback" />
+    <result column="consultant_price" jdbcType="DECIMAL" property="consultantPrice" />
+    <result column="hospital_price" jdbcType="DECIMAL" property="hospitalPrice" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime" />
+    <result column="delete_user" jdbcType="VARCHAR" property="deleteUser" />
+    <result column="del_flag" jdbcType="VARCHAR" property="delFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, apply_user_id, invite_user_id, consultant_user_list, consultant_start_time, consultant_end_time, 
+    consultant_report, consultant_feedback, consultant_price, hospital_price, create_time, 
+    create_user, update_time, update_user, delete_time, delete_user, del_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from case_consultant
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from case_consultant
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sicmed.remote.web.entity.CaseConsultant">
+    insert into case_consultant (id, apply_user_id, invite_user_id, 
+      consultant_user_list, consultant_start_time, 
+      consultant_end_time, consultant_report, 
+      consultant_feedback, consultant_price, hospital_price, 
+      create_time, create_user, update_time, 
+      update_user, delete_time, delete_user, 
+      del_flag)
+    values (#{id,jdbcType=VARCHAR}, #{applyUserId,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=VARCHAR}, 
+      #{consultantUserList,jdbcType=VARCHAR}, #{consultantStartTime,jdbcType=TIMESTAMP}, 
+      #{consultantEndTime,jdbcType=TIMESTAMP}, #{consultantReport,jdbcType=VARCHAR}, 
+      #{consultantFeedback,jdbcType=VARCHAR}, #{consultantPrice,jdbcType=DECIMAL}, #{hospitalPrice,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR}, #{deleteTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR}, 
+      #{delFlag,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.CaseConsultant">
+    insert into case_consultant
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="applyUserId != null">
+        apply_user_id,
+      </if>
+      <if test="inviteUserId != null">
+        invite_user_id,
+      </if>
+      <if test="consultantUserList != null">
+        consultant_user_list,
+      </if>
+      <if test="consultantStartTime != null">
+        consultant_start_time,
+      </if>
+      <if test="consultantEndTime != null">
+        consultant_end_time,
+      </if>
+      <if test="consultantReport != null">
+        consultant_report,
+      </if>
+      <if test="consultantFeedback != null">
+        consultant_feedback,
+      </if>
+      <if test="consultantPrice != null">
+        consultant_price,
+      </if>
+      <if test="hospitalPrice != null">
+        hospital_price,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="deleteTime != null">
+        delete_time,
+      </if>
+      <if test="deleteUser != null">
+        delete_user,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUserId != null">
+        #{applyUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserId != null">
+        #{inviteUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="consultantUserList != null">
+        #{consultantUserList,jdbcType=VARCHAR},
+      </if>
+      <if test="consultantStartTime != null">
+        #{consultantStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="consultantEndTime != null">
+        #{consultantEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="consultantReport != null">
+        #{consultantReport,jdbcType=VARCHAR},
+      </if>
+      <if test="consultantFeedback != null">
+        #{consultantFeedback,jdbcType=VARCHAR},
+      </if>
+      <if test="consultantPrice != null">
+        #{consultantPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="hospitalPrice != null">
+        #{hospitalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteTime != null">
+        #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteUser != null">
+        #{deleteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.CaseConsultant">
+    update case_consultant
+    <set>
+      <if test="applyUserId != null">
+        apply_user_id = #{applyUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserId != null">
+        invite_user_id = #{inviteUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="consultantUserList != null">
+        consultant_user_list = #{consultantUserList,jdbcType=VARCHAR},
+      </if>
+      <if test="consultantStartTime != null">
+        consultant_start_time = #{consultantStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="consultantEndTime != null">
+        consultant_end_time = #{consultantEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="consultantReport != null">
+        consultant_report = #{consultantReport,jdbcType=VARCHAR},
+      </if>
+      <if test="consultantFeedback != null">
+        consultant_feedback = #{consultantFeedback,jdbcType=VARCHAR},
+      </if>
+      <if test="consultantPrice != null">
+        consultant_price = #{consultantPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="hospitalPrice != null">
+        hospital_price = #{hospitalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteTime != null">
+        delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteUser != null">
+        delete_user = #{deleteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.CaseConsultant">
+    update case_consultant
+    set apply_user_id = #{applyUserId,jdbcType=VARCHAR},
+      invite_user_id = #{inviteUserId,jdbcType=VARCHAR},
+      consultant_user_list = #{consultantUserList,jdbcType=VARCHAR},
+      consultant_start_time = #{consultantStartTime,jdbcType=TIMESTAMP},
+      consultant_end_time = #{consultantEndTime,jdbcType=TIMESTAMP},
+      consultant_report = #{consultantReport,jdbcType=VARCHAR},
+      consultant_feedback = #{consultantFeedback,jdbcType=VARCHAR},
+      consultant_price = #{consultantPrice,jdbcType=DECIMAL},
+      hospital_price = #{hospitalPrice,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      delete_user = #{deleteUser,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

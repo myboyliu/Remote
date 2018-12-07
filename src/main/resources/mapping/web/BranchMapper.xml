@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sicmed.remote.web.mapper.BranchMapper">
+  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.Branch">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+    <result column="branch_name" jdbcType="VARCHAR" property="branchName" />
+    <result column="branch_number" jdbcType="VARCHAR" property="branchNumber" />
+    <result column="branch_grade" jdbcType="VARCHAR" property="branchGrade" />
+    <result column="branch_inform" jdbcType="VARCHAR" property="branchInform" />
+    <result column="branch_weight" jdbcType="INTEGER" property="branchWeight" />
+    <result column="order_weight" jdbcType="VARCHAR" property="orderWeight" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="delete_user" jdbcType="VARCHAR" property="deleteUser" />
+    <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, parent_id, branch_name, branch_number, branch_grade, branch_inform, branch_weight, 
+    order_weight, create_user, create_time, update_user, update_time, delete_user, delete_time, 
+    del_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from base_branch
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from base_branch
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sicmed.remote.web.entity.Branch">
+    insert into base_branch (id, parent_id, branch_name, 
+      branch_number, branch_grade, branch_inform, 
+      branch_weight, order_weight, create_user, 
+      create_time, update_user, update_time, 
+      delete_user, delete_time, del_flag
+      )
+    values (#{id,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{branchName,jdbcType=VARCHAR}, 
+      #{branchNumber,jdbcType=VARCHAR}, #{branchGrade,jdbcType=VARCHAR}, #{branchInform,jdbcType=VARCHAR}, 
+      #{branchWeight,jdbcType=INTEGER}, #{orderWeight,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{deleteUser,jdbcType=VARCHAR}, #{deleteTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.Branch">
+    insert into base_branch
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="branchName != null">
+        branch_name,
+      </if>
+      <if test="branchNumber != null">
+        branch_number,
+      </if>
+      <if test="branchGrade != null">
+        branch_grade,
+      </if>
+      <if test="branchInform != null">
+        branch_inform,
+      </if>
+      <if test="branchWeight != null">
+        branch_weight,
+      </if>
+      <if test="orderWeight != null">
+        order_weight,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="deleteUser != null">
+        delete_user,
+      </if>
+      <if test="deleteTime != null">
+        delete_time,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="branchName != null">
+        #{branchName,jdbcType=VARCHAR},
+      </if>
+      <if test="branchNumber != null">
+        #{branchNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="branchGrade != null">
+        #{branchGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="branchInform != null">
+        #{branchInform,jdbcType=VARCHAR},
+      </if>
+      <if test="branchWeight != null">
+        #{branchWeight,jdbcType=INTEGER},
+      </if>
+      <if test="orderWeight != null">
+        #{orderWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteUser != null">
+        #{deleteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteTime != null">
+        #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.Branch">
+    update base_branch
+    <set>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="branchName != null">
+        branch_name = #{branchName,jdbcType=VARCHAR},
+      </if>
+      <if test="branchNumber != null">
+        branch_number = #{branchNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="branchGrade != null">
+        branch_grade = #{branchGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="branchInform != null">
+        branch_inform = #{branchInform,jdbcType=VARCHAR},
+      </if>
+      <if test="branchWeight != null">
+        branch_weight = #{branchWeight,jdbcType=INTEGER},
+      </if>
+      <if test="orderWeight != null">
+        order_weight = #{orderWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteUser != null">
+        delete_user = #{deleteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteTime != null">
+        delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.Branch">
+    update base_branch
+    set parent_id = #{parentId,jdbcType=VARCHAR},
+      branch_name = #{branchName,jdbcType=VARCHAR},
+      branch_number = #{branchNumber,jdbcType=VARCHAR},
+      branch_grade = #{branchGrade,jdbcType=VARCHAR},
+      branch_inform = #{branchInform,jdbcType=VARCHAR},
+      branch_weight = #{branchWeight,jdbcType=INTEGER},
+      order_weight = #{orderWeight,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_user = #{deleteUser,jdbcType=VARCHAR},
+      delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=CHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

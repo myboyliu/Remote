@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sicmed.remote.web.mapper.ApplyFormMapper">
+  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.ApplyForm">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="apply_number" jdbcType="VARCHAR" property="applyNumber" />
+    <result column="case_record_id" jdbcType="VARCHAR" property="caseRecordId" />
+    <result column="case_summary" jdbcType="VARCHAR" property="caseSummary" />
+    <result column="apply_user_summary" jdbcType="VARCHAR" property="applyUserSummary" />
+    <result column="invite_user_summary" jdbcType="VARCHAR" property="inviteUserSummary" />
+    <result column="apply_user_id" jdbcType="VARCHAR" property="applyUserId" />
+    <result column="apply_manager_id" jdbcType="VARCHAR" property="applyManagerId" />
+    <result column="invite_user_id" jdbcType="VARCHAR" property="inviteUserId" />
+    <result column="invite_manager_id" jdbcType="VARCHAR" property="inviteManagerId" />
+    <result column="apply_branch_id" jdbcType="VARCHAR" property="applyBranchId" />
+    <result column="consultant_apply_time" jdbcType="TIMESTAMP" property="consultantApplyTime" />
+    <result column="apply_status" jdbcType="VARCHAR" property="applyStatus" />
+    <result column="apply_type" jdbcType="VARCHAR" property="applyType" />
+    <result column="apply_remark" jdbcType="VARCHAR" property="applyRemark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime" />
+    <result column="delete_user" jdbcType="VARCHAR" property="deleteUser" />
+    <result column="del_flag" jdbcType="VARCHAR" property="delFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, apply_number, case_record_id, case_summary, apply_user_summary, invite_user_summary, 
+    apply_user_id, apply_manager_id, invite_user_id, invite_manager_id, apply_branch_id, 
+    consultant_apply_time, apply_status, apply_type, apply_remark, create_time, create_user, 
+    update_time, update_user, delete_time, delete_user, del_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from apply_form
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from apply_form
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sicmed.remote.web.entity.ApplyForm">
+    insert into apply_form (id, apply_number, case_record_id, 
+      case_summary, apply_user_summary, invite_user_summary, 
+      apply_user_id, apply_manager_id, invite_user_id, 
+      invite_manager_id, apply_branch_id, consultant_apply_time, 
+      apply_status, apply_type, apply_remark, 
+      create_time, create_user, update_time, 
+      update_user, delete_time, delete_user, 
+      del_flag)
+    values (#{id,jdbcType=VARCHAR}, #{applyNumber,jdbcType=VARCHAR}, #{caseRecordId,jdbcType=VARCHAR}, 
+      #{caseSummary,jdbcType=VARCHAR}, #{applyUserSummary,jdbcType=VARCHAR}, #{inviteUserSummary,jdbcType=VARCHAR}, 
+      #{applyUserId,jdbcType=VARCHAR}, #{applyManagerId,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=VARCHAR}, 
+      #{inviteManagerId,jdbcType=VARCHAR}, #{applyBranchId,jdbcType=VARCHAR}, #{consultantApplyTime,jdbcType=TIMESTAMP}, 
+      #{applyStatus,jdbcType=VARCHAR}, #{applyType,jdbcType=VARCHAR}, #{applyRemark,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR}, #{deleteTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR}, 
+      #{delFlag,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.ApplyForm">
+    insert into apply_form
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="applyNumber != null">
+        apply_number,
+      </if>
+      <if test="caseRecordId != null">
+        case_record_id,
+      </if>
+      <if test="caseSummary != null">
+        case_summary,
+      </if>
+      <if test="applyUserSummary != null">
+        apply_user_summary,
+      </if>
+      <if test="inviteUserSummary != null">
+        invite_user_summary,
+      </if>
+      <if test="applyUserId != null">
+        apply_user_id,
+      </if>
+      <if test="applyManagerId != null">
+        apply_manager_id,
+      </if>
+      <if test="inviteUserId != null">
+        invite_user_id,
+      </if>
+      <if test="inviteManagerId != null">
+        invite_manager_id,
+      </if>
+      <if test="applyBranchId != null">
+        apply_branch_id,
+      </if>
+      <if test="consultantApplyTime != null">
+        consultant_apply_time,
+      </if>
+      <if test="applyStatus != null">
+        apply_status,
+      </if>
+      <if test="applyType != null">
+        apply_type,
+      </if>
+      <if test="applyRemark != null">
+        apply_remark,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="deleteTime != null">
+        delete_time,
+      </if>
+      <if test="deleteUser != null">
+        delete_user,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="applyNumber != null">
+        #{applyNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="caseRecordId != null">
+        #{caseRecordId,jdbcType=VARCHAR},
+      </if>
+      <if test="caseSummary != null">
+        #{caseSummary,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUserSummary != null">
+        #{applyUserSummary,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserSummary != null">
+        #{inviteUserSummary,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUserId != null">
+        #{applyUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyManagerId != null">
+        #{applyManagerId,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserId != null">
+        #{inviteUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteManagerId != null">
+        #{inviteManagerId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyBranchId != null">
+        #{applyBranchId,jdbcType=VARCHAR},
+      </if>
+      <if test="consultantApplyTime != null">
+        #{consultantApplyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyStatus != null">
+        #{applyStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="applyType != null">
+        #{applyType,jdbcType=VARCHAR},
+      </if>
+      <if test="applyRemark != null">
+        #{applyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteTime != null">
+        #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteUser != null">
+        #{deleteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.ApplyForm">
+    update apply_form
+    <set>
+      <if test="applyNumber != null">
+        apply_number = #{applyNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="caseRecordId != null">
+        case_record_id = #{caseRecordId,jdbcType=VARCHAR},
+      </if>
+      <if test="caseSummary != null">
+        case_summary = #{caseSummary,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUserSummary != null">
+        apply_user_summary = #{applyUserSummary,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserSummary != null">
+        invite_user_summary = #{inviteUserSummary,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUserId != null">
+        apply_user_id = #{applyUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyManagerId != null">
+        apply_manager_id = #{applyManagerId,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserId != null">
+        invite_user_id = #{inviteUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteManagerId != null">
+        invite_manager_id = #{inviteManagerId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyBranchId != null">
+        apply_branch_id = #{applyBranchId,jdbcType=VARCHAR},
+      </if>
+      <if test="consultantApplyTime != null">
+        consultant_apply_time = #{consultantApplyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyStatus != null">
+        apply_status = #{applyStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="applyType != null">
+        apply_type = #{applyType,jdbcType=VARCHAR},
+      </if>
+      <if test="applyRemark != null">
+        apply_remark = #{applyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteTime != null">
+        delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteUser != null">
+        delete_user = #{deleteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.ApplyForm">
+    update apply_form
+    set apply_number = #{applyNumber,jdbcType=VARCHAR},
+      case_record_id = #{caseRecordId,jdbcType=VARCHAR},
+      case_summary = #{caseSummary,jdbcType=VARCHAR},
+      apply_user_summary = #{applyUserSummary,jdbcType=VARCHAR},
+      invite_user_summary = #{inviteUserSummary,jdbcType=VARCHAR},
+      apply_user_id = #{applyUserId,jdbcType=VARCHAR},
+      apply_manager_id = #{applyManagerId,jdbcType=VARCHAR},
+      invite_user_id = #{inviteUserId,jdbcType=VARCHAR},
+      invite_manager_id = #{inviteManagerId,jdbcType=VARCHAR},
+      apply_branch_id = #{applyBranchId,jdbcType=VARCHAR},
+      consultant_apply_time = #{consultantApplyTime,jdbcType=TIMESTAMP},
+      apply_status = #{applyStatus,jdbcType=VARCHAR},
+      apply_type = #{applyType,jdbcType=VARCHAR},
+      apply_remark = #{applyRemark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      delete_user = #{deleteUser,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

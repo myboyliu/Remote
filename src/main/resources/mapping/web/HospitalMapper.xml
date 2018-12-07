@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sicmed.remote.web.mapper.HospitalMapper">
+  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.Hospital">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="hospital_name" jdbcType="VARCHAR" property="hospitalName" />
+    <result column="hospital_alias" jdbcType="VARCHAR" property="hospitalAlias" />
+    <result column="hospital_inform" jdbcType="VARCHAR" property="hospitalInform" />
+    <result column="hospital_grade" jdbcType="VARCHAR" property="hospitalGrade" />
+    <result column="hospital_weight" jdbcType="INTEGER" property="hospitalWeight" />
+    <result column="type_id" jdbcType="VARCHAR" property="typeId" />
+    <result column="city_id" jdbcType="VARCHAR" property="cityId" />
+    <result column="activation_flag" jdbcType="CHAR" property="activationFlag" />
+    <result column="order_weight" jdbcType="VARCHAR" property="orderWeight" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="delete_user" jdbcType="VARCHAR" property="deleteUser" />
+    <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime" />
+    <result column="del_flag" jdbcType="CHAR" property="delFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, hospital_name, hospital_alias, hospital_inform, hospital_grade, hospital_weight, 
+    type_id, city_id, activation_flag, order_weight, create_user, create_time, update_user, 
+    update_time, delete_user, delete_time, del_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from base_hospital
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from base_hospital
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sicmed.remote.web.entity.Hospital">
+    insert into base_hospital (id, hospital_name, hospital_alias, 
+      hospital_inform, hospital_grade, hospital_weight, 
+      type_id, city_id, activation_flag, 
+      order_weight, create_user, create_time, 
+      update_user, update_time, delete_user, 
+      delete_time, del_flag)
+    values (#{id,jdbcType=VARCHAR}, #{hospitalName,jdbcType=VARCHAR}, #{hospitalAlias,jdbcType=VARCHAR}, 
+      #{hospitalInform,jdbcType=VARCHAR}, #{hospitalGrade,jdbcType=VARCHAR}, #{hospitalWeight,jdbcType=INTEGER}, 
+      #{typeId,jdbcType=VARCHAR}, #{cityId,jdbcType=VARCHAR}, #{activationFlag,jdbcType=CHAR}, 
+      #{orderWeight,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR}, 
+      #{deleteTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.Hospital">
+    insert into base_hospital
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="hospitalName != null">
+        hospital_name,
+      </if>
+      <if test="hospitalAlias != null">
+        hospital_alias,
+      </if>
+      <if test="hospitalInform != null">
+        hospital_inform,
+      </if>
+      <if test="hospitalGrade != null">
+        hospital_grade,
+      </if>
+      <if test="hospitalWeight != null">
+        hospital_weight,
+      </if>
+      <if test="typeId != null">
+        type_id,
+      </if>
+      <if test="cityId != null">
+        city_id,
+      </if>
+      <if test="activationFlag != null">
+        activation_flag,
+      </if>
+      <if test="orderWeight != null">
+        order_weight,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="deleteUser != null">
+        delete_user,
+      </if>
+      <if test="deleteTime != null">
+        delete_time,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalName != null">
+        #{hospitalName,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalAlias != null">
+        #{hospitalAlias,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalInform != null">
+        #{hospitalInform,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalGrade != null">
+        #{hospitalGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalWeight != null">
+        #{hospitalWeight,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null">
+        #{typeId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null">
+        #{cityId,jdbcType=VARCHAR},
+      </if>
+      <if test="activationFlag != null">
+        #{activationFlag,jdbcType=CHAR},
+      </if>
+      <if test="orderWeight != null">
+        #{orderWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteUser != null">
+        #{deleteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteTime != null">
+        #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.Hospital">
+    update base_hospital
+    <set>
+      <if test="hospitalName != null">
+        hospital_name = #{hospitalName,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalAlias != null">
+        hospital_alias = #{hospitalAlias,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalInform != null">
+        hospital_inform = #{hospitalInform,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalGrade != null">
+        hospital_grade = #{hospitalGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalWeight != null">
+        hospital_weight = #{hospitalWeight,jdbcType=INTEGER},
+      </if>
+      <if test="typeId != null">
+        type_id = #{typeId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null">
+        city_id = #{cityId,jdbcType=VARCHAR},
+      </if>
+      <if test="activationFlag != null">
+        activation_flag = #{activationFlag,jdbcType=CHAR},
+      </if>
+      <if test="orderWeight != null">
+        order_weight = #{orderWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteUser != null">
+        delete_user = #{deleteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteTime != null">
+        delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.Hospital">
+    update base_hospital
+    set hospital_name = #{hospitalName,jdbcType=VARCHAR},
+      hospital_alias = #{hospitalAlias,jdbcType=VARCHAR},
+      hospital_inform = #{hospitalInform,jdbcType=VARCHAR},
+      hospital_grade = #{hospitalGrade,jdbcType=VARCHAR},
+      hospital_weight = #{hospitalWeight,jdbcType=INTEGER},
+      type_id = #{typeId,jdbcType=VARCHAR},
+      city_id = #{cityId,jdbcType=VARCHAR},
+      activation_flag = #{activationFlag,jdbcType=CHAR},
+      order_weight = #{orderWeight,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_user = #{deleteUser,jdbcType=VARCHAR},
+      delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=CHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

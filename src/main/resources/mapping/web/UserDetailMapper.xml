@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sicmed.remote.web.mapper.UserDetailMapper">
+  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.UserDetail">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_age" jdbcType="VARCHAR" property="userAge" />
+    <result column="user_sex" jdbcType="VARCHAR" property="userSex" />
+    <result column="user_address" jdbcType="VARCHAR" property="userAddress" />
+    <result column="user_card_number" jdbcType="VARCHAR" property="userCardNumber" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="hospital_id" jdbcType="VARCHAR" property="hospitalId" />
+    <result column="branch_id" jdbcType="VARCHAR" property="branchId" />
+    <result column="title_id" jdbcType="VARCHAR" property="titleId" />
+    <result column="specialist_type_id" jdbcType="VARCHAR" property="specialistTypeId" />
+    <result column="head_img" jdbcType="VARCHAR" property="headImg" />
+    <result column="user_resume" jdbcType="VARCHAR" property="userResume" />
+    <result column="user_strong" jdbcType="VARCHAR" property="userStrong" />
+    <result column="need_case_type" jdbcType="VARCHAR" property="needCaseType" />
+    <result column="consultation_picture_price" jdbcType="VARCHAR" property="consultationPicturePrice" />
+    <result column="consultation_video_price" jdbcType="VARCHAR" property="consultationVideoPrice" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="delete_user" jdbcType="VARCHAR" property="deleteUser" />
+    <result column="del_flag" jdbcType="VARCHAR" property="delFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_name, user_age, user_sex, user_address, user_card_number, telephone, hospital_id, 
+    branch_id, title_id, specialist_type_id, head_img, user_resume, user_strong, need_case_type, 
+    consultation_picture_price, consultation_video_price, create_time, create_user, update_time, 
+    delete_time, update_user, delete_user, del_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_detail
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from user_detail
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sicmed.remote.web.entity.UserDetail">
+    insert into user_detail (id, user_name, user_age, 
+      user_sex, user_address, user_card_number, 
+      telephone, hospital_id, branch_id, 
+      title_id, specialist_type_id, head_img, 
+      user_resume, user_strong, need_case_type, 
+      consultation_picture_price, consultation_video_price, 
+      create_time, create_user, update_time, 
+      delete_time, update_user, delete_user, 
+      del_flag)
+    values (#{id,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{userAge,jdbcType=VARCHAR}, 
+      #{userSex,jdbcType=VARCHAR}, #{userAddress,jdbcType=VARCHAR}, #{userCardNumber,jdbcType=VARCHAR}, 
+      #{telephone,jdbcType=VARCHAR}, #{hospitalId,jdbcType=VARCHAR}, #{branchId,jdbcType=VARCHAR}, 
+      #{titleId,jdbcType=VARCHAR}, #{specialistTypeId,jdbcType=VARCHAR}, #{headImg,jdbcType=VARCHAR}, 
+      #{userResume,jdbcType=VARCHAR}, #{userStrong,jdbcType=VARCHAR}, #{needCaseType,jdbcType=VARCHAR}, 
+      #{consultationPicturePrice,jdbcType=VARCHAR}, #{consultationVideoPrice,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{deleteTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{deleteUser,jdbcType=VARCHAR}, 
+      #{delFlag,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.UserDetail">
+    insert into user_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="userAge != null">
+        user_age,
+      </if>
+      <if test="userSex != null">
+        user_sex,
+      </if>
+      <if test="userAddress != null">
+        user_address,
+      </if>
+      <if test="userCardNumber != null">
+        user_card_number,
+      </if>
+      <if test="telephone != null">
+        telephone,
+      </if>
+      <if test="hospitalId != null">
+        hospital_id,
+      </if>
+      <if test="branchId != null">
+        branch_id,
+      </if>
+      <if test="titleId != null">
+        title_id,
+      </if>
+      <if test="specialistTypeId != null">
+        specialist_type_id,
+      </if>
+      <if test="headImg != null">
+        head_img,
+      </if>
+      <if test="userResume != null">
+        user_resume,
+      </if>
+      <if test="userStrong != null">
+        user_strong,
+      </if>
+      <if test="needCaseType != null">
+        need_case_type,
+      </if>
+      <if test="consultationPicturePrice != null">
+        consultation_picture_price,
+      </if>
+      <if test="consultationVideoPrice != null">
+        consultation_video_price,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUser != null">
+        create_user,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="deleteTime != null">
+        delete_time,
+      </if>
+      <if test="updateUser != null">
+        update_user,
+      </if>
+      <if test="deleteUser != null">
+        delete_user,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAge != null">
+        #{userAge,jdbcType=VARCHAR},
+      </if>
+      <if test="userSex != null">
+        #{userSex,jdbcType=VARCHAR},
+      </if>
+      <if test="userAddress != null">
+        #{userAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="userCardNumber != null">
+        #{userCardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null">
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalId != null">
+        #{hospitalId,jdbcType=VARCHAR},
+      </if>
+      <if test="branchId != null">
+        #{branchId,jdbcType=VARCHAR},
+      </if>
+      <if test="titleId != null">
+        #{titleId,jdbcType=VARCHAR},
+      </if>
+      <if test="specialistTypeId != null">
+        #{specialistTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="headImg != null">
+        #{headImg,jdbcType=VARCHAR},
+      </if>
+      <if test="userResume != null">
+        #{userResume,jdbcType=VARCHAR},
+      </if>
+      <if test="userStrong != null">
+        #{userStrong,jdbcType=VARCHAR},
+      </if>
+      <if test="needCaseType != null">
+        #{needCaseType,jdbcType=VARCHAR},
+      </if>
+      <if test="consultationPicturePrice != null">
+        #{consultationPicturePrice,jdbcType=VARCHAR},
+      </if>
+      <if test="consultationVideoPrice != null">
+        #{consultationVideoPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteTime != null">
+        #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteUser != null">
+        #{deleteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.UserDetail">
+    update user_detail
+    <set>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAge != null">
+        user_age = #{userAge,jdbcType=VARCHAR},
+      </if>
+      <if test="userSex != null">
+        user_sex = #{userSex,jdbcType=VARCHAR},
+      </if>
+      <if test="userAddress != null">
+        user_address = #{userAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="userCardNumber != null">
+        user_card_number = #{userCardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null">
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="hospitalId != null">
+        hospital_id = #{hospitalId,jdbcType=VARCHAR},
+      </if>
+      <if test="branchId != null">
+        branch_id = #{branchId,jdbcType=VARCHAR},
+      </if>
+      <if test="titleId != null">
+        title_id = #{titleId,jdbcType=VARCHAR},
+      </if>
+      <if test="specialistTypeId != null">
+        specialist_type_id = #{specialistTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="headImg != null">
+        head_img = #{headImg,jdbcType=VARCHAR},
+      </if>
+      <if test="userResume != null">
+        user_resume = #{userResume,jdbcType=VARCHAR},
+      </if>
+      <if test="userStrong != null">
+        user_strong = #{userStrong,jdbcType=VARCHAR},
+      </if>
+      <if test="needCaseType != null">
+        need_case_type = #{needCaseType,jdbcType=VARCHAR},
+      </if>
+      <if test="consultationPicturePrice != null">
+        consultation_picture_price = #{consultationPicturePrice,jdbcType=VARCHAR},
+      </if>
+      <if test="consultationVideoPrice != null">
+        consultation_video_price = #{consultationVideoPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null">
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteTime != null">
+        delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null">
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteUser != null">
+        delete_user = #{deleteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.UserDetail">
+    update user_detail
+    set user_name = #{userName,jdbcType=VARCHAR},
+      user_age = #{userAge,jdbcType=VARCHAR},
+      user_sex = #{userSex,jdbcType=VARCHAR},
+      user_address = #{userAddress,jdbcType=VARCHAR},
+      user_card_number = #{userCardNumber,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      hospital_id = #{hospitalId,jdbcType=VARCHAR},
+      branch_id = #{branchId,jdbcType=VARCHAR},
+      title_id = #{titleId,jdbcType=VARCHAR},
+      specialist_type_id = #{specialistTypeId,jdbcType=VARCHAR},
+      head_img = #{headImg,jdbcType=VARCHAR},
+      user_resume = #{userResume,jdbcType=VARCHAR},
+      user_strong = #{userStrong,jdbcType=VARCHAR},
+      need_case_type = #{needCaseType,jdbcType=VARCHAR},
+      consultation_picture_price = #{consultationPicturePrice,jdbcType=VARCHAR},
+      consultation_video_price = #{consultationVideoPrice,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      delete_user = #{deleteUser,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
