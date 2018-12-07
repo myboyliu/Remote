@@ -2,7 +2,7 @@ package com.sicmed.remote.web.entity;
 
 import java.util.Date;
 
-public class UserCaseType {
+public class UserCaseType extends BaseEntity {
     private String id;
 
     private String userId;

@@ -2,7 +2,7 @@ package com.sicmed.remote.web.entity;
 
 import java.util.Date;
 
-public class ApplyForm {
+public class ApplyForm extends BaseEntity {
     private String id;
 
     private String applyNumber;

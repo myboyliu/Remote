@@ -2,7 +2,7 @@ package com.sicmed.remote.web.entity;
 
 import java.util.Date;
 
-public class UserDetail {
+public class UserDetail extends BaseEntity {
     private String id;
 
     private String userName;

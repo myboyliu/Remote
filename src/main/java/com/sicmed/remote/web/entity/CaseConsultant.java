@@ -3,7 +3,7 @@ package com.sicmed.remote.web.entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class CaseConsultant {
+public class CaseConsultant extends BaseEntity {
     private String id;
 
     private String applyUserId;

@@ -2,7 +2,7 @@ package com.sicmed.remote.web.entity;
 
 import java.util.Date;
 
-public class CasePatient {
+public class CasePatient extends BaseEntity {
     private String id;
 
     private String patientNumber;
