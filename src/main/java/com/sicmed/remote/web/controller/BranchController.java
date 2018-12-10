@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author MaxCoder
@@ -41,10 +39,8 @@ public class BranchController extends BaseController {
      */
     @PostMapping(value = "add")
     public Object addBranch(@Validated(Insert.class) Branch branch, BindingResult bindingResult) {
-        List<FieldError> fieldErrorList = bindingResult.getFieldErrors();
-        if (!fieldErrorList.isEmpty()){
-            Map errorMsg = fieldErrorsBuilder(bindingResult.getFieldErrors());
-            return badRequestOfArguments(errorMsg);
+        if (bindingResult.hasErrors()) {
+            return fieldErrorsBuilder(bindingResult);
         }
         int i = branchService.insertSelective(branch);
 
@@ -78,14 +74,16 @@ public class BranchController extends BaseController {
      * @return
      */
     @PostMapping(value = "update")
-    public Object updateBranch(@Validated(Update.class)Branch branch) {
-
+    public Object updateBranch(@Validated(Update.class) Branch branch, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return fieldErrorsBuilder(bindingResult);
+        }
         int i = branchService.updateByPrimaryKeySelective(branch);
 
         while (i > 0) {
-            return "update_success";
+            return succeedRequestOfUpdate(branch);
         }
-        return "update_failed";
+        return badRequestOfUpdate(branch);
     }
 
 
@@ -95,12 +93,12 @@ public class BranchController extends BaseController {
      * @return
      */
     @GetMapping(value = "getById")
-        public Object getById(String branchId) {
+    public Object getById(String branchId) {
 
         Branch branch = branchService.getByPrimaryKey(branchId);
 
         while (branch == null) {
-            return badRequestOfSelect("");
+            return badRequestOfSelect(branchId);
         }
         return succeedRequestOfSelect(branch);
     }
@@ -111,8 +109,10 @@ public class BranchController extends BaseController {
      * @return
      */
     @GetMapping(value = "findByParam")
-    public Object findByParam(@Validated(Select.class)Branch branch) {
-
+    public Object findByParam(@Validated(Select.class) Branch branch, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return fieldErrorsBuilder(bindingResult);
+        }
         List<Branch> branchList = branchService.findByDynamicParam(branch);
 
         while (branchList.isEmpty()) {
@@ -121,20 +121,19 @@ public class BranchController extends BaseController {
         return succeedRequestOfSelect(branchList);
     }
 
-
     /**
-     * 查询所有科室列表
+     * 查询所有专家类型列表
      *
      * @return
      */
     @GetMapping(value = "getAll")
     public Object getAll() {
 
-        List<BranchBean> branchList = branchService.findMultilevelListByDynamicParam(null);
+        List<BranchBean> branchBeanList = branchService.findMultilevelListByDynamicParam(null);
 
-        while (branchList.isEmpty()) {
+        while (branchBeanList.isEmpty()) {
             return badRequestOfSelect("");
         }
-        return succeedRequestOfSelect(branchList);
+        return succeedRequestOfSelect(branchBeanList);
     }
 }
