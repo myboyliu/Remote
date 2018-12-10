@@ -2,6 +2,8 @@ package com.sicmed.remote.web.mapper;
 
 import com.sicmed.remote.web.entity.Hospital;
 
+import java.util.List;
+
 public interface HospitalMapper {
     int deleteByPrimaryKey(String id);
 
@@ -14,4 +16,6 @@ public interface HospitalMapper {
     int updateByPrimaryKeySelective(Hospital record);
 
     int updateByPrimaryKey(Hospital record);
+
+    List<Hospital> findByDynamicParam(Hospital hospital);
 }

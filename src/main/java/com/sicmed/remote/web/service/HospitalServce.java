@@ -40,6 +40,6 @@ public class HospitalServce implements BaseService<Hospital> {
 
     @Override
     public List<Hospital> findByDynamicParam(Hospital hospital) {
-        return null;
+        return hm.findByDynamicParam(hospital);
     }
 }

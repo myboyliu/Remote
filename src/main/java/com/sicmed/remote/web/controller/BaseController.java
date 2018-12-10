@@ -152,7 +152,7 @@ public abstract class BaseController {
     public Map succeedRequestOfDelete(Object result) {
         responseMap = new LinkedHashMap<>();
         responseMap.put("code", "41005");
-        responseMap.put("msg", "Request_Bad_Of_Delete");
+        responseMap.put("msg", "Request_Succeed_Of_Delete");
         responseMap.put("result", result);
         return responseMap;
     }
@@ -180,7 +180,7 @@ public abstract class BaseController {
     public Map succeedRequestOfSelect(Object result) {
         responseMap = new LinkedHashMap<>();
         responseMap.put("code", "41007");
-        responseMap.put("msg", "Request_Bad_Of_Select");
+        responseMap.put("msg", "Request_Succeed_Of_Select");
         responseMap.put("result", result);
         return responseMap;
     }

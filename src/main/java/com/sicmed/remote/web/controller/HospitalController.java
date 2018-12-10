@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * @author YoonaLt
  * @version Running JDK 1.8
- * @description hospital/insert(添加),hospital/update(更新),hospital/softdel(软删除),hospital/select(不分页)
+ * @description hospital/insert(添加),hospital/update(更新),hospital/softdel(软删除),hospital/select
  * @data 2018/12/7
  */
 @RestController
@@ -41,7 +41,7 @@ public class HospitalController extends BaseController {
             return succeedRequestOfSelect(hospitalList);
         }
 
-        return badRequestOfSelect("动态查询失败" + hospitalList);
+        return badRequestOfSelect("动态查询失败");
     }
 
     /**

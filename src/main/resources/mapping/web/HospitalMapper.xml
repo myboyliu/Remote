@@ -63,7 +63,6 @@
             <if test="pageSize &gt;0 and beginNo &gt; -1">
                 AND limit #{beginNo},#{pageSize}
             </if>
-
         </where>
 
     </select>
