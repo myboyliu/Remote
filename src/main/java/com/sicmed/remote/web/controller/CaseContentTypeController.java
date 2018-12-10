@@ -19,7 +19,8 @@ import java.util.Map;
  * @author YoonaLt
  * @version Running JDK 1.8
  * @description casecontenttype/insert(添加),casecontenttype/update(更新),casecontenttype/softdel(逻辑删除)
- * casecontenttype/select(动态层级查询),casecontenttype/selectbyid(id查询对应数据),casecontenttype/selectbyparam(动态查询)
+ * casecontenttype/select(动态层级查询),casecontenttype/selectbyid(id查询对应数据),casecontenttype/selectbyparam(动态查询),
+ * casecontenttype/selectall(查询所有)
  * @data 2018/12/10
  */
 @RestController
@@ -140,4 +141,17 @@ public class CaseContentTypeController extends BaseController {
         return badRequestOfSelect("由id查询caseContentType失败");
     }
 
+    /**
+     * 查询所有caseContentType
+     */
+    @GetMapping(value = "selectall")
+    public Map selectAllCaseContentTypeById() {
+
+        List<CaseContentType> caseContentTypes = caseContentTypeService.selectAll();
+        if (caseContentTypes != null && !caseContentTypes.isEmpty()) {
+            return succeedRequestOfSelect(caseContentTypes);
+        }
+
+        return badRequestOfSelect("查询所有caseContentType失败");
+    }
 }

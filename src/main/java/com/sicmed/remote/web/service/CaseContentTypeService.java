@@ -14,6 +14,10 @@ public class CaseContentTypeService implements BaseService<CaseContentType> {
     @Autowired
     private CaseContentTypeMapper caseContentTypeMapper;
 
+    public List<CaseContentType> selectAll() {
+        return caseContentTypeMapper.selectAll();
+    }
+
     public List<CaseContentTypeBean> selectMultilevel(CaseContentType caseContentType) {
         return caseContentTypeMapper.selectMultilevel(caseContentType);
     }

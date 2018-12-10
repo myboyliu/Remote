@@ -26,6 +26,33 @@
         where id = #{id,jdbcType=VARCHAR}
     </select>
 
+    <!--查询所有CaseContentTypeBean-->
+    <resultMap id="BeanAllResultMap" type="com.sicmed.remote.web.bean.CaseContentTypeBean">
+        <id column="parentId" jdbcType="VARCHAR" property="id"/>
+        <result column="parentCaseTypeName" jdbcType="VARCHAR" property="caseTypeName"/>
+        <collection property="childList" ofType="com.sicmed.remote.web.entity.CaseContentType" javaType="ArrayList">
+            <id column="childId" jdbcType="VARCHAR" property="id"/>
+            <result column="childCaseTypeName" jdbcType="VARCHAR" property="caseTypeName"/>
+        </collection>
+    </resultMap>
+    <sql id="Bean_Column_List_All">
+        parent.id parentId,parent.case_type_name parentCaseTypeName,
+        child.id childId,child.case_type_name childCaseTypeName
+    </sql>
+    <sql id="Bean_Left_Join_All">
+        LEFT JOIN case_content_type child ON child.parent_id = parent.id
+    </sql>
+    <select id="selectAll" parameterType="com.sicmed.remote.web.entity.CaseContentType"
+            resultMap="BeanAllResultMap">
+        select
+        <include refid="Bean_Column_List_All"/>from case_content_type parent
+        <include refid="Bean_Left_Join_All"/>
+        <where>
+            parent.del_flag = "0"
+            AND parent.parent_id is null
+        </where>
+    </select>
+
     <!--软删除-->
     <update id="deleteByPrimaryKey" parameterType="java.lang.String">
         update case_content_type

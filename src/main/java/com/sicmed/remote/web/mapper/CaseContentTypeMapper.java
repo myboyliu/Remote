@@ -21,4 +21,6 @@ public interface CaseContentTypeMapper {
     List findByDynamicParam(CaseContentType caseContentType);
 
     List<CaseContentTypeBean> selectMultilevel(CaseContentType caseContentType);
+
+    List<CaseContentType> selectAll();
 }

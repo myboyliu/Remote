@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import javax.validation.constraints.Max;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
  * @version 1.0
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CaseContentType extends BaseEntity {
     private String id;
 
@@ -27,8 +29,8 @@ public class CaseContentType extends BaseEntity {
     @Size(min = 1, max = 32, message = "caseNumber 长度错误")
     private String caseNumber;
 
-    @Min(value = 1,message = "权重级别需大于1")
-    @Max(value = Integer.MAX_VALUE,message = "权重级别需小于0x7fffffff")
+    @Min(value = 1, message = "权重级别需大于1")
+    @Max(value = Integer.MAX_VALUE, message = "权重级别需小于0x7fffffff")
     private Integer caseTypeWeight;
 
 

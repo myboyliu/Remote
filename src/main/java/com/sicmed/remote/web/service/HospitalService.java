@@ -13,6 +13,10 @@ public class HospitalService implements BaseService<Hospital> {
     @Autowired
     private HospitalMapper hospitalMapper;
 
+    public List<Hospital> selectAll() {
+        return hospitalMapper.selectAll();
+    }
+
     @Override
     public int insertSelective(Hospital hospital) {
         return hospitalMapper.insertSelective(hospital);

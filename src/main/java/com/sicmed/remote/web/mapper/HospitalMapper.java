@@ -18,4 +18,6 @@ public interface HospitalMapper {
     int updateByPrimaryKey(Hospital record);
 
     List<Hospital> findByDynamicParam(Hospital hospital);
+
+    List<Hospital> selectAll();
 }

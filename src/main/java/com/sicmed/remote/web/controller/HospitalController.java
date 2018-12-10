@@ -17,8 +17,8 @@ import java.util.Map;
 /**
  * @author YoonaLt
  * @version Running JDK 1.8
- * @description hospital/insert(添加),hospital/update(更新),hospital/softdel(软删除),hospital/select(查询)
- * hospital/selectbuid(id查询单条数据)
+ * @description hospital/insert(添加),hospital/update(更新),hospital/softdel(软删除),hospital/select(动态查询)
+ * hospital/selectbuid(id查询单条数据),hospital/selectall(查询全部医院)
  * @data 2018/12/7
  */
 @RestController
@@ -94,10 +94,6 @@ public class HospitalController extends BaseController {
     @GetMapping(value = "select")
     public Map selectHospital(Hospital hospital) {
 
-        if (hospital == null) {
-            return badRequestOfArguments("请求参数为空");
-        }
-
         List<Hospital> hospitalList = hospitalService.findByDynamicParam(hospital);
         if (hospitalList != null && !hospitalList.isEmpty()) {
             return succeedRequestOfSelect(hospitalList);
@@ -124,5 +120,19 @@ public class HospitalController extends BaseController {
         }
 
         return badRequestOfSelect("hospitalId查询失败");
+    }
+
+    /**
+     * 查询全部医院
+     */
+    @GetMapping(value = "selectall")
+    public Map selectAllHospital() {
+
+        List<Hospital> hospitals = hospitalService.selectAll();
+        if (hospitals != null && !hospitals.isEmpty()) {
+            return succeedRequestOfSelect(hospitals);
+        }
+
+        return badRequestOfSelect("查询所有医院失败");
     }
 }
