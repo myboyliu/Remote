@@ -35,7 +35,7 @@ public class HospitalService implements BaseService<Hospital> {
 
     @Override
     public Hospital getByPrimaryKey(String id) {
-        return null;
+        return hospitalMapper.selectByPrimaryKey(id);
     }
 
     @Override

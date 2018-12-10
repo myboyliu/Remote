@@ -2,6 +2,8 @@ package com.sicmed.remote.web.mapper;
 
 import com.sicmed.remote.web.entity.CaseContentType;
 
+import java.util.List;
+
 public interface CaseContentTypeMapper {
     int deleteByPrimaryKey(String id);
 
@@ -14,4 +16,6 @@ public interface CaseContentTypeMapper {
     int updateByPrimaryKeySelective(CaseContentType record);
 
     int updateByPrimaryKey(CaseContentType record);
+
+    List findByDynamicParam(CaseContentType caseContentType);
 }

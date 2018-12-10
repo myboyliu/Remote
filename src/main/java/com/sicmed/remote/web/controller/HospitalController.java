@@ -17,7 +17,8 @@ import java.util.Map;
 /**
  * @author YoonaLt
  * @version Running JDK 1.8
- * @description hospital/insert(添加),hospital/update(更新),hospital/softdel(软删除),hospital/select
+ * @description hospital/insert(添加),hospital/update(更新),hospital/softdel(软删除),hospital/select(查询)
+ * hospital/selectbuid(id查询单条数据)
  * @data 2018/12/7
  */
 @RestController
@@ -26,26 +27,6 @@ public class HospitalController extends BaseController {
 
     @Autowired
     private HospitalService hospitalService;
-
-    /**
-     * 查询hospital
-     *
-     * @param hospital
-     */
-    @GetMapping(value = "select")
-    public Map selectHospital(Hospital hospital) {
-
-        if (hospital == null) {
-            return badRequestOfArguments("请求参数为空");
-        }
-
-        List<Hospital> hospitalList = hospitalService.findByDynamicParam(hospital);
-        if (hospitalList != null && !hospitalList.isEmpty()) {
-            return succeedRequestOfSelect(hospitalList);
-        }
-
-        return badRequestOfSelect("动态查询失败");
-    }
 
     /**
      * 添加hospital
@@ -57,7 +38,7 @@ public class HospitalController extends BaseController {
     public Map addHospital(@Validated Hospital hospital, BindingResult br) {
 
         if (br.hasErrors()) {
-            return badRequestOfArguments("传入参数有误!");
+            return badRequestOfArguments(br.getFieldErrors());
         }
 
         int i = hospitalService.insertSelective(hospital);
@@ -65,6 +46,25 @@ public class HospitalController extends BaseController {
             return succeedRequestOfInsert("添加医院成功");
         }
         return badRequestOfInsert("添加医院失败");
+    }
+
+    /**
+     * 删除hospital
+     *
+     * @param hospital
+     */
+    @GetMapping(value = "softdel")
+    public Map softDelHospital(Hospital hospital) {
+
+        if (StringUtils.isBlank(hospital.getId())) {
+            return badRequestOfArguments("HospitalId为空");
+        }
+
+        int i = hospitalService.deleteByPrimaryKey(hospital.getId());
+        if (i > 0) {
+            return succeedRequestOfUpdate("删除hospital成功");
+        }
+        return badRequestOfUpdate("删除hospital失败");
     }
 
     /**
@@ -87,22 +87,42 @@ public class HospitalController extends BaseController {
     }
 
     /**
-     * 删除hospital
+     * 动态查询hospital
      *
      * @param hospital
      */
-    @GetMapping(value = "softdel")
-    public Map softDelHospital(Hospital hospital) {
+    @GetMapping(value = "select")
+    public Map selectHospital(Hospital hospital) {
 
-        if (StringUtils.isBlank(hospital.getId())) {
-            return badRequestOfArguments("HospitalId为空");
+        if (hospital == null) {
+            return badRequestOfArguments("请求参数为空");
         }
 
-        int i = hospitalService.deleteByPrimaryKey(hospital.getId());
-        if (i > 0) {
-            return succeedRequestOfUpdate("删除hospital成功");
+        List<Hospital> hospitalList = hospitalService.findByDynamicParam(hospital);
+        if (hospitalList != null && !hospitalList.isEmpty()) {
+            return succeedRequestOfSelect(hospitalList);
         }
-        return badRequestOfUpdate("更新hospital失败");
+
+        return badRequestOfSelect("动态查询失败");
     }
 
+    /**
+     * 由id查询对应的hospital
+     *
+     * @param hospital
+     */
+    @GetMapping(value = "selectbyid")
+    public Map selectHospitalById(Hospital hospital) {
+
+        if (StringUtils.isBlank(hospital.getId())) {
+            return badRequestOfArguments("hospitalId为空");
+        }
+
+        Hospital resultHospital = hospitalService.getByPrimaryKey(hospital.getId());
+        if (resultHospital != null) {
+            return succeedRequestOfSelect(resultHospital);
+        }
+
+        return badRequestOfSelect("hospitalId查询失败");
+    }
 }
