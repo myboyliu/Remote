@@ -2,6 +2,8 @@ package com.sicmed.remote.web.mapper;
 
 import com.sicmed.remote.web.entity.SpecialistType;
 
+import java.util.List;
+
 public interface SpecialistTypeMapper {
     int deleteByPrimaryKey(String id);
 
@@ -14,4 +16,6 @@ public interface SpecialistTypeMapper {
     int updateByPrimaryKeySelective(SpecialistType record);
 
     int updateByPrimaryKey(SpecialistType record);
+
+    List<SpecialistType> findByDynamicParam(SpecialistType specialistType);
 }
