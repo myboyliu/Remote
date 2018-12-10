@@ -8,24 +8,24 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class HospitalServce implements BaseService<Hospital> {
+public class HospitalService implements BaseService<Hospital> {
 
     @Autowired
-    private HospitalMapper hm;
+    private HospitalMapper hospitalMapper;
 
     @Override
     public int insertSelective(Hospital hospital) {
-        return hm.insertSelective(hospital);
+        return hospitalMapper.insertSelective(hospital);
     }
 
     @Override
     public int deleteByPrimaryKey(String id) {
-        return hm.deleteByPrimaryKey(id);
+        return hospitalMapper.deleteByPrimaryKey(id);
     }
 
     @Override
     public int updateByPrimaryKeySelective(Hospital hospital) {
-        return hm.updateByPrimaryKeySelective(hospital);
+        return hospitalMapper.updateByPrimaryKeySelective(hospital);
     }
 
     @Override
@@ -40,6 +40,6 @@ public class HospitalServce implements BaseService<Hospital> {
 
     @Override
     public List<Hospital> findByDynamicParam(Hospital hospital) {
-        return hm.findByDynamicParam(hospital);
+        return hospitalMapper.findByDynamicParam(hospital);
     }
 }
