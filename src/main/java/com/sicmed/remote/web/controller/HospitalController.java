@@ -1,7 +1,7 @@
 package com.sicmed.remote.web.controller;
 
 import com.sicmed.remote.web.entity.Hospital;
-import com.sicmed.remote.web.service.HospitalServce;
+import com.sicmed.remote.web.service.HospitalService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class HospitalController extends BaseController {
 
     @Autowired
-    private HospitalServce hs;
+    private HospitalService hospitalService;
 
     /**
      * 查询hospital
@@ -35,8 +35,11 @@ public class HospitalController extends BaseController {
     @GetMapping(value = "select")
     public Map selectHospital(Hospital hospital) {
 
-        //校验hospital?
-        List<Hospital> hospitalList = hs.findByDynamicParam(hospital);
+        if (hospital == null) {
+            return badRequestOfArguments("请求参数为空");
+        }
+
+        List<Hospital> hospitalList = hospitalService.findByDynamicParam(hospital);
         if (hospitalList != null && !hospitalList.isEmpty()) {
             return succeedRequestOfSelect(hospitalList);
         }
@@ -57,7 +60,7 @@ public class HospitalController extends BaseController {
             return badRequestOfArguments("传入参数有误!");
         }
 
-        int i = hs.insertSelective(hospital);
+        int i = hospitalService.insertSelective(hospital);
         if (i > 0) {
             return succeedRequestOfInsert("添加医院成功");
         }
@@ -76,7 +79,7 @@ public class HospitalController extends BaseController {
             return badRequestOfArguments("HospitalId为空");
         }
 
-        int i = hs.updateByPrimaryKeySelective(hospital);
+        int i = hospitalService.updateByPrimaryKeySelective(hospital);
         if (i > 0) {
             return succeedRequestOfUpdate("更新hospital成功");
         }
@@ -95,7 +98,7 @@ public class HospitalController extends BaseController {
             return badRequestOfArguments("HospitalId为空");
         }
 
-        int i = hs.deleteByPrimaryKey(hospital.getId());
+        int i = hospitalService.deleteByPrimaryKey(hospital.getId());
         if (i > 0) {
             return succeedRequestOfUpdate("删除hospital成功");
         }
