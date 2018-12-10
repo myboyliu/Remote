@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.mapper;
 
+import com.sicmed.remote.web.bean.CaseContentTypeBean;
 import com.sicmed.remote.web.entity.CaseContentType;
 
 import java.util.List;
@@ -18,4 +19,6 @@ public interface CaseContentTypeMapper {
     int updateByPrimaryKey(CaseContentType record);
 
     List findByDynamicParam(CaseContentType caseContentType);
+
+    List<CaseContentTypeBean> selectMultilevel(CaseContentType caseContentType);
 }

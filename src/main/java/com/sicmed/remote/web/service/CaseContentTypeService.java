@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.service;
 
+import com.sicmed.remote.web.bean.CaseContentTypeBean;
 import com.sicmed.remote.web.entity.CaseContentType;
 import com.sicmed.remote.web.mapper.CaseContentTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,10 @@ public class CaseContentTypeService implements BaseService<CaseContentType> {
 
     @Autowired
     private CaseContentTypeMapper caseContentTypeMapper;
+
+    public List<CaseContentTypeBean> selectMultilevel(CaseContentType caseContentType) {
+        return caseContentTypeMapper.selectMultilevel(caseContentType);
+    }
 
     @Override
     public int insertSelective(CaseContentType caseContentType) {

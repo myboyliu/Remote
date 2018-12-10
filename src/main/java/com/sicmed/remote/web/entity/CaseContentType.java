@@ -28,7 +28,7 @@ public class CaseContentType extends BaseEntity {
     private String caseNumber;
 
     @Min(value = 1,message = "权重级别需大于1")
-    @Max(value = 99,message = "权重级别需小于99")
+    @Max(value = Integer.MAX_VALUE,message = "权重级别需小于0x7fffffff")
     private Integer caseTypeWeight;
 
 

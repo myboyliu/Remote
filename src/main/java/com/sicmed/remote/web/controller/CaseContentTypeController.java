@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.controller;
 
+import com.sicmed.remote.web.bean.CaseContentTypeBean;
 import com.sicmed.remote.web.entity.CaseContentType;
 import com.sicmed.remote.web.service.CaseContentTypeService;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +19,7 @@ import java.util.Map;
  * @author YoonaLt
  * @version Running JDK 1.8
  * @description casecontenttype/insert(添加),casecontenttype/update(更新),casecontenttype/softdel(逻辑删除)
- * casecontenttype/select(动态查询),casecontenttype/selectbyid(id查询对应数据)
+ * casecontenttype/select(动态层级查询),casecontenttype/selectbyid(id查询对应数据),casecontenttype/selectbyparam(动态查询)
  * @data 2018/12/10
  */
 @RestController
@@ -88,20 +89,32 @@ public class CaseContentTypeController extends BaseController {
     }
 
     /**
-     * 动态查询caseContentType
+     * 动态分层查询caseContentType
      *
      * @param caseContentType
      */
     @GetMapping(value = "select")
-    public Map selectCaseContentType(CaseContentType caseContentType) {
+    public Map selectCaseContentTypeMultilevel(CaseContentType caseContentType) {
 
-        if (caseContentType == null) {
-            return badRequestOfArguments("请求参数为空");
+        List<CaseContentTypeBean> caseContentTypeBeans = caseContentTypeService.selectMultilevel(caseContentType);
+        if (caseContentTypeBeans != null && !caseContentTypeBeans.isEmpty()) {
+            return succeedRequestOfSelect(caseContentTypeBeans);
         }
 
-        List<CaseContentType> caseContentTypeList = caseContentTypeService.findByDynamicParam(caseContentType);
-        if (caseContentTypeList != null && !caseContentTypeList.isEmpty()) {
-            return succeedRequestOfSelect(caseContentTypeList);
+        return badRequestOfSelect("动态查询失败");
+    }
+
+    /**
+     * 动态查询caseContentType
+     *
+     * @param caseContentType
+     */
+    @GetMapping(value = "selectbyparam")
+    public Map selectCaseContentType(CaseContentType caseContentType) {
+
+        List<CaseContentType> caseContentTypes = caseContentTypeService.findByDynamicParam(caseContentType);
+        if (caseContentTypes != null && !caseContentTypes.isEmpty()) {
+            return succeedRequestOfSelect(caseContentTypes);
         }
 
         return badRequestOfSelect("动态查询失败");

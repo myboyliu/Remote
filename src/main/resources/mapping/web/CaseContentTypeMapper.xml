@@ -35,12 +35,12 @@
         where id = #{id,jdbcType=VARCHAR}
     </update>
 
-    <!--动态查询-->
+    <!--动态sql-->
     <select id="findByDynamicParam" parameterType="com.sicmed.remote.web.entity.CaseContentType"
             resultMap="BaseResultMap">
         select * from case_content_type
         <where>
-            AND del_flag = "0"
+            del_flag = "0"
             <if test="parentId != null">
                 AND parent_id = #{parentId,jdbcType=VARCHAR}
             </if>
@@ -50,10 +50,52 @@
             <if test="caseNumber != null">
                 AND case_number = #{caseNumber,jdbcType=VARCHAR}
             </if>
+            <if test="caseTypeWeight != null">
+                AND case_type_weight = #{caseTypeWeight,jdbcType=VARCHAR}
+            </if>
         </where>
-        <if test="pageSize &gt;0 and beginNo &gt; -1">
-            limit #{beginNo},#{pageSize}
-        </if>
+    </select>
+
+    <!--动态分层查询-->
+    <resultMap id="BeanResultMap" type="com.sicmed.remote.web.bean.CaseContentTypeBean">
+        <id column="parentId" jdbcType="VARCHAR" property="id"/>
+        <result column="parentCaseTypeName" jdbcType="VARCHAR" property="caseTypeName"/>
+        <result column="parentCaseNumber" jdbcType="VARCHAR" property="caseNumber"/>
+        <result column="parentCaseTypeWeight" jdbcType="INTEGER" property="caseTypeWeight"/>
+        <collection property="childList" ofType="com.sicmed.remote.web.entity.CaseContentType" javaType="ArrayList">
+            <id column="childId" jdbcType="VARCHAR" property="id"/>
+            <result column="childCaseTypeName" jdbcType="VARCHAR" property="caseTypeName"/>
+            <result column="childCaseNumber" jdbcType="VARCHAR" property="caseNumber"/>
+            <result column="childCaseTypeWeight" jdbcType="INTEGER" property="caseTypeWeight"/>
+        </collection>
+    </resultMap>
+    <sql id="Bean_Column_List">
+        parent.id parentId,parent.case_type_name parentCaseTypeName,parent.case_number parentCaseNumber,
+        parent.case_type_weight parentCaseTypeWeight ,
+        child.id childId,child.case_type_name childCaseTypeName,child.case_number childCaseNumber,
+        child.case_type_weight childCaseTypeWeight
+    </sql>
+    <sql id="Bean_Left_Join">
+        LEFT JOIN case_content_type child ON child.parent_id = parent.id
+    </sql>
+    <select id="selectMultilevel" parameterType="com.sicmed.remote.web.entity.CaseContentType"
+            resultMap="BeanResultMap">
+        select
+        <include refid="Bean_Column_List"/>from case_content_type parent
+        <include refid="Bean_Left_Join"/>
+        <where>
+            parent.del_flag = "0"
+            AND parent.parent_id is null
+            <if test="caseTypeName != null">
+                AND parent.case_type_name = #{caseTypeName,jdbcType=VARCHAR}
+            </if>
+            <if test="caseNumber != null">
+                AND parent.case_number = #{caseNumber,jdbcType=VARCHAR}
+            </if>
+        </where>
+        <!--        <if test="pageSize &gt;0 and beginNo &gt; -1">
+                    limit #{beginNo},#{pageSize}
+                </if>-->
     </select>
 
     <insert id="insert" parameterType="com.sicmed.remote.web.entity.CaseContentType">

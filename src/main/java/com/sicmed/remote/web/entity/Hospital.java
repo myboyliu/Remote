@@ -27,7 +27,7 @@ public class Hospital extends BaseEntity {
     private String hospitalGrade;
 
     @Min(value = 1, message = "hospitalWeight权重必须大于等于1")
-    @Max(value = 9999, message = "hospitalWeight权重必须小于等于9999")
+    @Max(value = Integer.MAX_VALUE, message = "hospitalWeight权重必须小于等于0x7fffffff")
     private Integer hospitalWeight;
 
     @Size(max = 32, min = 32, message = "typeId长度错误")
