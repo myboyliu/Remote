@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.mapper;
 
+import com.sicmed.remote.web.bean.BranchBean;
 import com.sicmed.remote.web.entity.Branch;
 
 import java.util.List;
@@ -19,4 +20,6 @@ public interface BranchMapper {
     int updateByPrimaryKey(Branch record);
 
     List<Branch> findByDynamicParam(Branch branch);
+
+    List<BranchBean> findMultilevelListByDynamicParam(Branch branch);
 }

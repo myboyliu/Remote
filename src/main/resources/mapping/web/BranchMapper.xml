@@ -222,47 +222,67 @@
         <include refid="Base_Column_List"/>
         from base_branch
         <where>
-            <if test="parentId != null">
-                parent_id = #{parentId,jdbcType=VARCHAR}
-            </if>
+            del_flag = "0"
             <if test="branchName != null">
-                branch_name = #{branchName,jdbcType=VARCHAR}
+                AND branch_name = #{branchName,jdbcType=VARCHAR}
             </if>
             <if test="branchNumber != null">
-                branch_number = #{branchNumber,jdbcType=VARCHAR}
+                AND branch_number = #{branchNumber,jdbcType=VARCHAR}
             </if>
             <if test="branchGrade != null">
-                branch_grade = #{branchGrade,jdbcType=VARCHAR}
+                AND branch_grade = #{branchGrade,jdbcType=VARCHAR}
             </if>
             <if test="branchInform != null">
-                branch_inform = #{branchInform,jdbcType=VARCHAR}
+                AND branch_inform = #{branchInform,jdbcType=VARCHAR}
             </if>
-            <if test="branchWeight != null">
-                branch_weight = #{branchWeight,jdbcType=INTEGER}
+        </where>
+    </select>
+
+    <resultMap id="BeanResultMap" type="com.sicmed.remote.web.bean.BranchBean">
+        <id column="parentBranchId" jdbcType="VARCHAR" property="id"/>
+        <result column="parentBranchName" jdbcType="VARCHAR" property="branchName"/>
+        <result column="parentBranchNumber" jdbcType="VARCHAR" property="branchNumber"/>
+        <result column="parentBranchGrade" jdbcType="VARCHAR" property="branchGrade"/>
+        <result column="parentBranchInform" jdbcType="VARCHAR" property="branchInform"/>
+        <result column="parentBranchWeight" jdbcType="INTEGER" property="branchWeight"/>
+        <result column="order_weight" jdbcType="VARCHAR" property="orderWeight"/>
+        <collection property="childList" ofType="com.sicmed.remote.web.entity.Branch" javaType="ArrayList">
+            <id column="childBranchId" jdbcType="VARCHAR" property="id"/>
+            <result column="childBranchName" jdbcType="VARCHAR" property="branchName"/>
+            <result column="childBranchNumber" jdbcType="VARCHAR" property="branchNumber"/>
+            <result column="childBranchGrade" jdbcType="VARCHAR" property="branchGrade"/>
+            <result column="childBranchInform" jdbcType="VARCHAR" property="branchInform"/>
+        </collection>
+    </resultMap>
+    <sql id="Bean_Column_List">
+        parentBranch.id parentBranchId, parentBranch.branch_name parentBranchName, parentBranch.branch_number
+        parentBranchNumber, parentBranch.branch_grade parentBranchGrade, parentBranch.branch_inform parentBranchInform,
+        childBranch.id childBranchId, childBranch.branch_name childBranchName, childBranch.branch_number
+        childBranchNumber, childBranch.branch_grade childBranchGrade,
+        childBranch.branch_inform childBranchInform
+    </sql>
+    <sql id="Bean_Left_Join">
+        LEFT JOIN base_branch childBranch ON childBranch.parent_id = parentBranch.id
+    </sql>
+    <select id="findMultilevelListByDynamicParam" parameterType="com.sicmed.remote.web.entity.Branch" resultMap="BeanResultMap">
+        select
+        <include refid="Bean_Column_List"/>
+        from base_branch parentBranch
+        <include refid="Bean_Left_Join"/>
+        <where>
+            parentBranch.del_flag = "0"
+            AND parentBranch.parent_id is null
+            <if test="branchName != null">
+                AND parentBranch.branch_name = #{branchName,jdbcType=VARCHAR}
             </if>
-            <if test="orderWeight != null">
-                order_weight = #{orderWeight,jdbcType=VARCHAR}
+            <if test="branchNumber != null">
+                AND parentBranch.branch_number = #{branchNumber,jdbcType=VARCHAR}
             </if>
-            <if test="createUser != null">
-                create_user = #{createUser,jdbcType=VARCHAR}
+            <if test="branchGrade != null">
+                AND parentBranch.branch_grade = #{branchGrade,jdbcType=VARCHAR}
             </if>
-            <if test="createTime != null">
-                create_time = #{createTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="updateUser != null">
-                update_user = #{updateUser,jdbcType=VARCHAR}
-            </if>
-            <if test="updateTime != null">
-                update_time = #{updateTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="deleteUser != null">
-                delete_user = #{deleteUser,jdbcType=VARCHAR}
-            </if>
-            <if test="deleteTime != null">
-                delete_time = #{deleteTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="delFlag != null">
-                del_flag = #{delFlag,jdbcType=CHAR}
+            <if test="branchInform != null">
+                AND parentBranch.branch_inform = #{branchInform,jdbcType=VARCHAR}
             </if>
         </where>
     </select>
