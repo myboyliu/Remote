@@ -1,6 +1,7 @@
 package com.sicmed.remote.web.controller;
 
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
@@ -37,16 +38,20 @@ public abstract class BaseController {
 
     /**
      * 处理Bean validation 返回的 错误信息
-     * @param fieldErrorList
+     *
+     * @param bindingResult
      * @return
      */
-    public static Map<String,Object> fieldErrorsBuilder(List<FieldError> fieldErrorList){
-        Map<String,Object> fieldErrorsMap = new LinkedHashMap<>();
+    public Map fieldErrorsBuilder(BindingResult bindingResult) {
+        List<FieldError> fieldErrorList = bindingResult.getFieldErrors();
+        Map<String, Object> fieldErrorsMap = new LinkedHashMap<>();
         for (FieldError fieldError : fieldErrorList) {
-            fieldErrorsMap.put(fieldError.getField(),fieldError.getDefaultMessage());
+            fieldErrorsMap.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
-        return fieldErrorsMap;
+        return badRequestOfArguments(fieldErrorsMap);
     }
+
+
     /**
      * 传入date类型参数报错解决
      *
