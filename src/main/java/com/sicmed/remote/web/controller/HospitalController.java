@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,7 +34,14 @@ public class HospitalController extends BaseController {
      */
     @GetMapping(value = "select")
     public Map selectHospital(Hospital hospital) {
-        
+
+        //校验hospital?
+        List<Hospital> hospitalList = hs.findByDynamicParam(hospital);
+        if (hospitalList != null && !hospitalList.isEmpty()) {
+            return succeedRequestOfSelect(hospitalList);
+        }
+
+        return badRequestOfSelect("动态查询失败");
     }
 
     /**
@@ -80,7 +88,7 @@ public class HospitalController extends BaseController {
      *
      * @param hospital
      */
-    @PostMapping(value = "update")
+    @GetMapping(value = "softdel")
     public Map softDelHospital(Hospital hospital) {
 
         if (StringUtils.isBlank(hospital.getId())) {
