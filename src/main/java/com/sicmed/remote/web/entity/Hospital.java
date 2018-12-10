@@ -1,6 +1,5 @@
 package com.sicmed.remote.web.entity;
 
-import javafx.scene.chart.ValueAxis;
 import lombok.Data;
 
 import javax.validation.constraints.*;

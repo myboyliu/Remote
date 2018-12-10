@@ -42,6 +42,29 @@
     </update>
     <!--条件查询-->
     <select id="findByDynamicParam" parameterType="com.sicmed.remote.web.entity.Hospital" resultMap="BaseResultMap">
+        select * from base_hospital
+        <where>
+            del_flag = "0"
+            <if test="hospitalName != null">
+                AND hospital_name = #{hospitalName,jdbcType=VARCHAR}
+            </if>
+            <if test="hospitalAlias != null">
+                AND hospital_alias = #{hospitalAlias,jdbcType=VARCHAR}
+            </if>
+            <if test="hospitalGrade != null">
+                AND hospital_grade = #{hospitalGrade,jdbcType=VARCHAR}
+            </if>
+            <if test="typeId != null">
+                AND type_id = #{typeId,jdbcType=VARCHAR}
+            </if>
+            <if test="cityId != null">
+                AND city_id = #{cityId,jdbcType=VARCHAR}
+            </if>
+            <if test="pageSize &gt;0 and beginNo &gt; -1">
+                AND limit #{beginNo},#{pageSize}
+            </if>
+
+        </where>
 
     </select>
 

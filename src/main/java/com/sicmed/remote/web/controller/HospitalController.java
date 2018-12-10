@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @author YoonaLt
  * @version Running JDK 1.8
- * @description hospital/insert(添加),hospital/update(更新),hospital/softdel(软删除)
+ * @description hospital/insert(添加),hospital/update(更新),hospital/softdel(软删除),hospital/select(不分页)
  * @data 2018/12/7
  */
 @RestController
@@ -32,8 +32,9 @@ public class HospitalController extends BaseController {
      * @param hospital
      */
     @GetMapping(value = "select")
-/*    public Map selectHospital(Hospital hospital) {
-    }*/
+    public Map selectHospital(Hospital hospital) {
+        
+    }
 
     /**
      * 添加hospital
@@ -45,14 +46,14 @@ public class HospitalController extends BaseController {
     public Map addHospital(@Validated Hospital hospital, BindingResult br) {
 
         if (br.hasErrors()) {
-            return BadRequestOfArguments("传入参数有误!");
+            return badRequestOfArguments("传入参数有误!");
         }
 
         int i = hs.insertSelective(hospital);
         if (i > 0) {
-            return SucceedRequestOfInsert("添加医院成功");
+            return succeedRequestOfInsert("添加医院成功");
         }
-        return BadRequestOfInsert("添加医院失败");
+        return badRequestOfInsert("添加医院失败");
     }
 
     /**
@@ -64,14 +65,14 @@ public class HospitalController extends BaseController {
     public Map updateHospital(Hospital hospital) {
 
         if (StringUtils.isBlank(hospital.getId())) {
-            return BadRequestOfArguments("HospitalId为空");
+            return badRequestOfArguments("HospitalId为空");
         }
 
         int i = hs.updateByPrimaryKeySelective(hospital);
         if (i > 0) {
-            return SucceedRequestOfUpdate("更新hospital成功");
+            return succeedRequestOfUpdate("更新hospital成功");
         }
-        return BadRequestOfUpdate("更新hospital失败");
+        return badRequestOfUpdate("更新hospital失败");
     }
 
     /**
@@ -83,14 +84,14 @@ public class HospitalController extends BaseController {
     public Map softDelHospital(Hospital hospital) {
 
         if (StringUtils.isBlank(hospital.getId())) {
-            return BadRequestOfArguments("HospitalId为空");
+            return badRequestOfArguments("HospitalId为空");
         }
 
         int i = hs.deleteByPrimaryKey(hospital.getId());
         if (i > 0) {
-            return SucceedRequestOfUpdate("更新hospital成功");
+            return succeedRequestOfUpdate("更新hospital成功");
         }
-        return BadRequestOfUpdate("更新hospital失败");
+        return badRequestOfUpdate("更新hospital失败");
     }
 
 }

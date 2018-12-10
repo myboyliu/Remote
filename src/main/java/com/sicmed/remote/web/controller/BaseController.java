@@ -51,7 +51,7 @@ public abstract class BaseController {
      * @param result
      * @return responseMap
      */
-    public Map SucceedRequest(Object result) {
+    public Map succeedRequest(Object result) {
         responseMap = new LinkedHashMap<>();
         responseMap.put("code", "20000");
         responseMap.put("msg", "Request_Succeed");
@@ -65,7 +65,7 @@ public abstract class BaseController {
      * @param result
      * @return responseMap
      */
-    public Map BadRequestOfArguments(Object result) {
+    public Map badRequestOfArguments(Object result) {
         responseMap = new LinkedHashMap<>();
         responseMap.put("code", "40000");
         responseMap.put("msg", "Request_Bad_Of_Arguments");
@@ -79,7 +79,7 @@ public abstract class BaseController {
      * @param result
      * @return responseMap
      */
-    public Map BadRequestOfInsert(Object result) {
+    public Map badRequestOfInsert(Object result) {
         responseMap = new LinkedHashMap<>();
         responseMap.put("code", "41000");
         responseMap.put("msg", "Request_Bad_Of_Insert");
@@ -93,7 +93,7 @@ public abstract class BaseController {
      * @param result
      * @return responseMap
      */
-    public Map SucceedRequestOfInsert(Object result) {
+    public Map succeedRequestOfInsert(Object result) {
         responseMap = new LinkedHashMap<>();
         responseMap.put("code", "41001");
         responseMap.put("msg", "Request_Succeed_Of_Insert");
@@ -107,7 +107,7 @@ public abstract class BaseController {
      * @param result
      * @return responseMap
      */
-    public Map BadRequestOfUpdate(Object result) {
+    public Map badRequestOfUpdate(Object result) {
         responseMap = new LinkedHashMap<>();
         responseMap.put("code", "41002");
         responseMap.put("msg", "Request_Bad_Of_Update");
@@ -121,7 +121,7 @@ public abstract class BaseController {
      * @param result
      * @return responseMap
      */
-    public Map SucceedRequestOfUpdate(Object result) {
+    public Map succeedRequestOfUpdate(Object result) {
         responseMap = new LinkedHashMap<>();
         responseMap.put("code", "41003");
         responseMap.put("msg", "Request_Succeed_Of_Update");
@@ -135,7 +135,7 @@ public abstract class BaseController {
      * @param result
      * @return responseMap
      */
-    public Map BadRequestOfDelete(Object result) {
+    public Map badRequestOfDelete(Object result) {
         responseMap = new LinkedHashMap<>();
         responseMap.put("code", "41004");
         responseMap.put("msg", "Request_Bad_Of_Delete");
@@ -149,7 +149,7 @@ public abstract class BaseController {
      * @param result
      * @return responseMap
      */
-    public Map SucceedRequestOfDelete(Object result) {
+    public Map succeedRequestOfDelete(Object result) {
         responseMap = new LinkedHashMap<>();
         responseMap.put("code", "41005");
         responseMap.put("msg", "Request_Bad_Of_Delete");
@@ -163,7 +163,7 @@ public abstract class BaseController {
      * @param result
      * @return responseMap
      */
-    public Map BadRequestOfSelect(Object result) {
+    public Map badRequestOfSelect(Object result) {
         responseMap = new LinkedHashMap<>();
         responseMap.put("code", "41006");
         responseMap.put("msg", "Request_Bad_Of_Select");
@@ -177,7 +177,7 @@ public abstract class BaseController {
      * @param result
      * @return responseMap
      */
-    public Map SucceedRequestOfSelect(Object result) {
+    public Map succeedRequestOfSelect(Object result) {
         responseMap = new LinkedHashMap<>();
         responseMap.put("code", "41007");
         responseMap.put("msg", "Request_Bad_Of_Select");
