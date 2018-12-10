@@ -60,11 +60,10 @@
             <if test="cityId != null">
                 AND city_id = #{cityId,jdbcType=VARCHAR}
             </if>
-            <if test="pageSize &gt;0 and beginNo &gt; -1">
-                AND limit #{beginNo},#{pageSize}
-            </if>
         </where>
-
+        <if test="pageSize &gt;0 and beginNo &gt; -1">
+            limit #{beginNo},#{pageSize}
+        </if>
     </select>
 
     <insert id="insert" parameterType="com.sicmed.remote.web.entity.Hospital">
