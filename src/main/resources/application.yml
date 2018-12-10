@@ -1,6 +1,8 @@
 server:
   port: 80
 spring:
+  profiles:
+    active: dev
   datasource:
     name: test
     url: jdbc:mysql://bj-cdb-3xrlmzai.sql.tencentcdb.com:63037/sicmed_slaver_ychz?serverTimezone=CTT&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
@@ -21,3 +23,6 @@ spring:
 #mybatis
 mybatis:
   mapper-locations: classpath:mapping/**/*.xml
+logging:
+  level:
+    root: debug
