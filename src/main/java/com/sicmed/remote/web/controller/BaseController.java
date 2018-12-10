@@ -1,6 +1,7 @@
 package com.sicmed.remote.web.controller;
 
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,6 +35,18 @@ public abstract class BaseController {
         return str;
     }
 
+    /**
+     * 处理Bean validation 返回的 错误信息
+     * @param fieldErrorList
+     * @return
+     */
+    public static Map<String,Object> fieldErrorsBuilder(List<FieldError> fieldErrorList){
+        Map<String,Object> fieldErrorsMap = new LinkedHashMap<>();
+        for (FieldError fieldError : fieldErrorList) {
+            fieldErrorsMap.put(fieldError.getField(),fieldError.getDefaultMessage());
+        }
+        return fieldErrorsMap;
+    }
     /**
      * 传入date类型参数报错解决
      *
