@@ -44,7 +44,7 @@
     <select id="findByDynamicParam" parameterType="com.sicmed.remote.web.entity.Hospital" resultMap="BaseResultMap">
         select * from base_hospital
         <where>
-            del_flag = "0"
+            AND del_flag = "0"
             <if test="hospitalName != null">
                 AND hospital_name = #{hospitalName,jdbcType=VARCHAR}
             </if>

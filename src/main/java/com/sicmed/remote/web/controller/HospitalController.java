@@ -41,7 +41,7 @@ public class HospitalController extends BaseController {
             return succeedRequestOfSelect(hospitalList);
         }
 
-        return badRequestOfSelect("动态查询失败");
+        return badRequestOfSelect("动态查询失败" + hospitalList);
     }
 
     /**
@@ -97,7 +97,7 @@ public class HospitalController extends BaseController {
 
         int i = hs.deleteByPrimaryKey(hospital.getId());
         if (i > 0) {
-            return succeedRequestOfUpdate("更新hospital成功");
+            return succeedRequestOfUpdate("删除hospital成功");
         }
         return badRequestOfUpdate("更新hospital失败");
     }
