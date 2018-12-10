@@ -5,6 +5,7 @@ import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.DoctorTitle;
 import com.sicmed.remote.common.InquiryStatus;
 
+
 /**
  * @author MaxCoder
  */
@@ -26,6 +27,5 @@ public class TestEnum {
         for (ApplyType arg : ApplyType.values()) {
             System.out.println(arg.toString());
         }
-
     }
 }

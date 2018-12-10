@@ -1,7 +1,6 @@
 package com.sicmed.remote.web.mapper;
 
 import com.sicmed.remote.web.entity.UserAccount;
-import org.apache.ibatis.annotations.Mapper;
 
 public interface UserAccountMapper {
     int deleteByPrimaryKey(String id);

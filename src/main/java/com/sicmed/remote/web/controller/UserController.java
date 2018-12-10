@@ -17,7 +17,7 @@ public class UserController {
     @PostMapping(value = "add/account")
     public Object register(UserAccount userAccount) {
 
-        int i = userService.insertUser(userAccount);
+        int i = userService.insertSelective(userAccount);
 
         return userAccount;
     }
