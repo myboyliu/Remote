@@ -2,6 +2,8 @@ package com.sicmed.remote.web.mapper;
 
 import com.sicmed.remote.web.entity.UserAccount;
 
+import java.util.List;
+
 public interface UserAccountMapper {
     int deleteByPrimaryKey(String id);
 
@@ -14,4 +16,8 @@ public interface UserAccountMapper {
     int updateByPrimaryKeySelective(UserAccount record);
 
     int updateByPrimaryKey(UserAccount record);
+
+    List<UserAccount> findByDynamicParam(UserAccount userAccount);
+
+    int selectCountPhone(String phoneNumber);
 }

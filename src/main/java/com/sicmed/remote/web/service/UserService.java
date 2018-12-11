@@ -2,11 +2,13 @@ package com.sicmed.remote.web.service;
 
 import com.sicmed.remote.web.entity.UserAccount;
 import com.sicmed.remote.web.mapper.UserAccountMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service
@@ -20,6 +22,7 @@ public class UserService implements BaseService<UserAccount> {
     public int deleteByPrimaryKey(String id) {
         return 0;
     }
+
     @Override
     public int insertSelective(UserAccount userAccount) {
         return userAccountMapper.insertSelective(userAccount);
@@ -45,12 +48,4 @@ public class UserService implements BaseService<UserAccount> {
     public List<UserAccount> findByDynamicParam(UserAccount userAccount) {
         return null;
     }
-
-
-
-
-
-
-
-
 }

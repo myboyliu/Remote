@@ -1,191 +1,236 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sicmed.remote.web.mapper.UserAccountMapper">
-  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.UserAccount">
-    <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="user_phone" jdbcType="VARCHAR" property="userPhone" />
-    <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
-    <result column="salt" jdbcType="VARCHAR" property="salt" />
-    <result column="create_ip" jdbcType="VARCHAR" property="createIp" />
-    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
-    <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
-    <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime" />
-    <result column="delete_user" jdbcType="VARCHAR" property="deleteUser" />
-    <result column="del_flag" jdbcType="VARCHAR" property="delFlag" />
-  </resultMap>
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.UserAccount">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="user_phone" jdbcType="VARCHAR" property="userPhone"/>
+        <result column="user_password" jdbcType="VARCHAR" property="userPassword"/>
+        <result column="salt" jdbcType="VARCHAR" property="salt"/>
+        <result column="create_ip" jdbcType="VARCHAR" property="createIp"/>
+        <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime"/>
+        <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime"/>
+        <result column="delete_user" jdbcType="VARCHAR" property="deleteUser"/>
+        <result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, user_phone, user_password, salt, create_ip, last_login_time, last_login_ip, create_time, 
     create_user, update_time, update_user, delete_time, delete_user, del_flag
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from user_account
-    where id = #{id,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+
+    <!--注册用户重复注册查询-->
+    <select id="selectCountPhone" parameterType="java.lang.String">
+        select count(*) from user_account where user_phone = userPhone
+    </select>
+
+    <!--动态查询查询内容-->
+    <sql id="My_Column_List">
+    id, user_phone, user_password, salt, create_ip, last_login_time, last_login_ip, create_time,
+    create_user
+  </sql>
+    <!--动态查询-->
+    <select id="findByDynamicParam" parameterType="com.sicmed.remote.web.entity.UserAccount" resultMap="BaseResultMap">
+        select
+        <include refid="My_Column_List"/>
+        from user_account
+        <where>
+            del_flag = "0"
+            <if test="userPhone != null">
+                AND user_phone = #{userPhone,jdbcType=VARCHAR}
+            </if>
+            <if test="userPassword != null">
+                AND user_password = #{userPassword,jdbcType=VARCHAR}
+            </if>
+            <if test="salt != null">
+                AND salt = #{salt,jdbcType=VARCHAR}
+            </if>
+            <if test="createIp != null">
+                AND create_ip = #{createIp,jdbcType=VARCHAR}
+            </if>
+            <if test="lastLoginTime != null">
+                AND last_login_time = #{lastLoginTime,jdbcType=VARCHAR}
+            </if>
+            <if test="lastLoginIp != null">
+                AND last_login_ip = #{lastLoginIp,jdbcType=VARCHAR}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime,jdbcType=VARCHAR}
+            </if>
+            <if test="createUser != null">
+                AND create_user = #{createUser,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_account
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from user_account
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sicmed.remote.web.entity.UserAccount">
-    <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
-      select replace(uuid(),'-','') from dual
-    </selectKey>
-    insert into user_account (id, user_phone, user_password, 
-      salt, create_ip, last_login_time, 
-      last_login_ip, create_time, create_user, 
-      update_time, update_user, delete_time, 
-      delete_user, del_flag)
-    values (#{id,jdbcType=VARCHAR}, #{userPhone,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR}, 
-      #{salt,jdbcType=VARCHAR}, #{createIp,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=TIMESTAMP}, 
-      #{lastLoginIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{deleteTime,jdbcType=TIMESTAMP}, 
-      #{deleteUser,jdbcType=VARCHAR}, #{delFlag,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.UserAccount">
-    <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
-      select replace(uuid(),'-','') from dual
-    </selectKey>
-    insert into user_account
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="userPhone != null">
-        user_phone,
-      </if>
-      <if test="userPassword != null">
-        user_password,
-      </if>
-      <if test="salt != null">
-        salt,
-      </if>
-      <if test="createIp != null">
-        create_ip,
-      </if>
-      <if test="lastLoginTime != null">
-        last_login_time,
-      </if>
-      <if test="lastLoginIp != null">
-        last_login_ip,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="createUser != null">
-        create_user,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="updateUser != null">
-        update_user,
-      </if>
-      <if test="deleteTime != null">
-        delete_time,
-      </if>
-      <if test="deleteUser != null">
-        delete_user,
-      </if>
-      <if test="delFlag != null">
-        del_flag,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=VARCHAR},
-      </if>
-      <if test="userPhone != null">
-        #{userPhone,jdbcType=VARCHAR},
-      </if>
-      <if test="userPassword != null">
-        #{userPassword,jdbcType=VARCHAR},
-      </if>
-      <if test="salt != null">
-        #{salt,jdbcType=VARCHAR},
-      </if>
-      <if test="createIp != null">
-        #{createIp,jdbcType=VARCHAR},
-      </if>
-      <if test="lastLoginTime != null">
-        #{lastLoginTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="lastLoginIp != null">
-        #{lastLoginIp,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null">
-        #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null">
-        #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="deleteTime != null">
-        #{deleteTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteUser != null">
-        #{deleteUser,jdbcType=VARCHAR},
-      </if>
-      <if test="delFlag != null">
-        #{delFlag,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.UserAccount">
-    update user_account
-    <set>
-      <if test="userPhone != null">
-        user_phone = #{userPhone,jdbcType=VARCHAR},
-      </if>
-      <if test="userPassword != null">
-        user_password = #{userPassword,jdbcType=VARCHAR},
-      </if>
-      <if test="salt != null">
-        salt = #{salt,jdbcType=VARCHAR},
-      </if>
-      <if test="createIp != null">
-        create_ip = #{createIp,jdbcType=VARCHAR},
-      </if>
-      <if test="lastLoginTime != null">
-        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="lastLoginIp != null">
-        last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null">
-        create_user = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null">
-        update_user = #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="deleteTime != null">
-        delete_time = #{deleteTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteUser != null">
-        delete_user = #{deleteUser,jdbcType=VARCHAR},
-      </if>
-      <if test="delFlag != null">
-        del_flag = #{delFlag,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.UserAccount">
+    <insert id="insert" parameterType="com.sicmed.remote.web.entity.UserAccount">
+        <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into user_account (id, user_phone, user_password,
+        salt, create_ip, last_login_time,
+        last_login_ip, create_time, create_user,
+        update_time, update_user, delete_time,
+        delete_user, del_flag)
+        values (#{id,jdbcType=VARCHAR}, #{userPhone,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR},
+        #{salt,jdbcType=VARCHAR}, #{createIp,jdbcType=VARCHAR}, #{lastLoginTime,jdbcType=TIMESTAMP},
+        #{lastLoginIp,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
+        #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{deleteTime,jdbcType=TIMESTAMP},
+        #{deleteUser,jdbcType=VARCHAR}, #{delFlag,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.UserAccount">
+        <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into user_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userPhone != null">
+                user_phone,
+            </if>
+            <if test="userPassword != null">
+                user_password,
+            </if>
+            <if test="salt != null">
+                salt,
+            </if>
+            <if test="createIp != null">
+                create_ip,
+            </if>
+            <if test="lastLoginTime != null">
+                last_login_time,
+            </if>
+            <if test="lastLoginIp != null">
+                last_login_ip,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+            <if test="deleteTime != null">
+                delete_time,
+            </if>
+            <if test="deleteUser != null">
+                delete_user,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="userPhone != null">
+                #{userPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="userPassword != null">
+                #{userPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="createIp != null">
+                #{createIp,jdbcType=VARCHAR},
+            </if>
+            <if test="lastLoginTime != null">
+                #{lastLoginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastLoginIp != null">
+                #{lastLoginIp,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.UserAccount">
+        update user_account
+        <set>
+            <if test="userPhone != null">
+                user_phone = #{userPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="userPassword != null">
+                user_password = #{userPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                salt = #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="createIp != null">
+                create_ip = #{createIp,jdbcType=VARCHAR},
+            </if>
+            <if test="lastLoginTime != null">
+                last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="lastLoginIp != null">
+                last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                delete_user = #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.UserAccount">
     update user_account
     set user_phone = #{userPhone,jdbcType=VARCHAR},
       user_password = #{userPassword,jdbcType=VARCHAR},

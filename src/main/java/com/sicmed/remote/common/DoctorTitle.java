@@ -17,6 +17,6 @@ public enum DoctorTitle {
     //副主任医师
     DEPUTY_CHIEF_PHYSICIAN,
     //主任医师
-    CHIEF_PHYSICIAN
+    CHIEF_PHYSICIAN,
 
 }
