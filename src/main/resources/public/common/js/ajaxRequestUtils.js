@@ -15,12 +15,12 @@ function getResponseJsonByAjax(type, url, data) {
         },
         error: function (err) {
             console.log(err);
+            return;
         }
     });
     console.log(responseJson);
     return responseJson;
 }
-
 function getDataByAjax(type, url, data) {
     var responseData;
     $.ajax({
@@ -36,6 +36,7 @@ function getDataByAjax(type, url, data) {
         },
         error: function (err) {
             console.log(err);
+            return;
         }
     });
     console.log(responseData);
