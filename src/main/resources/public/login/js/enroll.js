@@ -1,5 +1,6 @@
 var hospitalId = ''; // 医院id
 var managerHospitalDeptId = '';
+
 /**渲染医院下拉列表*/
 function renderHospitalSeleted(hospitalList) {
     hospitalId = hospitalList[0].id;
@@ -9,6 +10,7 @@ function renderHospitalSeleted(hospitalList) {
     }
     $('.quiz1').html(_html);
 };
+
 /**渲染科室下拉列表*/
 function renderBranchSeleted(branchList) {
     var _html = '<option value="">请选择科室</option>';
@@ -20,6 +22,7 @@ function renderBranchSeleted(branchList) {
     }
     $('.quiz3').html(_html);
 };
+
 /**渲染专家类型下拉列表*/
 function renderSpecialistTypeSeleted(specialistTypeList) {
     var _html = '<option value="">请选择专家类型</option>';
@@ -28,6 +31,7 @@ function renderSpecialistTypeSeleted(specialistTypeList) {
     }
     $('.quiz4').html(_html);
 };
+
 /**渲染病历类型列表*/
 function renderCaseContentView(caseContentList) {
     var _html = "";
@@ -42,6 +46,7 @@ function renderCaseContentView(caseContentList) {
     });
     $('.enroll_three').append(_html);
 };
+
 /**渲染注册成功窗口*/
 function renderRegistrationSuccessful() {
     var _$ = layui.jquery;
@@ -58,6 +63,7 @@ function renderRegistrationSuccessful() {
         location.href = 'login.html';
     }, 3000);
 }
+
 $(function () {
     var Name = $('.userName'); // 账号（手机号）
     var passWord = $('.passWord'); // 密码
@@ -67,9 +73,16 @@ $(function () {
     /**用户账号区域输入框blur事件*/
     Name.blur(function () {
         if (!RegExpObj.Reg_mobilePhone.test(Name.val())) {
-            $('.tip1').html('*用户名不正确');
+            $('.tip1').html('* 手机号码格式不正确');
         } else {
-            $('.tip1').html('');
+            var data = new FormData();
+            data.append("phoneNumber", Name.val())
+            var responseData = getDataByAjax("GET", checkPhoneNumber, data)
+            if (responseData.code === "20000") {
+                $('.tip1').html('');
+            } else {
+                $('.tip1').html('* 手机号已被注册!');
+            }
         }
     }).focus(function () {
         $('.tip1').html('');
@@ -133,14 +146,23 @@ $(function () {
     });
     //上传医师资格证，记录文件名添加到span里
     upload.onchange = function () {
+        var fileObj = new FormData();
         olf.innerHTML = upload.files[0].name;
         photo1.push(upload.files[0]);
+        fileObj.append("file",upload.files[0]);
+        var a =  getResponseJsonByAjax("POST",uploadFileUrl,fileObj);
+        console.log(a);
     }
     var signatureImg = new FormData();
     //上传签名，记录文件名添加到span里
     uploadTwo.onchange = function () {
+        var fileObj = new FormData();
         uhs.innerHTML = uploadTwo.files[0].name;
         photo2.push(uploadTwo.files[0]);
+        fileObj.append("file",uploadTwo.files[0]);
+        var a =  getResponseJsonByAjax("POST",uploadFileUrl,fileObj);
+        console.log("URL"+ a);
+
     }
     /** textarea 标签随着文本的高度实现自适应 */
     $('.text-adaption').each(function () {
