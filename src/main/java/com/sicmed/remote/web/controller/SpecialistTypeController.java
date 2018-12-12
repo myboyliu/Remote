@@ -4,8 +4,10 @@ import com.sicmed.remote.common.validation.Insert;
 import com.sicmed.remote.common.validation.Select;
 import com.sicmed.remote.common.validation.Update;
 import com.sicmed.remote.web.entity.SpecialistType;
+import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.service.SpecialistTypeService;
 import com.sicmed.remote.web.service.SpecialistTypeService;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -22,6 +24,7 @@ import java.util.List;
  * @author MaxCoder
  * @version 1.0
  */
+@Slf4j
 @RestController
 @RequestMapping(value = "specialistType")
 public class SpecialistTypeController extends BaseController {
@@ -126,18 +129,30 @@ public class SpecialistTypeController extends BaseController {
      *
      * @return
      */
-    @GetMapping(value = "findByParam2")
+    @GetMapping(value = "findByCurrentUser")
     public Object findByCurrentUser() {
 
         String userId = getRequestToken();
+        UserDetail ud = new UserDetail();
+        ud.setId(userId);
+        ud.setHospitalId("4274cdcbfc1e11e88ede487b6bd31bf7");
+        ud.setBranchId("0dba2e83fc4411e88ede487b6bd31bf7");
+        ud.setTitleName("医师");
+        ud.setConsultationPicturePrice("100");
+        ud.setConsultationVideoPrice("800");
+        ud.setNeedCaseType("首页-封面、首页-正面、首页-反面、病例-入院记录、病例-病史确认单、病例-病程记录、病例-手术资料、病例-高值耗材、病例-谈话记录、病例-讨论记录、病例-出院记录、病例-出院诊断证明书、病例-住院通知单、病例-死亡记录、病例-会诊记录、病例-其他文书");
+        log.debug(userId);
+        redisTemplate.opsForValue().set(userId,ud);
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
         SpecialistType specialistType = new SpecialistType();
 
-        specialistType.setHospitalId(userId);
+        specialistType.setHospitalId(userDetail.getHospitalId());
+
         List<SpecialistType> specialistTypeList = specialistTypeService.findByDynamicParam(specialistType);
 
-        while (specialistTypeList.isEmpty()) {
-            return badRequestOfSelect("");
+        while (specialistTypeList != null && !specialistTypeList.isEmpty()) {
+            return succeedRequestOfSelect(specialistTypeList);
         }
-        return succeedRequestOfSelect(specialistTypeList);
+        return badRequestOfSelect("查询结果为空!");
     }
 }

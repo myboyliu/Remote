@@ -1,4 +1,4 @@
-function selectSelfHospital(){
+function selectSelfHospital() {
     $(".promptText").show();
     $(".doctorContent").hide();
     $.ajax({
@@ -10,7 +10,7 @@ function selectSelfHospital(){
         },
         crossDomain: true,
         global: false,
-        success: function(data) {
+        success: function (data) {
             console.log(data)
             if (data.status == 200) {
                 hospitalId = data.id;
@@ -35,12 +35,13 @@ function selectSelfHospital(){
                 // 其他操作
             }
         },
-        error: function(err) {
+        error: function (err) {
             console.log(err);
         },
     })
 }
-function updateHospital(){
+
+function updateHospital() {
     $.ajax({
         type: 'POST',
         url: IP + 'hospital/updateSelfHospital',
@@ -57,7 +58,7 @@ function updateHospital(){
             withCredentials: true
         },
         crossDomain: true,
-        success: function(data) {
+        success: function (data) {
             console.log(data)
             if (data.status == 200) {
                 var _$ = layui.jquery;
@@ -71,7 +72,7 @@ function updateHospital(){
                     time: 2000,
                     content: _$('.successBox'),
                 });
-                setTimeout(function() {
+                setTimeout(function () {
                     window.location.reload();
                 }, 2000)
             } else if (data.status == 250) {
@@ -91,14 +92,13 @@ function updateHospital(){
                 });
             }
         },
-        error: function(err) {
+        error: function (err) {
             console.log(err);
         },
     })
 }
 
-
-function getBranchList(){
+function getBranchList() {
     $.ajax({
         type: 'GET',
         url: IP + 'hospitalDept/selectManagerSelfDept',
@@ -108,7 +108,7 @@ function getBranchList(){
         },
         crossDomain: true,
         global: false,
-        success: function(data) {
+        success: function (data) {
             console.log(data)
             if (data.status == 200) {
                 var tempArr = data.hospitalDeptsList;
@@ -159,13 +159,13 @@ function getBranchList(){
                 // 其他操作
             }
         },
-        error: function(err) {
+        error: function (err) {
             console.log(err);
         },
     })
 }
 
-function updateBranchList(){
+function updateBranchList() {
     $.ajax({
         type: 'POST',
         url: IP + 'hospitalDept/changeSelfDeptHospitalList',
@@ -177,7 +177,7 @@ function updateBranchList(){
             withCredentials: true
         },
         crossDomain: true,
-        success: function(data) {
+        success: function (data) {
             console.log(data)
 
             if (data.status == 200) {
@@ -204,7 +204,7 @@ function updateBranchList(){
                         withCredentials: true
                     },
                     crossDomain: true,
-                    success: function(data) {
+                    success: function (data) {
                         console.log(data)
                         if (data.status == 200) {
 
@@ -267,7 +267,7 @@ function updateBranchList(){
                             });
                         }
                     },
-                    error: function(err) {
+                    error: function (err) {
                         console.log(err);
                     },
                 })
@@ -280,28 +280,49 @@ function updateBranchList(){
                 layer.msg("操作失败，请稍后重试");
             }
         },
-        error: function(err) {
+        error: function (err) {
             console.log(err);
 
         },
     })
 }
 
-$(function() {
+/** 渲染专家类型列表*/
+function renderSpecialistTypeView(a) {
+    var array = [];
+    var _html = '';
+    for (var i = 0; i < array.length; i++) {
+        _html += '<tr name="' + array[i].id + '">\
+                        <td><input class="nameInput" readonly="readonly" type="text" value="' + array[i].name + '" placeholder="请输入"></td>\
+                        <td><input class="imgPicInput" readonly="readonly" type="text" value="' + array[i].money + '" placeholder="请输入"></td>\
+                        <td><input class="videoPicInput" readonly="readonly" type="text" value="' + array[i].moneyVideo + '" placeholder="请输入"></td>\
+                        <td>\
+                            <a class="delBtn" href="javascript:;">删除</a>\
+                            <a class="modifyBtn" href="javascript:;">修改</a>\
+                            <a class="expertSubmit noClick" href="javascript:;">保存</a>\
+                        </td>\
+                    </tr>'
+    }
+    $('.expertTypeTbody').html(_html);
+}
+
+$(function () {
+    // 专家类型与诊费
+    ajaxRequest("GET", getSpecialistTypeByCurrentUser, null, false, renderSpecialistTypeView(), null, null);
+
     var doctorInfo = {};
 
     /*  //textarea 标签随着文本的高度实现自适应 */
-    $('.text-adaption').each(function() {
+    $('.text-adaption').each(function () {
         this.setAttribute('style', 'height:' + (this.scrollHeight) + 40 + 'px;overflow-y:hidden;');
-    }).on('input propertychange', function() {
+    }).on('input propertychange', function () {
         this.style.height = 'auto';
         this.style.height = (this.scrollHeight) + 'px';
     });
 
 
-
     // 管理中心切换
-    $('.navContent > a').click(function() {
+    $('.navContent > a').click(function () {
         var _index = $(this).index();
         $(this).addClass('active').siblings('a').removeClass('active');
         $('.mainContent > div').hide().eq(_index).show();
@@ -333,16 +354,16 @@ $(function() {
 
 
     // 医院信息
-    $('.hospitalName').blur(function() {
+    $('.hospitalName').blur(function () {
         if ($(this).val() == '') {
             $('.hospitalNameRemind').show();
         } else {
             newHospitalName = $(this).val();
         }
-    }).focus(function() {
+    }).focus(function () {
         $('.hospitalNameRemind').hide();
     })
-    $('.hospitalTel').blur(function() {
+    $('.hospitalTel').blur(function () {
         if ($(this).val() == '') {
             $('.hospitalTelRemind').html('内容不能为空').show();
         }
@@ -354,31 +375,31 @@ $(function() {
         } else {
             newHospitalTel = $(this).val();
         }
-    }).focus(function() {
+    }).focus(function () {
         $('.hospitalTelRemind').hide();
     })
-    $('.imgPic').blur(function() {
+    $('.imgPic').blur(function () {
         if ($(this).val() == '') {
             $('.hospitalPicRemind').show();
         } else {
             newImgPic = $(this).val();
         }
-    }).focus(function() {
+    }).focus(function () {
         $('.hospitalPicRemind').hide();
     })
-    $('.videoPic').blur(function() {
+    $('.videoPic').blur(function () {
         if ($(this).val() == '') {
             $('.hospitalPicRemind').show();
         } else {
             newVideoPic = $(this).val();
         }
-    }).focus(function() {
+    }).focus(function () {
         $('.hospitalPicRemind').hide();
     })
 
 
     // 修改按钮
-    $('.hospitalName,.hospitalTel,.imgPic,.videoPic').bind('input propertychange', function() {
+    $('.hospitalName,.hospitalTel,.imgPic,.videoPic').bind('input propertychange', function () {
         //   console.log(1);
         if ($('.hospitalName').val() != '' && $('.hospitalTel').val() != '' && $('.imgPic').val() != '' && $('.videoPic').val() != '' || oldHospitalName != newHospitalName || oldHospitalTel != newHospitalTel || oldImgPic != newImgPic || oldVideoPic != newVideoPic) {
             $('.submitBtn').addClass('active');
@@ -390,7 +411,7 @@ $(function() {
     })
 
     // 医院保存
-    $('.submitBtn').click(function() {
+    $('.submitBtn').click(function () {
         if ($(this).hasClass('active')) {
             if ($('.hospitalName').val() == '') {
                 $('.hospitalNameRemind').show();
@@ -405,10 +426,9 @@ $(function() {
             } else if ($('.imgPic').val() == '' || $('.videoPic').val() == '') {
                 $('.hospitalPicRemind').show();
             } else {
-               updateHospital();
+                updateHospital();
             }
         }
-
     })
 
     // 科室列表、
@@ -417,14 +437,14 @@ $(function() {
 
 
     // 提示信息、
-    $('.sectionList').delegate('.problemContent', 'mouseenter', function() {
+    $('.sectionList').delegate('.problemContent', 'mouseenter', function () {
         $(this).find('.problemBox').show();
     })
-    $('.sectionList').delegate('.problemContent', 'mouseleave', function() {
+    $('.sectionList').delegate('.problemContent', 'mouseleave', function () {
         $(this).find('.problemBox').hide();
     })
     // 展开、收起
-    $('.sectionList').delegate('.sectionTitle', 'click', function() {
+    $('.sectionList').delegate('.sectionTitle', 'click', function () {
         $(this).siblings('.sectionContent').stop(true).slideToggle();
         if ($(this).find('.shrinkBtn').hasClass('active')) {
             $(this).find('.shrinkBtn').removeClass('active').html('展开列表');
@@ -434,7 +454,7 @@ $(function() {
     })
 
     // 删除科室
-    $('.sectionList').delegate('.selectedContent a', 'click', function() {
+    $('.sectionList').delegate('.selectedContent a', 'click', function () {
         if ($(this).attr('type') == '') {
             $(this).addClass('choose').attr('type', '1').parents('.selectedContent').siblings('.unselectedContent').find('.unselectedBox').prepend($(this));
         } else {
@@ -447,7 +467,7 @@ $(function() {
         }
     })
     // 添加科室
-    $('.sectionList').delegate('.unselectedContent a', 'click', function() {
+    $('.sectionList').delegate('.unselectedContent a', 'click', function () {
         if ($(this).attr('type') == '') {
             $(this).addClass('choose').attr('type', '0').parents('.unselectedContent').siblings('.selectedContent').find('.selectedBox').prepend($(this));
         } else {
@@ -461,7 +481,7 @@ $(function() {
     })
 
 
-    $('.sectionSubmit').click(function() {
+    $('.sectionSubmit').click(function () {
         if ($(this).hasClass('active')) {
             var deptHospitalDetailList = [];
             var objArr = $('.choose');
@@ -482,6 +502,7 @@ $(function() {
 
     // 医生列表
     selectManagerDoctorDeptList();
+
     function selectManagerDoctorDeptList() {
         $.ajax({
             type: 'GET',
@@ -492,7 +513,7 @@ $(function() {
             },
             crossDomain: true,
             global: false,
-            success: function(data) {
+            success: function (data) {
                 console.log(data)
                 if (data.status == 200) {
                     var tempArr = data.hospitalDeptsList;
@@ -546,63 +567,20 @@ $(function() {
                     // 其他操作
                 }
             },
-            error: function(err) {
+            error: function (err) {
                 console.log(err);
             },
         })
     }
 
-
-    // 获取左侧列表
-    // $.ajax({
-    //     type: 'GET',
-    //     url: IP + 'hospitalDept/selectManagerSelfDept',
-    //     dataType: 'json',
-    //     xhrFields: {
-    //         withCredentials: true
-    //     },
-    //     crossDomain: true,
-    //      global: false,
-    //     success: function(data) {
-    //         console.log(data)
-    // if (data.status == 200) {
-    //     var tempArr = data.hospitalDeptsList;
-    //     var _html = '';
-    //     for (var i = 0; i < tempArr.length; i++) {
-    //         _html += '<li class="oneLevelItem caseHistory">\
-    //             <p class="oneLevelName" name="' + tempArr[i].parentId + '">' + tempArr[i].parentName + '</p>\
-    //             <ul class="twoLevelUl">';
-    //         var twoArr = tempArr[i].changeDept;
-    //         for (var j = 0; j < twoArr.length; j++) {
-    //             _html += '<li class="twoLevelItem" name="' + twoArr[j].id + '" deptHospitalId="' + twoArr[j].deptHospitalId + '">\
-    //                         <p class="twoLevelName">' + twoArr[j].name + '</p>\
-    //                         <ul class="threeLevelUl"></ul>\
-    //                     </li>'
-    //         }
-    //         _html += '</ul>\
-    //     </li>'
-    //     }
-    //     $('.oneLevelUl').html(_html);
-    //     $('.oneLevelItem').eq(0).addClass('active').find('.twoLevelUl').show();
-    // } else if (data.status == 250) {
-    //     // 未登录操作
-    //     window.location = '/yilaiyiwang/login/login.html';
-    // } else {
-    //     // 其他操作
-    // }
-    //     },
-    //     error: function(err) {
-    //         console.log(err);
-    //     },
-    // })
     // 一级切换
-    $('.oneLevelUl').delegate('.oneLevelItem', 'click', function() {
+    $('.oneLevelUl').delegate('.oneLevelItem', 'click', function () {
         $(this).addClass('active').siblings('.oneLevelItem').removeClass('active');
         $(this).find('.twoLevelUl').stop(true).slideToggle();
         $(this).siblings('.oneLevelItem').find('.twoLevelUl').stop(true).slideUp();
     })
     // 二级科室切换
-    $('.oneLevelUl').delegate('.twoLevelItem', 'click', function() {
+    $('.oneLevelUl').delegate('.twoLevelItem', 'click', function () {
         if ($(this).hasClass('active')) {
             $(this).removeClass('active').siblings('.twoLevelItem').removeClass('active');
             $('.threeLevelUl').stop(true).slideUp();
@@ -614,59 +592,9 @@ $(function() {
         }
         return false;
     });
-    // 根据二级科室查医生
-    // function deptIdGetDoctors(deptHospitalId, obj) {
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: IP + 'user/selectIdAndNameListWithDeptId',
-    //         dataType: 'json',
-    //         data: {
-    //             "deptHospitalId": deptHospitalId,
-    //         },
-    //         xhrFields: {
-    //             withCredentials: true
-    //         },
-    //         crossDomain: true,
-    //          global: false,
-    //         success: function(data) {
-    //             console.log(data)
-    //             if (data.status == 200) {
-    //                 // 成功操作
-    //                 var tempArr = data.userBeanList;
-    //                 if (tempArr.length > 0) {
-    //                     var _html = '';
-    //                     for (var i = 0; i < tempArr.length; i++) {
-    // // 0未审核 1通过 2拒绝 3不完整
-    // if (tempArr[i].authenticationFlag == 0) {
-    //     _html += '<li class="threeLevelItem" name="' + tempArr[i].id + '"><span>' + tempArr[i].name + '</span><img class="unauthentication" src="/yilaiyiwang/images/unauthentication.png" alt=""/></li>'
-    // } else if (tempArr[i].authenticationFlag == 1) {
-    //     _html += '<li class="threeLevelItem" name="' + tempArr[i].id + '"><span>' + tempArr[i].name + '</span></li>'
-    // } else if (tempArr[i].authenticationFlag == 2) {
-    //     // _html += '<li class="threeLevelItem" name="' + tempArr[i].id + '"><span>' + tempArr[i].name + '</span><img class="uncomplete" src="/yilaiyiwang/images/Denied.png" alt=""/></li>'
-    // } else if (tempArr[i].authenticationFlag == 3) {
-    //     _html += '<li class="threeLevelItem" name="' + tempArr[i].id + '"><span>' + tempArr[i].name + '</span><img class="uncomplete" src="/yilaiyiwang/images/uncomplete.png" alt=""/></li>'
-    // } else {
-    //     _html += '<li class="threeLevelItem" name="' + tempArr[i].id + '"><span>' + tempArr[i].name + '</span></li>'
-    // }
-    //                     }
-    //                     obj.html(_html);
-    //                     obj.find('.threeLevelItem').eq(0).addClass('active');
-    //                     doctorIdGetInfo(tempArr[0].id);
-    //                 }
-    //             } else if (data.status == 250) {
-    //                 // 未登录操作
-    //                 window.location = '/yilaiyiwang/login/login.html';
-    //             } else {
-    //                 // 其他操作
-    //             }
-    //         },
-    //         error: function(err) {
-    //             console.log(err);
-    //         },
-    //     })
-    // }
+
     // 三级按钮
-    $('.oneLevelUl').delegate('.threeLevelItem', 'click', function() {
+    $('.oneLevelUl').delegate('.threeLevelItem', 'click', function () {
         $('.threeLevelItem').removeClass('active');
         $(this).addClass('active');
         $('.promptText').hide();
@@ -674,6 +602,7 @@ $(function() {
         doctorIdGetInfo($(this).attr('name'));
         return false;
     });
+
     // 根据医生id查医生信息
     function doctorIdGetInfo(id) {
         $.ajax({
@@ -688,7 +617,7 @@ $(function() {
             },
             crossDomain: true,
             global: false,
-            success: function(data) {
+            success: function (data) {
                 console.log(data)
                 if (data.status == 200) {
                     doctorInfo = data;
@@ -738,7 +667,7 @@ $(function() {
                         _html += '</div>';
                     }
                     $('.requireBox').html(_html);
-                    $('#beGoodAt').each(function() {
+                    $('#beGoodAt').each(function () {
                         this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
                     })
                 } else if (data.status == 250) {
@@ -758,7 +687,7 @@ $(function() {
                     $('#uhs').html('')
                 }
             },
-            error: function(err) {
+            error: function (err) {
                 console.log(err);
             },
         })
@@ -770,7 +699,7 @@ $(function() {
         url: IP + 'occupation/selectOccupationList',
         dataType: 'json',
         global: false,
-        success: function(data) {
+        success: function (data) {
             console.log(data);
             if (data.status == 200) {
                 var tempArr = [];
@@ -784,32 +713,8 @@ $(function() {
         }
     })
     // 获取专家类型列表 getSpecialistType
-    function getSpecialistType(hospitalId) {
-        $.ajax({
-            type: 'POST',
-            url: IP + '/specialistType/selectSpecialistTypeList',
-            dataType: 'json',
-            global: false,
-            data: {
-                "hospitalId": hospitalId,
-            },
-            success: function(data) {
-                console.log(data);
-                if (data.status == 200) {
-                    var tempArr = [];
-                    tempArr = data.specialistTypeBeanList;
-                    var _html = '<option value="" money="" moneyVideo="">请选择</option>';
-                    for (var i = 0; i < tempArr.length; i++) {
-                        _html += ' <option money="' + tempArr[i].money + '" moneyVideo="' + tempArr[i].moneyVideo + '" value="' + tempArr[i].id + '">' + tempArr[i].name + '</option>'
-                    };
-                    $('.expertSelect').html(_html);
-                    _html = "";
-                    // $('.imgPrice').val(tempArr[0].money);
-                    // $('.videoPrice').val(tempArr[0].moneyVideo);
-                }
-            }
-        })
-    }
+    // getSpecialistType();
+
     // 获取科室列表
     function getDeptList(id) {
         $.ajax({
@@ -820,7 +725,7 @@ $(function() {
                 "hospitalId": id,
             },
             global: false,
-            success: function(data) {
+            success: function (data) {
                 console.log(data);
                 if (data.status == 200) {
                     var hospital_office = data.hospitalDeptsList;
@@ -834,13 +739,14 @@ $(function() {
             }
         })
     }
+
     // 获取权限类型
     $.ajax({
         type: 'GET',
         url: IP + '/roles/getEntityList',
         dataType: 'json',
         global: false,
-        success: function(data) {
+        success: function (data) {
             // console.log(data);
             if (data.status == 200) {
                 var tempArr = [];
@@ -856,7 +762,7 @@ $(function() {
     })
 
     // 上传证书
-    $('.cardBtn').click(function() {
+    $('.cardBtn').click(function () {
         if ($('.cardUp')[0].files.length > 0) {
             var fb = new FormData();
             fb.append('userId', $('#userName').attr('rolesid'))
@@ -873,7 +779,7 @@ $(function() {
                 },
                 crossDomain: true,
                 global: false,
-                success: function(data) {
+                success: function (data) {
                     console.log(data)
                     if (data.status == 200) {
                         var _$ = layui.jquery;
@@ -887,7 +793,7 @@ $(function() {
                             time: 2000,
                             content: _$('.successBox'),
                         });
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $('.successBox').hide();
                         }, 2000)
                     } else if (data.status == 250) {
@@ -905,19 +811,19 @@ $(function() {
                             time: 2000,
                             content: _$('.loseBox'),
                         });
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $('.loseBox').hide();
                         }, 2000)
                     }
                 },
-                error: function(err) {
+                error: function (err) {
                     console.log(err);
                 },
             })
         }
     })
     // 上传签名
-    $('.signBtn').click(function() {
+    $('.signBtn').click(function () {
         if ($('.signUp')[0].files.length > 0) {
             var fb = new FormData();
             fb.append('userId', $('#userName').attr('rolesid'))
@@ -934,7 +840,7 @@ $(function() {
                 },
                 crossDomain: true,
                 global: false,
-                success: function(data) {
+                success: function (data) {
                     console.log(data)
                     if (data.status == 200) {
                         var _$ = layui.jquery;
@@ -948,7 +854,7 @@ $(function() {
                             time: 2000,
                             content: _$('.successBox'),
                         });
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $('.successBox').hide();
                         }, 2000)
                     } else if (data.status == 250) {
@@ -966,23 +872,23 @@ $(function() {
                             time: 2000,
                             content: _$('.loseBox'),
                         });
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $('.loseBox').hide();
                         }, 2000)
                     }
                 },
-                error: function(err) {
+                error: function (err) {
                     console.log(err);
                 },
             })
         }
     })
-    $('.expertSelect').change(function() {
+    $('.expertSelect').change(function () {
         $('#medicalFees').val($(this).find("option:selected").attr('money'));
         $('#medicalFeesVideo').val($(this).find("option:selected").attr('moneyvideo'));
     })
     // 重置密码
-    $('.resetBtn').click(function() {
+    $('.resetBtn').click(function () {
         var _$ = layui.jquery;
         layer.open({
             type: 1,
@@ -995,11 +901,11 @@ $(function() {
         });
     });
     // 重置密码弹框取消按钮
-    $('.replacementNoBtn').click(function() {
+    $('.replacementNoBtn').click(function () {
         layer.closeAll();
     })
     // 重置密码确定按钮
-    $('.replacementYesBtn').click(function() {
+    $('.replacementYesBtn').click(function () {
         $.ajax({
             type: 'POST',
             url: IP + 'user/remarkPassword',
@@ -1012,7 +918,7 @@ $(function() {
             },
             crossDomain: true,
             global: false,
-            success: function(data) {
+            success: function (data) {
                 console.log(data)
                 if (data.status == 200) {
                     var _$ = layui.jquery;
@@ -1026,7 +932,7 @@ $(function() {
                         //  time: 2000,
                         content: _$('.successBox'),
                     });
-                    setTimeout(function() {
+                    setTimeout(function () {
                         layer.closeAll();
                     }, 2000)
                 } else if (data.status == 250) {
@@ -1044,19 +950,19 @@ $(function() {
                         //  time: 2000,
                         content: _$('.loseBox'),
                     });
-                    setTimeout(function() {
+                    setTimeout(function () {
                         layer.closeAll();
                     }, 2000)
                 }
             },
-            error: function(err) {
+            error: function (err) {
                 console.log(err);
             },
         })
     })
 
     // 单个按钮
-    $(".requireBox").on('click', '.checkSingle', function() {
+    $(".requireBox").on('click', '.checkSingle', function () {
         if ($(this).attr('type') == '') {
             if ($(this).hasClass('CheckBg')) {
                 $(this).attr('type', '1').addClass('operate').toggleClass('CheckBg');
@@ -1074,63 +980,63 @@ $(function() {
         disabledFlag();
     })
     // 权限类型
-    $('.powerSelect').change(function() {
+    $('.powerSelect').change(function () {
         if ($(this).val() != doctorInfo.rolesId) {
             $('.modifyBtn').removeClass("disabled");
         }
         disabledFlag();
     })
     // 职称
-    $('.titleSelect').change(function() {
+    $('.titleSelect').change(function () {
         if ($(this).val() != doctorInfo.occupationId) {
             $('.modifyBtn').removeClass("disabled");
         }
         disabledFlag();
     })
     // 科室
-    $('.deptSelect').change(function() {
+    $('.deptSelect').change(function () {
         if ($(this).val() != doctorInfo.hospitalDeptId) {
             $('.modifyBtn').removeClass("disabled");
         }
         disabledFlag();
     })
     // 专家类型
-    $('.expertSelect').change(function() {
+    $('.expertSelect').change(function () {
         if ($(this).val() != doctorInfo.specialistTypeId) {
             $('.modifyBtn').removeClass("disabled");
         }
         disabledFlag();
     })
     // 姓名
-    $("#name").blur(function() {
+    $("#name").blur(function () {
         if ($(this).val() != doctorInfo.name) {
             $('.modifyBtn').removeClass("disabled");
         }
         disabledFlag();
     })
     // 电话
-    $('#telephone').blur(function() {
+    $('#telephone').blur(function () {
         if ($(this).val() != doctorInfo.telephone) {
             $('.modifyBtn').removeClass("disabled");
         }
         disabledFlag();
     });
     // 图文诊费/元
-    $('#medicalFees').blur(function() {
+    $('#medicalFees').blur(function () {
         if ($(this).val() != doctorInfo.medicalFees) {
             $('.modifyBtn').removeClass("disabled");
         }
         disabledFlag();
     });
     // 视频诊费/元
-    $('#medicalFeesVideo').blur(function() {
+    $('#medicalFeesVideo').blur(function () {
         if ($(this).val() != doctorInfo.medicalFeesVideo) {
             $('.modifyBtn').removeClass("disabled");
         }
         disabledFlag();
     });
     // 擅长
-    $('#beGoodAt').blur(function() {
+    $('#beGoodAt').blur(function () {
         if ($(this).val() != doctorInfo.beGoodAt) {
             $('.modifyBtn').removeClass("disabled");
         }
@@ -1138,12 +1044,13 @@ $(function() {
     });
 
     function disabledFlag() {
-        if($('#name').val() == doctorInfo.name && $('#telephone').val() == doctorInfo.telephone && $('#medicalFees').val() == doctorInfo.medicalFees && $('#medicalFeesVideo').val() == doctorInfo.medicalFeesVideo && $('#beGoodAt').val() == doctorInfo.beGoodAt && $('.powerSelect').val() == doctorInfo.rolesId && $('.titleSelect').val() == doctorInfo.occupationId && $('.deptSelect').val() == doctorInfo.hospitalDeptId && $('.expertSelect').val() == doctorInfo.specialistTypeId && $('.operate').length == 0){
+        if ($('#name').val() == doctorInfo.name && $('#telephone').val() == doctorInfo.telephone && $('#medicalFees').val() == doctorInfo.medicalFees && $('#medicalFeesVideo').val() == doctorInfo.medicalFeesVideo && $('#beGoodAt').val() == doctorInfo.beGoodAt && $('.powerSelect').val() == doctorInfo.rolesId && $('.titleSelect').val() == doctorInfo.occupationId && $('.deptSelect').val() == doctorInfo.hospitalDeptId && $('.expertSelect').val() == doctorInfo.specialistTypeId && $('.operate').length == 0) {
             $('.modifyBtn').addClass("disabled");
         }
     }
+
     // 修改信息
-    $('.modifyBtn').click(function() {
+    $('.modifyBtn').click(function () {
         if (!$(this).hasClass("disabled")) {
             // 修改信息判断
             var caseTypeList = [];
@@ -1175,7 +1082,7 @@ $(function() {
                     withCredentials: true
                 },
                 crossDomain: true,
-                success: function(data) {
+                success: function (data) {
                     console.log(data)
                     if (data.status == 200) {
                         $('.checkSingle').removeClass('operate');
@@ -1191,7 +1098,7 @@ $(function() {
                             time: 2000,
                             content: _$('.successBox'),
                         });
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $('.successBox').hide();
                         }, 2000);
                         $('.threeLevelItem.active').attr("stateflag", '1').find('img').hide();
@@ -1210,12 +1117,12 @@ $(function() {
                             time: 2000,
                             content: _$('.loseBox'),
                         });
-                        setTimeout(function() {
+                        setTimeout(function () {
                             $('.loseBox').hide();
                         }, 2000)
                     }
                 },
-                error: function(err) {
+                error: function (err) {
                     console.log(err);
                 },
             })
@@ -1223,7 +1130,7 @@ $(function() {
     })
 
     // 通过审核按钮
-    $('.adoptBtn').click(function() {
+    $('.adoptBtn').click(function () {
         var _$ = layui.jquery;
         layer.open({
             type: 1,
@@ -1238,11 +1145,11 @@ $(function() {
 
     })
     // 通过审核弹窗的取消按钮
-    $('.approvedNoBtn').click(function() {
+    $('.approvedNoBtn').click(function () {
         layer.closeAll();
     })
     // 通过审核弹窗的确定按钮
-    $('.approvedYesBtn').click(function() {
+    $('.approvedYesBtn').click(function () {
         $.ajax({
             type: 'POST',
             url: IP + 'user/authorizationUser',
@@ -1255,7 +1162,7 @@ $(function() {
             },
             crossDomain: true,
             global: false,
-            success: function(data) {
+            success: function (data) {
                 console.log(data)
                 if (data.status == 200) {
                     var _$ = layui.jquery;
@@ -1269,7 +1176,7 @@ $(function() {
                         time: 2000,
                         content: _$('.successBox'),
                     });
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $('.successBox').hide();
                         layer.closeAll();
                         //  审核通过操作成功后刷新页面，底部操作按钮变化
@@ -1295,12 +1202,12 @@ $(function() {
                         time: 2000,
                         content: _$('.loseBox'),
                     });
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $('.loseBox').hide();
                     }, 2000)
                 }
             },
-            error: function(err) {
+            error: function (err) {
                 console.log(err);
             },
         })
@@ -1308,7 +1215,7 @@ $(function() {
 
 
     // 拒绝审核
-    $('.refuseBtn').click(function() {
+    $('.refuseBtn').click(function () {
         var _$ = layui.jquery;
         layer.open({
             type: 1,
@@ -1321,16 +1228,15 @@ $(function() {
         });
 
 
-
         // 拒绝审核弹窗的取消按钮
-        $('.declineNoBtn').click(function() {
+        $('.declineNoBtn').click(function () {
             layer.closeAll();
         })
 
 
     })
     // 拒绝审核的确定按钮
-    $('.declineYesBtn').click(function() {
+    $('.declineYesBtn').click(function () {
         $.ajax({
             type: 'POST',
             url: IP + 'user/refuseAuthorizationUser',
@@ -1343,7 +1249,7 @@ $(function() {
             },
             crossDomain: true,
             global: false,
-            success: function(data) {
+            success: function (data) {
                 console.log(data)
                 if (data.status == 200) {
                     var _$ = layui.jquery;
@@ -1361,7 +1267,7 @@ $(function() {
                     $('.threeLevelItem.active').find('img').attr('src', '/yilaiyiwang/images/Denied.png'); //
                     doctorIdGetInfo($('.threeLevelItem.active').attr('name'));
                     $('.fexidContent').hide();
-                    setTimeout(function() {
+                    setTimeout(function () {
 
                         layer.closeAll();
                         //  window.location.reload();
@@ -1382,56 +1288,17 @@ $(function() {
                         time: 2000,
                         content: _$('.loseBox'),
                     });
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $('.loseBox').hide();
                     }, 2000)
                 }
             },
-            error: function(err) {
+            error: function (err) {
                 console.log(err);
             },
         })
     })
-    // 专家类型与诊费
-    $.ajax({
-        type: 'GET',
-        url: IP + 'specialistType/selectSelfSpecialistTypeList',
-        dataType: 'json',
-        xhrFields: {
-            withCredentials: true
-        },
-        crossDomain: true,
-        global: false,
-        success: function(data) {
-            console.log(data)
-            if (data.status == 200) {
-                // 成功操作
-                var tempArr = data.specialistTypeBeanList;
-                _html = '';
-                for (var i = 0; i < tempArr.length; i++) {
-                    _html += '<tr hospitalId="' + data.hospitalId + '" name="' + tempArr[i].id + '">\
-                        <td><input class="nameInput" readonly="readonly" type="text" value="' + tempArr[i].name + '" placeholder="请输入"></td>\
-                        <td><input class="imgPicInput" readonly="readonly" type="text" value="' + tempArr[i].money + '" placeholder="请输入"></td>\
-                        <td><input class="videoPicInput" readonly="readonly" type="text" value="' + tempArr[i].moneyVideo + '" placeholder="请输入"></td>\
-                        <td>\
-                            <a class="delBtn" href="javascript:;">删除</a>\
-                            <a class="modifyBtn" href="javascript:;">修改</a>\
-                            <a class="expertSubmit noClick" href="javascript:;">保存</a>\
-                        </td>\
-                    </tr>'
-                }
-                $('.expertTypeTbody').html(_html);
-            } else if (data.status == 250) {
-                // 未登录操作
-                window.location = '/yilaiyiwang/login/login.html';
-            } else {
-                // 其他操作
-            }
-        },
-        error: function(err) {
-            console.log(err);
-        },
-    });
+
     var oldName = ''; // 旧名字
     var oldMoney = ''; // 旧图文价格
     var oldMoneyVideo = ''; //旧视频价格
@@ -1442,7 +1309,7 @@ $(function() {
     var operationIndex = '';
     var hospitalId = '';
     // 修改
-    $('.expertTypeTbody').delegate('.modifyBtn', 'click', function() {
+    $('.expertTypeTbody').delegate('.modifyBtn', 'click', function () {
         operationIndex = $(this).parents('tr').index();
         if ($(this).html() == '修改') {
             oldName = $(this).parents('tr').find('input.nameInput').val();
@@ -1462,7 +1329,7 @@ $(function() {
         }
     })
 
-    $('.expertTypeTbody').delegate('input.nameInput', 'blur', function() {
+    $('.expertTypeTbody').delegate('input.nameInput', 'blur', function () {
         newName = $(this).val();
         if (oldName == newName && oldMoney == newMoney && oldMoneyVideo == newMoneyVideo) {
             $(this).parents('td').siblings('td').find('.expertSubmit').addClass('noClick');
@@ -1472,7 +1339,7 @@ $(function() {
             $(this).parents('td').siblings('td').find('.expertSubmit').removeClass('noClick');
         }
     })
-    $('.expertTypeTbody').delegate('input.imgPicInput', 'blur', function() {
+    $('.expertTypeTbody').delegate('input.imgPicInput', 'blur', function () {
         newMoney = $(this).val();
         if (oldName == newName && oldMoney == newMoney && oldMoneyVideo == newMoneyVideo) {
             $(this).parents('td').siblings('td').find('.expertSubmit').addClass('noClick');
@@ -1482,7 +1349,7 @@ $(function() {
             $(this).parents('td').siblings('td').find('.expertSubmit').removeClass('noClick');
         }
     })
-    $('.expertTypeTbody').delegate('input.videoPicInput', 'blur', function() {
+    $('.expertTypeTbody').delegate('input.videoPicInput', 'blur', function () {
         newMoneyVideo = $(this).val();
         if (oldName == newName && oldMoney == newMoney && oldMoneyVideo == newMoneyVideo) {
             $(this).parents('td').siblings('td').find('.expertSubmit').addClass('noClick');
@@ -1493,7 +1360,7 @@ $(function() {
         }
     })
     // 删除、
-    $('.expertTypeTbody').delegate('.delBtn', 'click', function() {
+    $('.expertTypeTbody').delegate('.delBtn', 'click', function () {
         expertId = $(this).parents('tr').attr('name');
         operationIndex = $(this).parents('tr').index();
         var _$ = layui.jquery;
@@ -1507,51 +1374,28 @@ $(function() {
             content: _$('.deleteBox'),
         });
     })
-    $('.deleteBox .noBtn').click(function() {
+    $('.deleteBox .noBtn').click(function () {
         if (expertId == '') {
             layer.closeAll();
             $('.expertTypeTbody > tr').eq(operationIndex).remove();
         } else {
-            $.ajax({
-                type: 'POST',
-                url: IP + 'specialistType/delSelfSpecialistType',
-                dataType: 'json',
-                xhrFields: {
-                    withCredentials: true
-                },
-                data: {
-                    "id": expertId,
-                },
-                crossDomain: true,
-                global: false,
+            // 删除专家类型
+            var data = new FormData();
+            data.append("id", expertId);
+            ajaxRequest("POST", deleteSpecialistType, data, deleteSuccess(), null, null);
 
-                success: function(data) {
-                    console.log(data)
-                    if (data.status == 200) {
-                        selectSelfHospital();
-                        selectManagerDoctorDeptList();
-                        $('.expertTypeTbody > tr').eq(operationIndex).remove();
-                        layer.closeAll();
-                    } else if (data.status == 250) {
-                        // 未登录操作
-                        window.location = '/yilaiyiwang/login/login.html';
-                    } else {
-                        // 其他操作
-                    }
-                },
-                error: function(err) {
-                    console.log(err);
-
-                },
-            });
+            function deleteSuccess() {
+                $('.expertTypeTbody > tr').eq(operationIndex).remove();
+                layer.closeAll();
+            }
         }
-
     })
-    $('.deleteBox .yesBtn').click(function() {
+
+    $('.deleteBox .yesBtn').click(function () {
         layer.closeAll();
     })
     // 添加
-    $('.addTypeBtn').click(function() {
+    $('.addTypeBtn').click(function () {
         $('.expertTypeTbody').append('<tr hospitalId="" name="">\
             <td><input class="nameInput revisability" type="text" value="" placeholder="请输入"></td>\
             <td><input class="imgPicInput revisability" type="text" value="" placeholder="请输入"></td>\
@@ -1564,7 +1408,7 @@ $(function() {
         </tr>');
     })
     // 保存
-    $('.expertTypeTbody').delegate('.expertSubmit', 'click', function() {
+    $('.expertTypeTbody').delegate('.expertSubmit', 'click', function () {
         if (oldName == newName && oldMoney == newMoney && oldMoneyVideo == newMoneyVideo) {
 
         } else if (newName == '' || newMoney == '' || newMoneyVideo == '') {
@@ -1585,167 +1429,43 @@ $(function() {
             });
         }
     })
-    $('.submitBox .noBtn').click(function() {
+    $('.submitBox .noBtn').click(function () {
         layer.closeAll()
     })
-    $('.submitBox .yesBtn').click(function() {
+    $('.submitBox .yesBtn').click(function () {
         if (hospitalId == '' && expertId == '') {
-            // 添加
-            $.ajax({
-                type: 'POST',
-                url: IP + 'specialistType/addSelfSpecialistType',
-                dataType: 'json',
-                data: {
-                    "name": newName,
-                    "money": newMoney,
-                    "moneyVideo": newMoneyVideo,
-                },
-                xhrFields: {
-                    withCredentials: true
-                },
-                crossDomain: true,
-                success: function(data) {
-                    console.log(data)
-                    if (data.status == 200) {
-                        // 成功操作
-                        layer.closeAll();
-                        $('.expertTypeTbody > tr').eq(operationIndex).find('input').removeClass('revisability').attr('readonly', 'readonly');
-                        $('.expertTypeTbody > tr').eq(operationIndex).find('.modifyBtn').show().html('修改');
-                        newName = '';
-                        newMoney = '';
-                        newMoneyVideo = '';
-                        $.ajax({
-                            type: 'GET',
-                            url: IP + 'specialistType/selectSelfSpecialistTypeList',
-                            dataType: 'json',
-                            xhrFields: {
-                                withCredentials: true
-                            },
-                            crossDomain: true,
-                            success: function(data) {
-                                console.log(data)
-                                if (data.status == 200) {
-                                    newName = '';
-                                    // 成功操作
-                                    selectSelfHospital();
-                                    var tempArr = data.specialistTypeBeanList;
-                                    _html = '';
-                                    for (var i = 0; i < tempArr.length; i++) {
-                                        _html += '<tr hospitalId="' + data.hospitalId + '" name="' + tempArr[i].id + '">\
-                                            <td><input class="nameInput" readonly="readonly" type="text" value="' + tempArr[i].name + '" placeholder="请输入"></td>\
-                                            <td><input class="imgPicInput" readonly="readonly" type="text" value="' + tempArr[i].money + '" placeholder="请输入"></td>\
-                                            <td><input class="videoPicInput" readonly="readonly" type="text" value="' + tempArr[i].moneyVideo + '" placeholder="请输入"></td>\
-                                            <td>\
-                                                <a class="delBtn" href="javascript:;">删除</a>\
-                                                <a class="modifyBtn" href="javascript:;">修改</a>\
-                                                <a class="expertSubmit noClick" href="javascript:;">保存</a>\
-                                            </td>\
-                                        </tr>'
-                                    }
-                                    $('.expertTypeTbody').html(_html);
-                                } else if (data.status == 250) {
-                                    // 未登录操作
-                                    window.location = '/yilaiyiwang/login/login.html';
-                                } else {
-                                    // 其他操作
-                                }
-                            },
-                            error: function(err) {
-                                console.log(err);
-                            },
-                        });
+            // 添加专家类型
+            var data = new FormData();
+            data.append("name", newName);
+            data.append("money", newMoney);
+            data.append("moneyVideo", newMoneyVideo);
+            ajaxRequest("POST", addSpecialistType, data, addSpecialistTypeSuccess(), null, null);
 
-                    } else if (data.status == 250) {
-                        // 未登录操作
-                        window.location = '/yilaiyiwang/login/login.html';
-                    } else {
-                        // 其他操作
-                    }
-                },
-                error: function(err) {
-                    console.log(err);
-                },
-            })
+            function addSpecialistTypeSuccess() {
+                layer.closeAll();
+                $('.expertTypeTbody > tr').eq(operationIndex).find('input').removeClass('revisability').attr('readonly', 'readonly');
+                $('.expertTypeTbody > tr').eq(operationIndex).find('.modifyBtn').show().html('修改');
+            }
         } else {
-            // 修改
-            $.ajax({
-                type: 'POST',
-                url: IP + 'specialistType/updateSelfDetail',
-                dataType: 'json',
-                data: {
-                    "name": newName,
-                    "money": newMoney,
-                    "moneyVideo": newMoneyVideo,
-                    "id": expertId,
-                    "hospitalId": hospitalId,
-                },
-                xhrFields: {
-                    withCredentials: true
-                },
-                crossDomain: true,
-                success: function(data) {
-                    console.log(data)
-                    if (data.status == 200) {
-                        // 成功操作
-                        layer.closeAll();
-                        $('.expertTypeTbody > tr').eq(operationIndex).find('input').removeClass('revisability').attr('readonly', 'readonly');
-                        $('.expertTypeTbody > tr').eq(operationIndex).find('.modifyBtn').html('修改');
-                        newName = '';
-                        newMoney = '';
-                        newMoneyVideo = '';
-                        $.ajax({
-                            type: 'GET',
-                            url: IP + 'specialistType/selectSelfSpecialistTypeList',
-                            dataType: 'json',
-                            xhrFields: {
-                                withCredentials: true
-                            },
-                            crossDomain: true,
-                            success: function(data) {
-                                console.log(data)
-                                if (data.status == 200) {
-                                    newName = '';
-                                    // 成功操作
-                                    selectSelfHospital();
-                                    var tempArr = data.specialistTypeBeanList;
-                                    _html = '';
-                                    for (var i = 0; i < tempArr.length; i++) {
-                                        _html += '<tr hospitalId="' + data.hospitalId + '" name="' + tempArr[i].id + '">\
-                                            <td><input class="nameInput" readonly="readonly" type="text" value="' + tempArr[i].name + '" placeholder="请输入"></td>\
-                                            <td><input class="imgPicInput" readonly="readonly" type="text" value="' + tempArr[i].money + '" placeholder="请输入"></td>\
-                                            <td><input class="videoPicInput" readonly="readonly" type="text" value="' + tempArr[i].moneyVideo + '" placeholder="请输入"></td>\
-                                            <td>\
-                                                <a class="delBtn" href="javascript:;">删除</a>\
-                                                <a class="modifyBtn" href="javascript:;">修改</a>\
-                                                <a class="expertSubmit noClick" href="javascript:;">保存</a>\
-                                            </td>\
-                                        </tr>'
-                                    }
-                                    $('.expertTypeTbody').html(_html);
-                                } else if (data.status == 250) {
-                                    // 未登录操作
-                                    window.location = '/yilaiyiwang/login/login.html';
-                                } else {
-                                    // 其他操作
-                                }
-                            },
-                            error: function(err) {
-                                console.log(err);
-                            },
-                        });
-                    } else if (data.status == 250) {
-                        // 未登录操作
-                        window.location = '/yilaiyiwang/login/login.html';
-                    } else {
-                        // 其他操作
-                    }
-                },
-                error: function(err) {
-                    console.log(err);
-                },
-            })
+            // 修改专家类型
+            var data = new FormData();
+            data.append("name", newName);
+            data.append("money", newMoney);
+            data.append("moneyVideo", newMoneyVideo);
+            data.append("hospitalId", hospitalId);
+            data.append("id", expertId);
+            ajaxRequest("POST", updateSpecialistType, data, updateSpecialistTypeSuccess(), null, null);
+
+            function updateSpecialistTypeSuccess() {
+                layer.closeAll();
+                $('.expertTypeTbody > tr').eq(operationIndex).find('input').removeClass('revisability').attr('readonly', 'readonly');
+                $('.expertTypeTbody > tr').eq(operationIndex).find('.modifyBtn').html('修改');
+            }
         }
+        /** 重新渲染专家类型列表 */
+        // ajaxRequest("GET", getSpecialistTypeByCurrentUser, null, true, renderSpecialistTypeView(), null, null);
+        newName = '';
+        newMoney = '';
+        newMoneyVideo = '';
     })
-
-
 })
