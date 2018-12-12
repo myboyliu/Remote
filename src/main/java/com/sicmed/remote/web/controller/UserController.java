@@ -1,6 +1,9 @@
 package com.sicmed.remote.web.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.web.entity.UserAccount;
 import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.entity.UserSign;
@@ -87,11 +90,13 @@ public class UserController extends BaseController {
             return fieldErrorsBuilder(brOfUserDet);
         }
 
-        Map<String, String> resultMap = null;
+        LinkedHashMap<String, String> resultMap;
         try {
-            resultMap = (Map<String, String>) JSONObject.parse(idTypeName);
+            resultMap = JSON.parseObject(idTypeName, new TypeReference<LinkedHashMap<String, String>>() {
+            }, Feature.OrderedField);
+//            resultMap = (Map<String, String>) JSONObject.parse(idTypeName);
         } catch (Exception e) {
-            badRequestOfArguments("idTypeName 格式错误");
+            return badRequestOfArguments("idTypeName 格式错误");
         }
 
         // 添加UserAccount使用md5将随机生成的32位字母数字salt与password混合加密
@@ -107,29 +112,35 @@ public class UserController extends BaseController {
         List<String> idList = new ArrayList<>(); // 病例类型id列表
         String userId = userAccount.getId();
 
-        // 添加UserDetail
-        StringBuffer stringBuffer = new StringBuffer();
-        for (Map.Entry<String, String> m : resultMap.entrySet()) {
-            idList.add(m.getKey());
-            stringBuffer.append(m.getValue() + "、");
+        if (resultMap != null && !resultMap.isEmpty()) {
+
+            StringBuffer stringBuffer = new StringBuffer();
+            for (Map.Entry<String, String> m : resultMap.entrySet()) {
+                idList.add(m.getKey());
+                stringBuffer.append(m.getValue() + "、");
+            }
+            stringBuffer.deleteCharAt(stringBuffer.length() - 1);
+            String typeName = stringBuffer.toString();  // 病例类型名称集合
+
+            userDetail.setNeedCaseType(typeName);
+
+            // 添加 UserCaseType
+            Map<String, String> userCaseTypeMap = new LinkedHashMap<>();
+            for (String id : idList) {
+                userCaseTypeMap.put(id, userId);
+            }
+            int k = userCaseTypeService.insertMulitple(userCaseTypeMap);
+            if (k < 1) {
+                return badRequestOfInsert("添加UserCaseType失败");
+            }
         }
-        stringBuffer.deleteCharAt(stringBuffer.length() - 1);
-        String typeName = stringBuffer.toString();  // 病例类型名称集合
-        userDetail.setNeedCaseType(typeName);
+
+
+        // 添加UserDetail
         userDetail.setId(userId);
         int j = userDetailService.insertSelective(userDetail);
         if (j < 1) {
             return badRequestOfInsert("添加UserDetail失败");
-        }
-
-        // 添加 UserCaseType
-        Map<String, String> userCaseTypeMap = new LinkedHashMap<>();
-        for (String id : idList) {
-            userCaseTypeMap.put(id, userId);
-        }
-        int k = userCaseTypeService.insertMulitple(userCaseTypeMap);
-        if (k < 1) {
-            return badRequestOfInsert("添加UserCaseType失败");
         }
 
         // 添加UserSign
