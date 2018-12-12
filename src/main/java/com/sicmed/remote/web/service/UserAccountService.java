@@ -38,11 +38,20 @@ public class UserAccountService implements BaseService<UserAccount> {
         return request.getRemoteAddr();
     }
 
+    public UserAccount selectSaltPw(String phoneNumber) {
+        return userAccountMapper.selectSaltPw(phoneNumber);
+    }
 
     public int insertSelective(UserAccount userAccount, HttpServletRequest httpServletRequest) {
         String createIp = getUserIp(httpServletRequest);
         userAccount.setCreateIp(createIp);
         return userAccountMapper.insertSelective(userAccount);
+    }
+
+    public int updateByPrimaryKeySelective(UserAccount userAccount, HttpServletRequest httpServletRequest) {
+        String lastLoginIp = getUserIp(httpServletRequest);
+        userAccount.setLastLoginIp(lastLoginIp);
+        return userAccountMapper.updateByPrimaryKeySelective(userAccount);
     }
 
     @Override

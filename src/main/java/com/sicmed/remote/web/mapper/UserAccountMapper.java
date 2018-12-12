@@ -20,4 +20,6 @@ public interface UserAccountMapper {
     List<UserAccount> findByDynamicParam(UserAccount userAccount);
 
     int selectCountPhone(String phoneNumber);
+
+    UserAccount selectSaltPw(String userPhone);
 }

@@ -27,6 +27,11 @@
         select count(*) from user_account where user_phone = userPhone
     </select>
 
+    <!--login查询salt password-->
+    <select id="selectSaltPw" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select  id,salt,user_password from user_account where user_phone = #{userPhong}
+    </select>
+
     <!--动态查询查询内容-->
     <sql id="My_Column_List">
     id, user_phone, user_password, salt, create_ip, last_login_time, last_login_ip, create_time,
@@ -201,7 +206,7 @@
                 create_ip = #{createIp,jdbcType=VARCHAR},
             </if>
             <if test="lastLoginTime != null">
-                last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+                last_login_time = now(),
             </if>
             <if test="lastLoginIp != null">
                 last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},

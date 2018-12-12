@@ -1,7 +1,6 @@
 package com.sicmed.remote.web.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.web.entity.UserAccount;
@@ -24,10 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author YoonaLt
@@ -94,7 +90,6 @@ public class UserController extends BaseController {
         try {
             resultMap = JSON.parseObject(idTypeName, new TypeReference<LinkedHashMap<String, String>>() {
             }, Feature.OrderedField);
-//            resultMap = (Map<String, String>) JSONObject.parse(idTypeName);
         } catch (Exception e) {
             return badRequestOfArguments("idTypeName 格式错误");
         }
@@ -153,43 +148,41 @@ public class UserController extends BaseController {
         return succeedRequest("注册成功");
     }
 
+    /**
+     * 登录
+     *
+     * @param userAccount
+     * @param br
+     * @param httpServletRequest
+     */
+    @PostMapping(value = "login")
+    public Map userLogin(@Validated UserAccount userAccount, BindingResult br, HttpServletRequest httpServletRequest) {
 
-    /*    @PostMapping(value = "login")
-        public Map loginDoctor(String doctorPhone, String doctorPassword) {
-            Doctor doctor = doctorService.selectByPhone(doctorPhone);
-            if (doctor == null) {
-                return loginFailedResponse("用户名或密码不正确");
-            }
-                        System.out.println("key:" + m.getKey() + " value:" + m.getValue());
-            String salt = doctor.getSalt();
-            if (doctor.getDoctorPassword().equals(DigestUtils.md5DigestAsHex((doctorPassword + salt).getBytes()))) {
-                String token = doctor.getId();
-                redisSerive.insert(token, jsonUtil.objectToJsonStr(doctor));
-                log.info("======登陆成功====");
-                return loginSuccessResponse(token);
-            } else {
-                log.info("======登陆失败====");
-                return loginFailedResponse("用户名或密码不正确");
-            }
-        }*/
-    /*
-    @PostMapping(value = "mytest")
-    public Map testJ() {
-        log.debug("---------------");
-        String userId = "4111111142";
-        List<String> idList = new ArrayList<>();
-        idList.add("1");
-        idList.add("2");
-        idList.add("3");
-        Map<String, String> userCaseTypeMap = new LinkedHashMap<>();
-        for (String id : idList) {
-            userCaseTypeMap.put(id, userId);
+        if (br.hasErrors()) {
+            return fieldErrorsBuilder(br);
         }
-        log.debug("------2---------");
-        int k = userCaseTypeService.insertMulitple(userCaseTypeMap);
-        if (k < 1) {
-            return badRequestOfInsert("添加UserCaseType失败");
+
+        UserAccount resultUserAccount = userAccountService.selectSaltPw(userAccount.getUserPhone());
+        if (resultUserAccount == null) {
+            return badRequestOfSelect("userPhone查询salt,password失败");
         }
-        return succeedRequestOfInsert("222");
-    }*/
+
+        String salt = resultUserAccount.getSalt();
+        String encryptionPassWord = DigestUtils.md5DigestAsHex((userAccount.getUserPassword() + salt).getBytes());
+        if (!encryptionPassWord.equals(resultUserAccount.getUserPassword())) {
+            return badRequestOfArguments("输入的密码有误");
+        }
+
+        userAccount.setUserPassword(encryptionPassWord);
+        Date lastLoginTime = new Date();
+        userAccount.setLastLoginTime(lastLoginTime);
+        userAccount.setId(resultUserAccount.getId());
+        int i = userAccountService.updateByPrimaryKeySelective(userAccount, httpServletRequest);
+        if (i < 1) {
+            return badRequestOfInsert("更新用户登录信息失败");
+        }
+
+        return succeedRequest(resultUserAccount.getId());
+    }
+
 }
