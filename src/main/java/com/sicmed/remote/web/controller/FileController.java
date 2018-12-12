@@ -1,5 +1,7 @@
 package com.sicmed.remote.web.controller;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,25 +11,35 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
+
 /**
  * @author MaxCoder
  * @version 1.0
  * @Description TODO
  **/
+@Slf4j
 @RestController
 @RequestMapping(value = "file")
-public class FileController extends BaseController{
+public class FileController extends BaseController {
 
     @Value("${img.location}")
     private String location;
 
+    @Value("${spring.servlet.multipart.max-file-size}")
+    private Long max_file_size;
+
     @PostMapping("upload")
     public Object saveOrUpdatePageInfo(@RequestParam("file") MultipartFile file) {
-        //首先进行文件上传
-        String contentType = file.getContentType();
+        System.out.println();
         String fileName = file.getOriginalFilename();
+        while (file.getSize() > max_file_size) {
+           return badRequestOfArguments("文件过大");
+        }
+        String contentType = fileName.substring(fileName.lastIndexOf("."));
+
+        String randomFileName = RandomStringUtils.randomAlphanumeric(16) + contentType;
         try {
-            String url =  uploadFile(file.getBytes(), location, fileName);
+            String url = uploadFile(file.getBytes(), location, randomFileName);
             return succeedRequest(fileName);
         } catch (Exception e) {
             // TODO: handle exception
