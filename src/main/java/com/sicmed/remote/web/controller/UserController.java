@@ -68,18 +68,25 @@ public class UserController extends BaseController {
      * 注册接口
      *
      * @param userAccount
+     * @param brOfUserAccount
      * @param userDetail
+     * @param brOfUserDet
+     * @param userSign
      * @param idTypeName
-     * @param br
      * @param httpServletRequest
+     * @return
      */
     @PostMapping(value = "register")
-    public Map userRegister(@Validated UserAccount userAccount, @Validated UserDetail userDetail, UserSign userSign,
-                            String idTypeName, BindingResult br, HttpServletRequest httpServletRequest) {
+    public Map userRegister(@Validated UserAccount userAccount, BindingResult brOfUserAccount,
+                            @Validated UserDetail userDetail, BindingResult brOfUserDet,
+                            UserSign userSign, String idTypeName, HttpServletRequest httpServletRequest) {
 
-        if (br.hasErrors()) {
-            return badRequestOfArguments(br.getFieldErrors());
+        if (brOfUserAccount.hasErrors()) {
+            return fieldErrorsBuilder(brOfUserAccount);
+        } else if (brOfUserDet.hasErrors()) {
+            return fieldErrorsBuilder(brOfUserDet);
         }
+
         Map<String, String> resultMap = null;
         try {
             resultMap = (Map<String, String>) JSONObject.parse(idTypeName);
@@ -98,11 +105,7 @@ public class UserController extends BaseController {
         }
 
         List<String> idList = new ArrayList<>(); // 病例类型id列表
-        List<UserAccount> list = userAccountService.findByDynamicParam(userAccount);
-        if (list == null || list.isEmpty()) {
-            return badRequestOfSelect("查询注册用户id失败");
-        }
-        String userId = list.get(0).getId();
+        String userId = userAccount.getId();
 
         // 添加UserDetail
         StringBuffer stringBuffer = new StringBuffer();
