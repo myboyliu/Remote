@@ -3,8 +3,8 @@ package com.sicmed.remote.web.entity;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 
 /**
@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
  * @version 1.0
  */
 @Data
-public class UserDetail extends BaseEntity {
+public class UserDetail extends BaseEntity implements Serializable {
     private String id;
 
     @NotBlank(message = "userName is null")

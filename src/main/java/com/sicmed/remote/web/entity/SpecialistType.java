@@ -6,13 +6,14 @@ import com.sicmed.remote.common.validation.Update;
 import lombok.Data;
 
 import javax.validation.constraints.*;
+import java.io.Serializable;
 
 /**
  * @author Administrator
  * @version 1.0
  */
 @Data
-public class SpecialistType extends BaseEntity {
+public class SpecialistType extends BaseEntity implements Serializable {
     @Null(message = "ID由系统自动生成!", groups = {Insert.class})
     @NotBlank(message = "ID不能为空", groups = {Update.class})
     @Size(min = 32, max = 32, message = "id格式错误!", groups = {Update.class})

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import javax.validation.constraints.*;
+import java.io.Serializable;
 
 /**
  * @author Administrator
@@ -11,7 +12,7 @@ import javax.validation.constraints.*;
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Hospital extends BaseEntity {
+public class Hospital extends BaseEntity implements Serializable {
     private String id;
 
     @Size(max = 500, message = "hospitalName长度应小于500")

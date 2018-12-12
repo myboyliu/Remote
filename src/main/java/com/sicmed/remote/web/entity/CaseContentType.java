@@ -7,6 +7,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 
 /**
@@ -15,7 +16,7 @@ import javax.validation.constraints.Size;
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CaseContentType extends BaseEntity {
+public class CaseContentType extends BaseEntity implements Serializable {
     private String id;
 
     @Size(min = 1, max = 32, message = "caseTypeName 长度错误")

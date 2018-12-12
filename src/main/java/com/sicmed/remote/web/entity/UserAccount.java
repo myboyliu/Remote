@@ -15,7 +15,7 @@ import java.util.Date;
 public class UserAccount extends BaseEntity {
     private String id;
 
-    @NotBlank(message = "注册手机号不能为空")
+    @NotBlank(message = "手机号不能为空")
     @Size(max = 11, min = 11, message = "手机号长度错误")
     private String userPhone;
 

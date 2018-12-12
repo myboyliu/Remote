@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.service;
 
+import com.sicmed.remote.web.bean.UserControllerBean;
 import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.mapper.UserDetailMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,10 @@ public class UserDetailService implements BaseService<UserDetail> {
 
     @Autowired
     private UserDetailMapper userDetailMapper;
+
+    public UserControllerBean selectPersonalCenter(String userId) {
+        return userDetailMapper.selectPersonalCenter(userId);
+    }
 
     @Override
     public int insertSelective(UserDetail userDetail) {

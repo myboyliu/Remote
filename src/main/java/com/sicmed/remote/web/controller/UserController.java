@@ -3,13 +3,16 @@ package com.sicmed.remote.web.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
+import com.sicmed.remote.web.bean.UserControllerBean;
 import com.sicmed.remote.web.entity.UserAccount;
+import com.sicmed.remote.web.entity.UserCaseType;
 import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.entity.UserSign;
 import com.sicmed.remote.web.service.UserAccountService;
 import com.sicmed.remote.web.service.UserCaseTypeService;
 import com.sicmed.remote.web.service.UserDetailService;
 import com.sicmed.remote.web.service.UserSignService;
+import com.sun.xml.internal.ws.server.ServerRtException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,7 +107,8 @@ public class UserController extends BaseController {
             return badRequestOfInsert("添加UserAccount失败");
         }
 
-        List<String> idList = new ArrayList<>(); // 病例类型id列表
+        // 病例类型id列表
+        List<String> idList = new ArrayList<>();
         String userId = userAccount.getId();
 
         if (resultMap != null && !resultMap.isEmpty()) {
@@ -115,7 +119,8 @@ public class UserController extends BaseController {
                 stringBuffer.append(m.getValue() + "、");
             }
             stringBuffer.deleteCharAt(stringBuffer.length() - 1);
-            String typeName = stringBuffer.toString();  // 病例类型名称集合
+            // 病例类型名称集合
+            String typeName = stringBuffer.toString();
 
             userDetail.setNeedCaseType(typeName);
 
@@ -185,4 +190,16 @@ public class UserController extends BaseController {
         return succeedRequest(resultUserAccount.getId());
     }
 
+    /**
+     * 个人中心
+     */
+    @GetMapping(value = "personalCenter")
+    public Map personalCenter() {
+
+//        String userId = getRequestToken();
+        String userId = "f4e8a40dfde311e88ede487b6bd31bf7";
+        UserControllerBean userControllerBean = userDetailService.selectPersonalCenter(userId);
+        System.out.println(userControllerBean.toString() + "-----------------------------------------");
+        return null;
+    }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sicmed.remote.web.entity.Branch;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
  **/
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BranchBean extends Branch {
+public class BranchBean extends Branch implements Serializable {
 
     private List<Branch> childList;
 }

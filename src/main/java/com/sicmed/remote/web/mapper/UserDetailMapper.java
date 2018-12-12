@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.mapper;
 
+import com.sicmed.remote.web.bean.UserControllerBean;
 import com.sicmed.remote.web.entity.UserDetail;
 
 public interface UserDetailMapper {
@@ -14,4 +15,6 @@ public interface UserDetailMapper {
     int updateByPrimaryKeySelective(UserDetail record);
 
     int updateByPrimaryKey(UserDetail record);
+
+    UserControllerBean selectPersonalCenter(String userId);
 }
