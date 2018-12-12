@@ -39,7 +39,7 @@ public class UserDetail extends BaseEntity {
     @Size(min = 32, max = 32, message = "branchId 长度不合规")
     private String branchId;
 
-    @Null(message = "titleName not null")
+    @NotBlank(message = "titleName is null")
     private String titleName;
 
     @NotBlank(message = "specialistTypeId is null")
@@ -53,8 +53,6 @@ public class UserDetail extends BaseEntity {
     @Size(max = 1024, message = "userStrong 长度不合规")
     private String userStrong;
 
-    @NotBlank(message = "needCaseType is null")
-    @Size(max = 1024, message = "needCaseType 长度不合规")
     private String needCaseType;
 
     @NotBlank(message = "consultationPicturePrice is null")

@@ -112,7 +112,7 @@ public class UserController extends BaseController {
         }
         stringBuffer.deleteCharAt(stringBuffer.length() - 1);
         String typeName = stringBuffer.toString();  // 病例类型名称集合
-        userDetail.setTitleName(typeName);
+        userDetail.setNeedCaseType(typeName);
         userDetail.setId(userId);
         int j = userDetailService.insertSelective(userDetail);
         if (j < 1) {
