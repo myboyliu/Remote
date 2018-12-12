@@ -120,4 +120,24 @@ public class SpecialistTypeController extends BaseController {
         }
         return succeedRequestOfSelect(specialistTypeList);
     }
+
+    /**
+     * 根据登陆用户查询本院的专家类型
+     *
+     * @return
+     */
+    @GetMapping(value = "findByParam2")
+    public Object findByCurrentUser() {
+
+        String userId = getRequestToken();
+        SpecialistType specialistType = new SpecialistType();
+
+        specialistType.setHospitalId(userId);
+        List<SpecialistType> specialistTypeList = specialistTypeService.findByDynamicParam(specialistType);
+
+        while (specialistTypeList.isEmpty()) {
+            return badRequestOfSelect("");
+        }
+        return succeedRequestOfSelect(specialistTypeList);
+    }
 }
