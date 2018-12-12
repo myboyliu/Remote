@@ -29,8 +29,8 @@ function double(num) {
 }
 // nav
 $(function() {
-    if(!localStorage.getItem('userId')){
-        window.location = "/yilaiyiwang/login/login.html";
+    if(!localStorage.getItem('token')){
+        window.location = "/page/login.html";
     }
 
     // 0医生  1医政

@@ -30,21 +30,26 @@ $(function () {
                 time: 0
             });
             var data = new FormData();
-            data.append("username", $('#iphoneInputIn').val());
-            data.append("password", $('#passwordUp').val());
+            data.append("userPhone", $('#iphoneInputIn').val());
+            data.append("userPassword", $('#passwordUp').val());
             var responseData = getDataByAjax("POST", loginUrl, data);
 
-            if (responseData.status == 200) {
-                localStorage.setItem('userId', data.userId);
-                localStorage.setItem('name', data.name);
-                localStorage.setItem('hospitalName', data.hospitalName);
-                localStorage.setItem('hospitalId', data.hospitalId);
-                localStorage.setItem('rolesName', data.rolesName);
+            if (responseData.code == 20000) {
+                localStorage.setItem('token', responseData.result);
+
+                // localStorage.setItem('userId', data.userId);
+                localStorage.setItem('name', "测试用户");
+                // localStorage.setItem('hospitalName', data.hospitalName);
+                // localStorage.setItem('hospitalId', data.hospitalId);
+                localStorage.setItem('rolesName', "医政");
                 layer.close(index);
                 if (data.rolesName == '医政') {
-                    window.location.href = '/workbench/workbench.html';
+                    // window.location.href = '/workbench/workbench.html';
+                    window.location.href = '/page/system.html';
                 } else {
-                    window.location.href = '/morkbench/morkbench.html';
+                    // window.location.href = '/morkbench/morkbench.html';
+                    window.location.href = '/page/system.html';
+
                 }
             } else if (data.status == 208) {
                 layer.msg("用户名或密码错误！", {time: 2000});

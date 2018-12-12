@@ -39,7 +39,7 @@ function renderCaseContentView(caseContentList) {
         _html += '<div class="catalogue clearfix">\<p>' + val.caseTypeName + '</p>\<div class="checkAll" caseTypeName="' + key + '" name="' + val.id + '">全选\</div>';
         var childList = val.childList;
         for (var i = 0; i < childList.length; i++) {
-            _html += '<div class="checkSingle" name="' + childList[i].id + '">' + childList[i].caseTypeName + '\</div>';
+            _html += '<div class="checkSingle" parentName="' + val.caseTypeName + '" name="' + childList[i].id + '">' + childList[i].caseTypeName + '\</div>';
         }
         _html += '</div>';
 
@@ -145,24 +145,23 @@ $(function () {
         }
     });
     //上传医师资格证，记录文件名添加到span里
+    var doctorCardFront;
     upload.onchange = function () {
         var fileObj = new FormData();
         olf.innerHTML = upload.files[0].name;
         photo1.push(upload.files[0]);
-        fileObj.append("file",upload.files[0]);
-        var a =  getResponseJsonByAjax("POST",uploadFileUrl,fileObj);
-        console.log(a);
+        fileObj.append("file", upload.files[0]);
+        doctorCardFront = getResponseJsonByAjax("POST", uploadFileUrl, fileObj);
     }
     var signatureImg = new FormData();
+    var signature;
     //上传签名，记录文件名添加到span里
     uploadTwo.onchange = function () {
         var fileObj = new FormData();
         uhs.innerHTML = uploadTwo.files[0].name;
         photo2.push(uploadTwo.files[0]);
-        fileObj.append("file",uploadTwo.files[0]);
-        var a =  getResponseJsonByAjax("POST",uploadFileUrl,fileObj);
-        console.log("URL"+ a);
-
+        fileObj.append("file", uploadTwo.files[0]);
+        signature = getResponseJsonByAjax("POST", uploadFileUrl, fileObj);
     }
     /** textarea 标签随着文本的高度实现自适应 */
     $('.text-adaption').each(function () {
@@ -193,31 +192,43 @@ $(function () {
             layer.msg('请选择专家类型');
         } else {
             //禁用注册按钮
-            $(".enroll_button").attr({"disabled": "disabled"});
+            // $(".enroll_button").attr({"disabled": "disabled"});
             var caseTypeListArr = [];
+            var caseTypeJsonStr = "{";
             for (var i = 0; i < $('.checkSingle.CheckBg').length; i++) {
-                caseTypeListArr.push({
-                    "caseTypeId": $('.checkSingle.CheckBg').eq(i).attr('name'),
-                    "caseTypeName": $('.checkSingle.CheckBg').eq(i).html(),
-                });
+                var a = $('.checkSingle.CheckBg').eq(i).attr('name');
+                var b = $('.checkSingle.CheckBg').eq(i).html();
+                var c = $('.checkSingle.CheckBg').eq(i).attr('parentName');
+                caseTypeJsonStr += "'" + a + "':'" + c + "-" + b + "',";
+                // caseTypeListArr.push({
+                //     "caseTypeId": $('.checkSingle.CheckBg').eq(i).attr('name'),
+                //     "caseTypeName": $('.checkSingle.CheckBg').eq(i).html(),
+                // });
             }
+            caseTypeJsonStr = caseTypeJsonStr.substring(0, caseTypeJsonStr.length - 1);
+            caseTypeJsonStr += "}";
             var data = new FormData();
-            data.append("name", $('.name').val());
-            data.append("userName", $('.userName').val());
-            data.append("password", $('.passWord').val());
+            data.append("userName", $('.name').val());
+            data.append("userPhone", $('.userName').val());
+            data.append("userPassword", $('.passWord').val());
             data.append("telephone", $('.phone').val());
             data.append("rolesId", $('.quiz2').val());
-            data.append("hospitalDeptId", $('.quiz3').val());
-            data.append("occupationId", $('.quiz5').val());
+            data.append("hospitalId", $('.quiz1').val());
+            data.append("branchId", $('.quiz3').val());
+            data.append("titleName", $('.quiz5').val());
             data.append("specialistTypeId", $('.quiz4').val());
-            data.append("beGoodAt", $("#textAdaotion").val());
-            data.append("caseTypeListStr", JSON.stringify(caseTypeListArr));
-            data.append('signatureImg', photo1[0]);
-            data.append("credentialsImg", photo2[0]);
+            data.append("userStrong", $("#textAdaotion").val());
+            data.append("idTypeName", caseTypeJsonStr);
+            data.append('doctorCardFront', doctorCardFront);
+            data.append("signature", signature);
             data.append("managerHospitalDeptId", managerHospitalDeptId);
+            data.append("consultationPicturePrice", $("#consultationPicturePrice").val());
+            data.append("consultationVideoPrice", $("#consultationVideoPrice").val());
             var responseData = getDataByAjax("POST", registrationUrl, data);
+            console.log(responseData.code);
+            console.log(responseData.result);
 
-            if (responseData.status == 200) {
+            if (responseData.status == 20000) {
                 renderRegistrationSuccessful();
             } else if (responseData.status == 209) {
                 layer.msg('信息不完整', {time: 3000});

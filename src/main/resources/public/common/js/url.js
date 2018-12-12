@@ -7,7 +7,7 @@ const getAllBranch = "/branch/getAll"; //查询所有科室列表
 
 const getAllCaseContentType = "/casecontenttype/selectall"; //查询所有病历类型列表
 
-const registrationUrl = "/user/registration"; //注册接口
+const registrationUrl = "/user/register"; //注册接口
 
 const loginUrl = "/user/login"; //登陆接口
 
