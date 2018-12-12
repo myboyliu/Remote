@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     public Map<String, Object> allExceptionHandler(Exception exception) {
 
         Map<String, Object> resultMap = new LinkedHashMap<>();
-
+        exception.printStackTrace();
         log.error("我报错了：{}", (Object) exception.getStackTrace());
 
         resultMap.put("code", "50000");
