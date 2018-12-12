@@ -3,10 +3,7 @@ package com.sicmed.remote.web.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -30,20 +27,18 @@ public class FileController extends BaseController {
 
     @PostMapping("upload")
     public Object saveOrUpdatePageInfo(@RequestParam("file") MultipartFile file) {
-        System.out.println();
         String fileName = file.getOriginalFilename();
         while (file.getSize() > max_file_size) {
-           return badRequestOfArguments("文件过大");
+            return badRequestOfArguments("文件过大");
         }
         String contentType = fileName.substring(fileName.lastIndexOf("."));
 
         String randomFileName = RandomStringUtils.randomAlphanumeric(16) + contentType;
         try {
-            String url = uploadFile(file.getBytes(), location, randomFileName);
-            return succeedRequest(fileName);
+            uploadFile(file.getBytes(), location, randomFileName);
+            return succeedRequest(randomFileName);
         } catch (Exception e) {
-            // TODO: handle exception
-            return "1";
+            return badRequestOfArguments("文件上传失败");
         }
     }
 
