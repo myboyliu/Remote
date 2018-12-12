@@ -19,7 +19,7 @@
   </sql>
     <!--注册添加多条UserCaseType-->
     <insert id="insertMulitple">
-        insert into user_case_type (id,user_id, case_type_id) values
+        insert into user_case_type (id,case_type_id,user_id) values
         <foreach collection="map" item="item" separator="," index="key">
             ((select replace(uuid(), '-', '') as id from dual),
             #{key,jdbcType=VARCHAR},

@@ -3,9 +3,11 @@ package com.sicmed.remote.web.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.sicmed.remote.web.entity.UserAccount;
 import com.sicmed.remote.web.entity.UserDetail;
+import com.sicmed.remote.web.entity.UserSign;
 import com.sicmed.remote.web.service.UserAccountService;
 import com.sicmed.remote.web.service.UserCaseTypeService;
 import com.sicmed.remote.web.service.UserDetailService;
+import com.sicmed.remote.web.service.UserSignService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,25 +46,8 @@ public class UserController extends BaseController {
     @Autowired
     private UserCaseTypeService userCaseTypeService;
 
-    @PostMapping(value = "mytest")
-    public Map testJ() {
-        log.debug("---------------");
-        String userId = "4111111142";
-        List<String> idList = new ArrayList<>();
-        idList.add("1");
-        idList.add("2");
-        idList.add("3");
-        Map<String, String> userCaseTypeMap = new LinkedHashMap<>();
-        for (String id : idList) {
-            userCaseTypeMap.put(id, userId);
-        }
-        log.debug("------2---------");
-        int k = userCaseTypeService.insertMulitple(userCaseTypeMap);
-        if (k < 1) {
-            return badRequestOfInsert("添加UserCaseType失败");
-        }
-        return succeedRequestOfInsert("222");
-    }
+    @Autowired
+    private UserSignService userSignService;
 
     /**
      * 判断注册手机号是否可用
@@ -89,17 +74,15 @@ public class UserController extends BaseController {
      * @param httpServletRequest
      */
     @PostMapping(value = "register")
-    public Map userRegister(@Validated UserAccount userAccount, @Validated UserDetail userDetail,
+    public Map userRegister(@Validated UserAccount userAccount, @Validated UserDetail userDetail, UserSign userSign,
                             String idTypeName, BindingResult br, HttpServletRequest httpServletRequest) {
 
         if (br.hasErrors()) {
             return badRequestOfArguments(br.getFieldErrors());
         }
-
         Map<String, String> resultMap = null;
         try {
-            Map<String, String> map = (Map<String, String>) JSONObject.parse(idTypeName);
-            resultMap = map;
+            resultMap = (Map<String, String>) JSONObject.parse(idTypeName);
         } catch (Exception e) {
             badRequestOfArguments("idTypeName 格式错误");
         }
@@ -115,6 +98,11 @@ public class UserController extends BaseController {
         }
 
         List<String> idList = new ArrayList<>(); // 病例类型id列表
+        List<UserAccount> list = userAccountService.findByDynamicParam(userAccount);
+        if (list == null || list.isEmpty()) {
+            return badRequestOfSelect("查询注册用户id失败");
+        }
+        String userId = list.get(0).getId();
 
         // 添加UserDetail
         StringBuffer stringBuffer = new StringBuffer();
@@ -125,18 +113,14 @@ public class UserController extends BaseController {
         stringBuffer.deleteCharAt(stringBuffer.length() - 1);
         String typeName = stringBuffer.toString();  // 病例类型名称集合
         userDetail.setTitleName(typeName);
+        userDetail.setId(userId);
         int j = userDetailService.insertSelective(userDetail);
         if (j < 1) {
             return badRequestOfInsert("添加UserDetail失败");
         }
 
         // 添加 UserCaseType
-        List<UserAccount> list = userAccountService.findByDynamicParam(userAccount);
-        if (list == null || list.isEmpty()) {
-            return badRequestOfSelect("查询注册用户id失败");
-        }
-        String userId = list.get(0).getId();
-        Map<String, String> userCaseTypeMap = null;
+        Map<String, String> userCaseTypeMap = new LinkedHashMap<>();
         for (String id : idList) {
             userCaseTypeMap.put(id, userId);
         }
@@ -145,7 +129,12 @@ public class UserController extends BaseController {
             return badRequestOfInsert("添加UserCaseType失败");
         }
 
-        // 判断是否添加UserSign
+        // 添加UserSign
+        userSign.setId(userId);
+        int l = userSignService.insertSelective(userSign);
+        if (l < 1) {
+            return badRequestOfInsert("添加UserSign失败");
+        }
 
         return succeedRequest("注册成功");
     }
@@ -169,4 +158,24 @@ public class UserController extends BaseController {
                 return loginFailedResponse("用户名或密码不正确");
             }
         }*/
+    /*
+    @PostMapping(value = "mytest")
+    public Map testJ() {
+        log.debug("---------------");
+        String userId = "4111111142";
+        List<String> idList = new ArrayList<>();
+        idList.add("1");
+        idList.add("2");
+        idList.add("3");
+        Map<String, String> userCaseTypeMap = new LinkedHashMap<>();
+        for (String id : idList) {
+            userCaseTypeMap.put(id, userId);
+        }
+        log.debug("------2---------");
+        int k = userCaseTypeService.insertMulitple(userCaseTypeMap);
+        if (k < 1) {
+            return badRequestOfInsert("添加UserCaseType失败");
+        }
+        return succeedRequestOfInsert("222");
+    }*/
 }
