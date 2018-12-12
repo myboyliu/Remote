@@ -1,6 +1,9 @@
 package com.sicmed.remote.web.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.ServletRequestDataBinder;
@@ -22,6 +25,12 @@ import java.util.Map;
  * @data 2018/12/7
  */
 public abstract class BaseController {
+
+    @Autowired
+    public RedisTemplate redisTemplate;
+    
+    @Autowired
+    public StringRedisTemplate stringRedisTemplate;
 
     private Map<String, Object> responseMap;
 
