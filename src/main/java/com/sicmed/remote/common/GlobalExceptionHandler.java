@@ -8,16 +8,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * @author MaxCoder
+ *
+ * @version 1.0
+ */
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private static Map<String, Object> resultMap;
-
     @ExceptionHandler(value = Exception.class)
     public Map<String, Object> allExceptionHandler(Exception exception) {
 
-        resultMap = new LinkedHashMap<>();
+        Map<String, Object> resultMap = new LinkedHashMap<>();
 
         log.error("我报错了：{}", (Object) exception.getStackTrace());
 
