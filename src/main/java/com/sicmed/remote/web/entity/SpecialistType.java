@@ -22,8 +22,8 @@ public class SpecialistType extends BaseEntity {
     @Size(min = 2, max = 15, message = "specialistName长度只能是2-15!", groups = {Insert.class, Update.class, Select.class})
     private String specialistName;
 
-    @NotBlank(message = "医院不能为空", groups = {Insert.class, Update.class})
-    @Size(min = 32, max = 32, message = "hospitalId格式错误!", groups = {Insert.class, Update.class, Select.class})
+    @NotBlank(message = "医院ID不能为空", groups = {Select.class})
+    @Size(min = 32, max = 32, message = "hospitalId长度只能是32!", groups = {Select.class})
     private String hospitalId;
 
     @NotNull(message = "图文会诊价格不能为空!", groups = {Insert.class, Update.class})
