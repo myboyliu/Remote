@@ -1,33 +1,31 @@
-var hospitalId = ''; // 医院id
 var managerHospitalDeptId = '';
 
 /**渲染医院下拉列表*/
-function renderHospitalSeleted(hospitalList) {
-    hospitalId = hospitalList[0].id;
+function renderHospitalSeleted(array) {
     var _html = '<option value="">请选择医院</option>';
-    for (var i = 0; i < hospitalList.length; i++) {
-        _html += '<option value="' + hospitalList[i].id + '">' + hospitalList[i].hospitalName + '</option>';
+    for (var i = 0; i < array.length; i++) {
+        _html += '<option value="' + array[i].id + '">' + array[i].hospitalName + '</option>';
     }
     $('.quiz1').html(_html);
 };
 
 /**渲染科室下拉列表*/
-function renderBranchSeleted(branchList) {
+function renderBranchSeleted(array) {
     var _html = '<option value="">请选择科室</option>';
-    for (var i = 0; i < branchList.length; i++) {
-        if (branchList[i].deptName == '远程医学中心') {
-            managerHospitalDeptId = branchList[i].hospitalDeptId;
+    for (var i = 0; i < array.length; i++) {
+        if (array[i].deptName == '远程医学中心') {
+            managerHospitalDeptId = array[i].hospitalDeptId;
         }
-        _html += '<option value="' + branchList[i].id + '">' + branchList[i].branchName + '</option>';
+        _html += '<option value="' + array[i].id + '">' + array[i].branchName + '</option>';
     }
     $('.quiz3').html(_html);
 };
 
 /**渲染专家类型下拉列表*/
-function renderSpecialistTypeSeleted(specialistTypeList) {
+function renderSpecialistTypeSeleted(array) {
     var _html = '<option value="">请选择专家类型</option>';
-    for (var i = 0; i < specialistTypeList.length; i++) {
-        _html += '<option money="' + specialistTypeList[i].consultationPicturePrice + '" moneyVideo="' + specialistTypeList[i].consultationVideoPrice + '" value="' + specialistTypeList[i].id + '">' + specialistTypeList[i].specialistName + '</option>'
+    for (var i = 0; i < array.length; i++) {
+        _html += '<option money="' + array[i].consultationPicturePrice + '" moneyVideo="' + array[i].consultationVideoPrice + '" value="' + array[i].id + '">' + array[i].specialistName + '</option>'
     }
     $('.quiz4').html(_html);
 };
@@ -75,14 +73,7 @@ $(function () {
         if (!RegExpObj.Reg_mobilePhone.test(Name.val())) {
             $('.tip1').html('* 手机号码格式不正确');
         } else {
-            var data = new FormData();
-            data.append("phoneNumber", Name.val())
-            var responseData = getDataByAjax("GET", checkPhoneNumber, data)
-            if (responseData.code === "20000") {
-                $('.tip1').html('');
-            } else {
-                $('.tip1').html('* 手机号已被注册!');
-            }
+            $('.tip1').html('');
         }
     }).focus(function () {
         $('.tip1').html('');
@@ -109,22 +100,33 @@ $(function () {
         $('.tip3').html('');
     });
     /**查询医院列表*/
-    let hospitalList = getResponseJsonByAjax("GET", getAllHospital);
-    renderHospitalSeleted(hospitalList);
-    /**查询科室列表*/
-    let branchList = getResponseJsonByAjax("GET", getAllBranch);
-    renderBranchSeleted(branchList);
-    /**查询科室列表*/
-    let specialistTypeList = getResponseJsonByAjax("GET", getSpecialistTypeByHospitalId);
-    renderSpecialistTypeSeleted(specialistTypeList);
+    ajaxRequest("GET", getAllHospital, null, true, false, true, renderHospitalSeleted, null, null);
     /**查询病历类型列表*/
-    let caseContentList = getResponseJsonByAjax("GET", getAllCaseContentType);
-    renderCaseContentView(caseContentList)
+    ajaxRequest("GET", getAllCaseContentType, null, true, false, true, renderCaseContentView, null, null);
     // 专家类型切换 修改 诊费
     $('.quiz4').change(function () {
         $('.money').val($(this).find('option:selected').attr('money'));
         $('.moneyVideo').val($(this).find('option:selected').attr('moneyVideo'));
     });
+    // 医院下拉列表切换
+    $('.quiz1').change(function () {
+        /**查询科室列表*/
+        ajaxRequest("GET", getAllBranch, null, true, false, true, renderBranchSeleted, emptyBranch, null);
+        function emptyBranch() {
+            var branch_html = '<option value="">请选择科室</option>';
+            $('.quiz3').html(branch_html);
+        }
+
+        /**查询专家类型列表*/
+        var data = {"hospitalId": $('.quiz1').val()};
+        ajaxRequest("GET", getSpecialistTypeByHospitalId, data, true, "application/json", true, renderSpecialistTypeSeleted, emptySpecialistType, null);
+        function emptySpecialistType() {
+            var specialistType_html = '<option value="">请选择专家类型</option>';
+            $('.quiz4').html(specialistType_html);
+        }
+    });
+
+
     // 全选按钮
     $(".enroll_three").on('click', '.checkAll', function () {
         if ($(this).hasClass('CheckBg')) {
@@ -192,18 +194,13 @@ $(function () {
             layer.msg('请选择专家类型');
         } else {
             //禁用注册按钮
-            // $(".enroll_button").attr({"disabled": "disabled"});
-            var caseTypeListArr = [];
+            $(".enroll_button").attr({"disabled": "disabled"});
             var caseTypeJsonStr = "{";
             for (var i = 0; i < $('.checkSingle.CheckBg').length; i++) {
                 var a = $('.checkSingle.CheckBg').eq(i).attr('name');
                 var b = $('.checkSingle.CheckBg').eq(i).html();
                 var c = $('.checkSingle.CheckBg').eq(i).attr('parentName');
                 caseTypeJsonStr += "'" + a + "':'" + c + "-" + b + "',";
-                // caseTypeListArr.push({
-                //     "caseTypeId": $('.checkSingle.CheckBg').eq(i).attr('name'),
-                //     "caseTypeName": $('.checkSingle.CheckBg').eq(i).html(),
-                // });
             }
             caseTypeJsonStr = caseTypeJsonStr.substring(0, caseTypeJsonStr.length - 1);
             caseTypeJsonStr += "}";
@@ -218,31 +215,16 @@ $(function () {
             data.append("titleName", $('.quiz5').val());
             data.append("specialistTypeId", $('.quiz4').val());
             data.append("userStrong", $("#textAdaotion").val());
+            data.append("consultationPicturePrice", $("#consultationPicturePrice").val());
+            data.append("consultationVideoPrice", $("#consultationVideoPrice").val());
             data.append("idTypeName", caseTypeJsonStr);
             data.append('doctorCardFront', doctorCardFront);
             data.append("signature", signature);
             data.append("managerHospitalDeptId", managerHospitalDeptId);
-            data.append("consultationPicturePrice", $("#consultationPicturePrice").val());
-            data.append("consultationVideoPrice", $("#consultationVideoPrice").val());
-            var responseData = getDataByAjax("POST", registrationUrl, data);
-            console.log(responseData.code);
-            console.log(responseData.result);
+            ajaxRequest("POST", registrationUrl, data, false, false, true, renderRegistrationSuccessful, function () {
+                $('.tip1').html('* 手机号码已经注册过了!');
+            }, null);
 
-            if (responseData.status == 20000) {
-                renderRegistrationSuccessful();
-            } else if (responseData.status == 209) {
-                layer.msg('信息不完整', {time: 3000});
-                //   启用注册按钮
-                $(".enroll_button").removeAttr("disabled"); //将按钮可用
-            } else if (responseData.status == 210) {
-                layer.msg('该用户名已被占用', {time: 3000});
-                //   启用注册按钮
-                $(".enroll_button").removeAttr("disabled"); //将按钮可用
-            } else {
-                // 其他操作
-                layer.msg('注册失败', {time: 3000});
-                $(".enroll_button").removeAttr("disabled"); //将按钮可用
-            }
         }
     });
 });
