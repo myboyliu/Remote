@@ -26,6 +26,10 @@ const updateSpecialistType = "/specialistType/update"; //根据当前登陆的�
 
 const deleteSpecialistType = "/specialistType/remove"; //根据当前登陆的用户查询专家类型列表
 
+const getHospitalByCurrentUserUrl = "/hospital/selectByUser"; //根据当前登陆的医政用户查询医院信息
+
+const updateHospitalByCurrentUserUrl = "/hospital/update"; //根据当前登陆的医政用户修改医院信息
+
 const uploadFileUrl = "/file/upload";
 
 
