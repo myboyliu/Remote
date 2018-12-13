@@ -17,13 +17,16 @@
         <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="delete_user" jdbcType="VARCHAR" property="deleteUser"/>
+        <result column="hospital_phone" jdbcType="TIMESTAMP" property="hospitalPhone"/>
+        <result column="consultation_picture_price" jdbcType="TIMESTAMP" property="consultationPicturePrice"/>
+        <result column="consultation_video_price" jdbcType="VARCHAR" property="consultationVideoPrice"/>
         <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime"/>
         <result column="del_flag" jdbcType="CHAR" property="delFlag"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, hospital_name, hospital_alias, hospital_inform, hospital_grade, hospital_weight, 
     type_id, city_id, activation_flag, order_weight, create_user, create_time, update_user, 
-    update_time, delete_user, delete_time, del_flag
+    update_time, delete_user, delete_time, del_flag,hospital_phone,consultation_picture_price,consultation_video_price
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
@@ -141,6 +144,15 @@
             <if test="deleteTime != null">
                 delete_time,
             </if>
+            <if test="hospitalPhone != null">
+                hospital_phone,
+            </if>
+            <if test="consultationPicturePrice != null">
+                consultation_picture_price,
+            </if>
+            <if test="consultationVideoPrice != null">
+                consultation_video_price,
+            </if>
             <if test="delFlag != null">
                 del_flag,
             </if>
@@ -194,6 +206,15 @@
             <if test="deleteTime != null">
                 #{deleteTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="hospitalPhone != null">
+                #{hospitalPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="consultationPicturePrice != null">
+                #{consultationPicturePrice,jdbcType=VARCHAR},
+            </if>
+            <if test="consultationVideoPrice != null">
+                #{consultationVideoPrice,jdbcType=VARCHAR},
+            </if>
             <if test="delFlag != null">
                 #{delFlag,jdbcType=CHAR},
             </if>
@@ -246,6 +267,15 @@
             </if>
             <if test="deleteTime != null">
                 delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="hospitalPhone != null">
+                hospital_phone = #{hospitalPhone,jdbcType=CHAR},
+            </if>
+            <if test="consultationPicturePrice != null">
+                consultation_picture_price = #{consultationPicturePrice,jdbcType=CHAR},
+            </if>
+            <if test="consultationVideoPrice != null">
+                consultation_video_price = #{consultationVideoPrice,jdbcType=CHAR},
             </if>
             <if test="delFlag != null">
                 del_flag = #{delFlag,jdbcType=CHAR},

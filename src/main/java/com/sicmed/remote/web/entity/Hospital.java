@@ -33,7 +33,6 @@ public class Hospital extends BaseEntity {
     private Integer hospitalWeight;
 
     @Size(max = 32, min = 32, message = "typeId长度错误")
-    @NotBlank(message = "typeId is null!")
     private String typeId;
 
     @Size(max = 32, min = 32, message = "cityId长度错误")
@@ -45,4 +44,13 @@ public class Hospital extends BaseEntity {
     @Size(min = 1, max = 4, message = "orderWeight长度有误")
     private String orderWeight;
 
+    @NotBlank(message = "hospitalPhone is null")
+    @Size(max = 32, message = "hospital_phone 长度过长")
+    private String hospitalPhone;
+
+    @NotBlank(message = "consultationPicturePrice is null")
+    private String consultationPicturePrice;
+
+    @NotBlank(message = "consultationVideoPrice is null")
+    private String consultationVideoPrice;
 }

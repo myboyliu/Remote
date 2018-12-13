@@ -1,6 +1,8 @@
 package com.sicmed.remote.web.controller;
 
 import com.sicmed.remote.web.entity.Hospital;
+import com.sicmed.remote.web.entity.UserDetail;
+import com.sicmed.remote.web.mapper.UserDetailMapper;
 import com.sicmed.remote.web.service.HospitalService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,5 +136,18 @@ public class HospitalController extends BaseController {
         }
 
         return badRequestOfSelect("查询所有医院失败");
+    }
+
+    /**
+     * token获取,修改对应的医院信息
+     */
+    @GetMapping(value = "selectByUser")
+    public Map selectByUser() {
+
+        String userId = getRequestToken();
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        String hospitalId = userDetail.getHospitalId();
+        Hospital hospital1 = hospitalService.getByPrimaryKey(hospitalId);
+        return succeedRequest(hospital1);
     }
 }
