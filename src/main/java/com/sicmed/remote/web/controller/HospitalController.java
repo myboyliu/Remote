@@ -83,7 +83,7 @@ public class HospitalController extends BaseController {
 
         int i = hospitalService.updateByPrimaryKeySelective(hospital);
         if (i > 0) {
-            return succeedRequestOfUpdate("更新hospital成功");
+            return succeedRequestOfUpdate(hospital);
         }
         return badRequestOfUpdate("更新hospital失败");
     }
@@ -139,7 +139,7 @@ public class HospitalController extends BaseController {
     }
 
     /**
-     * token获取,修改对应的医院信息
+     * token获取对应的医院信息
      */
     @GetMapping(value = "selectByUser")
     public Map selectByUser() {
