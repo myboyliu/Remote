@@ -5,7 +5,6 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 
 
 /**
@@ -14,7 +13,7 @@ import java.io.Serializable;
  */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserDetail extends BaseEntity implements Serializable {
+public class UserDetail extends BaseEntity {
     private String id;
 
     @NotBlank(message = "userName is null")

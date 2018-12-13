@@ -249,6 +249,10 @@ public class UserController extends BaseController {
 
     /**
      * 个人中心信息修改
+     *
+     * @param phoneNumber
+     * @param idTypeName
+     * @param userStrong
      */
     @PostMapping(value = "modifyPersonal")
     public Map modifyPersonal(String phoneNumber, String idTypeName, String userStrong) {
