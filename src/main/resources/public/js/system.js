@@ -1,101 +1,73 @@
-function selectSelfHospital() {
+//  查询医院信息
+var hospitalId = '';
+var oldHospitalName = '';
+var oldHospitalTel = '';
+var oldImgPic = '';
+var oldVideoPic = '';
+var newHospitalName = '';
+var newHospitalTel = '';
+var newImgPic = '';
+var newVideoPic = '';
+
+var oldName = ''; // 旧名字
+var oldMoney = ''; // 旧图文价格
+var oldMoneyVideo = ''; //旧视频价格
+var newName = ''; // 新名字
+var newMoney = ''; // 新图文价格
+var newMoneyVideo = ''; // 新视频价格
+var expertId = '';
+var operationIndex = '';
+function renderHospitalView(result) {
     $(".promptText").show();
     $(".doctorContent").hide();
-    $.ajax({
-        type: 'GET',
-        url: IP + 'hospital/selectSelfHospital',
-        dataType: 'json',
-        xhrFields: {
-            withCredentials: true
-        },
-        crossDomain: true,
-        global: false,
-        success: function (data) {
-            console.log(data)
-            if (data.status == 200) {
-                hospitalId = data.id;
-                getDeptList(data.hospital.id);
-                getSpecialistType(data.hospital.id);
-                oldHospitalName = data.hospital.name;
-                oldHospitalTel = data.hospital.phone;
-                oldImgPic = data.hospital.price;
-                oldVideoPic = data.hospital.priceVideo;
-                newHospitalName = data.hospital.name;
-                newHospitalTel = data.hospital.phone;
-                newImgPic = data.hospital.price;
-                newVideoPic = data.hospital.priceVideo;
-                $('.hospitalName').val(data.hospital.name);
-                $('.hospitalTel').val(data.hospital.phone);
-                $('.imgPic').val(data.hospital.price);
-                $('.videoPic').val(data.hospital.priceVideo)
-            } else if (data.status == 250) {
-                // 未登录操作
-                window.location = '/yilaiyiwang/login/login.html';
-            } else {
-                // 其他操作
-            }
-        },
-        error: function (err) {
-            console.log(err);
-        },
-    })
+
+    $('#hospitalId').val(result.id);
+    $('.hospitalName').val(result.hospitalName);
+    $('.hospitalTel').val(result.hospitalPhone);
+    $('.imgPic').val(result.consultationPicturePrice);
+    $('.videoPic').val(result.consultationVideoPrice)
 }
 
 function updateHospital() {
-    $.ajax({
-        type: 'POST',
-        url: IP + 'hospital/updateSelfHospital',
-        dataType: 'json',
-        data: {
-            "addressId": '',
-            "name": $('.hospitalName').val(),
-            "details": '',
-            "phone": $('.hospitalTel').val(),
-            "price": $('.imgPic').val(),
-            "priceVideo": $('.videoPic').val(),
-        },
-        xhrFields: {
-            withCredentials: true
-        },
-        crossDomain: true,
-        success: function (data) {
-            console.log(data)
-            if (data.status == 200) {
-                var _$ = layui.jquery;
-                layer.open({
-                    type: 1,
-                    title: '',
-                    area: ['340px', '200px'],
-                    closeBtn: false,
-                    shade: [0.1, '#000000'],
-                    shadeClose: false,
-                    time: 2000,
-                    content: _$('.successBox'),
-                });
-                setTimeout(function () {
-                    window.location.reload();
-                }, 2000)
-            } else if (data.status == 250) {
-                // 未登录操作
-                window.location = '/yilaiyiwang/login/login.html';
-            } else {
-                var _$ = layui.jquery;
-                layer.open({
-                    type: 1,
-                    title: '',
-                    area: ['340px', '200px'],
-                    closeBtn: false,
-                    shade: [0.1, '#000000'],
-                    shadeClose: false,
-                    time: 2000,
-                    content: _$('.loseBox'),
-                });
-            }
-        },
-        error: function (err) {
-            console.log(err);
-        },
-    })
+    var data = new FormData();
+
+    data.append("id", $("#hospitalId").val());
+    data.append("hospitalName", $(".hospitalName").val());
+    data.append("hospitalPhone", $(".hospitalTel").val());
+    data.append("consultationPicturePrice", $(".imgPic").val());
+    data.append("consultationVideoPrice", $(".videoPic").val());
+
+    ajaxRequest("POST", updateHospitalByCurrentUserUrl, data, false, false, true, updateHospitalSuccess, updateHospitalFiled, null);
+
+    function updateHospitalSuccess(result) {
+        renderHospitalView(result);
+        var _$ = layui.jquery;
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['340px', '200px'],
+            closeBtn: false,
+            shade: [0.1, '#000000'],
+            shadeClose: false,
+            time: 2000,
+            content: _$('.successBox'),
+        });
+    }
+
+    function updateHospitalFiled() {
+        var _$ = layui.jquery;
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['340px', '200px'],
+            closeBtn: false,
+            shade: [0.1, '#000000'],
+            shadeClose: false,
+            time: 2000,
+            content: _$('.loseBox'),
+        });
+    }
+
 }
 
 function getBranchList() {
@@ -288,14 +260,13 @@ function updateBranchList() {
 }
 
 /** 渲染专家类型列表*/
-function renderSpecialistTypeView(a) {
-    var array = [];
+function renderSpecialistTypeView(array) {
     var _html = '';
     for (var i = 0; i < array.length; i++) {
         _html += '<tr name="' + array[i].id + '">\
-                        <td><input class="nameInput" readonly="readonly" type="text" value="' + array[i].name + '" placeholder="请输入"></td>\
-                        <td><input class="imgPicInput" readonly="readonly" type="text" value="' + array[i].money + '" placeholder="请输入"></td>\
-                        <td><input class="videoPicInput" readonly="readonly" type="text" value="' + array[i].moneyVideo + '" placeholder="请输入"></td>\
+                        <td><input maxlength="10" class="nameInput" readonly="readonly" type="text" value="' + array[i].specialistName + '" placeholder="请输入"></td>\
+                        <td><input maxlength="9" class="imgPicInput" readonly="readonly" type="text" value="' + array[i].consultationPicturePrice + '" placeholder="请输入"></td>\
+                        <td><input maxlength="9" class="videoPicInput" readonly="readonly" type="text" value="' + array[i].consultationVideoPrice + '" placeholder="请输入"></td>\
                         <td>\
                             <a class="delBtn" href="javascript:;">删除</a>\
                             <a class="modifyBtn" href="javascript:;">修改</a>\
@@ -307,8 +278,11 @@ function renderSpecialistTypeView(a) {
 }
 
 $(function () {
-    // 专家类型与诊费
-    ajaxRequest("GET", getSpecialistTypeByCurrentUser, null, false, renderSpecialistTypeView(), null, null);
+    /** 查询医院信息 */
+    ajaxRequest("GET", getHospitalByCurrentUserUrl, null, false, false, true, renderHospitalView, null, null);
+
+    /** 专家类型与诊费 */
+    ajaxRequest("GET", getSpecialistTypeByCurrentUser, null, false, false, false, renderSpecialistTypeView, null, null);
 
     var doctorInfo = {};
 
@@ -339,18 +313,6 @@ $(function () {
         $('.mainContent > div').hide().eq(2).show();
         localStorage.removeItem('lookDoctorId');
     }
-    //  查询医院信息
-    var hospitalId = '';
-    var oldHospitalName = '';
-    var oldHospitalTel = '';
-    var oldImgPic = '';
-    var oldVideoPic = '';
-    var newHospitalName = '';
-    var newHospitalTel = '';
-    var newImgPic = '';
-    var newVideoPic = '';
-    /** 查询医院信息 */
-    selectSelfHospital();
 
 
     // 医院信息
@@ -400,7 +362,6 @@ $(function () {
 
     // 修改按钮
     $('.hospitalName,.hospitalTel,.imgPic,.videoPic').bind('input propertychange', function () {
-        //   console.log(1);
         if ($('.hospitalName').val() != '' && $('.hospitalTel').val() != '' && $('.imgPic').val() != '' && $('.videoPic').val() != '' || oldHospitalName != newHospitalName || oldHospitalTel != newHospitalTel || oldImgPic != newImgPic || oldVideoPic != newVideoPic) {
             $('.submitBtn').addClass('active');
             $(".submitBtn").attr('disabled', false);
@@ -1299,15 +1260,7 @@ $(function () {
         })
     })
 
-    var oldName = ''; // 旧名字
-    var oldMoney = ''; // 旧图文价格
-    var oldMoneyVideo = ''; //旧视频价格
-    var newName = ''; // 新名字
-    var newMoney = ''; // 新图文价格
-    var newMoneyVideo = ''; // 新视频价格
-    var expertId = '';
-    var operationIndex = '';
-    var hospitalId = '';
+
     // 修改
     $('.expertTypeTbody').delegate('.modifyBtn', 'click', function () {
         operationIndex = $(this).parents('tr').index();
@@ -1381,10 +1334,10 @@ $(function () {
         } else {
             // 删除专家类型
             var data = new FormData();
-            data.append("id", expertId);
-            ajaxRequest("POST", deleteSpecialistType, data, deleteSuccess(), null, null);
+            data.append("specialistTypeId", expertId);
+            ajaxRequest("POST", deleteSpecialistType, data, false, false, true, deleteSpecialistTypeSuccess, null, null);
 
-            function deleteSuccess() {
+            function deleteSpecialistTypeSuccess() {
                 $('.expertTypeTbody > tr').eq(operationIndex).remove();
                 layer.closeAll();
             }
@@ -1397,9 +1350,9 @@ $(function () {
     // 添加
     $('.addTypeBtn').click(function () {
         $('.expertTypeTbody').append('<tr hospitalId="" name="">\
-            <td><input class="nameInput revisability" type="text" value="" placeholder="请输入"></td>\
-            <td><input class="imgPicInput revisability" type="text" value="" placeholder="请输入"></td>\
-            <td><input class="videoPicInput revisability" type="text" value="" placeholder="请输入"></td>\
+            <td><input  maxlength="10"  class="nameInput revisability" type="text" value="" placeholder="请输入"></td>\
+            <td><input  maxlength="9"  class="imgPicInput revisability" type="text" value="" placeholder="请输入"></td>\
+            <td><input  maxlength="9"  class="videoPicInput revisability" type="text" value="" placeholder="请输入"></td>\
             <td>\
                 <a class="delBtn" href="javascript:;">删除</a>\
                 <a style="display: none;" class="modifyBtn" href="javascript:;">修改</a>\
@@ -1436,12 +1389,14 @@ $(function () {
         if (hospitalId == '' && expertId == '') {
             // 添加专家类型
             var data = new FormData();
-            data.append("name", newName);
-            data.append("money", newMoney);
-            data.append("moneyVideo", newMoneyVideo);
-            ajaxRequest("POST", addSpecialistType, data, addSpecialistTypeSuccess(), null, null);
+            data.append("specialistName", newName);
+            data.append("consultationPicturePrice", newMoney);
+            data.append("consultationVideoPrice", newMoneyVideo);
+
+            ajaxRequest("POST", addSpecialistType, data, false, false, true, addSpecialistTypeSuccess, null, null);
 
             function addSpecialistTypeSuccess() {
+                ajaxRequest("GET", getSpecialistTypeByCurrentUser, null, false, false, true, renderSpecialistTypeView, null, null);
                 layer.closeAll();
                 $('.expertTypeTbody > tr').eq(operationIndex).find('input').removeClass('revisability').attr('readonly', 'readonly');
                 $('.expertTypeTbody > tr').eq(operationIndex).find('.modifyBtn').show().html('修改');
@@ -1449,21 +1404,20 @@ $(function () {
         } else {
             // 修改专家类型
             var data = new FormData();
-            data.append("name", newName);
-            data.append("money", newMoney);
-            data.append("moneyVideo", newMoneyVideo);
-            data.append("hospitalId", hospitalId);
+            data.append("specialistName", newName);
+            data.append("consultationPicturePrice", newMoney);
+            data.append("consultationVideoPrice", newMoneyVideo);
             data.append("id", expertId);
-            ajaxRequest("POST", updateSpecialistType, data, updateSpecialistTypeSuccess(), null, null);
+            ajaxRequest("POST", updateSpecialistType, data, false, false, true, updateSpecialistTypeSuccess, null, null);
 
             function updateSpecialistTypeSuccess() {
+                /** 重新渲染专家类型列表 */
+                ajaxRequest("GET", getSpecialistTypeByCurrentUser, null, false, false, true, renderSpecialistTypeView, null, null);
                 layer.closeAll();
                 $('.expertTypeTbody > tr').eq(operationIndex).find('input').removeClass('revisability').attr('readonly', 'readonly');
                 $('.expertTypeTbody > tr').eq(operationIndex).find('.modifyBtn').html('修改');
             }
         }
-        /** 重新渲染专家类型列表 */
-        // ajaxRequest("GET", getSpecialistTypeByCurrentUser, null, true, renderSpecialistTypeView(), null, null);
         newName = '';
         newMoney = '';
         newMoneyVideo = '';
