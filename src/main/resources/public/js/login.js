@@ -1,22 +1,4 @@
-function loginSuccess(responseData) {
-    alert(111);
-    console.log(responseData)
-    // localStorage.setItem('token', responseData.result);
-    //
-    // // localStorage.setItem('userId', data.userId);
-    // localStorage.setItem('name', "测试用户");
-    // // localStorage.setItem('hospitalName', data.hospitalName);
-    // // localStorage.setItem('hospitalId', data.hospitalId);
-    // localStorage.setItem('rolesName', "医政");
-    // layer.close(index);
-    // if (data.rolesName == '医政') {
-    //     // window.location.href = '/workbench/workbench.html';
-    //     window.location.href = '/page/system.html';
-    // } else {
-    //     // window.location.href = '/morkbench/morkbench.html';
-    //     window.location.href = '/page/system.html';
-    // }
-}
+
 
 $(function () {
     // 登录账号input失去焦点时所触发的函数
@@ -52,10 +34,24 @@ $(function () {
             var data = new FormData();
             data.append("userPhone", $('#iphoneInputIn').val());
             data.append("userPassword", $('#passwordUp').val());
-            // var responseData = getDataByAjax("POST", loginUrl, data);
-            ajaxRequest2("POST", loginUrl, data, loginSuccess());
-
-
+            ajaxRequest("POST", loginUrl, data, true, loginSuccess, null, null);
+            /**登陆成功回调方法*/
+            function loginSuccess(responseJson) {
+                localStorage.setItem('token', responseJson);
+                // localStorage.setItem('userId', data.userId);
+                localStorage.setItem('name', "测试用户");
+                // localStorage.setItem('hospitalName', data.hospitalName);
+                // localStorage.setItem('hospitalId', data.hospitalId);
+                localStorage.setItem('rolesName', "医政");
+                layer.close(index);
+                if (responseJson == "医政") {
+                    // window.location.href = '/workbench/workbench.html';
+                    window.location.href = '/page/system.html';
+                } else {
+                    // window.location.href = '/morkbench/morkbench.html';
+                    window.location.href = '/page/system.html';
+                }
+            }
         }
     });
     // 点击回车调用按钮点击事件

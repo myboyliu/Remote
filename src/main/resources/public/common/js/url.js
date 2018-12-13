@@ -14,7 +14,7 @@ const registrationUrl = "/user/register"; //注册接口
 
 const loginUrl = "/user/login"; //登陆接口
 
-const checkPhoneNumber = "/user/login"; //校验注册手机号是否可用
+const checkPhoneNumber = "/user/checkout"; //校验注册手机号是否可用
 
 const getSpecialistTypeByHospitalId = "/specialistType/findByParam"; //根据医院ID查询专家类型列表
 
@@ -24,7 +24,7 @@ const addSpecialistType = "/specialistType/add"; //根据当前登陆的用户�
 
 const updateSpecialistType = "/specialistType/update"; //根据当前登陆的用户查询专家类型列表
 
-const deleteSpecialistType = "/specialistType/delete"; //根据当前登陆的用户查询专家类型列表
+const deleteSpecialistType = "/specialistType/remove"; //根据当前登陆的用户查询专家类型列表
 
 const uploadFileUrl = "/file/upload";
 

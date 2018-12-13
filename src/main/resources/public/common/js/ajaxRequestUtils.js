@@ -15,7 +15,6 @@ function getResponseJsonByAjax(type, url, data) {
             if (data.code == 20000) {
                 responseJson = data.result;
             }
-
         },
         error: function (err) {
             console.log(err);
@@ -81,22 +80,21 @@ function ajaxRequest(type, url, data, async, successCallback, failedCallBack, er
         dataType: 'json',
         data: data,
         async: async,
-        header: {
+        headers: {
             token: localStorage.getItem("token")
         },
         success: function (data) {
-            switch (data.code) {
-                case 20000:
-                    break;
-                case 40000:
-                    break;
-                case 50000:
-                    break;
+            console.log(data);
+            if (data.code == 20000) {
+                successCallback(data.result);
+            }else if(data.code == 40000){
+                failedCallBack();
+            }else if(data.code == 50000){
+
             }
         },
         error: function (err) {
             errorCallBack();
-            return;
         }
     });
 }
