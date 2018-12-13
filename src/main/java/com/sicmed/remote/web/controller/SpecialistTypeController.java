@@ -48,8 +48,9 @@ public class SpecialistTypeController extends BaseController {
         String userId = getRequestToken();
 
         UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
-        specialistType.setHospitalId(userDetail.getHospitalId());
-
+        if (userDetail != null) {
+            specialistType.setHospitalId(userDetail.getHospitalId());
+        }
         int i = specialistTypeService.insertSelective(specialistType);
 
         while (i > 0) {
