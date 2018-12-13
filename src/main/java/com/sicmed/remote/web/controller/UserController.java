@@ -5,20 +5,15 @@ import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.web.bean.UserControllerBean;
 import com.sicmed.remote.web.entity.UserAccount;
-import com.sicmed.remote.web.entity.UserCaseType;
 import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.entity.UserSign;
 import com.sicmed.remote.web.service.UserAccountService;
 import com.sicmed.remote.web.service.UserCaseTypeService;
 import com.sicmed.remote.web.service.UserDetailService;
 import com.sicmed.remote.web.service.UserSignService;
-import com.sun.xml.internal.ws.server.ServerRtException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.ibatis.annotations.Param;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.connection.ReactiveSetCommands;
 import org.springframework.util.DigestUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -196,7 +191,11 @@ public class UserController extends BaseController {
             return badRequestOfInsert("更新用户登录信息失败");
         }
 
-        return succeedRequest(resultUserAccount.getId());
+        String userId = resultUserAccount.getId();
+        UserDetail userDetail = userDetailService.getByPrimaryKey(userId);
+        redisTemplate.opsForValue().set(userId, userDetail);
+
+        return succeedRequest(userDetail);
     }
 
     /**
