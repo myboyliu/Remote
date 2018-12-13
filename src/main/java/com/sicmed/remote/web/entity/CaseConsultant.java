@@ -2,7 +2,6 @@ package com.sicmed.remote.web.entity;
 
 import lombok.Data;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -11,7 +10,7 @@ import java.util.Date;
  * @version 1.0
  */
 @Data
-public class CaseConsultant extends BaseEntity implements Serializable {
+public class CaseConsultant extends BaseEntity {
     private String id;
 
     private String applyUserId;

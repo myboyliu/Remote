@@ -2,7 +2,6 @@ package com.sicmed.remote.web.entity;
 
 import lombok.Data;
 
-import java.io.Serializable;
 
 
 /**
@@ -10,7 +9,7 @@ import java.io.Serializable;
  * @version 1.0
  */
 @Data
-public class CaseContent extends BaseEntity implements Serializable {
+public class CaseContent extends BaseEntity  {
     private String id;
 
     private String recordId;

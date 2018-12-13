@@ -2,7 +2,6 @@ package com.sicmed.remote.web.entity;
 
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,7 +9,7 @@ import java.util.Date;
  * @version 1.0
  */
 @Data
-public class ApplyForm extends BaseEntity implements Serializable {
+public class ApplyForm extends BaseEntity{
 
     private String id;
 
