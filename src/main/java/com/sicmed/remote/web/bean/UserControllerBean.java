@@ -14,5 +14,9 @@ public class UserControllerBean extends UserDetail implements Serializable {
 
     private String userPhone;
 
+    private String signature;
+
+    private String doctorCardFront;
+
     private List<UserCaseType> caseTypeIds;
 }

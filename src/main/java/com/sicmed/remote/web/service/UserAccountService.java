@@ -66,7 +66,7 @@ public class UserAccountService implements BaseService<UserAccount> {
 
     @Override
     public int updateByPrimaryKeySelective(UserAccount userAccount) {
-        return 0;
+        return userAccountMapper.updateByPrimaryKeySelective(userAccount);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class UserAccountService implements BaseService<UserAccount> {
 
     @Override
     public UserAccount getByPrimaryKey(String id) {
-        return null;
+        return userAccountMapper.selectByPrimaryKey(id);
     }
 
     @Override

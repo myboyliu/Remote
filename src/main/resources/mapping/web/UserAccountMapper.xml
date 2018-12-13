@@ -23,13 +23,13 @@
   </sql>
 
     <!--注册用户重复注册查询-->
-    <select id="selectCountPhone" parameterType="java.lang.String">
-        select count(*) from user_account where user_phone = userPhone
+    <select id="selectCountPhone" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(*) from user_account where user_phone = #{userPhone}
     </select>
 
     <!--login查询salt password-->
     <select id="selectSaltPw" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select  id,salt,user_password from user_account where user_phone = #{userPhong}
+        select  id,salt,user_password from user_account where user_phone = #{userPhone}
     </select>
 
     <!--动态查询查询内容-->

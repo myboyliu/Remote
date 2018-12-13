@@ -2,6 +2,7 @@ package com.sicmed.remote.web.mapper;
 
 import com.sicmed.remote.web.bean.UserControllerBean;
 import com.sicmed.remote.web.entity.UserDetail;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserDetailMapper {
     int deleteByPrimaryKey(String id);

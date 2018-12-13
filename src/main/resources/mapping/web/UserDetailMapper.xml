@@ -36,34 +36,47 @@
 
     <!--个人中心页面信息-->
     <resultMap id="UserBeanResultMap" type="com.sicmed.remote.web.bean.UserControllerBean">
-        <result column="ud_name" jdbcType="VARCHAR" property="user_name"/>
+        <result column="ud_name" jdbcType="VARCHAR" property="userName"/>
         <result column="ud_phone" jdbcType="VARCHAR" property="telephone"/>
-        <result column="ud_hospital" jdbcType="VARCHAR" property="hospital_id"/>
-        <result column="ud_branch" jdbcType="VARCHAR" property="branch_id"/>
-        <result column="ud_title" jdbcType="VARCHAR" property="title_name"/>
-        <result column="ud_sti" jdbcType="VARCHAR" property="specialist_type_id"/>
-        <result column="ud_strong" jdbcType="VARCHAR" property="user_strong"/>
-        <result column="ud_cpp" jdbcType="VARCHAR" property="consultation_picture_price"/>
-        <result column="ud_cvp" jdbcType="VARCHAR" property="consultation_video_price"/>
+        <result column="ud_hospital" jdbcType="VARCHAR" property="hospitalId"/>
+        <result column="ud_branch" jdbcType="VARCHAR" property="branchId"/>
+        <result column="ud_title" jdbcType="VARCHAR" property="titleName"/>
+        <result column="ud_sti" jdbcType="VARCHAR" property="specialistTypeId"/>
+        <result column="ud_strong" jdbcType="VARCHAR" property="userStrong"/>
+        <result column="ud_cpp" jdbcType="VARCHAR" property="consultationPicturePrice"/>
+        <result column="ud_cvp" jdbcType="VARCHAR" property="consultationVideoPrice"/>
+        <!--一个userDetailId对应一个userAccount-->
         <result column="ua_phone" jdbcType="VARCHAR" property="userPhone"/>
+
+        <!--一个userDetailId对应一个userSign-->
+
         <result column="us_st" jdbcType="VARCHAR" property="signature"/>
-        <result column="us_dcf" jdbcType="VARCHAR" property="doctor_card_front"/>
+        <result column="us_dcf" jdbcType="VARCHAR" property="doctorCardFront"/>
+
+        <!--一个userDetailId对应多个userCaseType-->
         <collection property="caseTypeIds" ofType="com.sicmed.remote.web.entity.UserCaseType" javaType="ArrayList">
             <result column="ut_cyi" jdbcType="VARCHAR" property="caseTypeId"/>
         </collection>
     </resultMap>
     <select id="selectPersonalCenter" parameterType="java.lang.String" resultMap="UserBeanResultMap">
 select
-ud.user_name ud_name,ud.telephone ud_phone,ud.hospital_id ud_hospital,ud.branch_id ud_branch,ud.title_name ud_title,
-ud.specialist_type_id ud_sti,ud.user_strong ud_strong,ud.consultation_picture_price ud_cpp,
+ud.user_name ud_name,
+ud.telephone ud_phone,
+ud.hospital_id ud_hospital,
+ud.branch_id ud_branch,
+ud.title_name ud_title,
+ud.specialist_type_id ud_sti,
+ud.user_strong ud_strong,
+ud.consultation_picture_price ud_cpp,
 ud.consultation_video_price ud_cvp,
-ua.user_phone ua_phone
-us.signature us_st,us.doctor_card_front us_dcf,
+ua.user_phone ua_phone,
+us.signature us_st,
+us.doctor_card_front us_dcf,
 ut.case_type_id ut_cyi
 from user_detail ud
-left join user_account ua as ua.id = ud.id
-left join user_sign us as us.id = ud.id
-left  join user_case_type ut as ut.user_id = ud.id
+left join user_account ua on ud.id = ua.id
+left join user_sign us on ud.id = us.id
+left  join user_case_type ut on ud.id = ut.user_id
 where ud.id = #{userId}
     </select>
 

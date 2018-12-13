@@ -15,7 +15,10 @@ import com.sicmed.remote.web.service.UserSignService;
 import com.sun.xml.internal.ws.server.ServerRtException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.ibatis.annotations.Param;
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.ReactiveSetCommands;
 import org.springframework.util.DigestUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -87,6 +90,12 @@ public class UserController extends BaseController {
             return fieldErrorsBuilder(brOfUserAccount);
         } else if (brOfUserDet.hasErrors()) {
             return fieldErrorsBuilder(brOfUserDet);
+        }
+
+        String userPhone = userAccount.getUserPhone();
+        int q = userAccountService.selectCountPhone(userPhone);
+        if (q != 0) {
+            return badRequestOfArguments("账号已存在");
         }
 
         LinkedHashMap<String, String> resultMap;
@@ -191,15 +200,47 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 个人中心
+     * 个人中心信息展示
      */
     @GetMapping(value = "personalCenter")
     public Map personalCenter() {
 
-//        String userId = getRequestToken();
-        String userId = "f4e8a40dfde311e88ede487b6bd31bf7";
+        String userId = getRequestToken();
         UserControllerBean userControllerBean = userDetailService.selectPersonalCenter(userId);
-        System.out.println(userControllerBean.toString() + "-----------------------------------------");
-        return null;
+        return succeedRequestOfSelect(userControllerBean);
+    }
+
+    /**
+     * 个人中心密码修改
+     */
+    @PostMapping(value = "modifyPassword")
+    public Map personalModifyPassword(@NotBlank String oldPassword, @NotBlank String newPassword) {
+
+        String userId = getRequestToken();
+        UserAccount userAccount = userAccountService.getByPrimaryKey(userId);
+
+        if (userAccount == null) {
+            return badRequestOfArguments("查询用户信息失败");
+        }
+        String salt = userAccount.getSalt();
+        String passWord = userAccount.getUserPassword();
+        String encryptionOldPassWord = DigestUtils.md5DigestAsHex((oldPassword + salt).getBytes());
+
+        if (!passWord.equals(encryptionOldPassWord)) {
+            return badRequestOfArguments("旧密码输入错误");
+        }
+
+        String newSalt = RandomStringUtils.randomAlphanumeric(32);
+        String encryptionNewPassWord = DigestUtils.md5DigestAsHex((newPassword + newSalt).getBytes());
+
+        userAccount.setSalt(newSalt);
+        userAccount.setUserPassword(encryptionNewPassWord);
+        userAccount.setUpdateTime(new Date());
+        int i = userAccountService.updateByPrimaryKeySelective(userAccount);
+        if (i > 0) {
+            return succeedRequest("修改密码成功");
+        }
+
+        return badRequestOfUpdate("修改密码失败");
     }
 }
