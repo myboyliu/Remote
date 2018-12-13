@@ -13,6 +13,7 @@ import com.sicmed.remote.web.service.UserDetailService;
 import com.sicmed.remote.web.service.UserSignService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.validation.BindingResult;
@@ -249,10 +250,62 @@ public class UserController extends BaseController {
     /**
      * 个人中心信息修改
      */
-/*    @PostMapping(value = "modifyPersonal")
-    public Map modifyPersonal(String phoneNumber, String need_case_type, String user_strong) {
+    @PostMapping(value = "modifyPersonal")
+    public Map modifyPersonal(String phoneNumber, String idTypeName, String userStrong) {
 
         String userId = getRequestToken();
+        UserDetail userDetail = userDetailService.getByPrimaryKey(userId);
+        LinkedHashMap<String, String> resultMap = null;
+        List<String> idList = new ArrayList<>();
+        if (StringUtils.isNotBlank(phoneNumber)) {
+            // 更新用户电话
+            userDetail.setTelephone(phoneNumber);
+        }
+        if (StringUtils.isNotBlank(userStrong)) {
+            // 更新擅长
+            userDetail.setUserStrong(userStrong);
+        }
+        if (StringUtils.isNotBlank(idTypeName)) {
+            try {
+                resultMap = JSON.parseObject(idTypeName, new TypeReference<LinkedHashMap<String, String>>() {
+                }, Feature.OrderedField);
+            } catch (Exception e) {
+                return badRequestOfArguments("idTypeName 格式错误");
+            }
+        }
+        System.out.println(resultMap + "-------------------------------");
+        if (resultMap != null && !resultMap.isEmpty()) {
 
-    }*/
+            StringBuffer stringBuffer = new StringBuffer();
+            for (Map.Entry<String, String> m : resultMap.entrySet()) {
+                idList.add(m.getKey());
+                stringBuffer.append(m.getValue() + "、");
+            }
+            stringBuffer.deleteCharAt(stringBuffer.length() - 1);
+            // 病例类型名称集合
+            String typeName = stringBuffer.toString();
+
+            userDetail.setNeedCaseType(typeName);
+
+            // 删除原userId对应的UserCaseType字段,并添加新的 UserCaseType
+            int i = userCaseTypeService.deleteByUserId(userId);
+            if (i < 1) {
+                return badRequestOfDelete("删除原UserCaseType失败");
+            }
+            Map<String, String> userCaseTypeMap = new LinkedHashMap<>();
+            for (String id : idList) {
+                userCaseTypeMap.put(id, userId);
+            }
+            int k = userCaseTypeService.insertMulitple(userCaseTypeMap);
+            if (k < 1) {
+                return badRequestOfInsert("添加UserCaseType失败");
+            }
+        }
+        int j = userDetailService.updateByPrimaryKeySelective(userDetail);
+        if (j < 1) {
+            return badRequestOfUpdate("更新个人信息失败");
+        }
+
+        return succeedRequest(userDetail);
+    }
 }

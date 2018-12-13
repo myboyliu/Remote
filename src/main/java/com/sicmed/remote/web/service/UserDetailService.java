@@ -30,7 +30,7 @@ public class UserDetailService implements BaseService<UserDetail> {
 
     @Override
     public int updateByPrimaryKeySelective(UserDetail userDetail) {
-        return 0;
+        return userDetailMapper.updateByPrimaryKeySelective(userDetail);
     }
 
     @Override

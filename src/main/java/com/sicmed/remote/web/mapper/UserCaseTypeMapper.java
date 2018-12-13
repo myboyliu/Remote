@@ -19,4 +19,6 @@ public interface UserCaseTypeMapper {
     int updateByPrimaryKey(UserCaseType record);
 
     int insertMulitple(@Param("map") Map<String, String> mymap);
+
+    int deleteByUserId(String userId);
 }

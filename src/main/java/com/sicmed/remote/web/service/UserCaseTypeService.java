@@ -18,6 +18,10 @@ public class UserCaseTypeService implements BaseService<UserCaseType> {
         return userCaseTypeMapper.insertMulitple(map);
     }
 
+    public int deleteByUserId(String userId) {
+        return userCaseTypeMapper.deleteByUserId(userId);
+    }
+
     @Override
 
     public int insertSelective(UserCaseType userCaseType) {

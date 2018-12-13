@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -12,6 +13,7 @@ import java.io.Serializable;
  * @version 1.0
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDetail extends BaseEntity implements Serializable {
     private String id;
 
