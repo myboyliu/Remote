@@ -17,9 +17,9 @@
         <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="delete_user" jdbcType="VARCHAR" property="deleteUser"/>
-        <result column="hospital_phone" jdbcType="TIMESTAMP" property="hospitalPhone"/>
-        <result column="consultation_picture_price" jdbcType="TIMESTAMP" property="consultationPicturePrice"/>
-        <result column="consultation_video_price" jdbcType="VARCHAR" property="consultationVideoPrice"/>
+        <result column="hospital_phone" jdbcType="VARCHAR" property="hospitalPhone"/>
+        <result column="consultation_picture_price" jdbcType="INTEGER" property="consultationPicturePrice"/>
+        <result column="consultation_video_price" jdbcType="INTEGER" property="consultationVideoPrice"/>
         <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime"/>
         <result column="del_flag" jdbcType="CHAR" property="delFlag"/>
     </resultMap>
@@ -210,10 +210,10 @@
                 #{hospitalPhone,jdbcType=VARCHAR},
             </if>
             <if test="consultationPicturePrice != null">
-                #{consultationPicturePrice,jdbcType=VARCHAR},
+                #{consultationPicturePrice,jdbcType=INTEGER},
             </if>
             <if test="consultationVideoPrice != null">
-                #{consultationVideoPrice,jdbcType=VARCHAR},
+                #{consultationVideoPrice,jdbcType=INTEGER},
             </if>
             <if test="delFlag != null">
                 #{delFlag,jdbcType=CHAR},
@@ -269,13 +269,13 @@
                 delete_time = #{deleteTime,jdbcType=TIMESTAMP},
             </if>
             <if test="hospitalPhone != null">
-                hospital_phone = #{hospitalPhone,jdbcType=CHAR},
+                hospital_phone = #{hospitalPhone,jdbcType=VARCHAR},
             </if>
             <if test="consultationPicturePrice != null">
-                consultation_picture_price = #{consultationPicturePrice,jdbcType=CHAR},
+                consultation_picture_price = #{consultationPicturePrice,jdbcType=INTEGER},
             </if>
             <if test="consultationVideoPrice != null">
-                consultation_video_price = #{consultationVideoPrice,jdbcType=CHAR},
+                consultation_video_price = #{consultationVideoPrice,jdbcType=INTEGER},
             </if>
             <if test="delFlag != null">
                 del_flag = #{delFlag,jdbcType=CHAR},

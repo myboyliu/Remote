@@ -48,9 +48,13 @@ public class Hospital extends BaseEntity {
     @Size(max = 32, message = "hospital_phone 长度过长")
     private String hospitalPhone;
 
-    @NotBlank(message = "consultationPicturePrice is null")
-    private String consultationPicturePrice;
+    @NotNull(message = "consultationPicturePrice is null")
+    @Max(value = 9,message = "超出最大数值")
+    @Min(value = 1,message = "数值过小")
+    private Integer consultationPicturePrice;
 
-    @NotBlank(message = "consultationVideoPrice is null")
-    private String consultationVideoPrice;
+    @NotNull(message = "consultationVideoPrice is null")
+    @Max(value = 9,message = "超出最大数值")
+    @Min(value = 1,message = "数值过小")
+    private Integer consultationVideoPrice;
 }
