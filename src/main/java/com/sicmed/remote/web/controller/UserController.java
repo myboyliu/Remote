@@ -64,7 +64,7 @@ public class UserController extends BaseController {
 
         int i = userAccountService.selectCountPhone(phoneNumber);
         if (i != 0) {
-            return badRequestOfSelect("账号已存在");
+            return badRequestOfArguments("账号已存在");
         }
         return succeedRequest("用户名可用");
     }
@@ -212,6 +212,9 @@ public class UserController extends BaseController {
 
     /**
      * 个人中心密码修改
+     *
+     * @param oldPassword
+     * @param newPassword
      */
     @PostMapping(value = "modifyPassword")
     public Map personalModifyPassword(@NotBlank String oldPassword, @NotBlank String newPassword) {
@@ -243,4 +246,10 @@ public class UserController extends BaseController {
 
         return badRequestOfUpdate("修改密码失败");
     }
+
+/**
+ * 个人中心信息修改
+ */
+    @PostMapping(value = "modifyPersonal")
+    public
 }
