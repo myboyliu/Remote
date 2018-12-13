@@ -250,6 +250,6 @@ public class UserController extends BaseController {
 /**
  * 个人中心信息修改
  */
-    @PostMapping(value = "modifyPersonal")
-    public
+/*    @PostMapping(value = "modifyPersonal")
+    public*/
 }
