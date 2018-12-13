@@ -40,7 +40,7 @@ public class UserDetailService implements BaseService<UserDetail> {
 
     @Override
     public UserDetail getByPrimaryKey(String id) {
-        return null;
+        return userDetailMapper.selectByPrimaryKey(id);
     }
 
     @Override

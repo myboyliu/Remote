@@ -246,9 +246,13 @@ public class UserController extends BaseController {
         return badRequestOfUpdate("修改密码失败");
     }
 
-/**
- * 个人中心信息修改
- */
+    /**
+     * 个人中心信息修改
+     */
 /*    @PostMapping(value = "modifyPersonal")
-    public*/
+    public Map modifyPersonal(String phoneNumber, String need_case_type, String user_strong) {
+
+        String userId = getRequestToken();
+
+    }*/
 }
