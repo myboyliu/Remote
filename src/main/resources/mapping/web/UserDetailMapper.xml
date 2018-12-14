@@ -40,7 +40,8 @@
         <id column="baseBranchId" jdbcType="VARCHAR" property="id"/>
         <result column="baseBranchName" jdbcType="VARCHAR" property="branchName"/>
 
-        <collection property="customBranchList" ofType="com.sicmed.remote.web.bean.CustomBranchBean" javaType="ArrayList">
+        <collection property="customBranchList" ofType="com.sicmed.remote.web.bean.CustomBranchBean"
+                    javaType="ArrayList">
             <id column="customBranchId" jdbcType="VARCHAR" property="id"/>
             <result column="customBranchName" jdbcType="VARCHAR" property="customName"/>
 
@@ -366,7 +367,7 @@ where ud.id = #{userId}
                 create_user = #{createUser,jdbcType=VARCHAR},
             </if>
             <if test="updateTime != null">
-                update_time = #{updateTime,jdbcType=TIMESTAMP},
+                update_time = now(),
             </if>
             <if test="deleteTime != null">
                 delete_time = #{deleteTime,jdbcType=TIMESTAMP},

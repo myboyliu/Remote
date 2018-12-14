@@ -25,7 +25,7 @@ public class UserSignService implements BaseService<UserSign> {
 
     @Override
     public int updateByPrimaryKeySelective(UserSign userSign) {
-        return 0;
+        return userSignMapper.updateByPrimaryKeySelective(userSign);
     }
 
     @Override

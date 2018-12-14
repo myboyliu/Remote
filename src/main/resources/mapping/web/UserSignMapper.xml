@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sicmed.remote.web.mapper.UserSignMapper">
-  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.UserSign">
-    <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="signature" jdbcType="VARCHAR" property="signature" />
-    <result column="id_card_front" jdbcType="VARCHAR" property="idCardFront" />
-    <result column="id_card_contrary" jdbcType="VARCHAR" property="idCardContrary" />
-    <result column="doctor_card_front" jdbcType="VARCHAR" property="doctorCardFront" />
-    <result column="doctor_card_contrary" jdbcType="VARCHAR" property="doctorCardContrary" />
-    <result column="work_card" jdbcType="VARCHAR" property="workCard" />
-    <result column="approve_status" jdbcType="VARCHAR" property="approveStatus" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
-    <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime" />
-    <result column="delete_user" jdbcType="VARCHAR" property="deleteUser" />
-    <result column="del_flag" jdbcType="VARCHAR" property="delFlag" />
-  </resultMap>
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.UserSign">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="signature" jdbcType="VARCHAR" property="signature"/>
+        <result column="id_card_front" jdbcType="VARCHAR" property="idCardFront"/>
+        <result column="id_card_contrary" jdbcType="VARCHAR" property="idCardContrary"/>
+        <result column="doctor_card_front" jdbcType="VARCHAR" property="doctorCardFront"/>
+        <result column="doctor_card_contrary" jdbcType="VARCHAR" property="doctorCardContrary"/>
+        <result column="work_card" jdbcType="VARCHAR" property="workCard"/>
+        <result column="approve_status" jdbcType="VARCHAR" property="approveStatus"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime"/>
+        <result column="delete_user" jdbcType="VARCHAR" property="deleteUser"/>
+        <result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, signature, id_card_front, id_card_contrary, doctor_card_front, doctor_card_contrary, 
     work_card, approve_status, create_time, create_user, update_time, update_user, delete_time, 
     delete_user, del_flag
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from user_sign
-    where id = #{id,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_sign
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from user_sign
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sicmed.remote.web.entity.UserSign">
+    <insert id="insert" parameterType="com.sicmed.remote.web.entity.UserSign">
     insert into user_sign (id, signature, id_card_front, 
       id_card_contrary, doctor_card_front, doctor_card_contrary, 
       work_card, approve_status, create_time, 
@@ -47,152 +47,152 @@
       #{deleteTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR}, #{delFlag,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.UserSign">
-    insert into user_sign
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="signature != null">
-        signature,
-      </if>
-      <if test="idCardFront != null">
-        id_card_front,
-      </if>
-      <if test="idCardContrary != null">
-        id_card_contrary,
-      </if>
-      <if test="doctorCardFront != null">
-        doctor_card_front,
-      </if>
-      <if test="doctorCardContrary != null">
-        doctor_card_contrary,
-      </if>
-      <if test="workCard != null">
-        work_card,
-      </if>
-      <if test="approveStatus != null">
-        approve_status,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="createUser != null">
-        create_user,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="updateUser != null">
-        update_user,
-      </if>
-      <if test="deleteTime != null">
-        delete_time,
-      </if>
-      <if test="deleteUser != null">
-        delete_user,
-      </if>
-      <if test="delFlag != null">
-        del_flag,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=VARCHAR},
-      </if>
-      <if test="signature != null">
-        #{signature,jdbcType=VARCHAR},
-      </if>
-      <if test="idCardFront != null">
-        #{idCardFront,jdbcType=VARCHAR},
-      </if>
-      <if test="idCardContrary != null">
-        #{idCardContrary,jdbcType=VARCHAR},
-      </if>
-      <if test="doctorCardFront != null">
-        #{doctorCardFront,jdbcType=VARCHAR},
-      </if>
-      <if test="doctorCardContrary != null">
-        #{doctorCardContrary,jdbcType=VARCHAR},
-      </if>
-      <if test="workCard != null">
-        #{workCard,jdbcType=VARCHAR},
-      </if>
-      <if test="approveStatus != null">
-        #{approveStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null">
-        #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null">
-        #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="deleteTime != null">
-        #{deleteTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteUser != null">
-        #{deleteUser,jdbcType=VARCHAR},
-      </if>
-      <if test="delFlag != null">
-        #{delFlag,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.UserSign">
-    update user_sign
-    <set>
-      <if test="signature != null">
-        signature = #{signature,jdbcType=VARCHAR},
-      </if>
-      <if test="idCardFront != null">
-        id_card_front = #{idCardFront,jdbcType=VARCHAR},
-      </if>
-      <if test="idCardContrary != null">
-        id_card_contrary = #{idCardContrary,jdbcType=VARCHAR},
-      </if>
-      <if test="doctorCardFront != null">
-        doctor_card_front = #{doctorCardFront,jdbcType=VARCHAR},
-      </if>
-      <if test="doctorCardContrary != null">
-        doctor_card_contrary = #{doctorCardContrary,jdbcType=VARCHAR},
-      </if>
-      <if test="workCard != null">
-        work_card = #{workCard,jdbcType=VARCHAR},
-      </if>
-      <if test="approveStatus != null">
-        approve_status = #{approveStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null">
-        create_user = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null">
-        update_user = #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="deleteTime != null">
-        delete_time = #{deleteTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteUser != null">
-        delete_user = #{deleteUser,jdbcType=VARCHAR},
-      </if>
-      <if test="delFlag != null">
-        del_flag = #{delFlag,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.UserSign">
+    <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.UserSign">
+        insert into user_sign
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="signature != null">
+                signature,
+            </if>
+            <if test="idCardFront != null">
+                id_card_front,
+            </if>
+            <if test="idCardContrary != null">
+                id_card_contrary,
+            </if>
+            <if test="doctorCardFront != null">
+                doctor_card_front,
+            </if>
+            <if test="doctorCardContrary != null">
+                doctor_card_contrary,
+            </if>
+            <if test="workCard != null">
+                work_card,
+            </if>
+            <if test="approveStatus != null">
+                approve_status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+            <if test="deleteTime != null">
+                delete_time,
+            </if>
+            <if test="deleteUser != null">
+                delete_user,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="signature != null">
+                #{signature,jdbcType=VARCHAR},
+            </if>
+            <if test="idCardFront != null">
+                #{idCardFront,jdbcType=VARCHAR},
+            </if>
+            <if test="idCardContrary != null">
+                #{idCardContrary,jdbcType=VARCHAR},
+            </if>
+            <if test="doctorCardFront != null">
+                #{doctorCardFront,jdbcType=VARCHAR},
+            </if>
+            <if test="doctorCardContrary != null">
+                #{doctorCardContrary,jdbcType=VARCHAR},
+            </if>
+            <if test="workCard != null">
+                #{workCard,jdbcType=VARCHAR},
+            </if>
+            <if test="approveStatus != null">
+                #{approveStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.UserSign">
+        update user_sign
+        <set>
+            <if test="signature != null">
+                signature = #{signature,jdbcType=VARCHAR},
+            </if>
+            <if test="idCardFront != null">
+                id_card_front = #{idCardFront,jdbcType=VARCHAR},
+            </if>
+            <if test="idCardContrary != null">
+                id_card_contrary = #{idCardContrary,jdbcType=VARCHAR},
+            </if>
+            <if test="doctorCardFront != null">
+                doctor_card_front = #{doctorCardFront,jdbcType=VARCHAR},
+            </if>
+            <if test="doctorCardContrary != null">
+                doctor_card_contrary = #{doctorCardContrary,jdbcType=VARCHAR},
+            </if>
+            <if test="workCard != null">
+                work_card = #{workCard,jdbcType=VARCHAR},
+            </if>
+            <if test="approveStatus != null">
+                approve_status = #{approveStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = now(),
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                delete_user = #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.UserSign">
     update user_sign
     set signature = #{signature,jdbcType=VARCHAR},
       id_card_front = #{idCardFront,jdbcType=VARCHAR},
