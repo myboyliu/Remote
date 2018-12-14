@@ -201,12 +201,15 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 个人中心信息展示
+     * 个人中心信息及医政管理中心医生详细信息展示
      */
     @GetMapping(value = "personalCenter")
-    public Map personalCenter() {
+    public Map personalCenter(String userId) {
 
-        String userId = getRequestToken();
+        if (StringUtils.isBlank(userId)) {
+            userId = getRequestToken();
+        }
+
         UserControllerBean userControllerBean = userDetailService.selectPersonalCenter(userId);
         if (userControllerBean == null) {
             return badRequestOfSelect("个人中心查询个人信息失败");
@@ -328,9 +331,12 @@ public class UserController extends BaseController {
     @GetMapping(value = "managementDoctor")
     public Map managementDoctor() {
 
-        // 由登录医政id获取对应医院id
         String userId = getRequestToken();
         UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        if (userDetail == null) {
+            return badRequestOfSelect("redis查询userId对应数据失败");
+        }
+
         String hospitalId = userDetail.getHospitalId();
         // 查出该医院所有医生,并按照科室分类
         List<BranchBean> branchBeans = userDetailService.selectByHospital(hospitalId);
