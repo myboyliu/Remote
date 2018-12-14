@@ -44,7 +44,7 @@ public class BranchController extends BaseController {
         }
         int i = branchService.insertSelective(branch);
 
-        while (i > 0) {
+        if (i > 0) {
             return succeedRequestOfInsert(branch);
         }
         return badRequestOfInsert(branch);
@@ -61,7 +61,7 @@ public class BranchController extends BaseController {
 
         int i = branchService.deleteByPrimaryKey(branchId);
 
-        while (i > 0) {
+        if (i > 0) {
             return succeedRequestOfDelete("");
         }
         return badRequestOfDelete(branchId);
@@ -80,7 +80,7 @@ public class BranchController extends BaseController {
         }
         int i = branchService.updateByPrimaryKeySelective(branch);
 
-        while (i > 0) {
+        if (i > 0) {
             return succeedRequestOfUpdate(branch);
         }
         return badRequestOfUpdate(branch);
@@ -97,7 +97,7 @@ public class BranchController extends BaseController {
 
         Branch branch = branchService.getByPrimaryKey(branchId);
 
-        while (branch == null) {
+        if (branch == null) {
             return badRequestOfSelect(branchId);
         }
         return succeedRequestOfSelect(branch);
@@ -115,7 +115,7 @@ public class BranchController extends BaseController {
         }
         List<Branch> branchList = branchService.findByDynamicParam(branch);
 
-        while (branchList.isEmpty()) {
+        if (branchList.isEmpty()) {
             return badRequestOfSelect("");
         }
         return succeedRequestOfSelect(branchList);
@@ -131,7 +131,7 @@ public class BranchController extends BaseController {
 
         List<BranchBean> branchBeanList = branchService.findMultilevelListByDynamicParam(null);
 
-        while (branchBeanList.isEmpty()) {
+        if (branchBeanList.isEmpty()) {
             return badRequestOfSelect("");
         }
         return succeedRequestOfSelect(branchBeanList);
