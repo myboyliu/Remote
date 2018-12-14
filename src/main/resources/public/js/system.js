@@ -609,8 +609,6 @@ $(function () {
     }
 
 
-}
-
 // 获取职称列表
 $.ajax({
     type: 'GET',
