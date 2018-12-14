@@ -259,6 +259,8 @@
         <collection property="customBranchList" ofType="com.sicmed.remote.web.bean.CustomBranchBean" javaType="ArrayList">
             <id column="customBranchId" jdbcType="VARCHAR" property="id"/>
             <result column="customBranchName" jdbcType="VARCHAR" property="customName"/>
+            <result column="childBranchId" jdbcType="VARCHAR" property="baseBranchId"/>
+            <result column="childBranchName" jdbcType="VARCHAR" property="baseBranchName"/>
         </collection>
     </resultMap>
     <sql id="Bean_Column_List">

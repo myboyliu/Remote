@@ -17,5 +17,8 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CustomBranchBean extends CustomBranch implements Serializable {
 
+    private String baseBranchId;
+    private String baseBranchName;
+
     private List<UserBean> userBeanList;
 }
