@@ -1,9 +1,11 @@
 package com.sicmed.remote.web.service;
 
 import com.sicmed.remote.web.bean.BranchBean;
+import com.sicmed.remote.web.bean.UserBean;
 import com.sicmed.remote.web.bean.UserControllerBean;
 import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.mapper.UserDetailMapper;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,13 @@ public class UserDetailService implements BaseService<UserDetail> {
      */
     public List<BranchBean> selectByHospital(String hospitalId) {
         return userDetailMapper.selectByHospital(hospitalId);
+    }
+
+    /**
+     * branchId查询对应医生
+     */
+    public List<UserBean> selectByBranchId(String branchId) {
+        return userDetailMapper.selectByBranchId(branchId);
     }
 
     @Override

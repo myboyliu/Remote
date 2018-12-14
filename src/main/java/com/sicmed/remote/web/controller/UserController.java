@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.web.bean.BranchBean;
+import com.sicmed.remote.web.bean.UserBean;
 import com.sicmed.remote.web.bean.UserControllerBean;
 import com.sicmed.remote.web.entity.UserAccount;
 import com.sicmed.remote.web.entity.UserDetail;
@@ -13,6 +14,7 @@ import com.sicmed.remote.web.service.UserCaseTypeService;
 import com.sicmed.remote.web.service.UserDetailService;
 import com.sicmed.remote.web.service.UserSignService;
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+import javafx.scene.chart.ValueAxis;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -373,14 +375,17 @@ public class UserController extends BaseController {
 
     /**
      * 医生通讯录医生信息展示
+     *
+     * @param branchId
      */
+    @GetMapping(value = "addressBook")
     public Map addressBook(String branchId) {
 
         if (StringUtils.isBlank(branchId)) {
             return badRequestOfArguments("branchId为空");
         }
 
-//        List<UserDetail> userDetails = userDetailService.findByDynamicParam()
-        return null;
+        List<UserBean> userBeans = userDetailService.selectByBranchId(branchId);
+        return succeedRequest(userBeans);
     }
 }

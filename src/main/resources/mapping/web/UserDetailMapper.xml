@@ -66,9 +66,9 @@
     </sql>
 
     <sql id="Bean_Left_Join">
-        LEFT JOIN base_branch childBranch ON childBranch.parent_id = baseBranch.id
-        LEFT JOIN custom_branch customBranch ON customBranch.branch_id = childBranch.id AND customBranch.hospital_id = #{hospitalId}
-        LEFT JOIN user_detail  userDetail ON userDetail.branch_id = customBranch.id
+        LEFT JOIN base_branch childBranch ON childBranch.parent_id = baseBranch.id AND childBranch.del_flag = "0"
+        LEFT JOIN custom_branch customBranch ON customBranch.branch_id = childBranch.id AND customBranch.hospital_id = #{hospitalId} AND customBranch.del_flag = "0"
+        LEFT JOIN user_detail  userDetail ON userDetail.nch_id = customBranch.id AND userDetail.del_flag = "0"
         LEFT JOIN user_sign  userSign ON userSign.id = userDetail.id
     </sql>
 
@@ -80,6 +80,7 @@
         <include refid="Bean_Left_Join"/>
         WHERE
         baseBranch.parent_id is NULL
+        AND baseBranch.del_flag = "0"
     </select>
 
     <!--个人中心页面信息-->
@@ -128,6 +129,43 @@ left join user_account ua on ud.id = ua.id
 left join user_sign us on ud.id = us.id
 left  join user_case_type ut on ud.id = ut.user_id
 where ud.id = #{userId}
+    </select>
+
+    <!--branchId查询userDetail   医生通讯录医生信息展示-->
+    <resultMap id="MyResultMap" type="com.sicmed.remote.web.bean.UserBean">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
+        <result column="hospital_id" jdbcType="VARCHAR" property="hospitalId"/>
+        <result column="branch_id" jdbcType="VARCHAR" property="branchId"/>
+        <result column="title_name" jdbcType="VARCHAR" property="titleName"/>
+        <result column="specialist_type_id" jdbcType="VARCHAR" property="specialistTypeId"/>
+        <result column="user_strong" jdbcType="VARCHAR" property="userStrong"/>
+        <result column="need_case_type" jdbcType="VARCHAR" property="needCaseType"/>
+        <result column="consultation_picture_price" jdbcType="VARCHAR" property="consultationPicturePrice"/>
+        <result column="consultation_video_price" jdbcType="VARCHAR" property="consultationVideoPrice"/>
+        <result column="us_as" jdbcType="VARCHAR" property="approveStatus"/>
+
+    </resultMap>
+    <select id="selectByBranchId" parameterType="java.lang.String" resultMap="MyResultMap">
+        select
+        ud.id  id ,
+        ud.user_name user_name,
+        ud.telephone telephone,
+        ud.hospital_id hospital_id,
+        ud.branch_id branch_id,
+        ud.title_name title_name,
+        ud.specialist_type_id specialist_type_id,
+        ud.user_strong user_strong,
+        ud.need_case_type need_case_type,
+        ud.consultation_picture_price consultation_picture_price,
+        ud.consultation_video_price consultation_video_price,
+        us.approve_status us_as
+        from user_detail ud
+        left join user_sign us on us.id = ud.id
+        where
+        ud.del_flag = "0"
+        AND ud.branch_id = #{branchId}
     </select>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">

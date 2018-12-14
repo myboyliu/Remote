@@ -1,6 +1,7 @@
 package com.sicmed.remote.web.mapper;
 
 import com.sicmed.remote.web.bean.BranchBean;
+import com.sicmed.remote.web.bean.UserBean;
 import com.sicmed.remote.web.bean.UserControllerBean;
 import com.sicmed.remote.web.entity.UserDetail;
 
@@ -23,4 +24,8 @@ public interface UserDetailMapper {
 
     // hospitalId查询所有UserDetail并按照branchId分类
     List<BranchBean> selectByHospital(String hospitalId);
+
+    // branchId查询所有医生
+    List<UserBean> selectByBranchId(String branchId);
+
 }
