@@ -13,10 +13,10 @@ function renderHospitalSeleted(array) {
 function renderBranchSeleted(array) {
     var _html = '<option value="">请选择科室</option>';
     for (var i = 0; i < array.length; i++) {
-        if (array[i].deptName == '远程医学中心') {
-            managerHospitalDeptId = array[i].hospitalDeptId;
+        var childArray = array[i].childList;
+        for (var j = 0; j < childArray.length; j++) {
+            _html += '<option value="' + childArray[j].id + '">' + childArray[j].customName + '</option>';
         }
-        _html += '<option value="' + array[i].id + '">' + array[i].branchName + '</option>';
     }
     $('.quiz3').html(_html);
 };
@@ -111,15 +111,14 @@ $(function () {
     // 医院下拉列表切换
     $('.quiz1').change(function () {
         /**查询科室列表*/
-        ajaxRequest("GET", getAllBranch, null, true, false, true, renderBranchSeleted, emptyBranch, null);
+        var data = {"hospitalId": $('.quiz1').val()};
+        ajaxRequest("GET", getBranchByHospitalIdUrl, data, true, "application/json", false, renderBranchSeleted, emptyBranch, null);
         function emptyBranch() {
             var branch_html = '<option value="">请选择科室</option>';
             $('.quiz3').html(branch_html);
         }
-
         /**查询专家类型列表*/
-        var data = {"hospitalId": $('.quiz1').val()};
-        ajaxRequest("GET", getSpecialistTypeByHospitalId, data, true, "application/json", true, renderSpecialistTypeSeleted, emptySpecialistType, null);
+        ajaxRequest("GET", getSpecialistTypeByHospitalId, data, true, "application/json", false, renderSpecialistTypeSeleted, emptySpecialistType, null);
         function emptySpecialistType() {
             var specialistType_html = '<option value="">请选择专家类型</option>';
             $('.quiz4').html(specialistType_html);

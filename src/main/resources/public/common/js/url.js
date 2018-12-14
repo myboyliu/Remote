@@ -6,7 +6,7 @@ const baseUrl = "http://127.0.0.1"; //服务地址
 
 const getAllHospital = "/hospital/select"; //查询所有医院类别
 
-const getAllBranch = "/branch/getAll"; //查询所有科室列表
+const getBranchByHospitalIdUrl = "/custom/branch/getByHospitalId"; //查询所有科室列表
 
 const getAllCaseContentType = "/casecontenttype/selectall"; //查询所有病历类型列表
 
