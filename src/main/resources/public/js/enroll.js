@@ -13,7 +13,7 @@ function renderHospitalSeleted(array) {
 function renderBranchSeleted(array) {
     var _html = '<option value="">请选择科室</option>';
     for (var i = 0; i < array.length; i++) {
-        var childArray = array[i].childList;
+        var childArray = array[i].customBranchList;
         for (var j = 0; j < childArray.length; j++) {
             _html += '<option value="' + childArray[j].id + '">' + childArray[j].customName + '</option>';
         }

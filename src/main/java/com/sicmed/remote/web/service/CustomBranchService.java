@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.service;
 
+import com.sicmed.remote.web.bean.BranchBean;
 import com.sicmed.remote.web.bean.CustomBranchBean;
 import com.sicmed.remote.web.entity.CustomBranch;
 import com.sicmed.remote.web.mapper.CustomBranchMapper;
@@ -45,7 +46,7 @@ public class CustomBranchService implements BaseService<CustomBranch> {
         return customBranchMapper.findByDynamicParam(customBranch);
     }
 
-    public List<CustomBranchBean> selectByHospitalId(String hospitalId) {
+    public List<BranchBean> selectByHospitalId(String hospitalId) {
         return customBranchMapper.selectByHospitalId(hospitalId);
     }
 }

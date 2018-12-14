@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.controller;
 
+import com.sicmed.remote.web.bean.BranchBean;
 import com.sicmed.remote.web.bean.CustomBranchBean;
 import com.sicmed.remote.web.entity.CustomBranch;
 import com.sicmed.remote.web.entity.UserDetail;
@@ -63,7 +64,7 @@ public class CustomBranchController extends BaseController {
 
         UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
 
-        List<CustomBranchBean> customBranchList = customBranchService.selectByHospitalId(userDetail.getHospitalId());
+        List<BranchBean> customBranchList = customBranchService.selectByHospitalId(userDetail.getHospitalId());
 
         return succeedRequestOfSelect(customBranchList);
     }
@@ -71,7 +72,7 @@ public class CustomBranchController extends BaseController {
     @GetMapping(value = "getByHospitalId")
     public Object getByHospitalId(String hospitalId) {
 
-        List<CustomBranchBean> customBranchList = customBranchService.selectByHospitalId(hospitalId);
+        List<BranchBean> customBranchList = customBranchService.selectByHospitalId(hospitalId);
         if (customBranchList != null && customBranchList.size() > 0) {
             return succeedRequestOfSelect(customBranchList);
         }

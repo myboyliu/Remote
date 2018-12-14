@@ -1,6 +1,7 @@
 package com.sicmed.remote.web.mapper;
 
 
+import com.sicmed.remote.web.bean.BranchBean;
 import com.sicmed.remote.web.bean.CustomBranchBean;
 import com.sicmed.remote.web.entity.CustomBranch;
 import org.apache.ibatis.annotations.Param;
@@ -23,5 +24,5 @@ public interface CustomBranchMapper {
 
     List<CustomBranch> findByDynamicParam(CustomBranch branch);
 
-    List<CustomBranchBean> selectByHospitalId(@Param("hospitalId") String hospitalId);
+    List<BranchBean> selectByHospitalId(@Param("hospitalId") String hospitalId);
 }

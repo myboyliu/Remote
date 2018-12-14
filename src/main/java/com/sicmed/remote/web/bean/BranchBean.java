@@ -2,6 +2,7 @@ package com.sicmed.remote.web.bean;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sicmed.remote.web.entity.Branch;
+import com.sicmed.remote.web.entity.CustomBranch;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,4 +18,6 @@ import java.util.List;
 public class BranchBean extends Branch implements Serializable {
 
     private List<Branch> childList;
+
+    private List<CustomBranchBean> customBranchList;
 }
