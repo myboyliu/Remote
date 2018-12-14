@@ -155,9 +155,12 @@ $(function () {
         olf.innerHTML = upload.files[0].name;
         photo1.push(upload.files[0]);
         fileObj.append("file", upload.files[0]);
-        doctorCardFront = getResponseJsonByAjax("POST", uploadFileUrl, fileObj);
-    }
-    var signatureImg = new FormData();
+        ajaxRequest("POST", uploadFileUrl, fileObj, false, false, true, uploadSuccess, null, null);
+
+        function uploadSuccess(result) {
+            doctorCardFront = result;
+        }
+    };
     var signature;
     //上传签名，记录文件名添加到span里
     uploadTwo.onchange = function () {
@@ -165,7 +168,11 @@ $(function () {
         uhs.innerHTML = uploadTwo.files[0].name;
         photo2.push(uploadTwo.files[0]);
         fileObj.append("file", uploadTwo.files[0]);
-        signature = getResponseJsonByAjax("POST", uploadFileUrl, fileObj);
+        ajaxRequest("POST",uploadFileUrl,fileObj,false,false,true,uploadSuccess,null,null);
+        function uploadSuccess(result){
+            signature = result;
+        }
+
     }
     /** textarea 标签随着文本的高度实现自适应 */
     $('.text-adaption').each(function () {
