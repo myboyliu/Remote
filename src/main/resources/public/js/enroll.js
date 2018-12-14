@@ -1,5 +1,3 @@
-var managerHospitalDeptId = '';
-
 /**渲染医院下拉列表*/
 function renderHospitalSeleted(array) {
     var _html = '<option value="">请选择医院</option>';
@@ -15,7 +13,9 @@ function renderBranchSeleted(array) {
     for (var i = 0; i < array.length; i++) {
         var childArray = array[i].customBranchList;
         for (var j = 0; j < childArray.length; j++) {
-            _html += '<option value="' + childArray[j].id + '">' + childArray[j].customName + '</option>';
+            if (childArray[j].id) {
+                _html += '<option value="' + childArray[j].id + '">' + childArray[j].customName + '</option>';
+            }
         }
     }
     $('.quiz3').html(_html);
@@ -113,12 +113,15 @@ $(function () {
         /**查询科室列表*/
         var data = {"hospitalId": $('.quiz1').val()};
         ajaxRequest("GET", getBranchByHospitalIdUrl, data, true, "application/json", false, renderBranchSeleted, emptyBranch, null);
+
         function emptyBranch() {
             var branch_html = '<option value="">请选择科室</option>';
             $('.quiz3').html(branch_html);
         }
+
         /**查询专家类型列表*/
         ajaxRequest("GET", getSpecialistTypeByHospitalId, data, true, "application/json", false, renderSpecialistTypeSeleted, emptySpecialistType, null);
+
         function emptySpecialistType() {
             var specialistType_html = '<option value="">请选择专家类型</option>';
             $('.quiz4').html(specialistType_html);
@@ -193,33 +196,40 @@ $(function () {
             layer.msg('请选择专家类型');
         } else {
             //禁用注册按钮
-            $(".enroll_button").attr({"disabled": "disabled"});
-            var caseTypeJsonStr = "{";
-            for (var i = 0; i < $('.checkSingle.CheckBg').length; i++) {
-                var a = $('.checkSingle.CheckBg').eq(i).attr('name');
-                var b = $('.checkSingle.CheckBg').eq(i).html();
-                var c = $('.checkSingle.CheckBg').eq(i).attr('parentName');
-                caseTypeJsonStr += "'" + a + "':'" + c + "-" + b + "',";
-            }
-            caseTypeJsonStr = caseTypeJsonStr.substring(0, caseTypeJsonStr.length - 1);
-            caseTypeJsonStr += "}";
+            // $(".enroll_button").attr({"disabled": "disabled"});
             var data = new FormData();
+
+            if ($('.checkSingle.CheckBg').length > 0) {
+                var caseTypeJsonStr = "{";
+                for (var i = 0; i < $('.checkSingle.CheckBg').length; i++) {
+                    var a = $('.checkSingle.CheckBg').eq(i).attr('name');
+                    var b = $('.checkSingle.CheckBg').eq(i).html();
+                    var c = $('.checkSingle.CheckBg').eq(i).attr('parentName');
+                    caseTypeJsonStr += "'" + a + "':'" + c + "-" + b + "',";
+                }
+                caseTypeJsonStr = caseTypeJsonStr.substring(0, caseTypeJsonStr.length - 1);
+                caseTypeJsonStr += "}";
+                data.append("idTypeName", caseTypeJsonStr);
+            }
+
             data.append("userName", $('.name').val());
             data.append("userPhone", $('.userName').val());
             data.append("userPassword", $('.passWord').val());
             data.append("telephone", $('.phone').val());
-            data.append("rolesId", $('.quiz2').val());
             data.append("hospitalId", $('.quiz1').val());
+            data.append("rolesId", $('.quiz2').val());
             data.append("branchId", $('.quiz3').val());
             data.append("titleName", $('.quiz5').val());
             data.append("specialistTypeId", $('.quiz4').val());
             data.append("userStrong", $("#textAdaotion").val());
-            data.append("consultationPicturePrice", $("#consultationPicturePrice").val());
-            data.append("consultationVideoPrice", $("#consultationVideoPrice").val());
-            data.append("idTypeName", caseTypeJsonStr);
+            if ($("#consultationPicturePrice").val().length > 16) {
+                data.append("consultationPicturePrice", $("#consultationPicturePrice").val());
+            }
+            if ($("#consultationVideoPrice").val().length > 16) {
+                data.append("consultationVideoPrice", $("#consultationVideoPrice").val());
+            }
             data.append('doctorCardFront', doctorCardFront);
             data.append("signature", signature);
-            data.append("managerHospitalDeptId", managerHospitalDeptId);
             ajaxRequest("POST", registrationUrl, data, false, false, true, renderRegistrationSuccessful, function () {
                 $('.tip1').html('* 手机号码已经注册过了!');
             }, null);
