@@ -12,6 +12,7 @@ import com.sicmed.remote.web.service.UserAccountService;
 import com.sicmed.remote.web.service.UserCaseTypeService;
 import com.sicmed.remote.web.service.UserDetailService;
 import com.sicmed.remote.web.service.UserSignService;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -368,5 +369,18 @@ public class UserController extends BaseController {
         }
 
         return succeedRequest("修改成功");
+    }
+
+    /**
+     * 医生通讯录医生信息展示
+     */
+    public Map addressBook(String branchId) {
+
+        if (StringUtils.isBlank(branchId)) {
+            return badRequestOfArguments("branchId为空");
+        }
+
+//        List<UserDetail> userDetails = userDetailService.findByDynamicParam()
+        return null;
     }
 }

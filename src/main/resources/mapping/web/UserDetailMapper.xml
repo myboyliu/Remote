@@ -100,6 +100,7 @@
 
         <result column="us_st" jdbcType="VARCHAR" property="signature"/>
         <result column="us_dcf" jdbcType="VARCHAR" property="doctorCardFront"/>
+        <result column="us_as" jdbcType="VARCHAR" property="approveStatus"/>
 
         <!--一个userDetailId对应多个userCaseType-->
         <collection property="caseTypeIds" ofType="com.sicmed.remote.web.entity.UserCaseType" javaType="ArrayList">
@@ -120,6 +121,7 @@ ud.consultation_video_price ud_cvp,
 ua.user_phone ua_phone,
 us.signature us_st,
 us.doctor_card_front us_dcf,
+us.approve_status us_as,
 ut.case_type_id ut_cyi
 from user_detail ud
 left join user_account ua on ud.id = ua.id
