@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.service;
 
+import com.sicmed.remote.web.bean.CustomBranchBean;
 import com.sicmed.remote.web.entity.CustomBranch;
 import com.sicmed.remote.web.mapper.CustomBranchMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +43,9 @@ public class CustomBranchService implements BaseService<CustomBranch> {
     @Override
     public List<CustomBranch> findByDynamicParam(CustomBranch customBranch) {
         return customBranchMapper.findByDynamicParam(customBranch);
+    }
+
+    public List<CustomBranchBean> selectByHospitalId(String hospitalId) {
+        return customBranchMapper.selectByHospitalId(hospitalId);
     }
 }

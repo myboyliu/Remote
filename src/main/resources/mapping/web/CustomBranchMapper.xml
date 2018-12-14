@@ -45,7 +45,8 @@
         create_time, update_user, update_time,
         delete_user, delete_time, del_flag
         )
-        values (#{id,jdbcType=VARCHAR}, #{hospitalId,jdbcType=VARCHAR}, #{branchId,jdbcType=VARCHAR}, #{customName,jdbcType=VARCHAR},
+        values (#{id,jdbcType=VARCHAR}, #{hospitalId,jdbcType=VARCHAR}, #{branchId,jdbcType=VARCHAR},
+        #{customName,jdbcType=VARCHAR},
         #{branchNumber,jdbcType=VARCHAR}, #{branchGrade,jdbcType=VARCHAR}, #{branchInform,jdbcType=VARCHAR},
         #{branchWeight,jdbcType=INTEGER}, #{orderWeight,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
         #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
@@ -251,4 +252,31 @@
     </select>
 
 
+
+    <resultMap id="BeanResultMap" type="com.sicmed.remote.web.bean.BranchBean">
+        <id column="baseBranchId" jdbcType="VARCHAR" property="id"/>
+        <result column="baseBranchName" jdbcType="VARCHAR" property="branchName"/>
+        <collection property="childList" ofType="com.sicmed.remote.web.entity.CustomBranch" javaType="ArrayList">
+            <id column="customBranchId" jdbcType="VARCHAR" property="id"/>
+            <result column="customBranchName" jdbcType="VARCHAR" property="customName"/>
+        </collection>
+    </resultMap>
+    <sql id="Bean_Column_List">
+        baseBranch.id baseBranchId,baseBranch.branch_name baseBranchName,
+        childBranch.id childBranchId,childBranch.branch_name childBranchName,
+        customBranch.id customBranchId,customBranch.custom_name customBranchName
+    </sql>
+    <sql id="Bean_Left_Join">
+        LEFT JOIN base_branch childBranch ON childBranch.parent_id = baseBranch.id
+        LEFT JOIN custom_branch customBranch ON customBranch.branch_id = childBranch.id AND customBranch.hospital_id = #{hospitalId}
+    </sql>
+    <select id="selectByHospitalId" parameterType="com.sicmed.remote.web.entity.CustomBranch"
+            resultMap="BeanResultMap">
+        select
+        <include refid="Bean_Column_List"/>
+        from base_branch baseBranch
+        <include refid="Bean_Left_Join"/>
+        WHERE
+        baseBranch.parent_id is NULL
+    </select>
 </mapper>

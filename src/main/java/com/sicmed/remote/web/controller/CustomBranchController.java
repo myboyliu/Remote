@@ -1,11 +1,17 @@
 package com.sicmed.remote.web.controller;
 
+import com.sicmed.remote.web.bean.CustomBranchBean;
 import com.sicmed.remote.web.entity.CustomBranch;
+import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.service.CustomBranchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author MaxCoder
@@ -50,4 +56,25 @@ public class CustomBranchController extends BaseController {
         return badRequestOfDelete(customBranchId);
     }
 
+    @GetMapping(value = "getByCurrentUser")
+    public Object getByCurrentUser() {
+
+        String userId = getRequestToken();
+
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+
+        List<CustomBranchBean> customBranchList = customBranchService.selectByHospitalId(userDetail.getHospitalId());
+
+        return succeedRequestOfSelect(customBranchList);
+    }
+
+    @GetMapping(value = "getByHospitalId")
+    public Object getByHospitalId(String hospitalId) {
+
+        List<CustomBranchBean> customBranchList = customBranchService.selectByHospitalId(hospitalId);
+        if (customBranchList != null && customBranchList.size() > 0) {
+            return succeedRequestOfSelect(customBranchList);
+        }
+        return badRequestOfSelect(null);
+    }
 }
