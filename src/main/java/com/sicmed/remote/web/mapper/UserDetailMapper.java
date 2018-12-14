@@ -1,8 +1,10 @@
 package com.sicmed.remote.web.mapper;
 
+import com.sicmed.remote.web.bean.BranchBean;
 import com.sicmed.remote.web.bean.UserControllerBean;
 import com.sicmed.remote.web.entity.UserDetail;
-import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface UserDetailMapper {
     int deleteByPrimaryKey(String id);
@@ -18,4 +20,7 @@ public interface UserDetailMapper {
     int updateByPrimaryKey(UserDetail record);
 
     UserControllerBean selectPersonalCenter(String userId);
+
+    // hospitalId查询所有UserDetail并按照branchId分类
+    List<BranchBean> selectByHospital(String hospitalId);
 }

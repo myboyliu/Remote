@@ -3,6 +3,7 @@ package com.sicmed.remote.web.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
+import com.sicmed.remote.web.bean.BranchBean;
 import com.sicmed.remote.web.bean.UserControllerBean;
 import com.sicmed.remote.web.entity.UserAccount;
 import com.sicmed.remote.web.entity.UserDetail;
@@ -207,6 +208,10 @@ public class UserController extends BaseController {
 
         String userId = getRequestToken();
         UserControllerBean userControllerBean = userDetailService.selectPersonalCenter(userId);
+        if (userControllerBean == null) {
+            return badRequestOfSelect("个人中心查询个人信息失败");
+        }
+
         return succeedRequestOfSelect(userControllerBean);
     }
 
@@ -261,6 +266,7 @@ public class UserController extends BaseController {
         UserDetail userDetail = userDetailService.getByPrimaryKey(userId);
         LinkedHashMap<String, String> resultMap = null;
         List<String> idList = new ArrayList<>();
+
         if (StringUtils.isNotBlank(phoneNumber)) {
             // 更新用户电话
             userDetail.setTelephone(phoneNumber);
@@ -277,7 +283,7 @@ public class UserController extends BaseController {
                 return badRequestOfArguments("idTypeName 格式错误");
             }
         }
-        System.out.println(resultMap + "-------------------------------");
+
         if (resultMap != null && !resultMap.isEmpty()) {
 
             StringBuffer stringBuffer = new StringBuffer();
@@ -296,6 +302,7 @@ public class UserController extends BaseController {
             if (i < 1) {
                 return badRequestOfDelete("删除原UserCaseType失败");
             }
+
             Map<String, String> userCaseTypeMap = new LinkedHashMap<>();
             for (String id : idList) {
                 userCaseTypeMap.put(id, userId);
@@ -304,12 +311,30 @@ public class UserController extends BaseController {
             if (k < 1) {
                 return badRequestOfInsert("添加UserCaseType失败");
             }
+
         }
+
         int j = userDetailService.updateByPrimaryKeySelective(userDetail);
         if (j < 1) {
             return badRequestOfUpdate("更新个人信息失败");
         }
 
         return succeedRequest(userDetail);
+    }
+
+    /**
+     * 医政管理中心医生列表
+     */
+    @GetMapping(value = "managementDoctor")
+    public Map managementDoctor() {
+
+        // 由登录医政id获取对应医院id
+        String userId = getRequestToken();
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        String hospitalId = userDetail.getHospitalId();
+        // 查出该医院所有医生,并按照科室分类
+        List<BranchBean> branchBeans = userDetailService.selectByHospital(hospitalId);
+        return succeedRequest(branchBeans);
+
     }
 }

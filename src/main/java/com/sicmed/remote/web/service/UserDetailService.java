@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.service;
 
+import com.sicmed.remote.web.bean.BranchBean;
 import com.sicmed.remote.web.bean.UserControllerBean;
 import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.mapper.UserDetailMapper;
@@ -16,6 +17,13 @@ public class UserDetailService implements BaseService<UserDetail> {
 
     public UserControllerBean selectPersonalCenter(String userId) {
         return userDetailMapper.selectPersonalCenter(userId);
+    }
+
+    /**
+     * hospitalId查询userDetail,并按照branchId分类
+     */
+    public List<BranchBean> selectByHospital(String hospitalId) {
+        return userDetailMapper.selectByHospital(hospitalId);
     }
 
     @Override
