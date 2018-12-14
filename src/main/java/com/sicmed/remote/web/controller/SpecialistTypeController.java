@@ -53,7 +53,7 @@ public class SpecialistTypeController extends BaseController {
         }
         int i = specialistTypeService.insertSelective(specialistType);
 
-        while (i > 0) {
+        if (i > 0) {
             return succeedRequestOfInsert(specialistType);
         }
         return badRequestOfInsert(specialistType);
@@ -70,7 +70,7 @@ public class SpecialistTypeController extends BaseController {
 
         int i = specialistTypeService.deleteByPrimaryKey(specialistTypeId);
 
-        while (i > 0) {
+        if (i > 0) {
             return succeedRequestOfDelete("");
         }
         return badRequestOfDelete(specialistTypeId);
@@ -89,7 +89,7 @@ public class SpecialistTypeController extends BaseController {
         }
         int i = specialistTypeService.updateByPrimaryKeySelective(specialistType);
 
-        while (i > 0) {
+        if (i > 0) {
             return succeedRequestOfUpdate(specialistType);
         }
         return badRequestOfUpdate(specialistType);
@@ -106,7 +106,7 @@ public class SpecialistTypeController extends BaseController {
 
         SpecialistType specialistType = specialistTypeService.getByPrimaryKey(specialistTypeId);
 
-        while (specialistType == null) {
+        if (specialistType == null) {
             return badRequestOfSelect(specialistTypeId);
         }
         return succeedRequestOfSelect(specialistType);
@@ -126,10 +126,10 @@ public class SpecialistTypeController extends BaseController {
 
         List<SpecialistType> specialistTypeList = specialistTypeService.findByDynamicParam(specialistType);
 
-        while (specialistTypeList.isEmpty()) {
-            return badRequestOfSelect("");
+        if (specialistTypeList != null && specialistTypeList.size() > 0) {
+            return succeedRequestOfSelect(specialistTypeList);
         }
-        return succeedRequestOfSelect(specialistTypeList);
+        return badRequestOfSelect(null);
     }
 
     /**
