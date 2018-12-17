@@ -3,6 +3,7 @@ package com.sicmed.remote.web.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
+import com.sicmed.remote.common.DoctorCertified;
 import com.sicmed.remote.web.bean.BranchBean;
 import com.sicmed.remote.web.bean.UserBean;
 import com.sicmed.remote.web.bean.UserControllerBean;
@@ -13,8 +14,6 @@ import com.sicmed.remote.web.service.UserAccountService;
 import com.sicmed.remote.web.service.UserCaseTypeService;
 import com.sicmed.remote.web.service.UserDetailService;
 import com.sicmed.remote.web.service.UserSignService;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
-import javafx.scene.chart.ValueAxis;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -387,5 +386,67 @@ public class UserController extends BaseController {
 
         List<UserBean> userBeans = userDetailService.selectByBranchId(branchId);
         return succeedRequest(userBeans);
+    }
+
+    /**
+     * 医生注册审核通过
+     */
+    @PostMapping(value = "agreeRegister")
+    public Map agreeRegister(UserSign userSign) {
+
+        String userId = getRequestToken();
+        if (StringUtils.isBlank(userSign.getId())) {
+            return badRequestOfArguments("userSing为空");
+        }
+
+        userSign.setUpdateUser(userId);
+        userSign.setApproveStatus(DoctorCertified.AUTHENTICATION_ACCEDE.toString());
+        int i = userSignService.updateByPrimaryKeySelective(userSign);
+        if (i > 0) {
+            return succeedRequest("审核通过");
+        }
+
+        return badRequestOfArguments("审核通过出错");
+    }
+
+    /**
+     * 医生注册审核未通过
+     */
+    @PostMapping(value = "disagreeRegister")
+    public Map disagreeRegister(UserSign userSign) {
+
+        String userId = getRequestToken();
+        if (StringUtils.isBlank(userSign.getId())) {
+            return badRequestOfArguments("userDetailId为空");
+        }
+
+        userSign.setUpdateUser(userId);
+        userSign.setApproveStatus(DoctorCertified.AUTHENTICATION_FAILED.toString());
+        int i = userSignService.updateByPrimaryKeySelective(userSign);
+        if (i > 0) {
+            return succeedRequest("审核未通过");
+        }
+
+        return badRequestOfArguments("审核未通过出错");
+    }
+
+    /**
+     * 医政修改医生密码
+     */
+    @PostMapping(value = "adminChangePassWord")
+    public Map changePassWord(UserAccount userAccount) {
+
+        String userId = getRequestToken();
+
+        String salt = RandomStringUtils.randomAlphanumeric(32);
+        String encryptionPassWord = DigestUtils.md5DigestAsHex((userAccount.getUserPassword() + salt).getBytes());
+        userAccount.setUpdateUser(userId);
+        userAccount.setSalt(salt);
+        userAccount.setUserPassword(encryptionPassWord);
+        int i = userAccountService.updateByPrimaryKeySelective(userAccount);
+        if (i > 0) {
+            return succeedRequest("修改密码成功");
+        }
+        return badRequestOfArguments("修改密码失败");
     }
 }
