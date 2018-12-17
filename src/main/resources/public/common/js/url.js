@@ -30,6 +30,8 @@ const getHospitalByCurrentUserUrl = "/hospital/selectByUser"; //根据当前登�
 
 const updateHospitalByCurrentUserUrl = "/hospital/update"; //根据当前登陆的医政用户修改医院信息
 
+const addBranchListByCurrentUserUrl = "/custom/branch/addList"; //根据当前登陆的医政用户添加科室列表
+
 const getBranchListByCurrentUserUrl = "/custom/branch/getByCurrentUser"; //根据当前登陆的医政用户修改科室列表
 
 const updateBranchListByCurrentUserUrl = "/custom/branch/update"; //根据当前登陆的医政用户修改医院信息

@@ -5,6 +5,7 @@ import com.sicmed.remote.web.bean.CustomBranchBean;
 import com.sicmed.remote.web.entity.CustomBranch;
 import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.service.CustomBranchService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import java.util.List;
  * @author MaxCoder
  * @version 1.0
  */
+@Slf4j
 @RestController
 @RequestMapping("custom/branch")
 public class CustomBranchController extends BaseController {
@@ -38,6 +40,18 @@ public class CustomBranchController extends BaseController {
         if (i > 0) {
             return succeedRequestOfInsert(customBranch);
         }
+        return badRequestOfInsert("添加科室失败");
+    }
+
+    /**
+     * 批量自定义科室
+     *
+     * @return
+     */
+    @PostMapping(value = "addList")
+    public Object addListCustomBranch(String customBranchStr) {
+        log.debug(customBranchStr);
+
         return badRequestOfInsert("添加科室失败");
     }
 

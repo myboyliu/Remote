@@ -52,11 +52,11 @@ function renderBranchListView(array) {
                        <div class="sectionContent">\
                            <div class="selectedContent">\
                                <h4>已添加的二级科室，点击科室将减去，减去科室之前请先将该目录下的医生移动到其它科室</h4>\
-                               <div class="selectedBox clearfix">';
+                               <div id="' + array[i].id + '" class="selectedBox clearfix">';
         var customList = array[i].customBranchList;
         for (var j = 0; j < customList.length; j++) {
             if (customList[j].id) {
-                _html += '<a type="" deptHospitalId="' + customList[j].deptHospitalId +
+                _html += '<a type="" baseBranchId="' + customList[j].baseBranchId +
                     '" name="' + customList[j].id + '" href="javascript:;">' + customList[j].customName + '</a>';
             }
         }
@@ -69,8 +69,9 @@ function renderBranchListView(array) {
             if (customList[j].id) {
                 continue;
             }
-            _html += '<a type="" name="' + customList[j].baseBranchId + '" deptHospitalId="" href="javascript:;">' + customList[j].baseBranchName + '</a>'
+            _html += '<a type="" name="' + customList[j].baseBranchId + '" baseBranchId="" href="javascript:;">' + customList[j].baseBranchName + '</a>'
         }
+        _html += '<a centext="' + array[i].id + '" type="ADD_BUTTON" name="" baseBranchId="" href="javascript:;">+</a>'
         _html += '</div>\
                            </div>\
                        </div>\
@@ -386,7 +387,9 @@ $(function () {
 
     // 删除科室
     $('.sectionList').delegate('.selectedContent a', 'click', function () {
-        if ($(this).attr('type') == '') {
+        if ($(this).attr('type') == 'CUSTOM_RANCH') {
+            $(this).remove();
+        }else if ($(this).attr('type') == '') {
             $(this).addClass('choose').attr('type', '1').parents('.selectedContent').siblings('.unselectedContent').find('.unselectedBox').prepend($(this));
         } else {
             $(this).removeClass('choose').attr('type', '').parents('.selectedContent').siblings('.unselectedContent').find('.unselectedBox').prepend($(this));
@@ -399,7 +402,21 @@ $(function () {
     })
     // 添加科室
     $('.sectionList').delegate('.unselectedContent a', 'click', function () {
-        if ($(this).attr('type') == '') {
+        if ($(this).attr('type') == 'ADD_BUTTON') {
+            //页面层
+            layer.open({
+                type: 1,
+                title: '',
+                area: ['500px', '300px'],
+                closeBtn: false,
+                shade: [0.1, '#000000'],
+                shadeClose: false,
+                content: $('#CUSTOM_BRANCH_VIEW') //调到新增页面
+            });
+            // var centextId = "#" + $(this).attr('centext');
+            // var _html = '<a type="CUSTOM_RANCH" class="choose" baseBranchId=123" name="21312" href="javascript:;">12312</a>';
+            // $(centextId).prepend(_html);
+        } else if ($(this).attr('type') == '') {
             $(this).addClass('choose').attr('type', '0').parents('.unselectedContent').siblings('.selectedContent').find('.selectedBox').prepend($(this));
         } else {
             $(this).removeClass('choose').attr('type', '').parents('.unselectedContent').siblings('.selectedContent').find('.selectedBox').prepend($(this));
@@ -419,17 +436,25 @@ $(function () {
             if (objArr.length > 0) {
                 for (var i = 0; i < objArr.length; i++) {
                     deptHospitalDetailList.push({
-                        "deptId": objArr.eq(i).attr('name'),
-                        "deptName": objArr.eq(i).html(),
-                        "hospitalDeptId": objArr.eq(i).attr('depthospitalid'),
+                        "customBranchId": objArr.eq(i).attr('name'),
+                        "customBranchName": objArr.eq(i).html(),
+                        "baseBranchId": objArr.eq(i).attr('baseBranchId'),
                         "types": objArr.eq(i).attr('type')
                     })
                 }
                 var data = {
                     "deptHospitalDetailList": JSON.stringify(deptHospitalDetailList),
                 };
+
+                // var _html = '<a type="" baseBranchId="' + customList[j].baseBranchId + '" name="' + customList[j].id + '" href="javascript:;">' + customList[j].customName + '</a>';
+
+                console.log(JSON.stringify(deptHospitalDetailList));
+
+                /** 添加科室列表 */
+
+                // ajaxRequest("POST", addBranchListByCurrentUserUrl, data, false, false, true, updateCustomBranchSuccess, updateCustomBranchFailed, null);
                 /** 修改科室列表 */
-                ajaxRequest("POST", updatCustomBranchListUrl, data, false, false, true, updateCustomBranchSuccess, updateCustomBranchFailed, null);
+                // ajaxRequest("POST", updateCustomBranchListUrl, data, false, false, true, updateCustomBranchSuccess, updateCustomBranchFailed, null);
 
                 function updateCustomBranchFailed(result) {
                     /** 查询科室列表信息 */
@@ -493,6 +518,10 @@ $(function () {
 
 // 获取科室列表
     ajaxRequest("GET", getBranchListByCurrentUserUrl, null, false, false, true, renderBranchSelect, emptyBranch, null);
+
+    function emptyBranch() {
+
+    }
 
     function renderBranchSelect(result) {
         var _html = '<option value="">请选择</option>';

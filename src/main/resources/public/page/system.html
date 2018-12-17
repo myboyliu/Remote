@@ -120,7 +120,37 @@
         <!-- 科室列表 -->
         <div class="sectionContainer">
             <div class="sectionList">
-
+                <div class="sectionBox">
+                    <div class="sectionTitle clearfix">
+                        <h3 name="0dba2e83fc4411e88ede487b6bd31bf7">内科</h3>
+                        <div class="problemContent"><img src="../images/problem.png" alt="">
+                            <div class="problemBox"><p>1. 一级科室名称颜色为灰色时，代表该科室未被启用，将不会在通讯录中显示。为蓝色时，表示该科室已被启用。</p>
+                                <p>2. 选择某个目录下的二级科室后，则默认该一级科室被启用，可在通讯录中查到</p></div>
+                        </div>
+                        <p>请在下方提供的列表中选择，添加为该目录下的二级科室</p>
+                        <a class="shrinkBtn" href="javascript:;">展开列表</a>
+                        <div class="lineBox"></div>
+                    </div>
+                    <div class="sectionContent">
+                        <div class="selectedContent">
+                            <h4>已添加的二级科室，点击科室将减去，减去科室之前请先将该目录下的医生移动到其它科室</h4>
+                            <div id="0dba2e83fc4411e88ede487b6bd31bf7" class="selectedBox clearfix">
+                                <a type="" basebranchid="83730660fc4311e88ede487b6bd31bf7"
+                                   name="a20a53e2ff4411e88ede487b6bd31bf7" href="javascript:;">心内科</a>
+                                <a type="" basebranchid="83730660fc4311e88ede487b6bd31bf7"
+                                   name="b0e23673ff4411e88ede487b6bd31bf7" href="javascript:;">房颤中心</a>
+                                <a type="" basebranchid="83730660fc4311e88ede487b6bd31bf7"
+                                   name="b9572640ff4411e88ede487b6bd31bf7" href="javascript:;">室颤中心</a>
+                            </div>
+                        </div>
+                        <div class="unselectedContent">
+                            <h4>可添加的二级科室，点击科室自动添加</h4>
+                            <div class="unselectedBox clearfix">
+                                <a type="" name="0dba2e83fc4411e88ede487b6bd31bf1" basebranchid="" href="javascript:;">心血管内科2</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- <div class="sectionBox">
                 <div class="sectionTitle clearfix">
                     <h3>一级科室名</h3>
@@ -353,6 +383,36 @@
     </div>
 </div>
 
+<div id="CUSTOM_BRANCH_VIEW">
+    <span style="">
+        <p style=" display: inline-block; margin-left: 0px">自定义科室名称:</p><input style=" width: 258px;
+        height: 38px;
+        border-radius: 10px;
+        background-color: #f4f4f4;
+        border: 1px solid #dbdbdb;text-align: center;" type="text" maxlength="16" id="customBranchName"
+                                                                                placeholder="请填写自定义科室名称">
+        <br>
+        <br>
+        <br>
+        <p style=" display: inline-block; margin-left: 0px">关联系统科室:</p>
+        <select style=" width: 258px;
+        height: 38px;
+        border-radius: 10px;
+        background-color: #f4f4f4;
+        border: 1px solid #dbdbdb;text-align: center;" name="quiz3" class="quiz quiz5">
+            <option value="">请选择职称</option>
+            <option value="医师">医师</option>
+            <option value="住院医师">住院医师</option>
+            <option value="主治医师">主治医师</option>
+            <option value="副主任医师">副主任医师</option>
+            <option value="主任医师">主任医师</option>
+        </select>
+    </span>
+    <div class="btnBox">
+        <a class="replacementNoBtn leftBtn" href="javascript:;">取消</a>
+        <a class="replacementYesBtn rightBtn" href="javascript:;">确定</a>
+    </div>
+</div>
 </body>
 
 </html>
