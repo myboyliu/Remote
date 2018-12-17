@@ -350,24 +350,32 @@ public class UserController extends BaseController {
      * 管理中心修改医生信息
      */
     @PostMapping(value = "managementUpdateUser")
-    public Map managementUpdateUser(UserDetail userDetail, UserSign userSign) {
+    public Map managementUpdateUser(UserDetail userDetail, String signature, String doctorCardFront) {
+
+        if (StringUtils.isBlank(userDetail.getId())) {
+            return badRequestOfArguments("被修改用户id为空");
+        }
 
         String userId = getRequestToken();
-        if (userSign != null) {
-            userSign.setUpdateUser(userId);
-            int i = userSignService.updateByPrimaryKeySelective(userSign);
-            if (i < 1) {
-                return badRequestOfArguments("修改userSign失败");
-            }
+        String id = userDetail.getId();
+
+        UserSign userSign = new UserSign();
+        userSign.setUpdateUser(userId);
+        userSign.setSignature(signature);
+        userSign.setDoctorCardContrary(doctorCardFront);
+        userSign.setId(id);
+        int i = userSignService.updateByPrimaryKeySelective(userSign);
+        if (i < 1) {
+            return badRequestOfArguments("修改userSign失败");
         }
 
-        if (userDetail != null) {
-            userDetail.setUpdateUser(userId);
-            int j = userDetailService.updateByPrimaryKeySelective(userDetail);
-            if (j < 1) {
-                return badRequestOfArguments("修改userDetail失败");
-            }
+
+        userDetail.setUpdateUser(userId);
+        int j = userDetailService.updateByPrimaryKeySelective(userDetail);
+        if (j < 1) {
+            return badRequestOfArguments("修改userDetail失败");
         }
+
 
         return succeedRequest("修改成功");
     }
