@@ -68,7 +68,7 @@
     <sql id="Bean_Left_Join">
         LEFT JOIN base_branch childBranch ON childBranch.parent_id = baseBranch.id AND childBranch.del_flag = "0"
         LEFT JOIN custom_branch customBranch ON customBranch.branch_id = childBranch.id AND customBranch.hospital_id = #{hospitalId} AND customBranch.del_flag = "0"
-        LEFT JOIN user_detail  userDetail ON userDetail.nch_id = customBranch.id AND userDetail.del_flag = "0"
+        LEFT JOIN user_detail  userDetail ON userDetail.branch_id = customBranch.id AND userDetail.del_flag = "0"
         LEFT JOIN user_sign  userSign ON userSign.id = userDetail.id
     </sql>
 
