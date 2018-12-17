@@ -1,6 +1,8 @@
 package com.sicmed.remote.web.mapper;
 
+import com.sicmed.remote.web.bean.CaseContentBean;
 import com.sicmed.remote.web.entity.CaseContent;
+
 
 public interface CaseContentMapper {
     int deleteByPrimaryKey(String id);
@@ -14,4 +16,6 @@ public interface CaseContentMapper {
     int updateByPrimaryKeySelective(CaseContent record);
 
     int updateByPrimaryKey(CaseContent record);
+
+    int insertByMap(CaseContentBean caseContentBean);
 }
