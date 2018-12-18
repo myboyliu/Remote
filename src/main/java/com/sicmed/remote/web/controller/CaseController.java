@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -44,13 +45,12 @@ public class CaseController extends BaseController {
      * @param casePatientBr
      * @param caseRecord
      * @param caseRecordBr
-     * @param pathAndTypeId
+     * @param weightPathTypeId
      */
     @PostMapping(value = "insertNewCase")
     public Map insertNewCase(@Validated CasePatient casePatient, BindingResult casePatientBr,
                              @Validated CaseRecord caseRecord, BindingResult caseRecordBr,
-                             String pathAndTypeId) {
-
+                             String weightPathTypeId) {
         if (casePatientBr.hasErrors()) {
             return fieldErrorsBuilder(casePatientBr);
         }
@@ -80,22 +80,21 @@ public class CaseController extends BaseController {
         }
 
         // 添加病例所需文件
-        if (StringUtils.isNotBlank(pathAndTypeId)) {
+        if (StringUtils.isNotBlank(weightPathTypeId)) {
 
             // 文件路径 与 病例文件id map解析
-            LinkedHashMap<String, String> resultMap;
+            List<CaseContent> resultList;
             try {
-                resultMap = JSON.parseObject(pathAndTypeId, new TypeReference<LinkedHashMap<String, String>>() {
+                resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList>() {
                 }, Feature.OrderedField);
             } catch (Exception e) {
-                return badRequestOfArguments("typeIdAndPath 填写错误");
+                return badRequestOfArguments("pathWeightTypeId 填写错误");
             }
-
             CaseContentBean caseContentBean = new CaseContentBean();
             caseContentBean.setCreateUser(userId);
             caseContentBean.setRecordId(casePatient.getId());
             caseContentBean.setCreateUser(userId);
-            caseContentBean.setPathAndTypeIdMap(resultMap);
+            caseContentBean.setWeightPathTypeId(resultList);
             int l = caseContentService.insertByMap(caseContentBean);
             if (l < 0) {
                 return badRequestOfInsert("添加CaseContent失败");

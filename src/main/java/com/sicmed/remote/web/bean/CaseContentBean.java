@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sicmed.remote.web.entity.CaseContent;
 import lombok.Data;
 
-import java.util.Map;
+import java.util.List;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CaseContentBean extends CaseContent {
 
-    private Map<String, String> pathAndTypeIdMap;
+    private List weightPathTypeId;
 }

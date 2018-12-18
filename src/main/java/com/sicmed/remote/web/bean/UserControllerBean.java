@@ -8,6 +8,9 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * 属性应与UserBean合并,不应命名为UserControllerBean
+ */
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserControllerBean extends UserDetail implements Serializable {

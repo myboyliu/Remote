@@ -31,18 +31,16 @@
   </delete>
 
     <!--添加病例需求文件-->
+    <!--(select replace(uuid(), '-', '') as id from dual),-->
     <insert id="insertByMap" parameterType="com.sicmed.remote.web.bean.CaseContentBean">
-
-        <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
-            select replace(uuid(),'-','') from dual
-        </selectKey>
-        insert into case_content(id,record_id,create_user,content_path,content_type_id) values
-        <foreach collection="pathAndTypeIdMap" item="item" separator="," index="key">
+        insert into case_content(id,record_id,create_user,order_weight,content_path,content_type_id) values
+        <foreach collection="weightPathTypeId" item="item" separator="," index="">
             ( (select replace(uuid(), '-', '') as id from dual),
             #{recordId,jdbcType=VARCHAR},
             #{createUser,jdbcType=VARCHAR},
-            #{key,jdbcType=VARCHAR},
-            #{item,jdbcType=VARCHAR})
+            #{item.orderWeight},
+            #{item.contentPath},
+            #{item.contentTypeId})
         </foreach>
 
     </insert>
