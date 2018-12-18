@@ -35,6 +35,36 @@
         set del_flag = "1"
         where id = #{id,jdbcType=VARCHAR}
     </update>
+
+    <insert id="insertCustomBranchList">
+        <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into custom_branch (id,hospital_id, branch_id, custom_name) values
+        <foreach collection="addCustomBranchBeanList" item="item" separator="," index="key">
+            ((select replace(uuid(), '-', '') as id from dual),
+            #{item.hospitalId,jdbcType=VARCHAR},
+            #{item.baseBranchId,jdbcType=VARCHAR},
+            #{item.customBranchName,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+    <update id="deleteCustomBranchList">
+        update into custom_branch (id,hospital_id, branch_id, custom_name) values
+        <foreach collection="addCustomBranchBeanList" item="item" separator="," index="key">
+            ((select replace(uuid(), '-', '') as id from dual),
+            #{item.hospitalId,jdbcType=VARCHAR},
+            #{item.baseBranchId,jdbcType=VARCHAR},
+            #{item.customBranchName,jdbcType=VARCHAR})
+        </foreach>
+    </update>
+    <delete id="deleteCustomBranchIdList">
+        delete from custom_branch
+        where id in
+        <foreach collection="removeCustomBranchBeanList" item="item" open="(" separator="," close=")">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+    </delete>
+
     <insert id="insert" parameterType="com.sicmed.remote.web.entity.CustomBranch">
         <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
             select replace(uuid(),'-','') from dual
@@ -252,11 +282,11 @@
     </select>
 
 
-
     <resultMap id="BeanResultMap" type="com.sicmed.remote.web.bean.BranchBean">
         <id column="baseBranchId" jdbcType="VARCHAR" property="id"/>
         <result column="baseBranchName" jdbcType="VARCHAR" property="branchName"/>
-        <collection property="customBranchList" ofType="com.sicmed.remote.web.bean.CustomBranchBean" javaType="ArrayList">
+        <collection property="customBranchList" ofType="com.sicmed.remote.web.bean.CustomBranchBean"
+                    javaType="ArrayList">
             <id column="customBranchId" jdbcType="VARCHAR" property="id"/>
             <result column="customBranchName" jdbcType="VARCHAR" property="customName"/>
             <result column="childBranchId" jdbcType="VARCHAR" property="baseBranchId"/>
@@ -270,7 +300,8 @@
     </sql>
     <sql id="Bean_Left_Join">
         LEFT JOIN base_branch childBranch ON childBranch.parent_id = baseBranch.id
-        LEFT JOIN custom_branch customBranch ON customBranch.branch_id = childBranch.id AND customBranch.hospital_id = #{hospitalId}
+        LEFT JOIN custom_branch customBranch ON customBranch.branch_id = childBranch.id AND customBranch.hospital_id =
+        #{hospitalId}
     </sql>
     <select id="selectByHospitalId" parameterType="com.sicmed.remote.web.entity.CustomBranch"
             resultMap="BeanResultMap">

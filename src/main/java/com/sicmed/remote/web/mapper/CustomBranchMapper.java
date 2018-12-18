@@ -3,6 +3,7 @@ package com.sicmed.remote.web.mapper;
 
 import com.sicmed.remote.web.bean.BranchBean;
 import com.sicmed.remote.web.bean.CustomBranchBean;
+import com.sicmed.remote.web.bean.UpdateCustomBranchBean;
 import com.sicmed.remote.web.entity.CustomBranch;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,4 +26,8 @@ public interface CustomBranchMapper {
     List<CustomBranch> findByDynamicParam(CustomBranch branch);
 
     List<BranchBean> selectByHospitalId(@Param("hospitalId") String hospitalId);
+
+    int insertCustomBranchList(@Param("addCustomBranchBeanList") List<UpdateCustomBranchBean> addCustomBranchBeanList);
+
+    int deleteCustomBranchIdList(@Param("removeCustomBranchBeanList") List<String> removeCustomBranchBeanList);
 }
