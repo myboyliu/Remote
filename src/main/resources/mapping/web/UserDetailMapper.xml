@@ -85,6 +85,7 @@
 
     <!--个人中心页面信息-->
     <resultMap id="UserBeanResultMap" type="com.sicmed.remote.web.bean.UserControllerBean">
+        <id column="ud_id" jdbcType="VARCHAR" property="id"/>
         <result column="ud_name" jdbcType="VARCHAR" property="userName"/>
         <result column="ud_phone" jdbcType="VARCHAR" property="telephone"/>
         <result column="ud_hospital" jdbcType="VARCHAR" property="hospitalId"/>
@@ -110,6 +111,7 @@
     </resultMap>
     <select id="selectPersonalCenter" parameterType="java.lang.String" resultMap="UserBeanResultMap">
 select
+ud.id ud_id,
 ud.user_name ud_name,
 ud.telephone ud_phone,
 ud.hospital_id ud_hospital,
