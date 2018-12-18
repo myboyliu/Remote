@@ -168,8 +168,9 @@ $(function () {
         uhs.innerHTML = uploadTwo.files[0].name;
         photo2.push(uploadTwo.files[0]);
         fileObj.append("file", uploadTwo.files[0]);
-        ajaxRequest("POST",uploadFileUrl,fileObj,false,false,true,uploadSuccess,null,null);
-        function uploadSuccess(result){
+        ajaxRequest("POST", uploadFileUrl, fileObj, false, false, true, uploadSuccess, null, null);
+
+        function uploadSuccess(result) {
             signature = result;
         }
 
@@ -229,14 +230,15 @@ $(function () {
             data.append("titleName", $('.quiz5').val());
             data.append("specialistTypeId", $('.quiz4').val());
             data.append("userStrong", $("#textAdaotion").val());
-            if ($("#consultationPicturePrice").val().length > 16) {
-                data.append("consultationPicturePrice", $("#consultationPicturePrice").val());
+            data.append("consultationPicturePrice", $("#consultationPicturePrice").val());
+            data.append("consultationVideoPrice", $("#consultationVideoPrice").val());
+            if (doctorCardFront.length < 16) {
+                data.append('doctorCardFront', doctorCardFront);
             }
-            if ($("#consultationVideoPrice").val().length > 16) {
-                data.append("consultationVideoPrice", $("#consultationVideoPrice").val());
+            if (signature.length > 16) {
+                data.append("signature", signature);
             }
-            data.append('doctorCardFront', doctorCardFront);
-            data.append("signature", signature);
+
             ajaxRequest("POST", registrationUrl, data, false, false, true, renderRegistrationSuccessful, function () {
                 $('.tip1').html('* 手机号码已经注册过了!');
             }, null);
