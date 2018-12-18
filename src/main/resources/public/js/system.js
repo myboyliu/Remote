@@ -117,10 +117,10 @@ function renderDoctorListView(array) {
             var threeTempArr = twoTempArr[j].userBeanList;
             if (threeTempArr) {
                 for (var z = 0; z < threeTempArr.length; z++) {
-                    // 0未审核 AUTHENTICATION_CREATE_SUCCESS通过 2拒绝 3不完整
+                    // AUTHENTICATION_CREATE_SUCCESS未审核 通过 2拒绝 3不完整
                     if (threeTempArr[z].approveStatus == "AUTHENTICATION_CREATE_SUCCESS") {
                         _html += '<li class="threeLevelItem" stateFlag="' + threeTempArr[z].approveStatus + '" name="' + threeTempArr[z].id + '" title="' + threeTempArr[z].userName + '"><span>' + threeTempArr[z].userName + '</span><img class="unauthentication" src="../images/unauthentication.png" alt=""/></li>'
-                    } else if (threeTempArr[z].approveStatus == "AUTHENTICATION_CREATE_SUCCESS") {
+                    } else if (threeTempArr[z].approveStatus == "AUTHENTICATION_ACCEDE") {
                         _html += '<li class="threeLevelItem" stateFlag="' + threeTempArr[z].approveStatus + '" name="' + threeTempArr[z].id + '" title="' + threeTempArr[z].userName + '"><span>' + threeTempArr[z].userName + '</span></li>'
                     } else if (threeTempArr[z].approveStatus == 2) {
                         // _html += '<li class="threeLevelItem" stateFlag="'+threeTempArr[z].authenticationFlag+'" name="' + threeTempArr[z].userId + '" title="' + threeTempArr[z].name + '"><span>' + threeTempArr[z].name + '</span><img class="uncomplete" src="/yilaiyiwang/images/Denied.png" alt=""/></li>'
@@ -159,7 +159,6 @@ function renderRolesSelect(result) {
 
 /** 渲染医生信息页面科室下拉列表*/
 function renderBranchSelect(result) {
-    console.log(result);
     var _html = '<option value="">请选择</option>';
     for (var i = 0; i < result.length; i++) {
         var customBranchList = result[i].customBranchList;
@@ -184,14 +183,14 @@ function renderSpecialistTypeSelect(array) {
 /** 渲染医生信息页面*/
 function renderDoctorInfoView(result) {
     doctorInfo = result;
-    // 0未审核 1通过 2拒绝 3不完整
-    if (result.authenticationFlag == 0) {
+    // AUTHENTICATION_CREATE_SUCCESS未审核 AUTHENTICATION_ACCEDE通过 2拒绝 3不完整
+    if (result.approveStatus == "AUTHENTICATION_CREATE_SUCCESS") {
         $('.fexidContent').show().find('div').hide().eq(0).show();
         $('.footer').addClass('marginBottom70');
         // 遮罩 未通过审核遮罩显示 不能修改信息
         $('.coverage').show();
         $('.fexidContent').show();
-    } else if (result.authenticationFlag == 2) {
+    } else if (result.approveStatus == 2) {
         $('.fexidContent').hide();
     } else {
         $('.fexidContent').show().find('div').hide().eq(1).show();
@@ -200,7 +199,7 @@ function renderDoctorInfoView(result) {
         $('.fexidContent').show();
     }
     $('#userName').val(result.userName);
-    $('#userName').attr('rolesId', result.userId);
+    $('#userId').val(result.id);
     $('#name').val(result.userName);
     $('#telephone').val(result.userPhone);
     $('#hospitalName').val(result.hospitalName);
@@ -217,36 +216,30 @@ function renderDoctorInfoView(result) {
     if (result.signature) {
         $('.signName').html(result.signature.substr(result.signature.lastIndexOf('/'), result.signature.length));
     }
-    // var tempArr = result.caseTypeIds;
-    // var _html = '';
-    // for (var i = 0; i < tempArr.length; i++) {
-    //     _html += '<div class="catalogue clearfix">\
-    //                         <p>' + tempArr[i].name + '</p>';
-    //     var twoArr = tempArr[i].caseTypeList;
-    //     for (var j = 0; j < twoArr.length; j++) {
-    //         if (twoArr[j].userChange == '0') {
-    //             console.log(twoArr[j].userChange)
-    //             _html += '<div type="" class="checkSingle CheckBg" name="' + twoArr[j].id + '">' + twoArr[j].name + '</div>'
-    //         } else {
-    //             _html += '<div type="" class="checkSingle " name="' + twoArr[j].id + '">' + twoArr[j].name + '</div>'
-    //         }
-    //     }
-    //     _html += '</div>';
-    // }
-    // $('.requireBox').html(_html);
+    var caseTypeList = result.caseTypeIds;
+    for (var i = 0; i < caseTypeList.length; i++) {
+        var caseTypeDomId = "#" + caseTypeList[i].caseTypeId;
+        $(caseTypeDomId).addClass("CheckBg");
+    }
     $('#beGoodAt').each(function () {
         this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
     })
-    if (result.credentialsImage != '') {
-        $('#olf').html('signatureImage.jpg')
-    } else {
-        $('#olf').html('')
+}
+
+/** 渲染医生详细信息页面病例类型*/
+function renderCaseView(result) {
+    var _html = '';
+    for (var i = 0; i < result.length; i++) {
+        _html += '<div class="catalogue clearfix">\
+                            <p>' + result[i].caseTypeName + '</p>';
+        var twoArr = result[i].childList;
+        for (var j = 0; j < twoArr.length; j++) {
+            // _html += '<div type="" class="checkSingle CheckBg" name="' + twoArr[j].id + '">' + twoArr[j].caseTypeName + '</div>'
+            _html += '<div id="' + twoArr[j].id + '" type="" class="checkSingle " name="' + twoArr[j].id + '">' + twoArr[j].caseTypeName + '</div>'
+        }
+        _html += '</div>';
     }
-    if (result.signatureImage != '') {
-        $('#uhs').html('credentialsImage.jpg')
-    } else {
-        $('#uhs').html('')
-    }
+    $('.requireBox').html(_html);
 }
 
 /** 请求空结果处理 */
@@ -269,9 +262,12 @@ $(function () {
 
     /**获取医生信息页面科室下拉列表数据*/
     ajaxRequest("GET", getBranchListByCurrentUserUrl, null, false, false, true, renderBranchSelect, emptyResult, null);
+
     // 获取权限类型
     // ajaxRequest("GET", getRolesListUrl, null, false, false, true, renderRolesSelect, null, null);
 
+    /**获取病历类型列表*/
+    ajaxRequest("GET", getAllCaseContentType, null, true, false, true, renderCaseView, null, null);
     /*  //textarea 标签随着文本的高度实现自适应 */
     $('.text-adaption').each(function () {
         this.setAttribute('style', 'height:' + (this.scrollHeight) + 40 + 'px;overflow-y:hidden;');
@@ -603,7 +599,6 @@ $(function () {
     })
 
     function uploadSuccess(result) {
-        console.log(result)
         var _$ = layui.jquery;
         layer.open({
             type: 1,
@@ -661,7 +656,7 @@ $(function () {
 // 重置密码确定按钮
     $('.replacementYesBtn').click(function () {
         var data = new FormData();
-        data.append("userId", $('#userName').attr('rolesid'));
+        data.append("userId", $('#userName').attr('userId'));
         ajaxRequest("POST", "", data, false, false, true, resetSuccess, resetFailed, null);
 
         function resetSuccess() {
@@ -809,7 +804,7 @@ $(function () {
             data.append("occupationId", $('.titleSelect').val());
             data.append("specialistTypeId", $('.expertSelect').val());
             data.append("hospitalDeptId", $('.deptSelect').val());
-            data.append("userId", $('#userName').attr('rolesid'));
+            data.append("userId", $('#userName').attr('userId'));
             data.append("caseTypeList", JSON.stringify(caseTypeList));
 
             ajaxRequest("POST", "updateDoctorDetailUtl", data, false, false, true, updateDoctorDetailSuccess, updateDoctorDetailFailed, null);
@@ -878,10 +873,10 @@ $(function () {
     $('.approvedYesBtn').click(function () {
 
         var data = new FormData();
-        data.append("userId", $('#userName').attr('rolesid'));
-        ajaxRequest("POST", "approveRegisterUrl", data, false, false, true, approveRegisterSuccess, approveRegisterFailed, null);
 
-        // overruleRegisterUrl
+        data.append("id", $('#userId').val());
+        ajaxRequest("POST", approveRegisterUrl, data, false, false, true, approveRegisterSuccess, approveRegisterFailed, null);
+
         function approveRegisterSuccess(result) {
             var _$ = layui.jquery;
             layer.open({
@@ -946,8 +941,8 @@ $(function () {
     // 拒绝审核的确定按钮
     $('.declineYesBtn').click(function () {
         var data = new FormData();
-        data.append("userId", $('#userName').attr('rolesid'));
-        ajaxRequest("POST", "overruleRegisterUrl", data, false, false, true, overruleRegisterSuccess, overruleRegisterFailed, null);
+        data.append("id",$('#userId').val());
+        ajaxRequest("POST", overruleRegisterUrl, data, false, false, true, overruleRegisterSuccess, overruleRegisterFailed, null);
 
         function overruleRegisterSuccess() {
             var _$ = layui.jquery;

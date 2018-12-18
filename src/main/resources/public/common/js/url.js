@@ -38,7 +38,12 @@ const updateCustomBranchListUrl = "/custom/branch/update"; //根据当前登陆�
 
 const getBranchListByParentIdUrl = "/branch/findByParam"; //根据父级科室ID查询科室列表
 
+const approveRegisterUrl = "/user/agreeRegister"; //医生注册审核通过
+
+const overruleRegisterUrl = "/user/disagreeRegister"; //医生注册审核驳回
+
 const getDoctorListByCurrentUserUrl = "/user/managementDoctor";
+
 const getDoctorDetailByIdUrl = "/user/personalCenter";
 
 const uploadFileUrl = "/file/upload";
