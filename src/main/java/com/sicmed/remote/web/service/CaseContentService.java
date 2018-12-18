@@ -18,6 +18,10 @@ public class CaseContentService implements BaseService<CaseContent> {
         return caseContentMapper.insertByMap(caseContentBean);
     }
 
+    public int deleteByCaseRecordId(String caseRecordId){
+        return caseContentMapper.deleteByCaseRecordId(caseRecordId);
+    }
+
     @Override
     public int insertSelective(CaseContent caseContent) {
         return caseContentMapper.insertSelective(caseContent);

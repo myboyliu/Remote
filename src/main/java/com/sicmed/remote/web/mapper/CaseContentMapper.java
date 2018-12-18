@@ -18,4 +18,6 @@ public interface CaseContentMapper {
     int updateByPrimaryKey(CaseContent record);
 
     int insertByMap(CaseContentBean caseContentBean);
+
+    int deleteByCaseRecordId(String caseRecordId);
 }

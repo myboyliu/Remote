@@ -26,7 +26,7 @@ public class CaseRecordService implements BaseService<CaseRecord> {
 
     @Override
     public int updateByPrimaryKeySelective(CaseRecord caseRecord) {
-        return 0;
+        return  caseRecordMapper.updateByPrimaryKeySelective(caseRecord);
     }
 
     @Override

@@ -99,7 +99,86 @@ public class CaseController extends BaseController {
             }
         }
 
-        return succeedRequest(casePatient.getId());
+        return succeedRequest(casePatient);
     }
 
+    /**
+     * 修改CaseRecord
+     *
+     * @param caseRecord
+     */
+    @PostMapping(value = "updateCaseRecord")
+    public Map updateCaseRecord(CaseRecord caseRecord) {
+
+        if (caseRecord == null) {
+            return badRequestOfArguments("caseRecord 为空");
+        }
+
+        String userId = getRequestToken();
+        caseRecord.setCreateUser(userId);
+        int i = caseRecordService.updateByPrimaryKeySelective(caseRecord);
+        if (i < 1) {
+            return badRequestOfArguments("修改caseRecord失败");
+        }
+
+        return succeedRequest("修改caseRecord成功");
+    }
+
+    /**
+     * 修改CasePatient
+     *
+     * @param casePatient
+     */
+    @PostMapping(value = "updateCasePatient")
+    public Map updateCaseRecord(CasePatient casePatient) {
+
+        if (casePatient == null) {
+            return badRequestOfArguments("casePatient 为空");
+        }
+
+        String userId = getRequestToken();
+        casePatient.setCreateUser(userId);
+        int i = casePatientService.updateByPrimaryKeySelective(casePatient);
+        if (i < 1) {
+            return badRequestOfArguments("修改casePatient失败");
+        }
+
+        return succeedRequest("修改casePatient成功");
+    }
+
+    /**
+     * 修改CaseContent
+     */
+    @PostMapping(value = "updateCaseContent")
+    public Map updateCaseContent(String weightPathTypeId, String recordId) {
+
+        if (StringUtils.isBlank(recordId) || StringUtils.isBlank(weightPathTypeId)) {
+            return badRequestOfArguments("weightPathTypeId 或 caseRecordId 为空");
+        }
+
+        int i = caseContentService.deleteByCaseRecordId(recordId);
+        if (i < 1) {
+            return badRequestOfArguments("recordId有误");
+        }
+
+        // 文件路径 与 病例文件id map解析
+        List<CaseContent> resultList;
+        try {
+            resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList>() {
+            }, Feature.OrderedField);
+        } catch (Exception e) {
+            return badRequestOfArguments("pathWeightTypeId 填写错误");
+        }
+
+        String userId = getRequestToken();
+        CaseContentBean caseContentBean = new CaseContentBean();
+        caseContentBean.setRecordId(recordId);
+        caseContentBean.setUpdateUser(userId);
+        caseContentBean.setWeightPathTypeId(resultList);
+        int l = caseContentService.insertByMap(caseContentBean);
+        if (l < 0) {
+            return badRequestOfInsert("更新CaseContent失败");
+        }
+        return succeedRequest(caseContentBean);
+    }
 }

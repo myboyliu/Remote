@@ -45,6 +45,11 @@
 
     </insert>
 
+    <!--由caseRecordId删除对应的病例-->
+    <update id="deleteByCaseRecordId" parameterType="java.lang.String">
+        update case_content set del_flag = "1" where record_id = #{recordId}
+    </update>
+
     <insert id="insert" parameterType="com.sicmed.remote.web.entity.CaseContent">
     insert into case_content (id, record_id, content_type_id, 
       content_path, order_weight, create_time, 

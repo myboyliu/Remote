@@ -25,7 +25,7 @@ public class CasePatientService implements BaseService<CasePatient> {
 
     @Override
     public int updateByPrimaryKeySelective(CasePatient casePatient) {
-        return 0;
+        return casePatientMapper.updateByPrimaryKeySelective(casePatient);
     }
 
     @Override
