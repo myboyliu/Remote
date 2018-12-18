@@ -48,6 +48,9 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.CaseRecord">
+    <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
     insert into case_record
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
