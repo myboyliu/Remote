@@ -34,7 +34,9 @@ const addBranchListByCurrentUserUrl = "/custom/branch/addList"; //根据当前�
 
 const getBranchListByCurrentUserUrl = "/custom/branch/getByCurrentUser"; //根据当前登陆的医政用户修改科室列表
 
-const updateBranchListByCurrentUserUrl = "/custom/branch/update"; //根据当前登陆的医政用户修改医院信息
+const updateCustomBranchListUrl = "/custom/branch/update"; //根据当前登陆的医政用户修改医院信息
+
+const getBranchListByParentIdUrl = "/branch/findByParam"; //根据父级科室ID查询科室列表
 
 const getDoctorListByCurrentUserUrl = "/user/managementDoctor";
 const getDoctorDetailByIdUrl = "/user/personalCenter";

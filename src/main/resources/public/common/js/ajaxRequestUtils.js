@@ -23,7 +23,6 @@ function ajaxRequest(type, url, data, processData, contentType, async, successCa
             token: localStorage.getItem("token")
         },
         success: function (data) {
-            console.log(data);
             if (data.code == 20000) {
                 successCallback(data.result);
             } else if (data.code == 40000 || data.code == 41006) {

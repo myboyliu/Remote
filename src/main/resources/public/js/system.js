@@ -1,4 +1,6 @@
 //  查询医院信息
+var doctorInfo = {};
+
 var hospitalId = '';
 var oldHospitalName = '';
 var oldHospitalTel = '';
@@ -56,7 +58,7 @@ function renderBranchListView(array) {
         var customList = array[i].customBranchList;
         for (var j = 0; j < customList.length; j++) {
             if (customList[j].id) {
-                _html += '<a type="" baseBranchId="' + customList[j].baseBranchId +
+                _html += '<a type="ALREADY_BRANCH" baseBranchId="' + customList[j].baseBranchId +
                     '" name="' + customList[j].id + '" href="javascript:;">' + customList[j].customName + '</a>';
             }
         }
@@ -69,7 +71,7 @@ function renderBranchListView(array) {
             if (customList[j].id) {
                 continue;
             }
-            _html += '<a type="" name="' + customList[j].baseBranchId + '" baseBranchId="" href="javascript:;">' + customList[j].baseBranchName + '</a>'
+            _html += '<a type="" name="" baseBranchId="' + customList[j].baseBranchId + '" href="javascript:;">' + customList[j].baseBranchName + '</a>'
         }
         _html += '<a centext="' + array[i].id + '" type="ADD_BUTTON" name="" baseBranchId="" href="javascript:;">+</a>'
         _html += '</div>\
@@ -97,8 +99,10 @@ function renderSpecialistTypeView(array) {
                     </tr>'
     }
     $('.expertTypeTbody').html(_html);
+    renderSpecialistTypeSelect(array);
 }
 
+/** 渲染医生列表左侧下拉列表*/
 function renderDoctorListView(array) {
     var _html = '';
     for (var i = 0; i < array.length; i++) {
@@ -144,8 +148,40 @@ function renderDoctorListView(array) {
     }
 }
 
+/** 渲染医生信息页面角色下拉列表 */
+function renderRolesSelect(result) {
+    var _html = '<option value="">请选择</option>';
+    for (var i = 0; i < result.length; i++) {
+        _html += '<option value="' + result[i].id + '">' + result[i].remarks + '</option>'
+    }
+    $('.powerSelect').html(_html);
+}
 
-// 根据医生id查医生信息
+/** 渲染医生信息页面科室下拉列表*/
+function renderBranchSelect(result) {
+    console.log(result);
+    var _html = '<option value="">请选择</option>';
+    for (var i = 0; i < result.length; i++) {
+        var customBranchList = result[i].customBranchList;
+        for (var j = 0; j < customBranchList.length; j++) {
+            _html += ' <option value="' + customBranchList[j].id + '">' + customBranchList[j].customName + '</option>';
+        }
+    }
+    $('.deptSelect').html(_html);
+
+}
+
+/** 渲染医生信息页面专家类型下拉列表*/
+function renderSpecialistTypeSelect(array) {
+    var _html = '';
+    var _html = '<option value="" money="" moneyVideo="">请选择</option>';
+    for (var i = 0; i < array.length; i++) {
+        _html += ' <option money="' + array[i].consultationPicturePrice + '" moneyVideo="' + array[i].consultationVideoPrice + '" value="' + array[i].id + '">' + array[i].specialistName + '</option>'
+    }
+    $('.expertSelect').html(_html);
+}
+
+/** 渲染医生信息页面*/
 function renderDoctorInfoView(result) {
     doctorInfo = result;
     // 0未审核 1通过 2拒绝 3不完整
@@ -175,8 +211,12 @@ function renderDoctorInfoView(result) {
     $('.titleSelect').val(result.titleName);
     $('.deptSelect').val(result.branchId);
     $('.expertSelect').val(result.specialistTypeId);
-    $('.cardName').html(result.doctorCardFront.substr(result.doctorCardFront.lastIndexOf('/'), result.doctorCardFront.length));
-    $('.signName').html(result.signature.substr(result.signature.lastIndexOf('/'), result.signature.length));
+    if (result.doctorCardFront) {
+        $('.cardName').html(result.doctorCardFront.substr(result.doctorCardFront.lastIndexOf('/'), result.doctorCardFront.length));
+    }
+    if (result.signature) {
+        $('.signName').html(result.signature.substr(result.signature.lastIndexOf('/'), result.signature.length));
+    }
     // var tempArr = result.caseTypeIds;
     // var _html = '';
     // for (var i = 0; i < tempArr.length; i++) {
@@ -193,37 +233,44 @@ function renderDoctorInfoView(result) {
     //     }
     //     _html += '</div>';
     // }
-    $('.requireBox').html(_html);
+    // $('.requireBox').html(_html);
     $('#beGoodAt').each(function () {
         this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
     })
-    if (data.credentialsImage != '') {
+    if (result.credentialsImage != '') {
         $('#olf').html('signatureImage.jpg')
     } else {
         $('#olf').html('')
     }
-    if (data.signatureImage != '') {
+    if (result.signatureImage != '') {
         $('#uhs').html('credentialsImage.jpg')
     } else {
         $('#uhs').html('')
     }
 }
 
+/** 请求空结果处理 */
+function emptyResult() {
+}
+
 $(function () {
 
-    /** 查询医院信息 */
-    ajaxRequest("GET", getHospitalByCurrentUserUrl, null, false, false, true, renderHospitalView, null, null);
+    /** 获取医院信息 */
+    ajaxRequest("GET", getHospitalByCurrentUserUrl, null, false, false, true, renderHospitalView, emptyResult, null);
 
-    /** 查询科室列表信息 */
-    ajaxRequest("GET", getBranchListByCurrentUserUrl, null, false, false, true, renderBranchListView, null, null);
+    /** 获取科室列表信息 */
+    ajaxRequest("GET", getBranchListByCurrentUserUrl, null, false, false, true, renderBranchListView, emptyResult, null);
 
-    /** 专家类型与诊费 */
-    ajaxRequest("GET", getSpecialistTypeByCurrentUser, null, false, false, true, renderSpecialistTypeView, null, null);
+    /** 获取专家类型与诊费 */
+    ajaxRequest("GET", getSpecialistTypeByCurrentUser, null, false, false, true, renderSpecialistTypeView, emptyResult, null);
 
     /** 查询医生管理页面左侧导航医生列表 */
-    ajaxRequest("GET", getDoctorListByCurrentUserUrl, null, false, false, true, renderDoctorListView, null, null);
+    ajaxRequest("GET", getDoctorListByCurrentUserUrl, null, false, false, true, renderDoctorListView, emptyResult, null);
 
-    var doctorInfo = {};
+    /**获取医生信息页面科室下拉列表数据*/
+    ajaxRequest("GET", getBranchListByCurrentUserUrl, null, false, false, true, renderBranchSelect, emptyResult, null);
+    // 获取权限类型
+    // ajaxRequest("GET", getRolesListUrl, null, false, false, true, renderRolesSelect, null, null);
 
     /*  //textarea 标签随着文本的高度实现自适应 */
     $('.text-adaption').each(function () {
@@ -232,8 +279,6 @@ $(function () {
         this.style.height = 'auto';
         this.style.height = (this.scrollHeight) + 'px';
     });
-
-
     // 管理中心切换
     $('.navContent > a').click(function () {
         var _index = $(this).index();
@@ -387,11 +432,12 @@ $(function () {
 
     // 删除科室
     $('.sectionList').delegate('.selectedContent a', 'click', function () {
-        if ($(this).attr('type') == 'CUSTOM_RANCH') {
+        if ($(this).attr('type') == 'CUSTOM_BRANCH') {
             $(this).remove();
-        }else if ($(this).attr('type') == '') {
-            $(this).addClass('choose').attr('type', '1').parents('.selectedContent').siblings('.unselectedContent').find('.unselectedBox').prepend($(this));
+        } else if ($(this).attr('type') == 'ALREADY_BRANCH') {
+            $(this).addClass('choose').attr('type', 'REMOVE_BRANCH').parents('.selectedContent').siblings('.unselectedContent').find('.unselectedBox').prepend($(this));
         } else {
+            //"ADD_BRANCH"
             $(this).removeClass('choose').attr('type', '').parents('.selectedContent').siblings('.unselectedContent').find('.unselectedBox').prepend($(this));
         }
         if ($('.choose').length > 0) {
@@ -400,10 +446,24 @@ $(function () {
             $('.sectionSubmit').removeClass('active');
         }
     })
-    // 添加科室
+
     $('.sectionList').delegate('.unselectedContent a', 'click', function () {
         if ($(this).attr('type') == 'ADD_BUTTON') {
-            //页面层
+
+            var data = {"parentId": $(this).attr('centext')}
+            ajaxRequest("GET", getBranchListByParentIdUrl, data, true, "application/json", false, renderCustomBranchSelect, null, null);
+
+            function renderCustomBranchSelect(result) {
+                $("#customBranchSelect").empty();
+                $("#customBranchName").val("");
+                var _HTML = '';
+                for (var i = 0; i < result.length; i++) {
+                    _HTML += '<option value="' + result[i].id + '">' + result[i].branchName + '</option>';
+                }
+                $("#customBranchSelect").append(_HTML);
+            }
+
+            var id = "#" + $(this).attr('centext')
             layer.open({
                 type: 1,
                 title: '',
@@ -413,13 +473,30 @@ $(function () {
                 shadeClose: false,
                 content: $('#CUSTOM_BRANCH_VIEW') //调到新增页面
             });
-            // var centextId = "#" + $(this).attr('centext');
-            // var _html = '<a type="CUSTOM_RANCH" class="choose" baseBranchId=123" name="21312" href="javascript:;">12312</a>';
-            // $(centextId).prepend(_html);
+            // 添加科室
+            $("#closCustomBranchView").one("click", function () {
+                $('#CUSTOM_BRANCH_VIEW').hide();
+                layer.closeAll();
+            })
+            $("#addCustomBranch").bind("click", function () {
+                if ($.trim($("#customBranchName").val()).length < 1) {
+                    layer.msg("自定义科室名字不能为空")
+                    $("#customBranchName").val("");
+                    return;
+                }
+                $('#CUSTOM_BRANCH_VIEW').hide();
+                layer.closeAll();
+                var _html = '<a class="choose" type="CUSTOM_BRANCH" baseBranchId="' + $("#customBranchSelect").val() +
+                    '" name="" href="javascript:;">' + $("#customBranchName").val() + '</a>';
+                $(id).prepend(_html);
+                $(this).unbind();
+            })
+
+
         } else if ($(this).attr('type') == '') {
-            $(this).addClass('choose').attr('type', '0').parents('.unselectedContent').siblings('.selectedContent').find('.selectedBox').prepend($(this));
+            $(this).addClass('choose').attr('type', 'ADD_BRANCH').parents('.unselectedContent').siblings('.selectedContent').find('.selectedBox').prepend($(this));
         } else {
-            $(this).removeClass('choose').attr('type', '').parents('.unselectedContent').siblings('.selectedContent').find('.selectedBox').prepend($(this));
+            $(this).removeClass('choose').attr('type', 'ALREADY_BRANCH').parents('.unselectedContent').siblings('.selectedContent').find('.selectedBox').prepend($(this));
         }
         if ($('.choose').length > 0) {
             $('.sectionSubmit').addClass('active');
@@ -434,27 +511,20 @@ $(function () {
             var deptHospitalDetailList = [];
             var objArr = $('.choose');
             if (objArr.length > 0) {
+                let str = "";
                 for (var i = 0; i < objArr.length; i++) {
                     deptHospitalDetailList.push({
                         "customBranchId": objArr.eq(i).attr('name'),
                         "customBranchName": objArr.eq(i).html(),
                         "baseBranchId": objArr.eq(i).attr('baseBranchId'),
-                        "types": objArr.eq(i).attr('type')
+                        "type": objArr.eq(i).attr('type')
                     })
                 }
-                var data = {
-                    "deptHospitalDetailList": JSON.stringify(deptHospitalDetailList),
-                };
+                var data = new FormData;
+                data.append("customBranchStr", JSON.stringify(deptHospitalDetailList))
 
-                // var _html = '<a type="" baseBranchId="' + customList[j].baseBranchId + '" name="' + customList[j].id + '" href="javascript:;">' + customList[j].customName + '</a>';
-
-                console.log(JSON.stringify(deptHospitalDetailList));
-
-                /** 添加科室列表 */
-
-                // ajaxRequest("POST", addBranchListByCurrentUserUrl, data, false, false, true, updateCustomBranchSuccess, updateCustomBranchFailed, null);
-                /** 修改科室列表 */
-                // ajaxRequest("POST", updateCustomBranchListUrl, data, false, false, true, updateCustomBranchSuccess, updateCustomBranchFailed, null);
+                /** 自定义科室列表变更提交*/
+                ajaxRequest("POST", updateCustomBranchListUrl, data, false, false, true, updateCustomBranchSuccess, updateCustomBranchFailed, null);
 
                 function updateCustomBranchFailed(result) {
                     /** 查询科室列表信息 */
@@ -513,44 +583,6 @@ $(function () {
         return false;
     });
 
-// 获取专家类型列表 getSpecialistType
-// getSpecialistType();
-
-// 获取科室列表
-    ajaxRequest("GET", getBranchListByCurrentUserUrl, null, false, false, true, renderBranchSelect, emptyBranch, null);
-
-    function emptyBranch() {
-
-    }
-
-    function renderBranchSelect(result) {
-        var _html = '<option value="">请选择</option>';
-        for (var i = 0; i < result.length; i++) {
-            _html += ' <option value="' + result[i].hospitalDeptId + '">' + result[i].deptName + '</option>';
-        }
-        $('.deptSelect').html(_html);
-
-    }
-
-// 获取权限类型
-    $.ajax({
-        type: 'GET',
-        url: IP + '/roles/getEntityList',
-        dataType: 'json',
-        global: false,
-        success: function (data) {
-            // console.log(data);
-            if (data.status == 200) {
-                var tempArr = [];
-                tempArr = data.rolesBeanList;
-                var _html = '<option value="">请选择</option>';
-                for (var i = 0; i < tempArr.length; i++) {
-                    _html += '<option value="' + tempArr[i].id + '">' + tempArr[i].remarks + '</option>'
-                }
-                $('.powerSelect').html(_html);
-            }
-        }
-    })
 
 // 上传证书
     $('.cardBtn').click(function () {
