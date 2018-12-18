@@ -3,7 +3,6 @@ package com.sicmed.remote.web.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
-import com.sicmed.remote.web.YoonaLtUtils.IdentityCardUtil;
 import com.sicmed.remote.web.bean.CaseContentBean;
 import com.sicmed.remote.web.entity.CaseContent;
 import com.sicmed.remote.web.entity.CasePatient;
@@ -14,8 +13,6 @@ import com.sicmed.remote.web.service.CaseRecordService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,7 +44,7 @@ public class CaseController extends BaseController {
      * @param caseRecordBr
      * @param weightPathTypeId
      */
-    @PostMapping(value = "insertNewCase")
+/*    @PostMapping(value = "insertNewCase")
     public Map insertNewCase(@Validated CasePatient casePatient, BindingResult casePatientBr,
                              @Validated CaseRecord caseRecord, BindingResult caseRecordBr,
                              String weightPathTypeId) {
@@ -100,7 +97,7 @@ public class CaseController extends BaseController {
         }
 
         return succeedRequest(casePatient);
-    }
+    }*/
 
     /**
      * 修改CaseRecord
