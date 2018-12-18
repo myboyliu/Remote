@@ -1,16 +1,21 @@
 package com.sicmed.remote.web.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.ApplyType;
-import com.sicmed.remote.web.entity.ApplyForm;
-import com.sicmed.remote.web.entity.CaseRecord;
-import com.sicmed.remote.web.entity.UserDetail;
-import com.sicmed.remote.web.service.ApplyFormService;
-import com.sicmed.remote.web.service.UserDetailService;
+import com.sicmed.remote.web.YoonaLtUtils.IdentityCardUtil;
+import com.sicmed.remote.web.bean.CaseContentBean;
+import com.sicmed.remote.web.entity.*;
+import com.sicmed.remote.web.service.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -23,28 +28,92 @@ public class ApplyController extends BaseController {
     @Autowired
     private UserDetailService userDetailService;
 
+    @Autowired
+    private CasePatientService casePatientService;
+
+    @Autowired
+    private CaseRecordService caseRecordService;
+
+    @Autowired
+    private CaseContentService caseContentService;
+
     /**
-     * 保存草稿
+     * 添加草稿
      *
+     * @param casePatient
      * @param caseRecord
-     * @param applyForm
+     * @param weightPathTypeId
      */
     @PostMapping(value = "draft")
-    public Map draft(CaseRecord caseRecord, ApplyForm applyForm) {
-
-        if (caseRecord == null) {
-            return badRequestOfArguments("参数为空");
-        }
+    public Map draft(CasePatient casePatient, CaseRecord caseRecord, String weightPathTypeId) {
 
         String userId = getRequestToken();
 
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setApplyUserId(userId);
+
+        CaseContentBean caseContentBean = new CaseContentBean();
+
+        // 添加病例患者基本信息
+        if (casePatient != null) {
+
+            String str = casePatient.getPatientCard();
+            if (StringUtils.isNotBlank(str)) {
+
+                if (!IdentityCardUtil.validateCard(casePatient.getPatientCard())) {
+                    return badRequestOfArguments("身份证输入有误");
+                }
+                casePatient.setPatientSex(IdentityCardUtil.getGenderByIdCard(casePatient.getPatientCard()));
+            }
+
+            casePatient.setCreateUser(userId);
+            int i = casePatientService.insertSelective(casePatient);
+            if (i < 1) {
+                return badRequestOfInsert("添加casePatient失败");
+            }
+            caseRecord.setPatientId(casePatient.getId());
+        }
+
+        // 添加病例初步诊断结果
+        if (caseRecord != null) {
+
+            caseRecord.setCreateUser(userId);
+            int j = caseRecordService.insertSelective(caseRecord);
+            if (j < 1) {
+                return badRequestOfInsert("添加caseRecord的caseDiagnosis失败");
+            }
+
+            caseContentBean.setRecordId(caseRecord.getId());
+            applyForm.setCaseRecordId(caseRecord.getId());
+        }
+
+
+        // 添加病例所需文件
+        if (StringUtils.isNotBlank(weightPathTypeId)) {
+
+            // 文件路径 与 病例文件id map解析
+            List<CaseContent> resultList;
+            try {
+                resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList>() {
+                }, Feature.OrderedField);
+            } catch (Exception e) {
+                return badRequestOfArguments("pathWeightTypeId 填写错误");
+            }
+            caseContentBean.setRecordId(caseRecord.getId());
+            caseContentBean.setCreateUser(userId);
+            caseContentBean.setWeightPathTypeId(resultList);
+            int k = caseContentService.insertByMap(caseContentBean);
+            if (k < 0) {
+                return badRequestOfInsert("添加CaseContent失败");
+            }
+        }
+
+        // 添加applyForm,applyStatus申请状态为草稿
         UserDetail userDetail = userDetailService.getByPrimaryKey(userId);
         if (userDetail == null) {
             return badRequestOfArguments("获取医生详细信息失败");
         }
 
-        applyForm.setCaseRecordId(caseRecord.getId());
-        applyForm.setApplyUserId(userId);
         applyForm.setApplyBranchId(userDetail.getBranchId());
         String applyStatus = String.valueOf(ApplyType.APPLY_DRAFT);
         applyForm.setApplyStatus(applyStatus);
@@ -52,8 +121,10 @@ public class ApplyController extends BaseController {
         if (i < 1) {
             return badRequestOfArguments("添加草稿失败");
         }
-        return succeedRequest(applyForm);
+
+        return succeedRequest(casePatient);
     }
+
     // 转诊
 
     // 图文会诊
