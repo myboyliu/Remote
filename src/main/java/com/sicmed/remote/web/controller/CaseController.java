@@ -24,6 +24,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author YoonaLt
+ * @version Running JDK 1.8
+ * @description 创建病例以及修改病例相关
+ * @data 2018/12/19
+ */
 @Slf4j
 @RestController
 @RequestMapping(value = "case")

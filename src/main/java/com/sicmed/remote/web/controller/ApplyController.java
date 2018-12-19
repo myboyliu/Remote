@@ -10,6 +10,8 @@ import com.sicmed.remote.web.entity.*;
 import com.sicmed.remote.web.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,15 +20,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author YoonaLt
+ * @version Running JDK 1.8
+ * @description 转诊, 图文会诊, 视频会诊, 草稿
+ * @data 2018/12/19
+ */
 @RestController
 @RequestMapping(value = "apply")
 public class ApplyController extends BaseController {
 
     @Autowired
     private ApplyFormService applyFormService;
-
-    @Autowired
-    private UserDetailService userDetailService;
 
     @Autowired
     private CasePatientService casePatientService;
@@ -115,8 +120,8 @@ public class ApplyController extends BaseController {
         }
 
         applyForm.setApplyBranchId(userDetail.getBranchId());
-        String applyStatus = String.valueOf(ApplyType.APPLY_DRAFT);
-        applyForm.setApplyStatus(applyStatus);
+        String applyType = String.valueOf(ApplyType.APPLY_DRAFT);
+        applyForm.setApplyType(applyType);
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("添加草稿失败");
@@ -127,25 +132,79 @@ public class ApplyController extends BaseController {
 
     /**
      * 转诊
+     *
      * @param applyForm
      */
     @PostMapping(value = "transfer")
-    public Map transferTreatment(ApplyForm applyForm) {
+    public Map transferTreatment(@Validated ApplyForm applyForm, BindingResult applyFormBr) {
+
+        if (applyFormBr.hasErrors()) {
+            return fieldErrorsBuilder(applyFormBr);
+        }
 
         String userId = getRequestToken();
 
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
-        applyForm.setApplyBranchId(userDetail.getBranchId());
-        String applyStatus = String.valueOf(ApplyType.APPLY_REFERRAL);
-        applyForm.setApplyStatus(applyStatus);
+        String applyType = String.valueOf(ApplyType.APPLY_REFERRAL);
+        applyForm.setApplyType(applyType);
+        applyForm.setApplyUserId(userId);
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
-            return badRequestOfArguments("转诊申请失败");
+            return badRequestOfArguments("转诊记录保存失败");
         }
+
         return succeedRequest(applyForm);
     }
 
-    // 图文会诊
+    /**
+     * 视频会诊
+     *
+     * @param applyForm
+     * @param applyFormBr
+     */
+    @PostMapping(value = "video")
+    public Map videoConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr) {
 
-    // 视频会诊
+        if (applyFormBr.hasErrors()) {
+            return fieldErrorsBuilder(applyFormBr);
+        }
+
+        String userId = getRequestToken();
+
+        applyForm.setApplyUserId(userId);
+        String applyType = String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO);
+        applyForm.setApplyType(applyType);
+        int i = applyFormService.insertSelective(applyForm);
+        if (i < 1) {
+            return badRequestOfArguments("视频会诊记录保存失败");
+        }
+
+        return succeedRequest(applyForm);
+    }
+
+    /**
+     * 图文会诊
+     *
+     * @param applyForm
+     * @param applyFormBr
+     */
+    @PostMapping(value = "picture")
+    public Map pictureConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr) {
+
+        if (applyFormBr.hasErrors()) {
+            return fieldErrorsBuilder(applyFormBr);
+        }
+
+        String userId = getRequestToken();
+
+        applyForm.setApplyUserId(userId);
+        String applyType = String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT);
+        applyForm.setApplyType(applyType);
+        int i = applyFormService.insertSelective(applyForm);
+        if (i < 1) {
+            return badRequestOfArguments("图文会诊记录保存失败");
+        }
+
+        return succeedRequest(applyForm);
+    }
+
 }

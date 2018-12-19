@@ -9,9 +9,9 @@
         <result column="apply_user_summary" jdbcType="VARCHAR" property="applyUserSummary"/>
         <result column="invite_user_summary" jdbcType="VARCHAR" property="inviteUserSummary"/>
         <result column="apply_user_id" jdbcType="VARCHAR" property="applyUserId"/>
-        <result column="apply_manager_id" jdbcType="VARCHAR" property="applyManagerId"/>
+        <result column="apply_hospital_id" jdbcType="VARCHAR" property="applyHospitalId"/>
         <result column="invite_user_id" jdbcType="VARCHAR" property="inviteUserId"/>
-        <result column="invite_manager_id" jdbcType="VARCHAR" property="inviteManagerId"/>
+        <result column="invite_hospital_id" jdbcType="VARCHAR" property="inviteHospitalId"/>
         <result column="apply_branch_id" jdbcType="VARCHAR" property="applyBranchId"/>
         <result column="consultant_apply_time" jdbcType="TIMESTAMP" property="consultantApplyTime"/>
         <result column="apply_status" jdbcType="VARCHAR" property="applyStatus"/>
@@ -27,7 +27,7 @@
     </resultMap>
     <sql id="Base_Column_List">
     id, apply_number, case_record_id, case_summary, apply_user_summary, invite_user_summary, 
-    apply_user_id, apply_manager_id, invite_user_id, invite_manager_id, apply_branch_id, 
+    apply_user_id, apply_hospital_id, invite_user_id, invite_hospital_id, apply_branch_id,
     consultant_apply_time, apply_status, apply_type, apply_remark, create_time, create_user, 
     update_time, update_user, delete_time, delete_user, del_flag
   </sql>
@@ -44,16 +44,16 @@
     <insert id="insert" parameterType="com.sicmed.remote.web.entity.ApplyForm">
     insert into apply_form (id, apply_number, case_record_id, 
       case_summary, apply_user_summary, invite_user_summary, 
-      apply_user_id, apply_manager_id, invite_user_id, 
-      invite_manager_id, apply_branch_id, consultant_apply_time, 
+      apply_user_id, apply_hospital_id, invite_user_id,
+      invite_hospital_id, apply_branch_id, consultant_apply_time,
       apply_status, apply_type, apply_remark, 
       create_time, create_user, update_time, 
       update_user, delete_time, delete_user, 
       del_flag)
     values (#{id,jdbcType=VARCHAR}, #{applyNumber,jdbcType=VARCHAR}, #{caseRecordId,jdbcType=VARCHAR}, 
       #{caseSummary,jdbcType=VARCHAR}, #{applyUserSummary,jdbcType=VARCHAR}, #{inviteUserSummary,jdbcType=VARCHAR}, 
-      #{applyUserId,jdbcType=VARCHAR}, #{applyManagerId,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=VARCHAR}, 
-      #{inviteManagerId,jdbcType=VARCHAR}, #{applyBranchId,jdbcType=VARCHAR}, #{consultantApplyTime,jdbcType=TIMESTAMP}, 
+      #{applyUserId,jdbcType=VARCHAR}, #{applyHospitalId,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=VARCHAR},
+      #{inviteHospitalId,jdbcType=VARCHAR}, #{applyBranchId,jdbcType=VARCHAR}, #{consultantApplyTime,jdbcType=TIMESTAMP},
       #{applyStatus,jdbcType=VARCHAR}, #{applyType,jdbcType=VARCHAR}, #{applyRemark,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{updateUser,jdbcType=VARCHAR}, #{deleteTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR}, 
@@ -86,14 +86,14 @@
             <if test="applyUserId != null">
                 apply_user_id,
             </if>
-            <if test="applyManagerId != null">
-                apply_manager_id,
+            <if test="applyHospitalId != null">
+                apply_hospital_id,
             </if>
             <if test="inviteUserId != null">
                 invite_user_id,
             </if>
-            <if test="inviteManagerId != null">
-                invite_manager_id,
+            <if test="inviteHospitalId != null">
+                invite_hospital_id,
             </if>
             <if test="applyBranchId != null">
                 apply_branch_id,
@@ -154,14 +154,14 @@
             <if test="applyUserId != null">
                 #{applyUserId,jdbcType=VARCHAR},
             </if>
-            <if test="applyManagerId != null">
-                #{applyManagerId,jdbcType=VARCHAR},
+            <if test="applyHospitalId != null">
+                #{applyHospitalId,jdbcType=VARCHAR},
             </if>
             <if test="inviteUserId != null">
                 #{inviteUserId,jdbcType=VARCHAR},
             </if>
-            <if test="inviteManagerId != null">
-                #{inviteManagerId,jdbcType=VARCHAR},
+            <if test="inviteHospitalId != null">
+                #{inviteHospitalId,jdbcType=VARCHAR},
             </if>
             <if test="applyBranchId != null">
                 #{applyBranchId,jdbcType=VARCHAR},
@@ -222,14 +222,14 @@
             <if test="applyUserId != null">
                 apply_user_id = #{applyUserId,jdbcType=VARCHAR},
             </if>
-            <if test="applyManagerId != null">
-                apply_manager_id = #{applyManagerId,jdbcType=VARCHAR},
+            <if test="applyHospitalId != null">
+                apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR},
             </if>
             <if test="inviteUserId != null">
                 invite_user_id = #{inviteUserId,jdbcType=VARCHAR},
             </if>
-            <if test="inviteManagerId != null">
-                invite_manager_id = #{inviteManagerId,jdbcType=VARCHAR},
+            <if test="inviteHospitalId != null">
+                invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR},
             </if>
             <if test="applyBranchId != null">
                 apply_branch_id = #{applyBranchId,jdbcType=VARCHAR},
@@ -278,9 +278,9 @@
       apply_user_summary = #{applyUserSummary,jdbcType=VARCHAR},
       invite_user_summary = #{inviteUserSummary,jdbcType=VARCHAR},
       apply_user_id = #{applyUserId,jdbcType=VARCHAR},
-      apply_manager_id = #{applyManagerId,jdbcType=VARCHAR},
+      apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR},
       invite_user_id = #{inviteUserId,jdbcType=VARCHAR},
-      invite_manager_id = #{inviteManagerId,jdbcType=VARCHAR},
+      invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR},
       apply_branch_id = #{applyBranchId,jdbcType=VARCHAR},
       consultant_apply_time = #{consultantApplyTime,jdbcType=TIMESTAMP},
       apply_status = #{applyStatus,jdbcType=VARCHAR},
