@@ -6,6 +6,7 @@ import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.CustomBranchType;
 import com.sicmed.remote.web.bean.BranchBean;
 import com.sicmed.remote.web.bean.CustomBranchBean;
+import com.sicmed.remote.web.bean.HospitalBean;
 import com.sicmed.remote.web.bean.UpdateCustomBranchBean;
 import com.sicmed.remote.web.entity.CustomBranch;
 import com.sicmed.remote.web.entity.UserDetail;
@@ -140,5 +141,22 @@ public class CustomBranchController extends BaseController {
             return succeedRequestOfSelect(customBranchList);
         }
         return badRequestOfSelect(null);
+    }
+
+
+    /**
+     * 查询所有专家类型列表
+     *
+     * @return
+     */
+    @GetMapping(value = "getHospitalBranchList")
+    public Object getHospitalBranchList() {
+
+        List<HospitalBean> hospitalBeanList = customBranchService.getHospitalBranchList(null);
+
+        if (hospitalBeanList.isEmpty()) {
+            return badRequestOfSelect("");
+        }
+        return succeedRequestOfSelect(hospitalBeanList);
     }
 }

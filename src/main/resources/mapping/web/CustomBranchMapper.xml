@@ -312,4 +312,36 @@
         WHERE
         baseBranch.parent_id is NULL
     </select>
+
+
+    <resultMap id="HospitalBeanResultMap" type="com.sicmed.remote.web.bean.HospitalBean">
+        <id column="hospitalId" jdbcType="VARCHAR" property="id"/>
+        <result column="hospitalName" jdbcType="VARCHAR" property="hospitalName"/>
+        <collection property="branchBeanList" ofType="com.sicmed.remote.web.bean.BranchBean" javaType="ArrayList">
+            <id column="branchId" jdbcType="VARCHAR" property="id"/>
+            <result column="branchName" jdbcType="VARCHAR" property="branchName"/>
+            <collection property="customBranchList" ofType="com.sicmed.remote.web.bean.CustomBranchBean" javaType="ArrayList">
+                <id column="customBranchId" jdbcType="VARCHAR" property="id"/>
+                <result column="customName" jdbcType="VARCHAR" property="customName"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <sql id="HospitalBean_Column_List">
+        customBranch.id customBranchId,customBranch.custom_name customName,
+        hospital.id hospitalId, hospital.hospital_name hospitalName,
+        parentBranch.id branchId,parentBranch.branch_name branchName
+    </sql>
+    <sql id="HospitalBean_Left_Join">
+        LEFT JOIN base_hospital hospital ON hospital.id = customBranch.hospital_id
+        LEFT JOIN base_branch branch ON branch.id = customBranch.branch_id
+        LEFT JOIN base_branch parentBranch ON parentBranch.id = branch.parent_id
+    </sql>
+    <select id="selectHospitalBranchList" parameterType="com.sicmed.remote.web.entity.Hospital" resultMap="HospitalBeanResultMap">
+        select
+        <include refid="HospitalBean_Column_List"/>
+        from custom_branch customBranch
+        <include refid="HospitalBean_Left_Join"/>
+        WHERE
+        customBranch.del_flag = "0"
+    </select>
 </mapper>

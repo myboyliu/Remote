@@ -3,8 +3,10 @@ package com.sicmed.remote.web.mapper;
 
 import com.sicmed.remote.web.bean.BranchBean;
 import com.sicmed.remote.web.bean.CustomBranchBean;
+import com.sicmed.remote.web.bean.HospitalBean;
 import com.sicmed.remote.web.bean.UpdateCustomBranchBean;
 import com.sicmed.remote.web.entity.CustomBranch;
+import com.sicmed.remote.web.entity.Hospital;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -30,4 +32,6 @@ public interface CustomBranchMapper {
     int insertCustomBranchList(@Param("addCustomBranchBeanList") List<UpdateCustomBranchBean> addCustomBranchBeanList);
 
     int deleteCustomBranchIdList(@Param("removeCustomBranchBeanList") List<String> removeCustomBranchBeanList);
+
+    List<HospitalBean> selectHospitalBranchList(Hospital hospital);
 }

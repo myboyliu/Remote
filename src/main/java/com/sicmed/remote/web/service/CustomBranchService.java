@@ -2,8 +2,10 @@ package com.sicmed.remote.web.service;
 
 import com.sicmed.remote.web.bean.BranchBean;
 import com.sicmed.remote.web.bean.CustomBranchBean;
+import com.sicmed.remote.web.bean.HospitalBean;
 import com.sicmed.remote.web.bean.UpdateCustomBranchBean;
 import com.sicmed.remote.web.entity.CustomBranch;
+import com.sicmed.remote.web.entity.Hospital;
 import com.sicmed.remote.web.mapper.CustomBranchMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,5 +59,8 @@ public class CustomBranchService implements BaseService<CustomBranch> {
 
     public int deleteCustomBranchIdList(List<String> removeCustomBranchBeanList) {
         return customBranchMapper.deleteCustomBranchIdList(removeCustomBranchBeanList);
+    }
+    public List<HospitalBean> getHospitalBranchList(Hospital hospital) {
+        return customBranchMapper.selectHospitalBranchList(hospital);
     }
 }
