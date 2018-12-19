@@ -35,14 +35,15 @@ $(function () {
             function loginSuccess(responseJson) {
                 localStorage.setItem('token', responseJson.id);
                 localStorage.setItem('name', responseJson.userName);
+                localStorage.setItem('rolesName',"医生");
                 layer.close(index);
-                if (responseJson == "医政") {
-                    // window.location.href = '/workbench/workbench.html';
-                    window.location.href = '/page/system.html';
+                if ("1" == "医政") {
+                    window.location.href = '/page/workbench.html';
+                    // window.location.href = '/page/system.html';
                 } else {
                     layer.closeAll();
-                    // window.location.href = '/morkbench/morkbench.html';
-                    window.location.href = '/page/system.html';
+                    window.location.href = '/page/morkbench.html';
+                    // window.location.href = '/page/system.html';
                 }
             }
         }

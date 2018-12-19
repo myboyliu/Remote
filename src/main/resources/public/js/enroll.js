@@ -232,7 +232,7 @@ $(function () {
             data.append("userStrong", $("#textAdaotion").val());
             data.append("consultationPicturePrice", $("#consultationPicturePrice").val());
             data.append("consultationVideoPrice", $("#consultationVideoPrice").val());
-            if (doctorCardFront.length < 16) {
+            if (doctorCardFront.length > 16) {
                 data.append('doctorCardFront', doctorCardFront);
             }
             if (signature.length > 16) {

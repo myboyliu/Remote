@@ -142,9 +142,9 @@ function renderDoctorListView(array) {
         }
     }
     // 未审核小红点 处理
-    for (var i = 0; i < $('.threeLevelItem[stateFlag=0]').length; i++) {
-        $('.threeLevelItem[stateFlag=0]').parents('.threeLevelUl').siblings('.twoLevelName').addClass('redFlag');
-        $('.threeLevelItem[stateFlag=0]').parents('.twoLevelUl').siblings('.oneLevelName').addClass('redFlag');
+    for (var i = 0; i < $('.threeLevelItem[stateFlag=AUTHENTICATION_CREATE_SUCCESS]').length; i++) {
+        $('.threeLevelItem[stateFlag=AUTHENTICATION_CREATE_SUCCESS]').parents('.threeLevelUl').siblings('.twoLevelName').addClass('redFlag');
+        $('.threeLevelItem[stateFlag=AUTHENTICATION_CREATE_SUCCESS]').parents('.twoLevelUl').siblings('.oneLevelName').addClass('redFlag');
     }
 }
 
@@ -211,10 +211,10 @@ function renderDoctorInfoView(result) {
     $('.deptSelect').val(result.branchId);
     $('.expertSelect').val(result.specialistTypeId);
     if (result.doctorCardFront) {
-        $('.cardName').html(result.doctorCardFront.substr(result.doctorCardFront.lastIndexOf('/'), result.doctorCardFront.length));
+        $('.cardName').html(result.doctorCardFront);
     }
     if (result.signature) {
-        $('.signName').html(result.signature.substr(result.signature.lastIndexOf('/'), result.signature.length));
+        $('.signName').html(result.signature);
     }
     var caseTypeList = result.caseTypeIds;
     for (var i = 0; i < caseTypeList.length; i++) {
@@ -235,7 +235,7 @@ function renderCaseView(result) {
         var twoArr = result[i].childList;
         for (var j = 0; j < twoArr.length; j++) {
             // _html += '<div type="" class="checkSingle CheckBg" name="' + twoArr[j].id + '">' + twoArr[j].caseTypeName + '</div>'
-            _html += '<div id="' + twoArr[j].id + '" type="" class="checkSingle " name="' + twoArr[j].id + '">' + twoArr[j].caseTypeName + '</div>'
+            _html += '<div parentName="' + result.caseTypeName + '" id="' + twoArr[j].id + '" type="" class="checkSingle " name="' + twoArr[j].id + '">' + twoArr[j].caseTypeName + '</div>'
         }
         _html += '</div>';
     }
@@ -268,7 +268,8 @@ $(function () {
 
     /**获取病历类型列表*/
     ajaxRequest("GET", getAllCaseContentType, null, true, false, true, renderCaseView, null, null);
-    /*  //textarea 标签随着文本的高度实现自适应 */
+
+    /** textarea 标签随着文本的高度实现自适应 */
     $('.text-adaption').each(function () {
         this.setAttribute('style', 'height:' + (this.scrollHeight) + 40 + 'px;overflow-y:hidden;');
     }).on('input propertychange', function () {
@@ -284,18 +285,8 @@ $(function () {
             $('.doctorTitleList').css('height', $('body,html').height() - $('.doctorTitleList').offset().top - 70)
         }
     })
-
     // 判断是否是从新消息过来的
-    if (localStorage.getItem('lookDoctorId')) {
-        var id = localStorage.getItem('lookDoctorId');
-        // doctorIdGetInfo(id);
-        $('.navContent > a').eq(2).addClass('active').siblings('a').removeClass('active');
-        $('.mainContent > div').hide().eq(2).show();
-        localStorage.removeItem('lookDoctorId');
-    }
-
-
-    // 医院信息
+    /** 医院信息页面组件事件*/
     $('.hospitalName').blur(function () {
         if ($(this).val() == '') {
             $('.hospitalNameRemind').show();
@@ -305,6 +296,7 @@ $(function () {
     }).focus(function () {
         $('.hospitalNameRemind').hide();
     })
+
     $('.hospitalTel').blur(function () {
         if ($(this).val() == '') {
             $('.hospitalTelRemind').html('内容不能为空').show();
@@ -320,6 +312,7 @@ $(function () {
     }).focus(function () {
         $('.hospitalTelRemind').hide();
     })
+
     $('.imgPic').blur(function () {
         if ($(this).val() == '') {
             $('.hospitalPicRemind').show();
@@ -329,6 +322,7 @@ $(function () {
     }).focus(function () {
         $('.hospitalPicRemind').hide();
     })
+
     $('.videoPic').blur(function () {
         if ($(this).val() == '') {
             $('.hospitalPicRemind').show();
@@ -339,8 +333,7 @@ $(function () {
         $('.hospitalPicRemind').hide();
     })
 
-
-    // 修改按钮
+    /** 医院信息修改按钮状态改变事件*/
     $('.hospitalName,.hospitalTel,.imgPic,.videoPic').bind('input propertychange', function () {
         if ($('.hospitalName').val() != '' && $('.hospitalTel').val() != '' && $('.imgPic').val() != '' && $('.videoPic').val() != '' || oldHospitalName != newHospitalName || oldHospitalTel != newHospitalTel || oldImgPic != newImgPic || oldVideoPic != newVideoPic) {
             $('.submitBtn').addClass('active');
@@ -351,7 +344,7 @@ $(function () {
         }
     })
 
-    // 医院保存
+    /** 医院信息修改提交事件 */
     $('.submitBtn').click(function () {
         if ($(this).hasClass('active')) {
             if ($('.hospitalName').val() == '') {
@@ -388,7 +381,7 @@ $(function () {
                         shade: [0.1, '#000000'],
                         shadeClose: false,
                         time: 2000,
-                        content: _$('.successBox'),
+                        content: _$('.successBox')
                     });
                 }
 
@@ -409,13 +402,16 @@ $(function () {
         }
     })
 
-    // 提示信息、
+    /** 科室管理页面*/
+    // 提示信息
     $('.sectionList').delegate('.problemContent', 'mouseenter', function () {
         $(this).find('.problemBox').show();
     })
+
     $('.sectionList').delegate('.problemContent', 'mouseleave', function () {
         $(this).find('.problemBox').hide();
     })
+
     // 展开、收起
     $('.sectionList').delegate('.sectionTitle', 'click', function () {
         $(this).siblings('.sectionContent').stop(true).slideToggle();
@@ -442,7 +438,7 @@ $(function () {
             $('.sectionSubmit').removeClass('active');
         }
     })
-
+    //添加科室
     $('.sectionList').delegate('.unselectedContent a', 'click', function () {
         if ($(this).attr('type') == 'ADD_BUTTON') {
 
@@ -547,12 +543,14 @@ $(function () {
         }
     })
 
+    /**医生管理页面*/
     // 一级切换
     $('.oneLevelUl').delegate('.oneLevelItem', 'click', function () {
         $(this).addClass('active').siblings('.oneLevelItem').removeClass('active');
         $(this).find('.twoLevelUl').stop(true).slideToggle();
         $(this).siblings('.oneLevelItem').find('.twoLevelUl').stop(true).slideUp();
     })
+
     // 二级科室切换
     $('.oneLevelUl').delegate('.twoLevelItem', 'click', function () {
         if ($(this).hasClass('active')) {
@@ -566,6 +564,7 @@ $(function () {
         }
         return false;
     });
+
     // 三级按钮
     $('.oneLevelUl').delegate('.threeLevelItem', 'click', function () {
         $('.threeLevelItem').removeClass('active');
@@ -580,25 +579,50 @@ $(function () {
     });
 
 
-// 上传证书
+
+
+    var doctorCard = "0";
+    var signature = "0";
+
+
+    //上传医师资格证，记录文件名添加到span里
+    cardUpload.onchange = function () {
+        cardName.innerHTML = cardUpload.files[0].name;
+    };
+    var signature;
+    //上传签名，记录文件名添加到span里
+    signUpload.onchange = function () {
+        signName.innerHTML = signUpload.files[0].name;
+    }
+    /** 证书上传事件*/
     $('.cardBtn').click(function () {
         if ($('.cardUp')[0].files.length > 0) {
-            var fb = new FormData();
-            fb.append('file', $('.cardUp')[0].files[0])
-            ajaxRequest("POST", uploadFileUrl, fb, false, false, true, uploadSuccess, uploadFailed, null);
+            var fileData = new FormData();
+            fileData.append('file', $('.cardUp')[0].files[0])
+            doctorCard = "1";
+            ajaxRequest("POST", uploadFileUrl, fileData, false, false, true, uploadSuccess, uploadFailed, null);
         }
     })
 
-// 上传签名
+    /** 签名上传事件*/
     $('.signBtn').click(function () {
         if ($('.signUp')[0].files.length > 0) {
             var fb = new FormData();
             fb.append('file', $('.signUp')[0].files[0])
+            signature = "1";
             ajaxRequest("POST", uploadFileUrl, fb, false, false, true, uploadSuccess, uploadFailed, null);
         }
     })
 
+    /** 上传成功回调方法*/
     function uploadSuccess(result) {
+        if (doctorCard == "1") {
+            doctorCard = result;
+            $('.cardName').html(doctorCard);
+        }else {
+            signature = result;
+            $('.signName').html(signature);
+        }
         var _$ = layui.jquery;
         layer.open({
             type: 1,
@@ -615,6 +639,7 @@ $(function () {
         }, 2000)
     }
 
+    /** 上传失败回调方法*/
     function uploadFailed() {
         var _$ = layui.jquery;
         layer.open({
@@ -636,7 +661,8 @@ $(function () {
         $('#medicalFees').val($(this).find("option:selected").attr('money'));
         $('#medicalFeesVideo').val($(this).find("option:selected").attr('moneyvideo'));
     })
-// 重置密码
+
+    // 重置密码
     $('.resetBtn').click(function () {
         var _$ = layui.jquery;
         layer.open({
@@ -649,11 +675,12 @@ $(function () {
             content: _$('.replacement'),
         });
     });
-// 重置密码弹框取消按钮
+
+    // 重置密码弹框取消按钮
     $('.replacementNoBtn').click(function () {
         layer.closeAll();
     })
-// 重置密码确定按钮
+    // 重置密码确定按钮
     $('.replacementYesBtn').click(function () {
         var data = new FormData();
         data.append("userId", $('#userName').attr('userId'));
@@ -712,6 +739,7 @@ $(function () {
         }
         disabledFlag();
     })
+
 // 权限类型
     $('.powerSelect').change(function () {
         if ($(this).val() != doctorInfo.rolesId) {
@@ -719,6 +747,7 @@ $(function () {
         }
         disabledFlag();
     })
+
 // 职称
     $('.titleSelect').change(function () {
         if ($(this).val() != doctorInfo.occupationId) {
@@ -726,6 +755,7 @@ $(function () {
         }
         disabledFlag();
     })
+
 // 科室
     $('.deptSelect').change(function () {
         if ($(this).val() != doctorInfo.hospitalDeptId) {
@@ -733,6 +763,7 @@ $(function () {
         }
         disabledFlag();
     })
+
 // 专家类型
     $('.expertSelect').change(function () {
         if ($(this).val() != doctorInfo.specialistTypeId) {
@@ -740,6 +771,7 @@ $(function () {
         }
         disabledFlag();
     })
+
 // 姓名
     $("#name").blur(function () {
         if ($(this).val() != doctorInfo.name) {
@@ -747,6 +779,7 @@ $(function () {
         }
         disabledFlag();
     })
+
 // 电话
     $('#telephone').blur(function () {
         if ($(this).val() != doctorInfo.telephone) {
@@ -754,6 +787,7 @@ $(function () {
         }
         disabledFlag();
     });
+
 // 图文诊费/元
     $('#medicalFees').blur(function () {
         if ($(this).val() != doctorInfo.medicalFees) {
@@ -761,6 +795,7 @@ $(function () {
         }
         disabledFlag();
     });
+
 // 视频诊费/元
     $('#medicalFeesVideo').blur(function () {
         if ($(this).val() != doctorInfo.medicalFeesVideo) {
@@ -768,6 +803,7 @@ $(function () {
         }
         disabledFlag();
     });
+
 // 擅长
     $('#beGoodAt').blur(function () {
         if ($(this).val() != doctorInfo.beGoodAt) {
@@ -786,28 +822,37 @@ $(function () {
     $('.modifyBtn').click(function () {
         if (!$(this).hasClass("disabled")) {
             // 修改信息判断
-            var caseTypeList = [];
-            for (var i = 0; i < $('.operate').length; i++) {
-                caseTypeList.push({
-                    "caseTypeId": $('.operate').eq(i).attr('name'),
-                    "caseTypeName": $('.operate').eq(i).html(),
-                    "types": $('.operate').eq(i).attr('type'),
-                })
-            }
             var data = new FormData();
-            data.append("name", $('#name').val());
-            data.append("telephone", $('#telephone').val());
-            data.append("medicalFees", $('#medicalFees').val());
-            data.append("medicalFeesVideo", $('#medicalFeesVideo').val());
-            data.append("beGoodAt", $('#beGoodAt').val());
-            data.append("roleId", $('.powerSelect').val());
-            data.append("occupationId", $('.titleSelect').val());
-            data.append("specialistTypeId", $('.expertSelect').val());
-            data.append("hospitalDeptId", $('.deptSelect').val());
-            data.append("userId", $('#userName').attr('userId'));
-            data.append("caseTypeList", JSON.stringify(caseTypeList));
+            if ($('.operate').length > 0) {
+                var caseTypeJsonStr = "{";
+                for (var i = 0; i < $('.CheckBg').length; i++) {
+                    var a = $('.checkSingle.CheckBg').eq(i).attr('name');
+                    var b = $('.checkSingle.CheckBg').eq(i).html();
+                    var c = $('.checkSingle.CheckBg').eq(i).attr('parentName');
+                    caseTypeJsonStr += "'" + a + "':'" + c + "-" + b + "',";
+                }
+                caseTypeJsonStr = caseTypeJsonStr.substring(0, caseTypeJsonStr.length - 1);
+                caseTypeJsonStr += "}";
+                data.append("idTypeName", caseTypeJsonStr);
+            }
 
-            ajaxRequest("POST", "updateDoctorDetailUtl", data, false, false, true, updateDoctorDetailSuccess, updateDoctorDetailFailed, null);
+            if (doctorCard.length > 16) {
+                data.append('doctorCardFront', doctorCard);
+            }
+            if (signature.length > 16) {
+                data.append("signature", signature);
+            }
+            data.append("userName", $('#name').val());
+            data.append("telephone", $('#telephone').val());
+            data.append("consultationPicturePrice", $('#medicalFees').val());
+            data.append("consultationVideoPrice", $('#medicalFeesVideo').val());
+            data.append("userStrong", $('#beGoodAt').val());
+            data.append("titleName", $('.titleSelect').val());
+            data.append("specialistTypeId", $('.expertSelect').val());
+            data.append("branchId", $('.deptSelect').val());
+            data.append("userId", $('#userName').attr('userId'));
+
+            ajaxRequest("POST", updateDoctorDetailUtl, data, false, false, true, updateDoctorDetailSuccess, updateDoctorDetailFailed, null);
 
             function updateDoctorDetailSuccess() {
                 $('.checkSingle').removeClass('operate');
@@ -941,7 +986,7 @@ $(function () {
     // 拒绝审核的确定按钮
     $('.declineYesBtn').click(function () {
         var data = new FormData();
-        data.append("id",$('#userId').val());
+        data.append("id", $('#userId').val());
         ajaxRequest("POST", overruleRegisterUrl, data, false, false, true, overruleRegisterSuccess, overruleRegisterFailed, null);
 
         function overruleRegisterSuccess() {
