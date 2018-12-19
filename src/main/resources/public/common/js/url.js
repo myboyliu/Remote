@@ -46,6 +46,10 @@ const getDoctorListByCurrentUserUrl = "/user/managementDoctor";
 
 const getDoctorDetailByIdUrl = "/user/personalCenter";
 
+const getHospitalBranchListUrl = "/custom/branch/getHospitalBranchList"; //查询通讯录左侧导航 数据
+
+const getDoctorListByBranchIdUrl = "/user/addressBook";
+
 const uploadFileUrl = "/file/upload";
 
 

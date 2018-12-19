@@ -32,7 +32,6 @@ $(function() {
     if(!localStorage.getItem('token')){
         window.location = "/page/login.html";
     }
-
     // 0医生  1医政
     if (localStorage.getItem('rolesName') == '医政') {
         $('.guide > li[type=0]').hide();
@@ -92,67 +91,4 @@ $(function() {
           window.location = '/yilaiyiwang/newInformation/seek.html';
       }
   });
-
-
-    // //  loding层
-    // $(document).bind("ajaxSend",function () {
-    //         layer.msg('请勿重复操作,正在处理...', {
-    //            icon: 16,
-    //            shade: 0.3,
-    //            time: 0
-    //        });
-    // }).bind("ajaxComplete", function () {
-    //    layer.closeAll();
-    // });
-
-    // // websocket 新消息
-    // var websocket = null;
-    // //判断当前浏览器是否支持WebSocket
-    // if (localStorage.getItem("userId")) {
-    //     if ('WebSocket' in window) {
-    //         websocket = new WebSocket('ws://192.168.0.125:8080/websocket/' + localStorage.getItem("userId"));
-    //     }
-    //     //接收到消息的回调方法
-    //     websocket.onmessage = function (event) {
-    //         console.log(event);
-    //         if (event.data == 270) {
-    //             console.log('连接成功');
-    //         } else if (event.data == 274) {
-    //             console.log('新消息')
-    //             $('.topInfoArea .news').addClass('newNews');
-    //         }
-    //     }
-    //     window.onbeforeunload = function () {
-    //         closeWebSocket();
-    //     }
-    // }
-
 });
-// 隔段时间掉一次借口
-
-          $.ajax({
-              type: 'GET',
-              url: IP + 'news/countNewNumber',
-              dataType: 'json',
-              xhrFields: {
-                  withCredentials: true
-              },
-              crossDomain: true,
-              success: function (data) {
-                  console.log(data)
-                  if (data.status == 200) {
-                      if (data.count > 0) {
-                          $('.news').addClass('newNews');
-                      } else {
-                          $('.news').removeClass('newNews');
-                      }
-                  }
-                  else if (data.status == 250) {
-                        window.location = '/yilaiyiwang/login/login.html';
-                  }
-              },
-              error: function (err) {
-                  console.log(err);
-
-              },
-          });
