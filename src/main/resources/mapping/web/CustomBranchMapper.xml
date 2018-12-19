@@ -317,6 +317,9 @@
     <resultMap id="HospitalBeanResultMap" type="com.sicmed.remote.web.bean.HospitalBean">
         <id column="hospitalId" jdbcType="VARCHAR" property="id"/>
         <result column="hospitalName" jdbcType="VARCHAR" property="hospitalName"/>
+        <result column="consultationVideoPrice" jdbcType="INTEGER" property="consultationVideoPrice"/>
+        <result column="consultationPicturePrice" jdbcType="INTEGER" property="consultationPicturePrice"/>
+        <result column="hospitalPhone" jdbcType="VARCHAR" property="hospitalPhone"/>
         <collection property="branchBeanList" ofType="com.sicmed.remote.web.bean.BranchBean" javaType="ArrayList">
             <id column="branchId" jdbcType="VARCHAR" property="id"/>
             <result column="branchName" jdbcType="VARCHAR" property="branchName"/>
@@ -328,7 +331,7 @@
     </resultMap>
     <sql id="HospitalBean_Column_List">
         customBranch.id customBranchId,customBranch.custom_name customName,
-        hospital.id hospitalId, hospital.hospital_name hospitalName,
+        hospital.id hospitalId, hospital.hospital_name hospitalName,hospital.consultation_picture_price consultationPicturePrice, hospital.consultation_video_price consultationVideoPrice,hospital.hospital_phone hospitalPhone,
         parentBranch.id branchId,parentBranch.branch_name branchName
     </sql>
     <sql id="HospitalBean_Left_Join">
