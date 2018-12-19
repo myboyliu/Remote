@@ -51,7 +51,7 @@
             parent.del_flag = "0"
             AND parent.parent_id is null
         </where>
-        order by parent.case_number,child.case_number
+        order by parent.case_type_weight,child.case_type_weight
     </select>
 
     <!--软删除-->
