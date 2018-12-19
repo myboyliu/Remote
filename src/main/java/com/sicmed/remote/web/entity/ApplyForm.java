@@ -27,22 +27,17 @@ public class ApplyForm extends BaseEntity {
 
     private String inviteUserSummary;
 
-    @NotBlank(message = "applyUserId is null")
-    @Size(min = 32,max = 32,message = "applyUserId 长度不合规")
+
     private String applyUserId;
 
-    @NotBlank(message = "applyManagerId is null")
-    @Size(min = 32,max = 32,message = "applyManagerId 长度不合规")
     private String applyManagerId;
 
     @Size(min = 32,max = 32,message = "inviteUserId 长度不合规")
     private String inviteUserId;
 
-    @NotBlank(message = "inviteManagerId is null")
     @Size(min = 32,max = 32,message = "inviteManagerId 长度不合规")
     private String inviteManagerId;
 
-    @NotBlank(message = "applyBranchId is null")
     @Size(min = 32,max = 32,message = "applyBranchId 长度不合规")
     private String applyBranchId;
 

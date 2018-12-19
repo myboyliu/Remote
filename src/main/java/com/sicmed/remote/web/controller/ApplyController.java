@@ -109,7 +109,7 @@ public class ApplyController extends BaseController {
         }
 
         // 添加applyForm,applyStatus申请状态为草稿
-        UserDetail userDetail = userDetailService.getByPrimaryKey(userId);
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
         if (userDetail == null) {
             return badRequestOfArguments("获取医生详细信息失败");
         }
@@ -125,7 +125,25 @@ public class ApplyController extends BaseController {
         return succeedRequest(casePatient);
     }
 
-    // 转诊
+    /**
+     * 转诊
+     * @param applyForm
+     */
+    @PostMapping(value = "transfer")
+    public Map transferTreatment(ApplyForm applyForm) {
+
+        String userId = getRequestToken();
+
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        applyForm.setApplyBranchId(userDetail.getBranchId());
+        String applyStatus = String.valueOf(ApplyType.APPLY_REFERRAL);
+        applyForm.setApplyStatus(applyStatus);
+        int i = applyFormService.insertSelective(applyForm);
+        if (i < 1) {
+            return badRequestOfArguments("转诊申请失败");
+        }
+        return succeedRequest(applyForm);
+    }
 
     // 图文会诊
 

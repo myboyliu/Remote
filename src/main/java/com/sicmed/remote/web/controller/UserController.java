@@ -268,7 +268,7 @@ public class UserController extends BaseController {
     public Map modifyPersonal(String phoneNumber, String idTypeName, String userStrong) {
 
         String userId = getRequestToken();
-        UserDetail userDetail = userDetailService.getByPrimaryKey(userId);
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
         LinkedHashMap<String, String> resultMap = null;
         List<String> idList = new ArrayList<>();
 
