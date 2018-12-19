@@ -4,10 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.ApplyType;
+import com.sicmed.remote.common.ConsultationStatus;
+import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.YoonaLtUtils.IdentityCardUtil;
+import com.sicmed.remote.web.bean.ApplyTimeBean;
 import com.sicmed.remote.web.bean.CaseContentBean;
 import com.sicmed.remote.web.entity.*;
 import com.sicmed.remote.web.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +31,7 @@ import java.util.Map;
  * @description 转诊, 图文会诊, 视频会诊, 草稿
  * @data 2018/12/19
  */
+@Slf4j
 @RestController
 @RequestMapping(value = "apply")
 public class ApplyController extends BaseController {
@@ -41,6 +47,9 @@ public class ApplyController extends BaseController {
 
     @Autowired
     private CaseContentService caseContentService;
+
+    @Autowired
+    private ApplyTimeService applyTimeService;
 
     /**
      * 添加草稿
@@ -120,6 +129,7 @@ public class ApplyController extends BaseController {
         }
 
         applyForm.setApplyBranchId(userDetail.getBranchId());
+        applyForm.setApplyUserId(userId);
         String applyType = String.valueOf(ApplyType.APPLY_DRAFT);
         applyForm.setApplyType(applyType);
         int i = applyFormService.insertSelective(applyForm);
@@ -136,7 +146,7 @@ public class ApplyController extends BaseController {
      * @param applyForm
      */
     @PostMapping(value = "transfer")
-    public Map transferTreatment(@Validated ApplyForm applyForm, BindingResult applyFormBr) {
+    public Map transferTreatment(@Validated ApplyForm applyForm, BindingResult applyFormBr, String startEndTime) {
 
         if (applyFormBr.hasErrors()) {
             return fieldErrorsBuilder(applyFormBr);
@@ -144,12 +154,38 @@ public class ApplyController extends BaseController {
 
         String userId = getRequestToken();
 
+        // 添加 转诊 申请表
         String applyType = String.valueOf(ApplyType.APPLY_REFERRAL);
+        String applyStatues = String.valueOf(InquiryStatus.INQUIRY_APPLY_CREATE_SUCCESS);
         applyForm.setApplyType(applyType);
         applyForm.setApplyUserId(userId);
+        applyForm.setApplyStatus(applyStatues);
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("转诊记录保存失败");
+        }
+
+        if (startEndTime == null) {
+            return badRequestOfArguments("startEndTime is null");
+        }
+
+        LinkedHashMap<String, String> resultMap;
+        try {
+            resultMap = JSON.parseObject(startEndTime, new TypeReference<LinkedHashMap<String, String>>() {
+            }, Feature.OrderedField);
+        } catch (Exception e) {
+            return badRequestOfArguments("startEndTime 格式有误");
+        }
+
+        // 添加 转诊申请 时间
+        ApplyTimeBean applyTimeBean = new ApplyTimeBean();
+        applyTimeBean.setApplyFormId(applyForm.getId());
+        applyTimeBean.setStartEndTime(resultMap);
+        applyTimeBean.setCreateUser(userId);
+        applyTimeBean.setApplyStatus(applyForm.getApplyStatus());
+        int j = applyTimeService.insertStartEndTimes(applyTimeBean);
+        if (j < 1) {
+            return badRequestOfArguments("添加申请时间失败");
         }
 
         return succeedRequest(applyForm);
@@ -162,7 +198,7 @@ public class ApplyController extends BaseController {
      * @param applyFormBr
      */
     @PostMapping(value = "video")
-    public Map videoConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr) {
+    public Map videoConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String startEndTime) {
 
         if (applyFormBr.hasErrors()) {
             return fieldErrorsBuilder(applyFormBr);
@@ -170,12 +206,38 @@ public class ApplyController extends BaseController {
 
         String userId = getRequestToken();
 
-        applyForm.setApplyUserId(userId);
+        // 添加 视频会诊 申请表
         String applyType = String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO);
+        String applyStatues = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_CREATE_SUCCESS);
+        applyForm.setApplyUserId(userId);
         applyForm.setApplyType(applyType);
+        applyForm.setApplyStatus(applyStatues);
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("视频会诊记录保存失败");
+        }
+
+        if (startEndTime == null) {
+            return badRequestOfArguments("startEndTime is null");
+        }
+
+        LinkedHashMap<String, String> resultMap;
+        try {
+            resultMap = JSON.parseObject(startEndTime, new TypeReference<LinkedHashMap<String, String>>() {
+            }, Feature.OrderedField);
+        } catch (Exception e) {
+            return badRequestOfArguments("startEndTime 格式有误");
+        }
+
+        // 添加申请时间
+        ApplyTimeBean applyTimeBean = new ApplyTimeBean();
+        applyTimeBean.setApplyFormId(applyForm.getId());
+        applyTimeBean.setStartEndTime(resultMap);
+        applyTimeBean.setCreateUser(userId);
+        applyTimeBean.setApplyStatus(applyForm.getApplyStatus());
+        int j = applyTimeService.insertStartEndTimes(applyTimeBean);
+        if (j < 1) {
+            return badRequestOfArguments("添加申请时间失败");
         }
 
         return succeedRequest(applyForm);
@@ -196,12 +258,26 @@ public class ApplyController extends BaseController {
 
         String userId = getRequestToken();
 
+        // 添加 图文会诊 申请表
         applyForm.setApplyUserId(userId);
         String applyType = String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT);
         applyForm.setApplyType(applyType);
+        String applyStatues = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_CREATE_SUCCESS);
+        applyForm.setApplyStatus(applyStatues);
+
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("图文会诊记录保存失败");
+        }
+
+        // 添加申请时间
+        ApplyTime applyTime = new ApplyTime();
+        applyTime.setApplyFormId(applyForm.getId());
+        applyTime.setCreateUser(userId);
+        applyTime.setApplyStatus(applyForm.getApplyStatus());
+        int j = applyTimeService.insertSelective(applyTime);
+        if (j < 1) {
+            return badRequestOfArguments("添加申请时间失败");
         }
 
         return succeedRequest(applyForm);

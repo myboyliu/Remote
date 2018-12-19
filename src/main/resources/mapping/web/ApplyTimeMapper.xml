@@ -1,35 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sicmed.remote.web.mapper.ApplyTimeMapper">
-  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.ApplyTime">
-    <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="apply_form_id" jdbcType="VARCHAR" property="applyFormId" />
-    <result column="event_start_time" jdbcType="TIMESTAMP" property="eventStartTime" />
-    <result column="event_end_time" jdbcType="TIMESTAMP" property="eventEndTime" />
-    <result column="apply_status" jdbcType="VARCHAR" property="applyStatus" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
-    <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime" />
-    <result column="delete_user" jdbcType="VARCHAR" property="deleteUser" />
-    <result column="del_flag" jdbcType="VARCHAR" property="delFlag" />
-  </resultMap>
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.ApplyTime">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="apply_form_id" jdbcType="VARCHAR" property="applyFormId"/>
+        <result column="event_start_time" jdbcType="TIMESTAMP" property="eventStartTime"/>
+        <result column="event_end_time" jdbcType="TIMESTAMP" property="eventEndTime"/>
+        <result column="apply_status" jdbcType="VARCHAR" property="applyStatus"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime"/>
+        <result column="delete_user" jdbcType="VARCHAR" property="deleteUser"/>
+        <result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, apply_form_id, event_start_time, event_end_time, apply_status, create_time, create_user, 
     update_time, update_user, delete_time, delete_user, del_flag
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from apply_time
-    where id = #{id,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from apply_time
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from apply_time
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sicmed.remote.web.entity.ApplyTime">
+
+    <!--视频会诊添加-->
+    <insert id="insertStartEndTimes" parameterType="com.sicmed.remote.web.bean.ApplyTimeBean">
+        insert into apply_time (id,apply_form_id,create_user,apply_status,event_start_time,event_end_time) values
+        <foreach collection="startEndTime" item="value" separator="," index="key">
+            ((select replace(uuid(), '-', '') as id from dual),
+            #{applyFormId,jdbcType=VARCHAR},
+            #{createUser},
+            #{applyStatus,jdbcType=VARCHAR},
+            #{key,jdbcType=TIMESTAMP},
+            #{value,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+
+    <insert id="insert" parameterType="com.sicmed.remote.web.entity.ApplyTime">
     insert into apply_time (id, apply_form_id, event_start_time, 
       event_end_time, apply_status, create_time, 
       create_user, update_time, update_user, 
@@ -41,125 +55,125 @@
       #{deleteTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR}, #{delFlag,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.ApplyTime">
-    insert into apply_time
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="applyFormId != null">
-        apply_form_id,
-      </if>
-      <if test="eventStartTime != null">
-        event_start_time,
-      </if>
-      <if test="eventEndTime != null">
-        event_end_time,
-      </if>
-      <if test="applyStatus != null">
-        apply_status,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="createUser != null">
-        create_user,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="updateUser != null">
-        update_user,
-      </if>
-      <if test="deleteTime != null">
-        delete_time,
-      </if>
-      <if test="deleteUser != null">
-        delete_user,
-      </if>
-      <if test="delFlag != null">
-        del_flag,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=VARCHAR},
-      </if>
-      <if test="applyFormId != null">
-        #{applyFormId,jdbcType=VARCHAR},
-      </if>
-      <if test="eventStartTime != null">
-        #{eventStartTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="eventEndTime != null">
-        #{eventEndTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="applyStatus != null">
-        #{applyStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null">
-        #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null">
-        #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="deleteTime != null">
-        #{deleteTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteUser != null">
-        #{deleteUser,jdbcType=VARCHAR},
-      </if>
-      <if test="delFlag != null">
-        #{delFlag,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.ApplyTime">
-    update apply_time
-    <set>
-      <if test="applyFormId != null">
-        apply_form_id = #{applyFormId,jdbcType=VARCHAR},
-      </if>
-      <if test="eventStartTime != null">
-        event_start_time = #{eventStartTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="eventEndTime != null">
-        event_end_time = #{eventEndTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="applyStatus != null">
-        apply_status = #{applyStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createUser != null">
-        create_user = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null">
-        update_user = #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="deleteTime != null">
-        delete_time = #{deleteTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteUser != null">
-        delete_user = #{deleteUser,jdbcType=VARCHAR},
-      </if>
-      <if test="delFlag != null">
-        del_flag = #{delFlag,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.ApplyTime">
+    <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.ApplyTime">
+        insert into apply_time
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="applyFormId != null">
+                apply_form_id,
+            </if>
+            <if test="eventStartTime != null">
+                event_start_time,
+            </if>
+            <if test="eventEndTime != null">
+                event_end_time,
+            </if>
+            <if test="applyStatus != null">
+                apply_status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+            <if test="deleteTime != null">
+                delete_time,
+            </if>
+            <if test="deleteUser != null">
+                delete_user,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="applyFormId != null">
+                #{applyFormId,jdbcType=VARCHAR},
+            </if>
+            <if test="eventStartTime != null">
+                #{eventStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="eventEndTime != null">
+                #{eventEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="applyStatus != null">
+                #{applyStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.ApplyTime">
+        update apply_time
+        <set>
+            <if test="applyFormId != null">
+                apply_form_id = #{applyFormId,jdbcType=VARCHAR},
+            </if>
+            <if test="eventStartTime != null">
+                event_start_time = #{eventStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="eventEndTime != null">
+                event_end_time = #{eventEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="applyStatus != null">
+                apply_status = #{applyStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                delete_user = #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.ApplyTime">
     update apply_time
     set apply_form_id = #{applyFormId,jdbcType=VARCHAR},
       event_start_time = #{eventStartTime,jdbcType=TIMESTAMP},
