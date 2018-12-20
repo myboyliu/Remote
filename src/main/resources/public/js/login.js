@@ -39,11 +39,9 @@ $(function () {
                 layer.close(index);
                 if ("1" == "医政") {
                     window.location.href = '/page/workbench.html';
-                    // window.location.href = '/page/system.html';
                 } else {
                     layer.closeAll();
                     window.location.href = '/page/morkbench.html';
-                    // window.location.href = '/page/system.html';
                 }
             }
         }
