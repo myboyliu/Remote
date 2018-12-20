@@ -11,7 +11,7 @@ let deptId = "";
 
 /** 渲染 病历页面 左侧导航 */
 function renderCaseTypeLeftNavigation(data) {
-    var _html = '<li class="oneLevelItem patientInfo active">\
+    let _html = '<li class="oneLevelItem patientInfo active">\
                     <p class="oneLevelName">患者基本信息</p>\
                 </li>\
                 <li class="oneLevelItem caseHistory">\
@@ -21,8 +21,8 @@ function renderCaseTypeLeftNavigation(data) {
         _html += '<li class="twoLevelItem">\
                                 <p class="twoLevelName">' + val.caseTypeName + '</p>\
                                 <ul class="threeLevelUl">';
-        var childCaseTypeList = val.childList;
-        for (var i = 0; i < childCaseTypeList.length; i++) {
+        const childCaseTypeList = val.childList;
+        for (let i = 0; i < childCaseTypeList.length; i++) {
             _html += '<li class="threeLevelItem" name="' + childCaseTypeList[i].id + '">' + childCaseTypeList[i].caseTypeName + '</li>'
         }
         _html += '</ul>\
@@ -40,17 +40,17 @@ function renderCaseTypeLeftNavigation(data) {
         'height': $(window).height() - 230 - $('.oneLevelUl .oneLevelItem').length * $('.oneLevelName').height(),
     });
 
-    var upfileHtml = '';
+    let upfileHtml = '';
     $.each(data, function (key, val) {
-        var childCaseTypeList = val.childList;
-        for (var i = 0; i < childCaseTypeList.length; i++) {
+        const childCaseTypeList = val.childList;
+        for (let i = 0; i < childCaseTypeList.length; i++) {
             upfileHtml += '<li name="' + childCaseTypeList[i].caseTypeName + '" id="' + childCaseTypeList[i].id + '" class="upfileItem clearfix">\
                             <div class="upfileContent">\
                                 <div class="operateLeft">' + val.caseTypeName + '-' + childCaseTypeList[i].caseTypeName + '</div>\
                                 <ul class="fileContent clearfix">\
                                     <li class="fileAdd">\
                                         <a class="addfileBtn" href="javascript:;"></a>\
-                                        <input class="fileInput" type="file" multiple>\
+                                        <input accept=".png,.jpg,.pdf,.jpeg,.dcm" class="fileInput" type="file" multiple>\
                                         <p class="fileName">添加文件</p>\
                                     </li>\
                                 </ul>\
@@ -121,7 +121,7 @@ function renderDoctorList(data) {
                     </li>';
     let currentUserId = localStorage.getItem('token');
     for (let i = 0; i < data.length; i++) {
-        if (currentUserId == data[i].id) {
+        if (currentUserId === data[i].id) {
             continue;
         }
         _html += '<li deptName="" deptId="' + noDocData.deptId + '" name="' + data[i].id + '" class="doctorChunk">\
@@ -148,9 +148,9 @@ function renderDoctorList(data) {
 
 // 展示选择的医生
 function favoriteHtml() {
-    var _html = "";
+    let _html = "";
     $('.doctorCount').html(inviteDoctorArray.length);
-    if (inviteDoctorArray.length == 0) {
+    if (inviteDoctorArray.length === 0) {
         _html = '<li class="clearfix"><span>主会诊人:未选择</span></li>';
         $('.imgPric').html(hospitalInfo.hospitalImgPic ? hospitalInfo.hospitalImgPic : '-');
         $('.videoPric').html(hospitalInfo.hospitalVideoPic ? hospitalInfo.hospitalVideoPic : '-');
@@ -158,7 +158,7 @@ function favoriteHtml() {
         let imgPric = Number(inviteDoctorArray[0].hospitalImgPic);
         let videoPric = Number(inviteDoctorArray[0].hospitalVideoPic);
         for (let i = 0; i < inviteDoctorArray.length; i++) {
-            if (i == 0) {
+            if (i === 0) {
                 _html += '<li class="clearfix"><span>主会诊人:<' + inviteDoctorArray[i].hospitalName + ';' + inviteDoctorArray[i].deptName + ';' + inviteDoctorArray[i].name + ';' + inviteDoctorArray[i].occupationName + '>;</span><img class="delDocBtn" src="../images/delDoc.png" alt=""></li>';
             } else {
                 _html += '<li class="clearfix"><span><' + inviteDoctorArray[i].hospitalName + ';' + inviteDoctorArray[i].deptName + ';' + inviteDoctorArray[i].name + ';' + inviteDoctorArray[i].occupationName + '>;</span><img class="delDocBtn" src="../images/delDoc.png" alt=""></li>';
@@ -175,7 +175,7 @@ function favoriteHtml() {
 /** 根据二级科室id查询医生 */
 function getDoctorByBranchId(deptId) {
     deptId = deptId;
-    var data = {"branchId": deptId};
+    const data = {"branchId": deptId};
     ajaxRequest("GET", getDoctorListByBranchIdUrl, data, true, "application/json", false, renderDoctorList, null, null);
 }
 
@@ -217,6 +217,16 @@ function buildApplyData() {
     ajaxRequest("POST", createCaseUrl, data, false, false, true, null, null, null);
 }
 
+/** 渲染 病例图片列表 */
+let objParent = null; // 当前点击块的父级
+function renderFileListView(url, type, fileName) {
+    objParent.append(
+        `<li class="fileItem" dataBase="${url}">\
+                                        <div style='background-image:url(${url});'></div>\
+                                        <img class="delFileBtn" src="../images/delete_file.png"/><p type="${type}" desc="" class="fileName">${fileName}</p></li>`
+    );
+}
+
 $(function () {
     /**查询病历类型列表*/
     ajaxRequest("GET", getAllCaseContentType, null, true, false, true, renderCaseTypeLeftNavigation, null, null);
@@ -256,7 +266,7 @@ $(function () {
     $('#age').blur(function () {
         if (!RegExpObj.Reg_age.test($('#age').val())) {
             layer.msg('输入内容格式有误，请修改')
-        } else if ($('#age').val().length == 0) {
+        } else if ($('#age').val().length === 0) {
             layer.msg('年龄不能为空');
         }
     });
@@ -264,7 +274,7 @@ $(function () {
         if (!RegExpObj.Reg_hight.test($('#high').val())) {
             layer.msg('输入内容格式有误，请修改')
 
-        } else if ($('#high').val().length == 0) {
+        } else if ($('#high').val().length === 0) {
             layer.msg('身高不能为空');
         }
     });
@@ -272,7 +282,7 @@ $(function () {
         if (!RegExpObj.Reg_hight.test($('#weight').val())) {
 
             layer.msg('输入内容格式有误，请修改')
-        } else if ($('#weight').val().length == 0) {
+        } else if ($('#weight').val().length === 0) {
             layer.msg('体重不能为空');
         }
     });
@@ -284,7 +294,7 @@ $(function () {
     });
     // 验证常住城市
     $('#address').blur(function () {
-        if ($('#address').val().length == 0) {
+        if ($('#address').val().length === 0) {
             layer.msg('城市不能为空');
         } else if (!RegExpObj.Reg_address.test($('#address').val())) {
             layer.msg('输入内容格式有误，请修改')
@@ -292,13 +302,13 @@ $(function () {
     });
     // 验证初步诊断不能为空
     $('#createCase_textDiagnose').blur(function () {
-        if ($('#createCase_textDiagnose').val().length == 0) {
+        if ($('#createCase_textDiagnose').val().length === 0) {
             layer.msg('初步诊断不能为空');
         }
     });
     // 验证会、转诊目的不能为空
     $('#createCase_textGola').blur(function () {
-        if ($('#createCase_textGola').val().length == 0) {
+        if ($('#createCase_textGola').val().length === 0) {
             layer.msg('会/转诊目的不能为空');
         }
     });
@@ -306,14 +316,14 @@ $(function () {
 
     // 上面tab切换
     $('.tabContent > a').click(function () {
-        var _index = $(this).index();
+        const _index = $(this).index();
         $(this).addClass('active').siblings('a').removeClass('active');
         $('.contentBox > div').eq(_index).show().siblings('div').hide();
         $('.tabBox > a').eq(_index).show().siblings('a').hide();
     });
     // 底部上一步下一步切换
     $('.tabBox > a').click(function () {
-        var _index = $(this).index();
+        const _index = $(this).index();
         $(this).hide().siblings('a').show();
         $('.contentBox > div').eq(_index).hide().siblings('div').show();
         $('.tabContent > a').eq(_index).removeClass('active').siblings('a').addClass('active');
@@ -371,7 +381,7 @@ $(function () {
 
     })
     $('.hospitalUl').delegate('.sectionItem', 'click', function () {
-        if ($(this).find('.deptUl').css('display') == 'none') {
+        if ($(this).find('.deptUl').css('display') === 'none') {
             $(this).addClass('active').siblings('.sectionItem').removeClass('active');
         } else {
             $(this).removeClass('active').siblings('.sectionItem').removeClass('active');
@@ -407,7 +417,7 @@ $(function () {
         event.stopPropagation();
         $(".doctorChunk").css("border", "1px solid #efefef");
         $(this).css("border", "1px solid #F6C567");
-        if (($(this).index() + 1) % 3 == 0) {
+        if (($(this).index() + 1) % 3 === 0) {
             $(this).children(".present").css({
                 "top": "0",
                 "left": "-462px"
@@ -436,7 +446,7 @@ $(function () {
             inviteDoctorArray = [];
             favoriteHtml();
         } else if (inviteDoctorArray.length > 0 && $(this).find('.hospital').attr('name') != inviteDoctorArray[0].hospitalId) {
-            var _$ = layui.jquery;
+            const _$ = layui.jquery;
             layer.open({
                 type: 1,
                 title: '',
@@ -452,9 +462,9 @@ $(function () {
             }, 2000)
         } else {
             hospitalInfo = {};
-            var flag = true;
-            for (var i = 0; i < inviteDoctorArray.length; i++) {
-                if (inviteDoctorArray[i].id == $(this).attr('name')) {
+            let flag = true;
+            for (let i = 0; i < inviteDoctorArray.length; i++) {
+                if (inviteDoctorArray[i].id === $(this).attr('name')) {
                     flag = false
                 }
             }
@@ -500,7 +510,7 @@ $(function () {
     })
     // 病历信息二级按钮
     $('.oneLevelUl').delegate('.twoLevelItem', 'click', function () {
-        if ($(this).find('.threeLevelUl').css('display') == 'none') {
+        if ($(this).find('.threeLevelUl').css('display') === 'none') {
             $(this).addClass('active').siblings('.twoLevelItem').removeClass('active');
         } else {
             $(this).removeClass('active').siblings('.twoLevelItem').removeClass('active');
@@ -523,21 +533,21 @@ $(function () {
 
 
     /*  //textarea 标签随着文本的高度实现自适应 */
-    var ie = !!window.attachEvent && !window.opera;
-    var ie9 = ie && (!!+"\v1");
-    var inputhandler = function (node, fun) {
+    const ie = !!window.attachEvent && !window.opera;
+    const ie9 = ie && (!!+"\v1");
+    const inputhandler = function (node, fun) {
         if ("oninput" in node) {
             node.oninput = fun;
         } else {
             node.onpropertychange = fun;
         }
         if (ie9) node.onkeyup = fun;
-    }
+    };
     /* 初步诊断随诊文本增加高度自适应 */
-    var createCase_textDiagnose = document.getElementById("createCase_textDiagnose");
+    const createCase_textDiagnose = document.getElementById("createCase_textDiagnose");
     inputhandler(createCase_textDiagnose, function () {
         if (!ie) createCase_textDiagnose.style.height = 40 + "px";
-        var height = createCase_textDiagnose.scrollHeight;
+        const height = createCase_textDiagnose.scrollHeight;
         if (height >= 40) {
             createCase_textDiagnose.style.height = height + "px";
         } else {
@@ -545,10 +555,10 @@ $(function () {
         }
     });
     /*会/转诊目的文本增加高度自适应 */
-    var createCase_textGola = document.getElementById("createCase_textGola");
+    const createCase_textGola = document.getElementById("createCase_textGola");
     inputhandler(createCase_textGola, function () {
         if (!ie) createCase_textGola.style.height = 40 + "px";
-        var height = createCase_textGola.scrollHeight;
+        const height = createCase_textGola.scrollHeight;
         if (height >= 40) {
             createCase_textGola.style.height = height + "px";
         } else {
@@ -556,88 +566,84 @@ $(function () {
         }
     });
 
-
     //点击添加 添加病历图片
-    var objParent = null; // 当前点击块的父级
-    var fileArr = []; // 当前点击块的文件数据
-    var indexFile = 0; // 当前点击的索引
-    var ObjArr = []; //  当前点击块文件数组对象
-    var selectFileArr = []; // 某一块的图片展示数据
-    $('.upfileUl').delegate('.fileInput', 'change', function () {
-        objParent = $(this).parents('.fileContent');
-        let uploadFile = $(this)[0].files; // 某一块添加时的原始数据
-        let fileIndex = 0;
+    let fileArr = []; // 当前点击块的文件数据
+    let indexFile = 0; // 当前点击的索引
+    let ObjArr = []; //  当前点击块文件数组对象
+    let selectFileArr = []; // 某一块的图片展示数据
+    let uploadFile;
+    let fileIndex = 0;
+
+    $(".upfileUl").delegate('.fileInput', 'change', function () {
+        objParent = $(this).parents(".fileContent");
+        uploadFile = $(this)[0].files; // 某一块添加时的原始数据
+        fileIndex = 0;
+        addCaseFile()
+    });
+    function addCaseFile() {
         let fileName = uploadFile[fileIndex].name;
-        console.log($(this).val())
-        return false;
-        // 过滤重复
-        for (let i = 0; i < fileAllArr.length; i++) {
-            if (fileAllArr[i].name == fileName) {
+        // 重复文件过滤
+        for (let i = 0, len = fileAllArr.length; i < len; i++) {
+            if (fileAllArr[i].name === fileName) {
                 return false;
             }
         }
-        let reader = new FileReader();
+        let url = "";
+        let type = "";
         let data = new FormData();
+        //上传文件
         data.append("file", uploadFile[fileIndex]);
         ajaxRequest("POST", uploadFileUrl, data, false, false, true, uploadFileSuccess, null, null);
-
         function uploadFileSuccess(result) {
             console.log(result);
         }
-
-        reader.readAsDataURL(uploadFile[fileIndex]);
-        reader.onload = function (e) {
-            if (e.target.result) {
-                console.log(e.target.result);
-                fileAllArr.push({
-                    "name": fileName,
-                    "value": uploadFile[fileIndex],
-                });
-                let url = e.target.result;
-                let type = "";
-                if (/(.png|.jpg|.jpeg)$/gi.test(fileName)) {
-                    type = "img";
-                } else if (/(.pdf)$/gi.test(fileName)) {
-                    type = "pdf";
-                    url = "../images/pdf_icon.png"
-                } else if (/(.dcm)$/gi.test(fileName)) {
-                    type = "dcm";
-                    url = "../images/dcm_icon.png"
-                }
-                objParent.append(
-                    `<li class="fileItem" dataBase="${e.target.result}">\
-                                        <div style='background-image:url(${url});'></div>\
-                                        <img class="delFileBtn" src="../images/delete_file.png"/><p type="${type}" desc="" class="fileName">${fileName}</p></li>`
-                );
-                // 总张数
-                $('.sum').html(fileAllArr.length);
+        fileAllArr.push({
+            "name": fileName,
+            "value": uploadFile[fileIndex],
+        });
+        if (/(.png|.jpg|.jpeg)$/gi.test(fileName)) {
+            type = "img";
+            let reader = new FileReader();
+            reader.readAsDataURL(uploadFile[fileIndex]);
+            reader.onload = function (e) {
+                url = e.target.result;
+                renderFileListView(url, type, fileName);
             }
-            fileIndex++;
-            if (fileIndex < uploadFile.length) {
-                reader.readAsDataURL(uploadFile[fileIndex]);
-            } else {
-                // 拖拽排序
-                $(".fileContent").sortable({
-                    items: "li:not(.fileAdd)"
-                });
-            }
+        } else if (/(.pdf)$/gi.test(fileName)) {
+            type = "pdf";
+            url = "../images/pdf_icon.png";
+            renderFileListView(url, type, fileName);
+        } else if (/(.dcm)$/gi.test(fileName)) {
+            type = "dcm";
+            url = "../images/dcm_icon.png";
+            renderFileListView(url, type, fileName);
         }
-    });
+        // 总张数
+        fileIndex++;
+        $('.sum').html(fileAllArr.length);
+        if (fileIndex < uploadFile.length) {
+            addCaseFile();
+        } else {
+            // 拖拽排序
+            $(".fileContent").sortable({
+                items: "li:not(.fileAdd)"
+            });
+        }
+    }
 
 // 删除文件
     $('.upfileUl').delegate('.delFileBtn', 'click', function () {
-        for (var i = 0; i < fileAllArr.length; i++) {
-            if ($(this).siblings('.fileName').html() == fileAllArr[i].name) {
+        for (let i = 0; i < fileAllArr.length; i++) {
+            if ($(this).siblings(".fileName").html() === fileAllArr[i].name) {
                 fileAllArr.splice(i, 1);
             }
         }
-        for (var i = 0; i < selectFileArr.length; i++) {
-            if ($(this).siblings('.fileName').html() == selectFileArr[i].name) {
+        for (let i = 0; i < selectFileArr.length; i++) {
+            if ($(this).siblings(".fileName").html() === selectFileArr[i].name) {
                 selectFileArr.splice(i, 1);
             }
         }
         $(this).parent('.fileItem').remove();
-        // $(this).parents('.upfileContent').find('.fileCount').html($(this).parents('.fileContent').find('.fileItem').length);
         // 总张数
         $('.sum').html(fileAllArr.length);
         return false;
@@ -646,7 +652,7 @@ $(function () {
 // 图片点击查看大图
     $('.upfileUl').delegate('.fileItem', 'click', function () {
 
-        var $ = layui.jquery;
+        const $ = layui.jquery;
         // 弹出层
         layer.open({
             type: 1,
@@ -662,7 +668,7 @@ $(function () {
         objParent = $(this).parent('.fileContent');
         indexFile = $(this).index() - 1;
         ObjArr = $(this).parent('.fileContent').find('.fileItem');
-        for (var i = 0; i < ObjArr.length; i++) {
+        for (let i = 0; i < ObjArr.length; i++) {
             fileArr.push({
                 'name': ObjArr.eq(i).find('p').html(),
                 'type': ObjArr.eq(i).find('p').attr('type'),
@@ -675,7 +681,7 @@ $(function () {
         if (fileArr[indexFile].type != 'img') {
             // pdf dcm
             $('.bigImgContainer').find('.bigImg').addClass('bgSize');
-            if (fileArr[indexFile].type == 'pdf') {
+            if (fileArr[indexFile].type === 'pdf') {
                 /* 未完成查看PDF */
                 PDFObject.embed($('.fileItem').attr('database'), ".bigImg", {
                     page: "1"
@@ -688,7 +694,7 @@ $(function () {
 
 
         /* 如果是png/jpg/pdf格式 downlodeFile 隐藏 */
-        if (fileArr[indexFile].type == 'dcm') {
+        if (fileArr[indexFile].type === 'dcm') {
             $('.downlodeFile').show();
         } else {
             $('.downlodeFile').hide();
@@ -723,7 +729,7 @@ $(function () {
         $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
         $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
         /* 如果是png/jpg/pdf格式 downlodeFile 隐藏 */
-        if (fileArr[indexFile].type == 'dcm') {
+        if (fileArr[indexFile].type === 'dcm') {
             $('.downlodeFile').show();
         } else {
             $('.downlodeFile').hide();
@@ -753,7 +759,7 @@ $(function () {
         $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
         $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
         /* 如果是png/jpg/pdf格式 downlodeFile 隐藏 */
-        if (fileArr[indexFile].type == 'dcm') {
+        if (fileArr[indexFile].type === 'dcm') {
             $('.downlodeFile').show();
         } else {
             $('.downlodeFile').hide();
@@ -766,12 +772,12 @@ $(function () {
         console.log(fileArr)
         layer.closeAll();
         $('.bigImgContainer').hide();
-        var _html = '<li class="fileAdd">\
+        let _html = '<li class="fileAdd">\
             <a class="addfileBtn" href="javascript:;"></a>\
-            <input class="fileInput" type="file" multiple>\
+            <input accept=".png,.jpg,.pdf,.jpeg,.dcm" class="fileInput" type="file" multiple>\
             <p class="fileName">添加文件</p>\
         </li>';
-        for (var i = 0; i < fileArr.length; i++) {
+        for (let i = 0; i < fileArr.length; i++) {
             _html += '<li class="fileItem">'
             if (fileArr[i].type != 'img') {
                 _html += `<div class="bgSize" style='background-image:${fileArr[i].src};'></div>`
@@ -779,7 +785,7 @@ $(function () {
                 _html += `<div style='background-image:${fileArr[i].src};'></div>`
             }
             _html += '<img class="delFileBtn" src="../images/delete_file.png"/>';
-            if (fileArr[i].desc == '') {
+            if (fileArr[i].desc === '') {
                 _html += '<p type="' + fileArr[i].type + '" desc="" class="fileName">' + fileArr[i].name + '</p>';
             } else {
                 _html += '<p type="' + fileArr[i].type + '" desc="' + fileArr[i].desc + '" class="fileName active">' + fileArr[i].name + '</p>';
@@ -797,7 +803,7 @@ $(function () {
 // 图片缩放 拖拽
     $('.bigImgBox').on("mousewheel DOMMouseScroll", function (e) {
         if (!$('.bigImgBox .bigImg').hasClass('bgSize')) {
-            var delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) || // chrome & ie
+            const delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) || // chrome & ie
                 (e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1)); // firefox
             if (delta > 0) {
                 // 向上滚
@@ -816,11 +822,11 @@ $(function () {
 
     $('.bigImgBox').on('mousedown', function (e) {
         if (!$('.bigImgBox .bigImg').hasClass('bgSize')) {
-            var x = e.clientX - parseInt($('.bigImg').css('left'));
-            var y = e.clientY - parseInt($('.bigImg').css('top'));
+            const x = e.clientX - parseInt($('.bigImg').css('left'));
+            const y = e.clientY - parseInt($('.bigImg').css('top'));
             $('.bigImgBox').on('mousemove', function (e) {
-                var newX = e.clientX;
-                var newY = e.clientY;
+                const newX = e.clientX;
+                const newY = e.clientY;
                 console.log(newY - y)
                 $('.bigImg').css({
                     'top': newY - y + 'px',
@@ -841,7 +847,7 @@ $(function () {
 // 保存草稿
     $('.ServeDrafts').click(function () {
         //前端数据校验
-        if ($('#username').val() == '' && $('#idCard').val() == '' && $('#phone').val() == '' && $('#address').val() == '' && $('#age').val() == '' && $('#high').val() == '' && $('#weight').val() == '' && $('#createCase_textDiagnose').val() == '' && $('#createCase_textGola').val() == '' && fileAllArr.length <= '0') {
+        if ($('#username').val() === '' && $('#idCard').val() === '' && $('#phone').val() === '' && $('#address').val() === '' && $('#age').val() === '' && $('#high').val() === '' && $('#weight').val() === '' && $('#createCase_textDiagnose').val() === '' && $('#createCase_textGola').val() === '' && fileAllArr.length <= '0') {
             layer.open({
                 type: 1,
                 title: '',
@@ -875,7 +881,7 @@ $(function () {
 
         // 医生医院相关数据
         if (inviteDoctorArray.length > 0) {
-            var doctorList = [];
+            const doctorList = [];
             data.append('consultationHospitalId', inviteDoctorArray[0].hospitalId); // 会诊医院id
             data.append('deptId', inviteDoctorArray[0].deptId); // 主会诊科室id
             for (var i = 0; i < inviteDoctorArray.length; i++) {
@@ -894,14 +900,14 @@ $(function () {
             // 原始文件数据 fileAllArr
 
             // 图片描述和类型
-            var descArr = $('.upfileUl > li.upfileItem');
-            var JSONStr = '{';
+            const descArr = $('.upfileUl > li.upfileItem');
+            let JSONStr = '{';
             for (var i = 0; i < descArr.length; i++) {
-                var fileLi = descArr.eq(i).find('.fileContent > li.fileItem');
-                for (var j = 0; j < fileLi.length; j++) {
+                const fileLi = descArr.eq(i).find('.fileContent > li.fileItem');
+                for (let j = 0; j < fileLi.length; j++) {
                     JSONStr += '"' + fileLi.eq(j).find("p.fileName").html() + '":{detail:"' + fileLi.eq(j).find("p.fileName").attr("desc") + '",typeId:"' + descArr.eq(i).attr("id") + '",typeName:"' + descArr.eq(i).attr("name") + '"},'
-                    for (var x = 0; x < fileAllArr.length; x++) {
-                        if (fileLi.eq(j).find("p.fileName").html() == fileAllArr[x].name) {
+                    for (let x = 0; x < fileAllArr.length; x++) {
+                        if (fileLi.eq(j).find("p.fileName").html() === fileAllArr[x].name) {
                             data.append('file', fileAllArr[x].value);
                         }
                     }
@@ -917,7 +923,7 @@ $(function () {
 
         //添加成功
         function addDraftSuccess() {
-            var $ = layui.jquery;
+            const $ = layui.jquery;
             layer.open({
                 type: 1,
                 title: false,
@@ -939,7 +945,7 @@ $(function () {
 // 图文会诊、
     $('.graphicGroup').click(function () {
         /* 判断信息是否填写完整 */
-        if ($('#username').val() == '' || $('#idCard').val() == '' || $('#phone').val() == '' || $('#address').val() == '' || $('#age').val() + $('.choiceAge').val() == '' || $('#high').val() == '' || $('#weight').val() == '' || $('.sex > a.active').html() == '' || $('#createCase_textDiagnose').val() == '' || $('#createCase_textGola').val() == '' || fileAllArr.length <= '0') {
+        if ($('#username').val() === '' || $('#idCard').val() === '' || $('#phone').val() === '' || $('#address').val() === '' || $('#age').val() + $('.choiceAge').val() === '' || $('#high').val() === '' || $('#weight').val() === '' || $('.sex > a.active').html() === '' || $('#createCase_textDiagnose').val() === '' || $('#createCase_textGola').val() === '' || fileAllArr.length <= '0') {
             var _$ = layui.jquery;
             layer.open({
                 type: 1,
@@ -955,7 +961,7 @@ $(function () {
                 $('.incomplete').hide();
 
             }, 2000);
-        } else if (!RegExpObj.Reg_Name.test($('#username').val()) || !RegExpObj.Reg_IDCardNo.test($('#idCard').val()) || !RegExpObj.Reg_age.test($('#age').val()) || !RegExpObj.Reg_hight.test($('#high').val()) || !RegExpObj.Reg_hight.test($('#weight').val()) || !RegExpObj.Reg_mobilePhone.test($('#phone').val()) || !RegExpObj.Reg_address.test($('#address').val()) || $('#createCase_textDiagnose').val() == '' || $('#createCase_textGola').val() == '') {
+        } else if (!RegExpObj.Reg_Name.test($('#username').val()) || !RegExpObj.Reg_IDCardNo.test($('#idCard').val()) || !RegExpObj.Reg_age.test($('#age').val()) || !RegExpObj.Reg_hight.test($('#high').val()) || !RegExpObj.Reg_hight.test($('#weight').val()) || !RegExpObj.Reg_mobilePhone.test($('#phone').val()) || !RegExpObj.Reg_address.test($('#address').val()) || $('#createCase_textDiagnose').val() === '' || $('#createCase_textGola').val() === '') {
             var _$ = layui.jquery;
             layer.open({
                 type: 1,
@@ -996,7 +1002,7 @@ $(function () {
     });
 // 视频会诊
     $('.videoBtn').click(function () {
-        if ($('#username').val() == '' || $('#idCard').val() == '' || $('#phone').val() == '' || $('#address').val() == '' || $('#age').val() + $('.choiceAge').val() == '' || $('#high').val() == '' || $('#weight').val() == '' || $('.sex > a.active').html() == '' || $('#createCase_textDiagnose').val() == '' || $('#createCase_textGola').val() == '' || fileAllArr.length <= '0') {
+        if ($('#username').val() === '' || $('#idCard').val() === '' || $('#phone').val() === '' || $('#address').val() === '' || $('#age').val() + $('.choiceAge').val() === '' || $('#high').val() === '' || $('#weight').val() === '' || $('.sex > a.active').html() === '' || $('#createCase_textDiagnose').val() === '' || $('#createCase_textGola').val() === '' || fileAllArr.length <= '0') {
             layer.open({
                 type: 1,
                 title: '',
@@ -1012,8 +1018,8 @@ $(function () {
                 $('.incomplete').hide();
             }, 2000);
 
-        } else if (!RegExpObj.Reg_Name.test($('#username').val()) || !RegExpObj.Reg_IDCardNo.test($('#idCard').val()) || !RegExpObj.Reg_age.test($('#age').val()) || !RegExpObj.Reg_hight.test($('#high').val()) || !RegExpObj.Reg_hight.test($('#weight').val()) || !RegExpObj.Reg_isPhone.test($('#phone').val()) || !RegExpObj.Reg_address.test($('#address').val()) || $('#createCase_textDiagnose').val() == '' || $('#createCase_textGola').val() == '') {
-            var _$ = layui.jquery;
+        } else if (!RegExpObj.Reg_Name.test($('#username').val()) || !RegExpObj.Reg_IDCardNo.test($('#idCard').val()) || !RegExpObj.Reg_age.test($('#age').val()) || !RegExpObj.Reg_hight.test($('#high').val()) || !RegExpObj.Reg_hight.test($('#weight').val()) || !RegExpObj.Reg_isPhone.test($('#phone').val()) || !RegExpObj.Reg_address.test($('#address').val()) || $('#createCase_textDiagnose').val() === '' || $('#createCase_textGola').val() === '') {
+            const _$ = layui.jquery;
             layer.open({
                 type: 1,
                 title: '',
@@ -1043,19 +1049,19 @@ $(function () {
             redrawDate();
         }
 
-        var startMinute = 0; // 开始总分钟数
-        var endMinute = 0; // 结束总分钟数
-        var startHour = 0; // 开始小时数
-        var endHour = 0; // 结束小时数
-        var _html = '';
-        for (var i = 0; i < 96; i++) {
+        let startMinute = 0; // 开始总分钟数
+        let endMinute = 0; // 结束总分钟数
+        let startHour = 0; // 开始小时数
+        let endHour = 0; // 结束小时数
+        let _html = '';
+        for (let i = 0; i < 96; i++) {
             startMinute = i * 15;
             endMinute = (i + 1) * 15;
             startHour = parseInt(startMinute / 60);
             endHour = parseInt(endMinute / 60);
-            var startM = startMinute %= 60; // 计算后的开始分钟数
-            var endM = endMinute %= 60; // 计算后的开始分钟数
-            if (endHour == 24) {
+            const startM = startMinute %= 60; // 计算后的开始分钟数
+            const endM = endMinute %= 60; // 计算后的开始分钟数
+            if (endHour === 24) {
                 _html += '<li endDate="23:59" index="' + i + '">' + double(startHour) + ':' + double(startM) + '</li>'
             } else {
                 _html += '<li endDate="' + double(endHour) + ':' + double(endM) + '" index="' + i + '">' + double(startHour) + ':' + double(startM) + '</li>'
@@ -1074,7 +1080,7 @@ $(function () {
 
 // 图文的确认弹窗确定按钮事件
     $('.imagebtnBox .yesBtn').click(function () {
-        var data = new FormData();
+        const data = new FormData();
         data.append('name', $('#username').val());
         data.append('idCard', $('#idCard').val());
         data.append('phone', $('#phone').val());
@@ -1094,7 +1100,7 @@ $(function () {
 
         // inviteDoctorArray 医生医院相关数据
         if (inviteDoctorArray.length > 0) {
-            var doctorList = [];
+            const doctorList = [];
             data.append('consultationHospitalId', inviteDoctorArray[0].hospitalId); // 会诊医院id
             data.append('deptId', inviteDoctorArray[0].deptId); // 主会诊科室id
             data.append('basePrice', inviteDoctorArray[0].hospitalImgPic); // 医院图文基本价格
@@ -1116,15 +1122,15 @@ $(function () {
             // 原始文件数据 fileAllArr
 
             // 图片描述和类型
-            var descArr = $('.upfileUl > li.upfileItem');
-            var detailArr = [];
-            var JSONStr = '{';
+            const descArr = $('.upfileUl > li.upfileItem');
+            const detailArr = [];
+            let JSONStr = '{';
             for (var i = 0; i < descArr.length; i++) {
-                var fileLi = descArr.eq(i).find('.fileContent > li.fileItem');
-                for (var j = 0; j < fileLi.length; j++) {
+                const fileLi = descArr.eq(i).find('.fileContent > li.fileItem');
+                for (let j = 0; j < fileLi.length; j++) {
                     JSONStr += '"' + fileLi.eq(j).find("p.fileName").html() + '":{detail:"' + fileLi.eq(j).find("p.fileName").attr("desc") + '",typeId:"' + descArr.eq(i).attr("id") + '",typeName:"' + descArr.eq(i).attr("name") + '"},'
-                    for (var x = 0; x < fileAllArr.length; x++) {
-                        if (fileLi.eq(j).find("p.fileName").html() == fileAllArr[x].name) {
+                    for (let x = 0; x < fileAllArr.length; x++) {
+                        if (fileLi.eq(j).find("p.fileName").html() === fileAllArr[x].name) {
                             data.append('file', fileAllArr[x].value);
                         }
                     }
@@ -1147,14 +1153,14 @@ $(function () {
             data: data,
             success: function (data) {
                 console.log(data);
-                if (data.status == 200) {
+                if (data.status === 200) {
                     sessionStorage.setItem('sendOrderData', JSON.stringify(data));
                     window.location = '../writeCase/sendSuccess.html';
-                } else if (data.status == 250) {
+                } else if (data.status === 250) {
                     window.location = '../login/login.html';
-                } else if (data.status == 500) {
+                } else if (data.status === 500) {
                     layer.msg('发送失败请稍后重试');
-                } else if (data.status == 501) {
+                } else if (data.status === 501) {
                     layer.msg('请选择医生或医院');
                 } else {
                     layer.msg('发送失败请稍后重试');
@@ -1166,12 +1172,12 @@ $(function () {
         });
     });
 
-    var dateTempList = [];
-    var myDate = new Date();
+    let dateTempList = [];
+    const myDate = new Date();
     var flag = true;
-    var startIndex = 0;
-    var endIndex = 0;
-    var dateStr = myDate.getFullYear() + '-' + double(myDate.getMonth() + 1) + '-' + double(myDate.getDate());
+    let startIndex = 0;
+    let endIndex = 0;
+    let dateStr = myDate.getFullYear() + '-' + double(myDate.getMonth() + 1) + '-' + double(myDate.getDate());
 
     function redrawDate() {
         $('#timeBox').html('');
@@ -1181,7 +1187,7 @@ $(function () {
         }
         // 渲染日历控件
         layui.use('laydate', function () {
-            var laydate = layui.laydate;
+            const laydate = layui.laydate;
             //执行一个laydate实例
             laydate.render({
                 elem: '#timeBox',
@@ -1194,8 +1200,8 @@ $(function () {
                     $('#timeUl > li').removeClass('active');
                     flag = true;
                     dateStr = value;
-                    for (var i = 0; i < dateTempList.length; i++) {
-                        if (dateStr == dateTempList[i].date) {
+                    for (let i = 0; i < dateTempList.length; i++) {
+                        if (dateStr === dateTempList[i].date) {
                             if (dateTempList[i].startIndex <= dateTempList[i].endIndex) {
                                 for (var j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
                                     $('#timeUl > li').eq(j).addClass('active');
@@ -1232,7 +1238,7 @@ $(function () {
                     $('#timeUl > li').eq(i).addClass('active');
                 }
             }
-            if (dateTempList.length == 0) {
+            if (dateTempList.length === 0) {
                 dateTempList.push({
                     "date": dateStr,
                     "startIndex": startIndex,
@@ -1240,7 +1246,7 @@ $(function () {
                 });
             } else {
                 for (var i = 0; i < dateTempList.length; i++) {
-                    if (dateTempList[i].date == dateStr) {
+                    if (dateTempList[i].date === dateStr) {
                         dateTempList.splice(i, 1);
                     }
                 }
@@ -1255,8 +1261,8 @@ $(function () {
     });
 // 清空当页数据
     $('.selectTimeContent').find('.clearBtn').click(function () {
-        for (var i = 0; i < dateTempList.length; i++) {
-            if (dateTempList[i].date == dateStr) {
+        for (let i = 0; i < dateTempList.length; i++) {
+            if (dateTempList[i].date === dateStr) {
                 dateTempList.splice(i, 1);
             }
         }
@@ -1270,9 +1276,9 @@ $(function () {
         $('.selectTimeContainer').hide();
     })
 //发送视频会诊
-// 确定事件 == 发送视频会诊
+// 确定事件 === 发送视频会诊
     $('.selectTimeContainer .selectTimeContent .btnBox .yesBtn').click(function () {
-        var _$ = layui.jquery;
+        const _$ = layui.jquery;
         layer.open({
             type: 1,
             title: '',
@@ -1295,7 +1301,7 @@ $(function () {
         layer.closeAll();
     });
     $('.videoContent .yesBtn').click(function () {
-        var data = new FormData();
+        const data = new FormData();
         data.append('name', $('#username').val());
         data.append('idCard', $('#idCard').val());
         data.append('phone', $('#phone').val());
@@ -1314,7 +1320,7 @@ $(function () {
         data.append('types', '1'); // 会诊类型(0:图文,1:视频)
         // inviteDoctorArray 医生医院相关数据
         if (inviteDoctorArray.length > 0) {
-            var doctorList = [];
+            const doctorList = [];
             data.append('consultationHospitalId', inviteDoctorArray[0].hospitalId); // 会诊医院id
             data.append('deptId', inviteDoctorArray[0].deptId); // 主会诊科室id
             data.append('basePrice', inviteDoctorArray[0].hospitalVideoPic); // 医院视频基本价格
@@ -1335,15 +1341,15 @@ $(function () {
             // 原始文件数据 fileAllArr
 
             // 图片描述和类型
-            var descArr = $('.upfileUl > li.upfileItem');
-            var detailArr = [];
-            var JSONStr = '{';
+            const descArr = $('.upfileUl > li.upfileItem');
+            const detailArr = [];
+            let JSONStr = '{';
             for (var i = 0; i < descArr.length; i++) {
-                var fileLi = descArr.eq(i).find('.fileContent > li.fileItem');
-                for (var j = 0; j < fileLi.length; j++) {
+                const fileLi = descArr.eq(i).find('.fileContent > li.fileItem');
+                for (let j = 0; j < fileLi.length; j++) {
                     JSONStr += '"' + fileLi.eq(j).find("p.fileName").html() + '":{detail:"' + fileLi.eq(j).find("p.fileName").attr("desc") + '",typeId:"' + descArr.eq(i).attr("id") + '",typeName:"' + descArr.eq(i).attr("name") + '"},'
-                    for (var x = 0; x < fileAllArr.length; x++) {
-                        if (fileLi.eq(j).find("p.fileName").html() == fileAllArr[x].name) {
+                    for (let x = 0; x < fileAllArr.length; x++) {
+                        if (fileLi.eq(j).find("p.fileName").html() === fileAllArr[x].name) {
                             data.append('file', fileAllArr[x].value);
                         }
                     }
@@ -1353,7 +1359,7 @@ $(function () {
             data.append('detailMap', JSONStr)
         }
         // 选择时间数组
-        var dateList = []; // 选择的时间数据
+        const dateList = []; // 选择的时间数据
         for (var i = 0; i < dateTempList.length; i++) {
             if (dateTempList[i].startIndex <= dateTempList[i].endIndex) {
                 dateList.push({
@@ -1388,15 +1394,15 @@ $(function () {
                 data: data,
                 success: function (data) {
                     console.log(data);
-                    if (data.status == 200) {
+                    if (data.status === 200) {
                         sessionStorage.setItem('sendOrderData', JSON.stringify(data));
                         window.location = '../writeCase/sendSuccess.html';
-                    } else if (data.status == 250) {
+                    } else if (data.status === 250) {
                         window.location = '../login/login.html';
-                    } else if (data.status == 500) {
+                    } else if (data.status === 500) {
                         layer.msg('发送失败请稍后重试');
 
-                    } else if (data.status == 501) {
+                    } else if (data.status === 501) {
                         layer.msg('请选择医生或医院');
                     } else {
 
@@ -1412,7 +1418,7 @@ $(function () {
 
 // 填病例底部取消按钮
     $('.cancel').click(function () {
-        if ($('#username').val() == '' && $('#idCard').val() == '' && $('#phone').val() == '' && $('#address').val() == '' && $('#age').val() == '' && $('#high').val() == '' && $('#weight').val() == '' && $('#createCase_textDiagnose').val() == '' && $('#createCase_textGola').val() == '' && fileAllArr.length <= 0 && inviteDoctorArray.length <= 0) {
+        if ($('#username').val() === '' && $('#idCard').val() === '' && $('#phone').val() === '' && $('#address').val() === '' && $('#age').val() === '' && $('#high').val() === '' && $('#weight').val() === '' && $('#createCase_textDiagnose').val() === '' && $('#createCase_textGola').val() === '' && fileAllArr.length <= 0 && inviteDoctorArray.length <= 0) {
             history.back();
             // layer.open({
             //     type: 1,
@@ -1429,7 +1435,7 @@ $(function () {
             // }, 2000);
             // return false;
         } else {
-            var _$ = layui.jquery;
+            const _$ = layui.jquery;
             layer.open({
                 type: 1,
                 title: '',
@@ -1442,7 +1448,7 @@ $(function () {
         }
     });
     $('.keepContent .saveBtn').click(function () {
-        var data = new FormData();
+        const data = new FormData();
         data.append('name', $('#username').val());
         data.append('idCard', $('#idCard').val());
         data.append('phone', $('#phone').val());
@@ -1459,7 +1465,7 @@ $(function () {
 
         // inviteDoctorArray 医生医院相关数据
         if (inviteDoctorArray.length > 0) {
-            var doctorList = [];
+            const doctorList = [];
             data.append('consultationHospitalId', inviteDoctorArray[0].hospitalId); // 会诊医院id
             data.append('deptId', inviteDoctorArray[0].deptId); // 主会诊科室id
             for (var i = 0; i < inviteDoctorArray.length; i++) {
@@ -1478,15 +1484,15 @@ $(function () {
             // 原始文件数据 fileAllArr
 
             // 图片描述和类型
-            var descArr = $('.upfileUl > li.upfileItem');
-            var detailArr = [];
-            var JSONStr = '{';
+            const descArr = $('.upfileUl > li.upfileItem');
+            const detailArr = [];
+            let JSONStr = '{';
             for (var i = 0; i < descArr.length; i++) {
-                var fileLi = descArr.eq(i).find('.fileContent > li.fileItem');
-                for (var j = 0; j < fileLi.length; j++) {
+                const fileLi = descArr.eq(i).find('.fileContent > li.fileItem');
+                for (let j = 0; j < fileLi.length; j++) {
                     JSONStr += '"' + fileLi.eq(j).find("p.fileName").html() + '":{detail:"' + fileLi.eq(j).find("p.fileName").attr("desc") + '",typeId:"' + descArr.eq(i).attr("id") + '",typeName:"' + descArr.eq(i).attr("name") + '"},'
-                    for (var x = 0; x < fileAllArr.length; x++) {
-                        if (fileLi.eq(j).find("p.fileName").html() == fileAllArr[x].name) {
+                    for (let x = 0; x < fileAllArr.length; x++) {
+                        if (fileLi.eq(j).find("p.fileName").html() === fileAllArr[x].name) {
                             data.append('file', fileAllArr[x].value);
                         }
                     }
@@ -1495,7 +1501,7 @@ $(function () {
             JSONStr += '}'
             data.append('detailMap', JSONStr)
         }
-        if ($('#username').val() == '' && $('#idCard').val() == '' && $('#phone').val() == '' && $('#address').val() == '' && $('#age').val() == '' && $('#high').val() == '' && $('#weight').val() == '' && $('#createCase_textDiagnose').val() == '' && $('#createCase_textGola').val() == '' && fileAllArr.length <= '0') {
+        if ($('#username').val() === '' && $('#idCard').val() === '' && $('#phone').val() === '' && $('#address').val() === '' && $('#age').val() === '' && $('#high').val() === '' && $('#weight').val() === '' && $('#createCase_textDiagnose').val() === '' && $('#createCase_textGola').val() === '' && fileAllArr.length <= '0') {
             layer.open({
                 type: 1,
                 title: '',
@@ -1524,8 +1530,8 @@ $(function () {
             data: data,
             success: function (data) {
                 console.log(data);
-                if (data.status == 200) {
-                    var $ = layui.jquery;
+                if (data.status === 200) {
+                    const $ = layui.jquery;
                     layer.open({
                         type: 1,
                         title: false,
@@ -1542,7 +1548,7 @@ $(function () {
                     setTimeout(function () {
                         window.location = '../morkbench/morkbench.html';
                     }, 2000);
-                } else if (data.status == 250) {
+                } else if (data.status === 250) {
                     window.location = '../login/login.html';
                 } else {
 
@@ -1561,18 +1567,18 @@ $(function () {
         layer.closeAll();
     });
 
-    var markReferralJson = {};
+    let markReferralJson = {};
 
-    var initDate = new Date();
-    var initValue = '';
-    var initYear = initDate.getFullYear();
-    var initMonth = initDate.getMonth() + 1;
-    var initDay = initDate.getDate();
+    const initDate = new Date();
+    let initValue = '';
+    let initYear = initDate.getFullYear();
+    let initMonth = initDate.getMonth() + 1;
+    let initDay = initDate.getDate();
 
     function referraSelectRender() {
         $("#referralTimeScope").html('');
         layui.use('laydate', function () {
-            var laydate = layui.laydate;
+            const laydate = layui.laydate;
             //执行一个laydate实例
             laydate.render({
                 elem: '#referralTimeScope',
@@ -1583,12 +1589,12 @@ $(function () {
                 mark: markReferralJson,
                 change: function (value, date) { //监听日期被切换
                     console.log(value, date);
-                    if (date.date == initDay && date.month != initMonth || date.year != initYear) {
+                    if (date.date === initDay && date.month != initMonth || date.year != initYear) {
 
                     } else {
-                        var _flag = true;
-                        for (var key in markReferralJson) {
-                            if (key == value) {
+                        let _flag = true;
+                        for (let key in markReferralJson) {
+                            if (key === value) {
                                 _flag = false;
                                 delete markReferralJson[value];
                                 break;
@@ -1611,7 +1617,7 @@ $(function () {
 // 底部转诊按钮事件
     $(".referralBtn").click(function () {
         /* 判断信息是否填写完整 */
-        if ($('#username').val() == '' || $('#idCard').val() == '' || $('#phone').val() == '' || $('#address').val() == '' || $('#age').val() + $('.choiceAge').val() == '' || $('#high').val() == '' || $('#weight').val() == '' || $('.sex > a.active').html() == '' || $('#createCase_textDiagnose').val() == '' || $('#createCase_textGola').val() == '' || fileAllArr.length <= '0') {
+        if ($('#username').val() === '' || $('#idCard').val() === '' || $('#phone').val() === '' || $('#address').val() === '' || $('#age').val() + $('.choiceAge').val() === '' || $('#high').val() === '' || $('#weight').val() === '' || $('.sex > a.active').html() === '' || $('#createCase_textDiagnose').val() === '' || $('#createCase_textGola').val() === '' || fileAllArr.length <= '0') {
             var _$ = layui.jquery;
             layer.open({
                 type: 1,
@@ -1626,7 +1632,7 @@ $(function () {
             setTimeout(function () {
                 $('.incomplete').hide();
             }, 2000);
-        } else if (!RegExpObj.Reg_Name.test($('#username').val()) || !RegExpObj.Reg_IDCardNo.test($('#idCard').val()) || !RegExpObj.Reg_age.test($('#age').val()) || !RegExpObj.Reg_hight.test($('#high').val()) || !RegExpObj.Reg_hight.test($('#weight').val()) || !RegExpObj.Reg_mobilePhone.test($('#phone').val()) || !RegExpObj.Reg_address.test($('#address').val()) || $('#createCase_textDiagnose').val() == '' || $('#createCase_textGola').val() == '') {
+        } else if (!RegExpObj.Reg_Name.test($('#username').val()) || !RegExpObj.Reg_IDCardNo.test($('#idCard').val()) || !RegExpObj.Reg_age.test($('#age').val()) || !RegExpObj.Reg_hight.test($('#high').val()) || !RegExpObj.Reg_hight.test($('#weight').val()) || !RegExpObj.Reg_mobilePhone.test($('#phone').val()) || !RegExpObj.Reg_address.test($('#address').val()) || $('#createCase_textDiagnose').val() === '' || $('#createCase_textGola').val() === '') {
             var _$ = layui.jquery;
             layer.open({
                 type: 1,
@@ -1644,9 +1650,9 @@ $(function () {
 
         } else if (!hospitalInfo.hospitalId && inviteDoctorArray.length <= 0) {
             layer.msg('请选择医生或医院');
-        } else if (hospitalInfo.hospitalId && hospitalInfo.hospitalId == localStorage.getItem("hospitalId")) {
+        } else if (hospitalInfo.hospitalId && hospitalInfo.hospitalId === localStorage.getItem("hospitalId")) {
             layer.msg('转诊不能选择本院');
-        } else if (inviteDoctorArray.length > 0 && inviteDoctorArray[0].hospitalId == localStorage.getItem("hospitalId")) {
+        } else if (inviteDoctorArray.length > 0 && inviteDoctorArray[0].hospitalId === localStorage.getItem("hospitalId")) {
             layer.msg('转诊不能选择本院医生');
         } else if (inviteDoctorArray.length > 1) {
             layer.msg('转诊只可邀请1位医生');
@@ -1668,14 +1674,14 @@ $(function () {
         referraSelectRender();
     })
 // 转诊选完时间，确认事件，调出 确认 提示
-    var referralDateList = [];
+    let referralDateList = [];
     $(".referralTimeSelect").find(".yesBtn").click(function () {
         referralDateList = [];
-        for (var key in markReferralJson) {
+        for (let key in markReferralJson) {
             referralDateList.push({"time": key})
         }
         if (referralDateList.length > 0) {
-            var _$ = layui.jquery;
+            const _$ = layui.jquery;
             layer.open({
                 type: 1,
                 title: '',
@@ -1699,7 +1705,7 @@ $(function () {
 // 选完时间后的确认框
 // 确认事件
     $(".referralContent").find(".yesBtn").click(function () {
-        var data = new FormData();
+        const data = new FormData();
         data.append('name', $('#username').val());
         data.append('idCard', $('#idCard').val());
         data.append('phone', $('#phone').val());
@@ -1726,15 +1732,15 @@ $(function () {
             // 原始文件数据 fileAllArr
 
             // 图片描述和类型
-            var descArr = $('.upfileUl > li.upfileItem');
-            var detailArr = [];
-            var JSONStr = '{';
-            for (var i = 0; i < descArr.length; i++) {
-                var fileLi = descArr.eq(i).find('.fileContent > li.fileItem');
-                for (var j = 0; j < fileLi.length; j++) {
+            const descArr = $('.upfileUl > li.upfileItem');
+            const detailArr = [];
+            let JSONStr = '{';
+            for (let i = 0; i < descArr.length; i++) {
+                const fileLi = descArr.eq(i).find('.fileContent > li.fileItem');
+                for (let j = 0; j < fileLi.length; j++) {
                     JSONStr += '"' + fileLi.eq(j).find("p.fileName").html() + '":{detail:"' + fileLi.eq(j).find("p.fileName").attr("desc") + '",typeId:"' + descArr.eq(i).attr("id") + '",typeName:"' + descArr.eq(i).attr("name") + '"},'
-                    for (var x = 0; x < fileAllArr.length; x++) {
-                        if (fileLi.eq(j).find("p.fileName").html() == fileAllArr[x].name) {
+                    for (let x = 0; x < fileAllArr.length; x++) {
+                        if (fileLi.eq(j).find("p.fileName").html() === fileAllArr[x].name) {
                             console.log(fileAllArr[x].value)
                             data.append('file', fileAllArr[x].value);
                         }
@@ -1765,12 +1771,12 @@ $(function () {
                 data: data,
                 success: function (data) {
                     console.log(data);
-                    if (data.code == 1) {
+                    if (data.code === 1) {
                         sessionStorage.setItem('sendOrderData', JSON.stringify(data));
                         window.location = '../writeCase/referralSuccess.html';
-                    } else if (data.code == 250) {
+                    } else if (data.code === 250) {
                         window.location = '../login/login.html';
-                    } else if (data.code == 500) {
+                    } else if (data.code === 500) {
                         layer.msg('发送失败请稍后重试');
                     } else {
                         layer.msg('发送失败请稍后重试');
