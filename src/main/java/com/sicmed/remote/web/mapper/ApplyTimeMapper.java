@@ -17,4 +17,6 @@ public interface ApplyTimeMapper {
     int updateByPrimaryKey(ApplyTime record);
 
     int insertStartEndTimes(ApplyTimeBean applyTimeBean);
+
+    int updateApplyFormId(ApplyTime applyTime);
 }

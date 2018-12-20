@@ -121,7 +121,7 @@ public class CaseController extends BaseController {
         }
 
         String userId = getRequestToken();
-        caseRecord.setCreateUser(userId);
+        caseRecord.setUpdateUser(userId);
         int i = caseRecordService.updateByPrimaryKeySelective(caseRecord);
         if (i < 1) {
             return badRequestOfArguments("修改caseRecord失败");
@@ -143,7 +143,7 @@ public class CaseController extends BaseController {
         }
 
         String userId = getRequestToken();
-        casePatient.setCreateUser(userId);
+        casePatient.setUpdateUser(userId);
         int i = casePatientService.updateByPrimaryKeySelective(casePatient);
         if (i < 1) {
             return badRequestOfArguments("修改casePatient失败");

@@ -43,6 +43,46 @@
         </foreach>
     </insert>
 
+    <!--申请状态修改-->
+    <update id="updateApplyFormId" parameterType="com.sicmed.remote.web.entity.ApplyTime">
+        update apply_time
+        <set>
+            <if test="applyFormId != null">
+                apply_form_id = #{applyFormId,jdbcType=VARCHAR},
+            </if>
+            <if test="eventStartTime != null">
+                event_start_time = #{eventStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="eventEndTime != null">
+                event_end_time = #{eventEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="applyStatus != null">
+                apply_status = #{applyStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                delete_user = #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where apply_form_id = #{applyFormId,jdbcType=VARCHAR}
+    </update>
     <insert id="insert" parameterType="com.sicmed.remote.web.entity.ApplyTime">
     insert into apply_time (id, apply_form_id, event_start_time, 
       event_end_time, apply_status, create_time, 

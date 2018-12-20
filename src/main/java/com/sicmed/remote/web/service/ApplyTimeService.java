@@ -14,6 +14,15 @@ public class ApplyTimeService implements BaseService<ApplyTime> {
     @Autowired
     private ApplyTimeMapper applyTimeMapper;
 
+    public int updateStatus(String applyFormId, String applyStatus, String userId) {
+        ApplyTime applyTime = new ApplyTime();
+        applyTime.setApplyFormId(applyFormId);
+        applyTime.setUpdateUser(userId);
+        applyTime.setApplyStatus(applyStatus);
+        return applyTimeMapper.updateApplyFormId(applyTime);
+    }
+
+
     public int insertStartEndTimes(ApplyTimeBean applyTimeBean) {
         return applyTimeMapper.insertStartEndTimes(applyTimeBean);
     }

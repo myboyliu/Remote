@@ -13,6 +13,12 @@ public class ApplyFormService implements BaseService<ApplyForm> {
     @Autowired
     private ApplyFormMapper applyFormMapper;
 
+    public int updateStatus(ApplyForm applyForm, String applyStatus, String userId) {
+        applyForm.setApplyStatus(applyStatus);
+        applyForm.setUpdateUser(userId);
+        return applyFormMapper.updateByPrimaryKeySelective(applyForm);
+    }
+
     @Override
     public int insertSelective(ApplyForm applyForm) {
         return applyFormMapper.insertSelective(applyForm);

@@ -262,9 +262,7 @@
             <if test="createUser != null">
                 create_user = #{createUser,jdbcType=VARCHAR},
             </if>
-            <if test="updateTime != null">
-                update_time = #{updateTime,jdbcType=TIMESTAMP},
-            </if>
+            update_time = now(),
             <if test="updateUser != null">
                 update_user = #{updateUser,jdbcType=VARCHAR},
             </if>
