@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sicmed.remote.web.mapper.YqyLiveMapper" >
+  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.YqyLive" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="live_name" property="liveName" jdbcType="VARCHAR" />
+    <result column="admin_url" property="adminUrl" jdbcType="VARCHAR" />
+    <result column="admin_pwd" property="adminPwd" jdbcType="VARCHAR" />
+    <result column="live_room_id" property="liveRoomId" jdbcType="VARCHAR" />
+    <result column="dept_id" property="customBranch.id" jdbcType="VARCHAR" />
+    <result column="live_url" property="liveUrl" jdbcType="VARCHAR" />
+    <result column="live_describe" property="liveDescribe" jdbcType="VARCHAR" />
+    <result column="live_start_time" property="liveStartTime" jdbcType="TIMESTAMP" />
+    <result column="live_end_time" property="liveEndTime" jdbcType="TIMESTAMP" />
+    <result column="live_class" property="liveClass" jdbcType="VARCHAR" />
+    <result column="live_cover_url" property="liveCoverUrl" jdbcType="VARCHAR" />
+    <result column="live_user_id" property="liveUserId" jdbcType="VARCHAR" />
+    <result column="follow_num" property="followNum" jdbcType="INTEGER" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="delete_user" property="deleteUser" jdbcType="VARCHAR" />
+    <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP" />
+    <result column="del_flag" property="delFlag" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, live_name, admin_url, admin_pwd, live_room_id, dept_id, live_url, live_describe, 
+    live_start_time, live_end_time, live_class, live_cover_url, live_user_id, follow_num, 
+    create_user, create_time, update_user, update_time, delete_user, delete_time, del_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from yqy_live
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 设置默认封面 -->
+  <update id="setDefaultCover" parameterType="com.sicmed.remote.web.bean.YqyLiveBean" >
+    update yqy_live
+    set live_cover_url = #{liveCoverUrl,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!-- 模糊查询直播总数量 -->
+  <select id="searchAnnouncementSize" resultType="java.lang.Integer" parameterType="com.sicmed.remote.web.bean.YqyLiveBean" >
+    select
+    count(id) num
+    from yqy_live
+    where live_name LIKE CONCAT(CONCAT('%',#{liveName,jdbcType=VARCHAR}),'%')
+    AND del_flag = #{delFlag,jdbcType=VARCHAR}
+    AND live_end_time &gt; #{liveEndTime,jdbcType=TIMESTAMP}
+  </select>
+
+  <!-- 模糊搜索直播 根据热度排序-->
+  <select id="searchAnnouncementHot" resultMap="MyLiveBroadcastMap" parameterType="com.sicmed.remote.web.bean.YqyLiveBean" >
+    select
+    <include refid="MyLiveBroadcast_List" />
+    from yqy_live yqyLive
+    LEFT JOIN custom_branch customBranch ON customBranch.id = yqyLive.dept_id
+    LEFT JOIN base_hospital hospital ON hospital.id = customBranch.hospital_id
+    where live_name LIKE CONCAT(CONCAT('%',#{liveName,jdbcType=VARCHAR}),'%')
+    AND yqyLive.del_flag = #{delFlag,jdbcType=VARCHAR}
+    AND live_end_time &gt; #{liveEndTime,jdbcType=TIMESTAMP}
+    ORDER BY follow_num DESC
+  </select>
+
+  <!-- 模糊搜索直播 根据开始时间排序-->
+  <select id="searchAnnouncementNew" resultMap="MyLiveBroadcastMap" parameterType="com.sicmed.remote.web.bean.YqyLiveBean" >
+    select
+    <include refid="MyLiveBroadcast_List" />
+    from yqy_live yqyLive
+    LEFT JOIN custom_branch customBranch ON customBranch.id = yqyLive.dept_id
+    LEFT JOIN base_hospital hospital ON hospital.id = customBranch.hospital_id
+    where live_name LIKE CONCAT(CONCAT('%',#{liveName,jdbcType=VARCHAR}),'%')
+    AND yqyLive.del_flag = #{delFlag,jdbcType=VARCHAR}
+    AND live_end_time &gt; #{liveEndTime,jdbcType=TIMESTAMP}
+    ORDER BY live_start_time ASC
+  </select>
+
+  <!-- 查询直播信息 -->
+  <resultMap id="LiveInfoMap" type="com.sicmed.remote.web.bean.LiveInfoBean" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="live_user_id" property="username" jdbcType="VARCHAR" />
+    <result column="admin_url" property="adminUrl" jdbcType="VARCHAR" />
+    <result column="admin_pwd" property="adminPwd" jdbcType="VARCHAR" />
+    <result column="live_url" property="liveUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="LiveInfo_List" >
+    id, live_user_id, live_url, admin_url, admin_pwd
+  </sql>
+  <select id="getLiveMessage" resultMap="LiveInfoMap" parameterType="java.lang.String" >
+    select
+    <include refid="LiveInfo_List"/>
+    from yqy_live
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 查询自己发出的预告-->
+  <resultMap id="MyLiveBroadcastMap" type="com.sicmed.remote.web.bean.YqyLiveBean" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="live_name" property="liveName" jdbcType="VARCHAR" />
+    <result column="hospitalName" property="hospitalName" jdbcType="VARCHAR" />
+    <result column="deptName" property="deptName" jdbcType="VARCHAR" />
+    <result column="live_room_id" property="liveRoomId" jdbcType="VARCHAR" />
+    <result column="admin_pwd" property="livePwd" jdbcType="VARCHAR" />
+    <result column="live_url" property="liveUrl" jdbcType="VARCHAR" />
+    <result column="live_describe" property="liveDescribe" jdbcType="VARCHAR" />
+    <result column="live_start_time" property="liveStartTime" jdbcType="TIMESTAMP" />
+    <result column="live_end_time" property="liveEndTime" jdbcType="TIMESTAMP" />
+    <result column="live_class" property="liveClass" jdbcType="VARCHAR" />
+    <result column="live_cover_url" property="liveCoverUrl" jdbcType="VARCHAR" />
+    <result column="follow_num" property="followNum" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="MyLiveBroadcast_List" >
+    yqyLive.id id, live_name, live_url, live_describe, live_start_time, live_end_time,admin_pwd,live_room_id,
+    live_class, live_cover_url, follow_num,hospital.hospital_name hospitalName,customBranch.custom_name deptName
+  </sql>
+
+  <!-- 查询我发出的直播数量 -->
+  <select id="findMyAnnouncementListSize" resultType="java.lang.Integer" parameterType="com.sicmed.remote.web.entity.YqyLive">
+    SELECT
+      count(id) num
+    FROM yqy_live
+    WHERE live_user_id = #{liveUserId,jdbcType=VARCHAR} AND del_flag = #{delFlag,jdbcType=VARCHAR}
+  </select>
+  <!-- 查询我发出的直播列表 -->
+  <select id="findMyAnnouncementList" resultMap="MyLiveBroadcastMap" parameterType="com.sicmed.remote.web.entity.YqyLive" >
+    select
+    <include refid="MyLiveBroadcast_List" />
+    from yqy_live yqyLive
+    LEFT JOIN custom_branch customBranch ON customBranch.id = yqyLive.dept_id
+    LEFT JOIN base_hospital hospital ON hospital.id = customBranch.hospital_id
+    where live_user_id = #{liveUserId,jdbcType=VARCHAR} AND yqyLive.del_flag = #{delFlag,jdbcType=VARCHAR}
+    ORDER BY live_start_time DESC
+    limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+  </select>
+
+  <!-- 根据直播类型查询未结束直播(根据最新排序) -->
+  <select id="findAnnouncementByTypeNew" resultMap="MyLiveBroadcastMap" parameterType="com.sicmed.remote.web.entity.YqyLive" >
+    select
+    <include refid="MyLiveBroadcast_List" />
+    from yqy_live yqyLive
+    LEFT JOIN custom_branch customBranch ON customBranch.id = yqyLive.dept_id
+    LEFT JOIN base_hospital hospital ON hospital.id = customBranch.hospital_id
+    <where>
+      yqyLive.del_flag = #{delFlag,jdbcType=VARCHAR}
+      <if test="liveClass != null" >
+        AND live_class = #{liveClass,jdbcType=VARCHAR}
+      </if>
+      AND live_end_time &gt; #{liveEndTime,jdbcType=TIMESTAMP}
+    </where>
+    ORDER BY yqyLive.create_time ASC
+  </select>
+
+  <!-- 根据直播类型查询未结束直播(根据热度排序) -->
+  <select id="findAnnouncementByTypeFollow" resultMap="MyLiveBroadcastMap" parameterType="com.sicmed.remote.web.entity.YqyLive" >
+    select
+    <include refid="MyLiveBroadcast_List" />
+    from yqy_live yqyLive
+    LEFT JOIN custom_branch customBranch ON customBranch.id = yqyLive.dept_id
+    LEFT JOIN base_hospital hospital ON hospital.id = customBranch.hospital_id
+    <where>
+      yqyLive.del_flag = #{delFlag,jdbcType=VARCHAR}
+      <if test="liveClass != null" >
+        AND live_class = #{liveClass,jdbcType=VARCHAR}
+      </if>
+      AND live_end_time &gt; #{liveEndTime,jdbcType=TIMESTAMP}
+    </where>
+    ORDER BY follow_num DESC
+  </select>
+
+  <!-- 根据类型查询直播列表数量 -->
+  <select id="findAnnouncementByTypeSize" resultType="java.lang.Integer" parameterType="com.sicmed.remote.web.entity.YqyLive" >
+    select
+    count(id) num
+    from yqy_live
+    <where>
+      del_flag = #{delFlag,jdbcType=VARCHAR}
+      <if test="liveClass != null" >
+        AND live_class = #{liveClass,jdbcType=VARCHAR}
+      </if>
+      AND live_end_time &gt; #{liveEndTime,jdbcType=TIMESTAMP}
+    </where>
+    ORDER BY live_start_time ASC
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from yqy_live
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sicmed.remote.web.entity.YqyLive" >
+    insert into yqy_live (id, live_name, admin_url, 
+      admin_pwd, live_room_id, dept_id, 
+      live_url, live_describe, live_start_time, 
+      live_end_time, live_class, live_cover_url, 
+      live_user_id, follow_num, create_user, 
+      create_time, update_user, update_time, 
+      delete_user, delete_time, del_flag
+      )
+    values (#{id,jdbcType=VARCHAR}, #{liveName,jdbcType=VARCHAR}, #{adminUrl,jdbcType=VARCHAR}, 
+      #{adminPwd,jdbcType=VARCHAR}, #{liveRoomId,jdbcType=VARCHAR}, #{customBranch.id,jdbcType=VARCHAR}, 
+      #{liveUrl,jdbcType=VARCHAR}, #{liveDescribe,jdbcType=VARCHAR}, #{liveStartTime,jdbcType=TIMESTAMP}, 
+      #{liveEndTime,jdbcType=TIMESTAMP}, #{liveClass,jdbcType=VARCHAR}, #{liveCoverUrl,jdbcType=VARCHAR}, 
+      #{liveUserId,jdbcType=VARCHAR}, #{followNum,jdbcType=INTEGER}, #{createUser,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{deleteUser,jdbcType=VARCHAR}, #{deleteTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.YqyLive" >
+    <selectKey keyProperty="id" resultType="java.lang.String"
+               order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into yqy_live
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="liveName != null" >
+        live_name,
+      </if>
+      <if test="adminUrl != null" >
+        admin_url,
+      </if>
+      <if test="adminPwd != null" >
+        admin_pwd,
+      </if>
+      <if test="liveRoomId != null" >
+        live_room_id,
+      </if>
+      <if test="customBranch != null and customBranch.id != null and customBranch.id != ''" >
+        dept_id,
+      </if>
+      <if test="liveUrl != null" >
+        live_url,
+      </if>
+      <if test="liveDescribe != null" >
+        live_describe,
+      </if>
+      <if test="liveStartTime != null" >
+        live_start_time,
+      </if>
+      <if test="liveEndTime != null" >
+        live_end_time,
+      </if>
+      <if test="liveClass != null" >
+        live_class,
+      </if>
+      <if test="liveCoverUrl != null" >
+        live_cover_url,
+      </if>
+      <if test="liveUserId != null" >
+        live_user_id,
+      </if>
+      <if test="followNum != null" >
+        follow_num,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="deleteUser != null" >
+        delete_user,
+      </if>
+      <if test="deleteTime != null" >
+        delete_time,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="liveName != null" >
+        #{liveName,jdbcType=VARCHAR},
+      </if>
+      <if test="adminUrl != null" >
+        #{adminUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="adminPwd != null" >
+        #{adminPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="liveRoomId != null" >
+        #{liveRoomId,jdbcType=VARCHAR},
+      </if>
+      <if test="customBranch.id != null" >
+        #{customBranch.id,jdbcType=VARCHAR},
+      </if>
+      <if test="liveUrl != null" >
+        #{liveUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="liveDescribe != null" >
+        #{liveDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="liveStartTime != null" >
+        #{liveStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="liveEndTime != null" >
+        #{liveEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="liveClass != null" >
+        #{liveClass,jdbcType=VARCHAR},
+      </if>
+      <if test="liveCoverUrl != null" >
+        #{liveCoverUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="liveUserId != null" >
+        #{liveUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="followNum != null" >
+        #{followNum,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteUser != null" >
+        #{deleteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteTime != null" >
+        #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.YqyLive" >
+    update yqy_live
+    <set >
+      <if test="liveName != null" >
+        live_name = #{liveName,jdbcType=VARCHAR},
+      </if>
+      <if test="adminUrl != null" >
+        admin_url = #{adminUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="adminPwd != null" >
+        admin_pwd = #{adminPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="liveRoomId != null" >
+        live_room_id = #{liveRoomId,jdbcType=VARCHAR},
+      </if>
+      <if test="customBranch != null and customBranch.id != null and customBranch.id != ''" >
+        dept_id = #{customBranch.id,jdbcType=VARCHAR},
+      </if>
+      <if test="liveUrl != null" >
+        live_url = #{liveUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="liveDescribe != null" >
+        live_describe = #{liveDescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="liveStartTime != null" >
+        live_start_time = #{liveStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="liveEndTime != null" >
+        live_end_time = #{liveEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="liveClass != null" >
+        live_class = #{liveClass,jdbcType=VARCHAR},
+      </if>
+      <if test="liveCoverUrl != null" >
+        live_cover_url = #{liveCoverUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="liveUserId != null" >
+        live_user_id = #{liveUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="followNum != null" >
+        follow_num = #{followNum,jdbcType=INTEGER},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteUser != null" >
+        delete_user = #{deleteUser,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteTime != null" >
+        delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.YqyLive" >
+    update yqy_live
+    set live_name = #{liveName,jdbcType=VARCHAR},
+      admin_url = #{adminUrl,jdbcType=VARCHAR},
+      admin_pwd = #{adminPwd,jdbcType=VARCHAR},
+      live_room_id = #{liveRoomId,jdbcType=VARCHAR},
+      dept_id = #{customBranch.id,jdbcType=VARCHAR},
+      live_url = #{liveUrl,jdbcType=VARCHAR},
+      live_describe = #{liveDescribe,jdbcType=VARCHAR},
+      live_start_time = #{liveStartTime,jdbcType=TIMESTAMP},
+      live_end_time = #{liveEndTime,jdbcType=TIMESTAMP},
+      live_class = #{liveClass,jdbcType=VARCHAR},
+      live_cover_url = #{liveCoverUrl,jdbcType=VARCHAR},
+      live_user_id = #{liveUserId,jdbcType=VARCHAR},
+      follow_num = #{followNum,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_user = #{deleteUser,jdbcType=VARCHAR},
+      delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=CHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
