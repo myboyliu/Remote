@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sicmed.remote.web.mapper.TencentVideoMapper">
+    <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.TencentVideo">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="video_name" property="videoName" jdbcType="VARCHAR"/>
+        <result column="video_class" property="videoClass" jdbcType="VARCHAR"/>
+        <result column="video_describe" property="videoDescribe" jdbcType="VARCHAR"/>
+        <result column="video_url" property="videoUrl" jdbcType="VARCHAR"/>
+        <result column="video_cover_url" property="videoCoverUrl" jdbcType="VARCHAR"/>
+        <result column="upload_time" property="uploadTime" jdbcType="TIMESTAMP"/>
+        <result column="upload_user" property="uploadUser" jdbcType="VARCHAR"/>
+        <result column="playback" property="playback" jdbcType="INTEGER"/>
+        <result column="dept_id" property="customBranch.id" jdbcType="VARCHAR"/>
+        <result column="video_url_true" property="videoUrlTrue" jdbcType="VARCHAR"/>
+        <result column="trans_code" property="transCode" jdbcType="CHAR"/>
+        <result column="video_file_id" property="videoFileId" jdbcType="VARCHAR"/>
+        <result column="time_long" property="timeLong" jdbcType="VARCHAR"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_user" property="deleteUser" jdbcType="VARCHAR"/>
+        <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP"/>
+        <result column="del_flag" property="delFlag" jdbcType="CHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, video_name, video_class, video_describe, video_url, video_cover_url, upload_time, 
+    upload_user, playback, dept_id, video_url_true, trans_code, video_file_id, time_long,
+    create_user, create_time, update_user, update_time, delete_user, delete_time, del_flag
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from tencent_video
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 根据视频文件id修改内容 -->
+    <update id="updateVideoFile" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+        update tencent_video
+        <set>
+            <if test="videoUrl != null">
+                video_url = #{videoUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="videoCoverUrl != null">
+                video_cover_url = #{videoCoverUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="transCode != null">
+                trans_code = #{transCode,jdbcType=CHAR},
+            </if>
+        </set>
+        where video_file_id = #{tencentVideo.videoFileId,jdbcType=VARCHAR}
+    </update>
+
+    <!-- 查询我发出的视频列表 -->
+    <resultMap id="MyVideoMap" type="com.sicmed.remote.web.entity.TencentVideo">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="video_name" property="videoName" jdbcType="VARCHAR"/>
+        <result column="video_class" property="videoClass" jdbcType="VARCHAR"/>
+        <result column="video_describe" property="videoDescribe" jdbcType="VARCHAR"/>
+        <result column="video_url" property="videoUrl" jdbcType="VARCHAR"/>
+        <result column="video_cover_url" property="videoCoverUrl" jdbcType="VARCHAR"/>
+        <result column="upload_time" property="uploadTime" jdbcType="TIMESTAMP"/>
+        <result column="upload_user" property="uploadUser" jdbcType="VARCHAR"/>
+        <result column="trans_code" property="transCode" jdbcType="CHAR"/>
+        <result column="playback" property="playback" jdbcType="INTEGER"/>
+        <result column="dept_id" property="customBranch.id" jdbcType="VARCHAR"/>
+        <result column="video_file_id" property="videoFileId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="MyVideo_List">
+    id, video_name, video_class, video_describe, video_url, video_cover_url, upload_time,trans_code,
+    upload_user, playback, dept_id, video_file_id
+  </sql>
+
+    <!-- 根据id查询优享课程 -->
+    <select id="findVideoById" resultMap="MyVideoMap" parameterType="java.lang.String">
+        select
+        <include refid="MyVideo_List"/>
+        from tencent_video
+        where id = #{id,jdbcType=VARCHAR} AND del_flag = '0'
+    </select>
+
+    <!-- 查询我的优享课程总条数 -->
+    <select id="findMyVideoListSize" resultType="java.lang.Integer"
+            parameterType="com.sicmed.remote.web.entity.TencentVideo">
+        select
+        count(id) num
+        from tencent_video
+        where upload_user = #{uploadUser,jdbcType=VARCHAR} AND del_flag = '0'
+    </select>
+
+    <!-- 查询我的优享课程 -->
+    <select id="findMyVideoList" resultMap="MyVideoMap" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+        select
+        <include refid="MyVideo_List"/>
+        from tencent_video
+        where upload_user = #{uploadUser,jdbcType=VARCHAR} AND del_flag = '0'
+        limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <!-- 获取点播数量,根据id -->
+    <select id="getNumberById" resultType="java.lang.Integer" parameterType="java.lang.String" >
+        select
+        playback
+        from tencent_video
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 查询视频分类列表 -->
+    <resultMap id="VideoMap" type="com.sicmed.remote.web.bean.VideoBean">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="video_name" property="videoName" jdbcType="VARCHAR"/>
+        <result column="video_class" property="videoClass" jdbcType="VARCHAR"/>
+        <result column="video_describe" property="videoDescribe" jdbcType="VARCHAR"/>
+        <result column="video_url" property="videoUrl" jdbcType="VARCHAR"/>
+        <result column="video_cover_url" property="videoCoverUrl" jdbcType="VARCHAR"/>
+        <result column="upload_time" property="uploadTime" jdbcType="TIMESTAMP"/>
+        <result column="upload_user" property="uploadUser" jdbcType="VARCHAR"/>
+        <result column="playback" property="playback" jdbcType="INTEGER"/>
+        <result column="hospitalName" property="hospitalName" jdbcType="VARCHAR"/>
+        <result column="deptName" property="deptName" jdbcType="VARCHAR"/>
+        <result column="video_file_id" property="videoFileId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Video_List">
+    video.id, video_name, video_class, video_describe, video_url, video_cover_url, upload_time,
+    upload_user, playback, hospital.hospital_name hospitalName,customBranch.custom_name deptName, video_file_id
+  </sql>
+
+    <!-- 模糊搜索总条数 -->
+    <select id="searchVideoSize" resultType="java.lang.Integer" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+        select
+        count(id) num
+        from tencent_video video
+        <where>
+            video_name LIKE CONCAT(CONCAT('%',#{videoName,jdbcType=VARCHAR}),'%')
+            AND video.del_flag = '0'
+            AND trans_code = '1'
+        </where>
+    </select>
+
+    <!-- 模糊搜索 按时间排序-->
+    <select id="searchVideoNew" resultMap="VideoMap" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+        select
+        <include refid="Video_List"/>
+        from tencent_video video
+        LEFT JOIN custom_branch customBranch ON customBranch.id = video.dept_id
+        LEFT JOIN base_hospital hospital ON hospital.id = customBranch.hospital_id
+        <where>
+            video_name LIKE CONCAT(CONCAT('%',#{videoName,jdbcType=VARCHAR}),'%')
+            AND video.del_flag = '0'
+            AND trans_code = '1'
+        </where>
+        ORDER BY upload_time DESC
+        limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+    <!-- 模糊搜索 按点击量排序-->
+    <select id="searchVideoHot" resultMap="VideoMap" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+        select
+        <include refid="Video_List"/>
+        from tencent_video video
+        LEFT JOIN custom_branch customBranch ON customBranch.id = video.dept_id
+        LEFT JOIN base_hospital hospital ON hospital.id = customBranch.hospital_id
+        <where>
+            video_name LIKE CONCAT(CONCAT('%',#{videoName,jdbcType=VARCHAR}),'%')
+            AND video.del_flag = '0'
+            AND trans_code = '1'
+        </where>
+        ORDER BY playback DESC
+        limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <!-- 根据热度查询视频分类列表 -->
+    <select id="findVideoListByTypeHot" resultMap="VideoMap" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+        select
+        <include refid="Video_List"/>
+        from tencent_video video
+        LEFT JOIN custom_branch customBranch ON customBranch.id = video.dept_id
+        LEFT JOIN base_hospital hospital ON hospital.id = customBranch.hospital_id
+        <where>
+            video.del_flag = #{delFlag,jdbcType=CHAR}
+            AND video_class = #{videoClass,jdbcType=VARCHAR}
+            AND trans_code = '1'
+        </where>
+        ORDER BY playback DESC
+        limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <!-- 查询视频分类列表总条数 -->
+    <select id="findVideoListByTypeSize" resultType="java.lang.Integer"
+            parameterType="com.sicmed.remote.web.entity.TencentVideo">
+        select
+        count(id) num
+        from tencent_video video
+        <where>
+            video.del_flag = #{delFlag,jdbcType=CHAR}
+            AND video_class = #{videoClass,jdbcType=VARCHAR}
+            AND trans_code = '1'
+        </where>
+    </select>
+
+    <!-- 根据上传时间查询视频分类列表 -->
+    <select id="findVideoListByTypeNew" resultMap="VideoMap" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+        select
+        <include refid="Video_List"/>
+        from tencent_video video
+        LEFT JOIN custom_branch customBranch ON customBranch.id = video.dept_id
+        LEFT JOIN base_hospital hospital ON hospital.id = customBranch.hospital_id
+        <where>
+            video.del_flag = #{delFlag,jdbcType=CHAR}
+            AND video_class = #{videoClass,jdbcType=VARCHAR}
+            AND trans_code = '1'
+        </where>
+        ORDER BY upload_time DESC
+        limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tencent_video
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+    insert into tencent_video (id, video_name, video_class, 
+      video_describe, video_url, video_cover_url, 
+      upload_time, upload_user, playback, 
+      dept_id, video_url_true, trans_code,
+      video_file_id, time_long, create_user, 
+      create_time, update_user, update_time, 
+      delete_user, delete_time, del_flag
+      )
+    values (#{id,jdbcType=VARCHAR}, #{videoName,jdbcType=VARCHAR}, #{videoClass,jdbcType=VARCHAR}, 
+      #{videoDescribe,jdbcType=VARCHAR}, #{videoUrl,jdbcType=VARCHAR}, #{videoCoverUrl,jdbcType=VARCHAR}, 
+      #{uploadTime,jdbcType=TIMESTAMP}, #{uploadUser,jdbcType=VARCHAR}, #{playback,jdbcType=INTEGER}, 
+      #{customBranch.id,jdbcType=VARCHAR}, #{videoUrlTrue,jdbcType=VARCHAR}, #{transCode,jdbcType=CHAR},
+      #{videoFileId,jdbcType=VARCHAR}, #{timeLong,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{deleteUser,jdbcType=VARCHAR}, #{deleteTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=CHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+        <selectKey keyProperty="id" resultType="java.lang.String"
+                   order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into tencent_video
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="videoName != null">
+                video_name,
+            </if>
+            <if test="videoClass != null">
+                video_class,
+            </if>
+            <if test="videoDescribe != null">
+                video_describe,
+            </if>
+            <if test="videoUrl != null">
+                video_url,
+            </if>
+            <if test="videoCoverUrl != null">
+                video_cover_url,
+            </if>
+            <if test="uploadTime != null">
+                upload_time,
+            </if>
+            <if test="uploadUser != null">
+                upload_user,
+            </if>
+            <if test="playback != null">
+                playback,
+            </if>
+            <if test="customBranch != null and customBranch.id != null and customBranch.id !=''">
+                dept_id,
+            </if>
+            <if test="videoUrlTrue != null">
+                video_url_true,
+            </if>
+            <if test="transCode != null">
+                trans_code,
+            </if>
+            <if test="videoFileId != null">
+                video_file_id,
+            </if>
+            <if test="timeLong != null">
+                time_long,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteUser != null">
+                delete_user,
+            </if>
+            <if test="deleteTime != null">
+                delete_time,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="videoName != null">
+                #{videoName,jdbcType=VARCHAR},
+            </if>
+            <if test="videoClass != null">
+                #{videoClass,jdbcType=VARCHAR},
+            </if>
+            <if test="videoDescribe != null">
+                #{videoDescribe,jdbcType=VARCHAR},
+            </if>
+            <if test="videoUrl != null">
+                #{videoUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="videoCoverUrl != null">
+                #{videoCoverUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadTime != null">
+                #{uploadTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="uploadUser != null">
+                #{uploadUser,jdbcType=VARCHAR},
+            </if>
+            <if test="playback != null">
+                #{playback,jdbcType=INTEGER},
+            </if>
+            <if test="customBranch.id != null">
+                #{customBranch.id,jdbcType=VARCHAR},
+            </if>
+            <if test="videoUrlTrue != null">
+                #{videoUrlTrue,jdbcType=VARCHAR},
+            </if>
+            <if test="transCode != null">
+                #{transCode,jdbcType=CHAR},
+            </if>
+            <if test="videoFileId != null">
+                #{videoFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="timeLong != null">
+                #{timeLong,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=CHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+        update tencent_video
+        <set>
+            <if test="videoName != null">
+                video_name = #{videoName,jdbcType=VARCHAR},
+            </if>
+            <if test="videoClass != null">
+                video_class = #{videoClass,jdbcType=VARCHAR},
+            </if>
+            <if test="videoDescribe != null">
+                video_describe = #{videoDescribe,jdbcType=VARCHAR},
+            </if>
+            <if test="videoUrl != null">
+                video_url = #{videoUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="videoCoverUrl != null">
+                video_cover_url = #{videoCoverUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadTime != null">
+                upload_time = #{uploadTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="uploadUser != null">
+                upload_user = #{uploadUser,jdbcType=VARCHAR},
+            </if>
+            <if test="playback != null">
+                playback = #{playback,jdbcType=INTEGER},
+            </if>
+            <if test="customBranch != null and customBranch.id != null and customBranch.id !=''">
+                dept_id = #{customBranch.id,jdbcType=VARCHAR},
+            </if>
+            <if test="videoUrlTrue != null">
+                video_url_true = #{videoUrlTrue,jdbcType=VARCHAR},
+            </if>
+            <if test="transCode != null">
+                trans_code = #{transCode,jdbcType=CHAR},
+            </if>
+            <if test="videoFileId != null">
+                video_file_id = #{videoFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="timeLong != null">
+                time_long = #{timeLong,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                delete_user = #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=CHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+    update tencent_video
+    set video_name = #{videoName,jdbcType=VARCHAR},
+      video_class = #{videoClass,jdbcType=VARCHAR},
+      video_describe = #{videoDescribe,jdbcType=VARCHAR},
+      video_url = #{videoUrl,jdbcType=VARCHAR},
+      video_cover_url = #{videoCoverUrl,jdbcType=VARCHAR},
+      upload_time = #{uploadTime,jdbcType=TIMESTAMP},
+      upload_user = #{uploadUser,jdbcType=VARCHAR},
+      playback = #{playback,jdbcType=INTEGER},
+      dept_id = #{customBranch.id,jdbcType=VARCHAR},
+      video_url_true = #{videoUrlTrue,jdbcType=VARCHAR},
+      trans_code = #{transCode,jdbcType=CHAR},
+      video_file_id = #{videoFileId,jdbcType=VARCHAR},
+      time_long = #{timeLong,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_user = #{deleteUser,jdbcType=VARCHAR},
+      delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=CHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
