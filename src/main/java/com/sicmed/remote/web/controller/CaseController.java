@@ -71,10 +71,18 @@ public class CaseController extends BaseController {
         if (!IdentityCardUtil.validateCard(casePatient.getPatientCard())) {
             return badRequestOfArguments("身份证输入有误");
         }
-        casePatient.setPatientSex(IdentityCardUtil.getGenderByIdCard(casePatient.getPatientCard()));
         casePatient.setCreateUser(userId);
-        int i = casePatientService.insertSelective(casePatient);
-        if (i < 1) {
+
+        // 查询患者是否已经存在
+        CasePatient rel = casePatientService.selectByCard(casePatient.getPatientCard());
+        if (rel == null) {
+            int i = casePatientService.insertSelective(casePatient);
+            if (i < 1) {
+                return badRequestOfInsert("添加casePatient失败");
+            }
+        }
+        int k = casePatientService.updateByCard(casePatient);
+        if (k < 1) {
             return badRequestOfInsert("添加casePatient失败");
         }
 
@@ -162,9 +170,12 @@ public class CaseController extends BaseController {
             return badRequestOfArguments("weightPathTypeId 或 caseRecordId 为空");
         }
 
-        int i = caseContentService.deleteByCaseRecordId(recordId);
-        if (i < 1) {
-            return badRequestOfArguments("recordId有误");
+        int j = caseContentService.selectRecordId(recordId);
+        if (j > 0) {
+            int i = caseContentService.deleteByCaseRecordId(recordId);
+            if (i < 1) {
+                return badRequestOfArguments("recordId有误");
+            }
         }
 
         // 文件路径 与 病例文件id map解析

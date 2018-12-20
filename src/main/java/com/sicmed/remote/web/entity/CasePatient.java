@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import javax.validation.constraints.*;
@@ -10,6 +11,7 @@ import javax.validation.constraints.*;
  * @version 1.0
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CasePatient extends BaseEntity {
     private String id;
 
@@ -28,20 +30,6 @@ public class CasePatient extends BaseEntity {
     private String patientPhone;
 
     private String patientBirthday;
-
-    @Min(value = 0, message = "年龄不能小于0岁")
-    @Max(value = 127, message = "年龄不能超过127")
-    private Integer patientAge;
-
-    private String patientSex;
-
-    @Min(value = 10, message = "身高不能小于10cm")
-    @Max(value = 300, message = "身高不能超过275cm 吉尼斯认证世界最高272cm")
-    private Integer patientHeight;
-
-    @Min(value = 500, message = "体重不能小于0.5kg 已知存活最轻婴儿为0.5kg")
-    @Max(value = 300000, message = "体重不能超过300kg")
-    private Integer patientWeight;
 
     private String cityId;
 

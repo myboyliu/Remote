@@ -18,8 +18,12 @@ public class CaseContentService implements BaseService<CaseContent> {
         return caseContentMapper.insertByMap(caseContentBean);
     }
 
-    public int deleteByCaseRecordId(String caseRecordId){
+    public int deleteByCaseRecordId(String caseRecordId) {
         return caseContentMapper.deleteByCaseRecordId(caseRecordId);
+    }
+
+    public int selectRecordId(String recordId) {
+        return caseContentMapper.selectRecordId(recordId);
     }
 
     @Override

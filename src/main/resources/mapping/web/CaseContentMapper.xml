@@ -50,6 +50,11 @@
         update case_content set del_flag = "1" where record_id = #{recordId}
     </update>
 
+    <!--selectRecordId查询-->
+    <select id="selectRecordId" parameterType="java.lang.String">
+        select count(*) from case_content where record_id = #{recordId}
+    </select>
+
     <insert id="insert" parameterType="com.sicmed.remote.web.entity.CaseContent">
     insert into case_content (id, record_id, content_type_id, 
       content_path, order_weight, create_time, 

@@ -14,4 +14,8 @@ public interface CasePatientMapper {
     int updateByPrimaryKeySelective(CasePatient record);
 
     int updateByPrimaryKey(CasePatient record);
+
+    CasePatient selectByCard(String patientCard);
+
+    int updateByCard(CasePatient casePatient);
 }

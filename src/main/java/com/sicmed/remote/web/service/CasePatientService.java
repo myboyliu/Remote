@@ -13,6 +13,14 @@ public class CasePatientService implements BaseService<CasePatient> {
     @Autowired
     private CasePatientMapper casePatientMapper;
 
+    public CasePatient selectByCard(String patientCard) {
+        return casePatientMapper.selectByCard(patientCard);
+    }
+
+    public int updateByCard(CasePatient casePatient) {
+        return casePatientMapper.updateByCard(casePatient);
+    }
+
     @Override
     public int insertSelective(CasePatient casePatient) {
         return casePatientMapper.insertSelective(casePatient);

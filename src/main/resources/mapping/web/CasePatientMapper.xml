@@ -8,10 +8,6 @@
         <result column="patient_card" jdbcType="VARCHAR" property="patientCard"/>
         <result column="patient_phone" jdbcType="VARCHAR" property="patientPhone"/>
         <result column="patient_birthday" jdbcType="VARCHAR" property="patientBirthday"/>
-        <result column="patient_age" jdbcType="INTEGER" property="patientAge"/>
-        <result column="patient_sex" jdbcType="CHAR" property="patientSex"/>
-        <result column="patient_height" jdbcType="INTEGER" property="patientHeight"/>
-        <result column="patient_weight" jdbcType="INTEGER" property="patientWeight"/>
         <result column="city_id" jdbcType="VARCHAR" property="cityId"/>
         <result column="detail_address" jdbcType="VARCHAR" property="detailAddress"/>
         <result column="education_id" jdbcType="VARCHAR" property="educationId"/>
@@ -27,11 +23,78 @@
         <result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, patient_number, patient_name, patient_card, patient_phone, patient_birthday, 
-    patient_age, patient_sex, patient_height, patient_weight, city_id, detail_address, 
-    education_id, profession_id, nation_id, blood_group_id, create_time, create_user, 
+    id, patient_number, patient_name, patient_card, patient_phone, patient_birthday,
+    city_id, detail_address,
+    education_id, profession_id, nation_id, blood_group_id, create_time, create_user,
     update_time, update_user, delete_time, delete_user, del_flag
   </sql>
+
+    <!--身份证查患者-->
+    <select id="selectByCard" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from case_patient where patient_card = #{patientCard}
+    </select>
+
+    <!--身份证更新患者-->
+    <update id="updateByCard" parameterType="com.sicmed.remote.web.entity.CasePatient">
+        update case_patient
+        <set>
+            <if test="patientNumber != null">
+                patient_number = #{patientNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="patientName != null">
+                patient_name = #{patientName,jdbcType=VARCHAR},
+            </if>
+            <if test="patientCard != null">
+                patient_card = #{patientCard,jdbcType=VARCHAR},
+            </if>
+            <if test="patientPhone != null">
+                patient_phone = #{patientPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="patientBirthday != null">
+                patient_birthday = #{patientBirthday,jdbcType=VARCHAR},
+            </if>
+            <if test="cityId != null">
+                city_id = #{cityId,jdbcType=VARCHAR},
+            </if>
+            <if test="detailAddress != null">
+                detail_address = #{detailAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="educationId != null">
+                education_id = #{educationId,jdbcType=VARCHAR},
+            </if>
+            <if test="professionId != null">
+                profession_id = #{professionId,jdbcType=VARCHAR},
+            </if>
+            <if test="nationId != null">
+                nation_id = #{nationId,jdbcType=VARCHAR},
+            </if>
+            <if test="bloodGroupId != null">
+                blood_group_id = #{bloodGroupId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            update_time = now(),
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                delete_user = #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where patient_card = #{patientCard,jdbcType=VARCHAR}
+    </update>
+
+
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -45,16 +108,15 @@
     <insert id="insert" parameterType="com.sicmed.remote.web.entity.CasePatient">
     insert into case_patient (id, patient_number, patient_name, 
       patient_card, patient_phone, patient_birthday, 
-      patient_age, patient_sex, patient_height, 
-      patient_weight, city_id, detail_address, 
+      patient_age, patient_sex, patient_height,
+      patient_weight, city_id, detail_address,
       education_id, profession_id, nation_id, 
       blood_group_id, create_time, create_user, 
       update_time, update_user, delete_time, 
       delete_user, del_flag)
     values (#{id,jdbcType=VARCHAR}, #{patientNumber,jdbcType=VARCHAR}, #{patientName,jdbcType=VARCHAR}, 
       #{patientCard,jdbcType=VARCHAR}, #{patientPhone,jdbcType=VARCHAR}, #{patientBirthday,jdbcType=VARCHAR}, 
-      #{patientAge,jdbcType=INTEGER}, #{patientSex,jdbcType=CHAR}, #{patientHeight,jdbcType=INTEGER},
-      #{patientWeight,jdbcType=INTEGER}, #{cityId,jdbcType=VARCHAR}, #{detailAddress,jdbcType=VARCHAR},
+#{cityId,jdbcType=VARCHAR}, #{detailAddress,jdbcType=VARCHAR},
       #{educationId,jdbcType=VARCHAR}, #{professionId,jdbcType=VARCHAR}, #{nationId,jdbcType=VARCHAR}, 
       #{bloodGroupId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{deleteTime,jdbcType=TIMESTAMP}, 
@@ -83,18 +145,6 @@
             </if>
             <if test="patientBirthday != null">
                 patient_birthday,
-            </if>
-            <if test="patientAge != null">
-                patient_age,
-            </if>
-            <if test="patientSex != null">
-                patient_sex,
-            </if>
-            <if test="patientHeight != null">
-                patient_height,
-            </if>
-            <if test="patientWeight != null">
-                patient_weight,
             </if>
             <if test="cityId != null">
                 city_id,
@@ -155,18 +205,6 @@
             <if test="patientBirthday != null">
                 #{patientBirthday,jdbcType=VARCHAR},
             </if>
-            <if test="patientAge != null">
-                #{patientAge,jdbcType=INTEGER},
-            </if>
-            <if test="patientSex != null">
-                #{patientSex,jdbcType=CHAR},
-            </if>
-            <if test="patientHeight != null">
-                #{patientHeight,jdbcType=INTEGER},
-            </if>
-            <if test="patientWeight != null">
-                #{patientWeight,jdbcType=INTEGER},
-            </if>
             <if test="cityId != null">
                 #{cityId,jdbcType=VARCHAR},
             </if>
@@ -226,18 +264,6 @@
             <if test="patientBirthday != null">
                 patient_birthday = #{patientBirthday,jdbcType=VARCHAR},
             </if>
-            <if test="patientAge != null">
-                patient_age = #{patientAge,jdbcType=INTEGER},
-            </if>
-            <if test="patientSex != null">
-                patient_sex = #{patientSex,jdbcType=CHAR},
-            </if>
-            <if test="patientHeight != null">
-                patient_height = #{patientHeight,jdbcType=INTEGER},
-            </if>
-            <if test="patientWeight != null">
-                patient_weight = #{patientWeight,jdbcType=INTEGER},
-            </if>
             <if test="cityId != null">
                 city_id = #{cityId,jdbcType=VARCHAR},
             </if>
@@ -285,10 +311,6 @@
       patient_card = #{patientCard,jdbcType=VARCHAR},
       patient_phone = #{patientPhone,jdbcType=VARCHAR},
       patient_birthday = #{patientBirthday,jdbcType=VARCHAR},
-      patient_age = #{patientAge,jdbcType=INTEGER},
-      patient_sex = #{patientSex,jdbcType=CHAR},
-      patient_height = #{patientHeight,jdbcType=INTEGER},
-      patient_weight = #{patientWeight,jdbcType=INTEGER},
       city_id = #{cityId,jdbcType=VARCHAR},
       detail_address = #{detailAddress,jdbcType=VARCHAR},
       education_id = #{educationId,jdbcType=VARCHAR},

@@ -69,15 +69,12 @@ public class ApplyController extends BaseController {
         CaseContentBean caseContentBean = new CaseContentBean();
 
         // 添加病例患者基本信息
-        if (casePatient != null) {
-
             String str = casePatient.getPatientCard();
             if (StringUtils.isNotBlank(str)) {
 
                 if (!IdentityCardUtil.validateCard(casePatient.getPatientCard())) {
                     return badRequestOfArguments("身份证输入有误");
                 }
-                casePatient.setPatientSex(IdentityCardUtil.getGenderByIdCard(casePatient.getPatientCard()));
             }
 
             casePatient.setCreateUser(userId);
@@ -86,12 +83,10 @@ public class ApplyController extends BaseController {
                 return badRequestOfInsert("添加casePatient失败");
             }
             caseRecord.setPatientId(casePatient.getId());
-        }
+
 
         // 添加病例初步诊断结果
-        if (caseRecord != null) {
-
-            caseRecord.setCreateUser(userId);
+         caseRecord.setCreateUser(userId);
             int j = caseRecordService.insertSelective(caseRecord);
             if (j < 1) {
                 return badRequestOfInsert("添加caseRecord的caseDiagnosis失败");
@@ -99,8 +94,6 @@ public class ApplyController extends BaseController {
 
             caseContentBean.setRecordId(caseRecord.getId());
             applyForm.setCaseRecordId(caseRecord.getId());
-        }
-
 
         // 添加病例所需文件
         if (StringUtils.isNotBlank(weightPathTypeId)) {
@@ -132,8 +125,8 @@ public class ApplyController extends BaseController {
         applyForm.setApplyUserId(userId);
         String applyType = String.valueOf(ApplyType.APPLY_DRAFT);
         applyForm.setApplyType(applyType);
-        int i = applyFormService.insertSelective(applyForm);
-        if (i < 1) {
+        int l = applyFormService.insertSelective(applyForm);
+        if (l < 1) {
             return badRequestOfArguments("添加草稿失败");
         }
 
@@ -427,4 +420,83 @@ public class ApplyController extends BaseController {
 
         return updateStatus(applyForm, applyStatus, msg1, msg2);
     }
+
+    /**
+     * 图文会诊首诊医政审核通过
+     */
+    @PostMapping(value = "pictureApplyAccede")
+    public Map pictureApplyAccede(ApplyForm applyForm) {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_ACCEDE);
+        String msg1 = "图文会诊审核通过,form修改失败";
+        String msg2 = "图文会诊审核通过,time修改失败";
+
+        return updateStatus(applyForm, applyStatus, msg1, msg2);
+    }
+
+    /**
+     * 图文会诊首诊医政审核拒绝
+     */
+    @PostMapping(value = "pictureApplyReject")
+    public Map pictureApplyReject(ApplyForm applyForm) {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_REJECT);
+        String msg1 = "图文会诊首诊医政审核拒绝,form修改失败";
+        String msg2 = "图文会诊首诊医政审核拒绝,time修改失败";
+
+        return updateStatus(applyForm, applyStatus, msg1, msg2);
+    }
+
+    /**
+     * 图文会诊收诊医生同意
+     */
+    @PostMapping(value = "pictureSlaveAccede")
+    public Map pictureSlaveAccede(ApplyForm applyForm) {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE);
+        String msg1 = "图文会诊收诊医生同意,form修改失败";
+        String msg2 = "图文会诊收诊医生同意,time修改失败";
+
+        return updateStatus(applyForm, applyStatus, msg1, msg2);
+    }
+
+    /**
+     * 图文会诊收诊医生拒绝
+     */
+    @PostMapping(value = "pictureSlaveReject")
+    public Map pictureSlaveReject(ApplyForm applyForm) {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_REJECT);
+        String msg1 = "图文会诊收诊医生拒绝,form修改失败";
+        String msg2 = "图文会诊收诊医生拒绝,time修改失败";
+
+        return updateStatus(applyForm, applyStatus, msg1, msg2);
+    }
+
+    /**
+     * 图文会诊收诊医政接收
+     */
+    @PostMapping(value = "pictureMasterAccede")
+    public Map pictureMasterAccede(ApplyForm applyForm) {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_ACCEDE);
+        String msg1 = "图文会诊收诊医政接收,form修改失败";
+        String msg2 = "图文会诊收诊医政接收,time修改失败";
+
+        return updateStatus(applyForm, applyStatus, msg1, msg2);
+    }
+
+    /**
+     * 图文会诊收诊医政拒绝
+     */
+    @PostMapping(value = "pictureMasterReject")
+    public Map pictureMasterReject(ApplyForm applyForm) {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_REJECT);
+        String msg1 = "图文会诊收诊医政拒绝,form修改失败";
+        String msg2 = "图文会诊收诊医政拒绝,time修改失败";
+
+        return updateStatus(applyForm, applyStatus, msg1, msg2);
+    }
+
 }
