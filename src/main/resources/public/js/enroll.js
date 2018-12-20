@@ -40,7 +40,6 @@ function renderCaseContentView(caseContentList) {
             _html += '<div class="checkSingle" parentName="' + val.caseTypeName + '" name="' + childList[i].id + '">' + childList[i].caseTypeName + '\</div>';
         }
         _html += '</div>';
-
     });
     $('.enroll_three').append(_html);
 };
@@ -149,7 +148,7 @@ $(function () {
         }
     });
     //上传医师资格证，记录文件名添加到span里
-    var doctorCardFront;
+    var doctorCardFront = "";
     upload.onchange = function () {
         var fileObj = new FormData();
         olf.innerHTML = upload.files[0].name;
@@ -161,7 +160,7 @@ $(function () {
             doctorCardFront = result;
         }
     };
-    var signature;
+    var signature = "";
     //上传签名，记录文件名添加到span里
     uploadTwo.onchange = function () {
         var fileObj = new FormData();
