@@ -98,9 +98,7 @@
             <if test="applyBranchId != null">
                 apply_branch_id,
             </if>
-            <if test="consultantApplyTime != null">
                 consultant_apply_time,
-            </if>
             <if test="applyStatus != null">
                 apply_status,
             </if>
@@ -166,9 +164,7 @@
             <if test="applyBranchId != null">
                 #{applyBranchId,jdbcType=VARCHAR},
             </if>
-            <if test="consultantApplyTime != null">
-                #{consultantApplyTime,jdbcType=TIMESTAMP},
-            </if>
+                now(),
             <if test="applyStatus != null">
                 #{applyStatus,jdbcType=VARCHAR},
             </if>
@@ -234,9 +230,7 @@
             <if test="applyBranchId != null">
                 apply_branch_id = #{applyBranchId,jdbcType=VARCHAR},
             </if>
-            <if test="consultantApplyTime != null">
-                consultant_apply_time = #{consultantApplyTime,jdbcType=TIMESTAMP},
-            </if>
+            consultant_apply_time = now(),
             <if test="applyStatus != null">
                 apply_status = #{applyStatus,jdbcType=VARCHAR},
             </if>
@@ -252,9 +246,7 @@
             <if test="createUser != null">
                 create_user = #{createUser,jdbcType=VARCHAR},
             </if>
-            <if test="updateTime != null">
-                update_time = #{updateTime,jdbcType=TIMESTAMP},
-            </if>
+            update_time = new(),
             <if test="updateUser != null">
                 update_user = #{updateUser,jdbcType=VARCHAR},
             </if>

@@ -19,4 +19,7 @@ public interface ApplyTimeMapper {
     int insertStartEndTimes(ApplyTimeBean applyTimeBean);
 
     int updateApplyFormId(ApplyTime applyTime);
+
+    int delByApplyForm(String applyFormId);
+
 }

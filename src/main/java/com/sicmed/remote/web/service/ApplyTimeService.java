@@ -22,6 +22,9 @@ public class ApplyTimeService implements BaseService<ApplyTime> {
         return applyTimeMapper.updateApplyFormId(applyTime);
     }
 
+    public int delByApplyForm(String applyFormId) {
+        return applyTimeMapper.delByApplyForm(applyFormId);
+    }
 
     public int insertStartEndTimes(ApplyTimeBean applyTimeBean) {
         return applyTimeMapper.insertStartEndTimes(applyTimeBean);

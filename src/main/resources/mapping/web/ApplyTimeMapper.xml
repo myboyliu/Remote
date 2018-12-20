@@ -83,6 +83,12 @@
         </set>
         where apply_form_id = #{applyFormId,jdbcType=VARCHAR}
     </update>
+
+    <!--确认时间,删除原时间-->
+    <update id="delByApplyForm" parameterType="java.lang.String">
+    update apply_time set del_flag = "1" where apply_form_id = #{applyFormId}
+    </update>
+
     <insert id="insert" parameterType="com.sicmed.remote.web.entity.ApplyTime">
     insert into apply_time (id, apply_form_id, event_start_time, 
       event_end_time, apply_status, create_time, 

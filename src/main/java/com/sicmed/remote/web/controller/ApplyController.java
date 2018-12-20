@@ -13,9 +13,11 @@ import com.sicmed.remote.web.entity.*;
 import com.sicmed.remote.web.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.omg.CORBA.BAD_CONTEXT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -69,31 +71,31 @@ public class ApplyController extends BaseController {
         CaseContentBean caseContentBean = new CaseContentBean();
 
         // 添加病例患者基本信息
-            String str = casePatient.getPatientCard();
-            if (StringUtils.isNotBlank(str)) {
+        String str = casePatient.getPatientCard();
+        if (StringUtils.isNotBlank(str)) {
 
-                if (!IdentityCardUtil.validateCard(casePatient.getPatientCard())) {
-                    return badRequestOfArguments("身份证输入有误");
-                }
+            if (!IdentityCardUtil.validateCard(casePatient.getPatientCard())) {
+                return badRequestOfArguments("身份证输入有误");
             }
+        }
 
-            casePatient.setCreateUser(userId);
-            int i = casePatientService.insertSelective(casePatient);
-            if (i < 1) {
-                return badRequestOfInsert("添加casePatient失败");
-            }
-            caseRecord.setPatientId(casePatient.getId());
+        casePatient.setCreateUser(userId);
+        int i = casePatientService.insertSelective(casePatient);
+        if (i < 1) {
+            return badRequestOfInsert("添加casePatient失败");
+        }
+        caseRecord.setPatientId(casePatient.getId());
 
 
         // 添加病例初步诊断结果
-         caseRecord.setCreateUser(userId);
-            int j = caseRecordService.insertSelective(caseRecord);
-            if (j < 1) {
-                return badRequestOfInsert("添加caseRecord的caseDiagnosis失败");
-            }
+        caseRecord.setCreateUser(userId);
+        int j = caseRecordService.insertSelective(caseRecord);
+        if (j < 1) {
+            return badRequestOfInsert("添加caseRecord的caseDiagnosis失败");
+        }
 
-            caseContentBean.setRecordId(caseRecord.getId());
-            applyForm.setCaseRecordId(caseRecord.getId());
+        caseContentBean.setRecordId(caseRecord.getId());
+        applyForm.setCaseRecordId(caseRecord.getId());
 
         // 添加病例所需文件
         if (StringUtils.isNotBlank(weightPathTypeId)) {
@@ -383,16 +385,38 @@ public class ApplyController extends BaseController {
     }
 
     /**
-     * 确认转诊时间
+     * 确认转诊,图文视频会诊时间
      */
     @PostMapping(value = "dateTime")
-    public Map dateTime(ApplyForm applyForm) {
+    public Map dateTime(ApplyForm applyForm, String startEndTime) {
 
+        // 删除原时间
+        if (applyForm == null || StringUtils.isBlank(startEndTime)) {
+            return badRequestOfArguments("applyForm or startEndTime is null");
+        }
+
+        int i = applyTimeService.delByApplyForm(applyForm.getId());
+        if (i < 1) {
+            return badRequestOfArguments("删除原applyTime失败");
+        }
+
+        String userId = getRequestToken();
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED);
-        String msg1 = "确认转诊时间,form修改失败";
-        String msg2 = "确认转诊时间,time修改失败";
 
-        return updateStatus(applyForm, applyStatus, msg1, msg2);
+        int j = applyFormService.updateStatus(applyForm, applyStatus, userId);
+        if (j < 1) {
+            return badRequestOfArguments("确认时间,form修改失败");
+        }
+
+        ApplyTimeBean applyTimeBean = new ApplyTimeBean();
+        applyTimeBean.setApplyFormId(applyForm.getId());
+        applyTimeBean.setApplyStatus(applyStatus);
+        applyTimeBean.setUpdateUser(userId);
+        int k = applyTimeService.insertStartEndTimes(applyTimeBean);
+        if (k < 1) {
+            return badRequestOfArguments("确认时间,time修改失败");
+        }
+        return succeedRequest(applyForm);
     }
 
     /**
@@ -422,81 +446,162 @@ public class ApplyController extends BaseController {
     }
 
     /**
-     * 图文会诊首诊医政审核通过
+     * 会诊首诊医政审核通过
      */
-    @PostMapping(value = "pictureApplyAccede")
-    public Map pictureApplyAccede(ApplyForm applyForm) {
+    @PostMapping(value = "consultationApplyAccede")
+    public Map consultationApplyAccede(ApplyForm applyForm) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_ACCEDE);
-        String msg1 = "图文会诊审核通过,form修改失败";
-        String msg2 = "图文会诊审核通过,time修改失败";
+        String msg1 = "会诊审核通过,form修改失败";
+        String msg2 = "会诊审核通过,time修改失败";
 
         return updateStatus(applyForm, applyStatus, msg1, msg2);
     }
 
     /**
-     * 图文会诊首诊医政审核拒绝
+     * 会诊首诊医政审核拒绝
      */
-    @PostMapping(value = "pictureApplyReject")
-    public Map pictureApplyReject(ApplyForm applyForm) {
+    @PostMapping(value = "consultationApplyReject")
+    public Map consultationApplyReject(ApplyForm applyForm) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_REJECT);
-        String msg1 = "图文会诊首诊医政审核拒绝,form修改失败";
-        String msg2 = "图文会诊首诊医政审核拒绝,time修改失败";
+        String msg1 = "会诊首诊医政审核拒绝,form修改失败";
+        String msg2 = "会诊首诊医政审核拒绝,time修改失败";
 
         return updateStatus(applyForm, applyStatus, msg1, msg2);
     }
 
     /**
-     * 图文会诊收诊医生同意
+     * 会诊收诊医生同意
      */
-    @PostMapping(value = "pictureSlaveAccede")
-    public Map pictureSlaveAccede(ApplyForm applyForm) {
+    @PostMapping(value = "consultationSlaveAccede")
+    public Map consultationSlaveAccede(ApplyForm applyForm) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE);
-        String msg1 = "图文会诊收诊医生同意,form修改失败";
-        String msg2 = "图文会诊收诊医生同意,time修改失败";
+        String msg1 = "会诊收诊医生同意,form修改失败";
+        String msg2 = "会诊收诊医生同意,time修改失败";
 
         return updateStatus(applyForm, applyStatus, msg1, msg2);
     }
 
     /**
-     * 图文会诊收诊医生拒绝
+     * 会诊收诊医生拒绝
      */
-    @PostMapping(value = "pictureSlaveReject")
-    public Map pictureSlaveReject(ApplyForm applyForm) {
+    @PostMapping(value = "consultationSlaveReject")
+    public Map consultationSlaveReject(ApplyForm applyForm) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_REJECT);
-        String msg1 = "图文会诊收诊医生拒绝,form修改失败";
-        String msg2 = "图文会诊收诊医生拒绝,time修改失败";
+        String msg1 = "会诊收诊医生拒绝,form修改失败";
+        String msg2 = "会诊收诊医生拒绝,time修改失败";
 
         return updateStatus(applyForm, applyStatus, msg1, msg2);
     }
 
     /**
-     * 图文会诊收诊医政接收
+     * 会诊收诊医政接收
      */
-    @PostMapping(value = "pictureMasterAccede")
-    public Map pictureMasterAccede(ApplyForm applyForm) {
+    @PostMapping(value = "consultationMasterAccede")
+    public Map consultationMasterAccede(ApplyForm applyForm) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_ACCEDE);
-        String msg1 = "图文会诊收诊医政接收,form修改失败";
-        String msg2 = "图文会诊收诊医政接收,time修改失败";
+        String msg1 = "会诊收诊医政接收,form修改失败";
+        String msg2 = "会诊收诊医政接收,time修改失败";
 
         return updateStatus(applyForm, applyStatus, msg1, msg2);
     }
 
     /**
-     * 图文会诊收诊医政拒绝
+     * 会诊收诊医政拒绝
      */
-    @PostMapping(value = "pictureMasterReject")
-    public Map pictureMasterReject(ApplyForm applyForm) {
+    @PostMapping(value = "consultationMasterReject")
+    public Map consultationMasterReject(ApplyForm applyForm) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_REJECT);
-        String msg1 = "图文会诊收诊医政拒绝,form修改失败";
-        String msg2 = "图文会诊收诊医政拒绝,time修改失败";
+        String msg1 = "会诊收诊医政拒绝,form修改失败";
+        String msg2 = "会诊收诊医政拒绝,time修改失败";
 
         return updateStatus(applyForm, applyStatus, msg1, msg2);
+    }
+
+    /**
+     * 会诊收诊医政选择砖家
+     */
+    @PostMapping(value = "consultationDoctorLocked")
+    public Map consultationDoctorLocked(ApplyForm applyForm) {
+
+        if (StringUtils.isBlank(applyForm.getInviteUserId())) {
+            return badRequestOfArguments("请选择砖家");
+        }
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DOCTOR_LOCKED);
+        if (StringUtils.isBlank(applyForm.getInviteUserId())) {
+            return badRequestOfArguments("未选定砖家");
+        }
+        String msg1 = "会诊收诊医政选择砖家,form修改失败";
+        String msg2 = "会诊收诊医政选择砖家,time修改失败";
+
+        return updateStatus(applyForm, applyStatus, msg1, msg2);
+    }
+
+    /**
+     * 会诊开始
+     */
+    @PostMapping(value = "consultationBegin")
+    public Map consultationBegin(ApplyForm applyForm) {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
+        String msg1 = "会诊开始,form修改失败";
+        String msg2 = "会诊开始,time修改失败";
+
+        return updateStatus(applyForm, applyStatus, msg1, msg2);
+    }
+
+    /**
+     * 提交报告
+     */
+    @PostMapping(value = "consultationReport")
+    public Map consultationReport(ApplyForm applyForm) {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_REPORT_SUBMITTED);
+        String msg1 = "提交报告,form修改失败";
+        String msg2 = "提交报告,time修改失败";
+
+        return updateStatus(applyForm, applyStatus, msg1, msg2);
+    }
+
+    /**
+     * 反馈
+     */
+    @PostMapping(value = "consultationFeedback")
+    public Map consultationFeedback(ApplyForm applyForm) {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_FEEDBACK_SUBMITTED);
+        String msg1 = "反馈,form修改失败";
+        String msg2 = "反馈,time修改失败";
+
+        return updateStatus(applyForm, applyStatus, msg1, msg2);
+    }
+
+    /**
+     * 会诊结束
+     */
+    @PostMapping(value = "consultationEnd")
+    public Map consultationEnd(ApplyForm applyForm) {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_END);
+        String msg1 = "会诊结束,form修改失败";
+        String msg2 = "会诊结束,time修改失败";
+
+        return updateStatus(applyForm, applyStatus, msg1, msg2);
+    }
+
+    // 按照登录id显示不同查询结果
+    @GetMapping(value = "respectivelyCheck")
+    public Map respectivelyCheck() {
+
+        // 医政
+        String userId = getRequestToken();
+        return null;
     }
 
 }
