@@ -44,25 +44,28 @@ function renderDoctorListView(data) {
     let hospitalName = $("#hospitalBranchNavigation li.active p").attr("title");
     let branchId = $("#hospitalBranchNavigation li.active ul li.active ul li.active").attr("name");
     let branchName = $("#hospitalBranchNavigation li.active ul li.active ul li.active").attr("title");
-    var _html = '';
-    var tempArr = data;
-    for (var i = 0; i < tempArr.length; i++) {
-        _html += '<li deptName="' +branchName + '" deptId="' + branchId + '" name="' + tempArr[i].id + '" class="doctorChunk">\
+    let _html = '';
+    let currentUserId = localStorage.getItem('token');
+    for (let i = 0; i < data.length; i++) {
+        if (currentUserId == data[i].id) {
+            continue;
+        }
+        _html += '<li deptName="' + branchName + '" deptId="' + branchId + '" name="' + data[i].id + '" class="doctorChunk">\
                                     <div class="diamond"></div>\
                                     <div class="message">\
-                                        <span class="mess_l username">' + tempArr[i].userName + '</span>\
-                                        <span class="occupation" name="' + tempArr[i].titleName + '">' + tempArr[i].titleName + '</span>\
-                                        <p class="p1 hospital" hospitalVideoPic="' + tempArr[i].consultationVideoPrice
-            + '" hospitalImgPic="' + tempArr[i].consultationPicturePrice + '" name="' + hospitalId + '">' + hospitalName + '</p>\
-                                        <p class="p2">' + tempArr[i].userStrong + '</p>\
-                                        <p medicalFeesVideo="' + tempArr[i].consultationVideoPrice + '" medicalFees="' + tempArr[i].consultationPicturePrice + '" class="p3 pric">图文&nbsp;' + tempArr[i].consultationPicturePrice + '元/视频&nbsp;' + tempArr[i].consultationVideoPrice + '元</p>\
+                                        <span class="mess_l username">' + data[i].userName + '</span>\
+                                        <span class="occupation" name="' + data[i].titleName + '">' + data[i].titleName + '</span>\
+                                        <p class="p1 hospital" hospitalVideoPic="' + data[i].consultationVideoPrice
+            + '" hospitalImgPic="' + data[i].consultationPicturePrice + '" name="' + hospitalId + '">' + hospitalName + '</p>\
+                                        <p class="p2">' + data[i].userStrong + '</p>\
+                                        <p medicalFeesVideo="' + data[i].consultationVideoPrice + '" medicalFees="' + data[i].consultationPicturePrice + '" class="p3 pric">图文&nbsp;' + data[i].consultationPicturePrice + '元/视频&nbsp;' + data[i].consultationVideoPrice + '元</p>\
                                     </div>\
                                     <div class="present">\
-                                        <h4>联系电话<span>' + tempArr[i].telephone + '</span></h4>\
+                                        <h4>联系电话<span>' + data[i].telephone + '</span></h4>\
                                         <h4>擅长</h4>\
-                                        <p>' + tempArr[i].userStrong + '</p>\
+                                        <p>' + data[i].userStrong + '</p>\
                                         <h4>病历要求</h4>\
-                                        <p>' + tempArr[i].needCaseType + '</p>\
+                                        <p>' + data[i].needCaseType + '</p>\
                                 <input type="button" value="发病历" class="graphicGroup">\
                             </div>\
                         </li>'
@@ -151,8 +154,8 @@ $(function () {
 
     // 点击按钮
     $('.doctorUl').delegate('.doctorChunk .graphicGroup', 'click', function () {
-        var favoriteArr = [];
-        favoriteArr.push({
+        let inviteDoctorArray = [];
+        inviteDoctorArray.push({
             id: $(this).parents('.doctorChunk').attr('name'), // 医生id
             hospitalName: $(this).parents('.doctorChunk').find('.hospital').html(), // 医院名字
             hospitalId: $(this).parents('.doctorChunk').find('.hospital').attr('name'), // 医院id
@@ -166,7 +169,7 @@ $(function () {
             occupationName: $(this).parents('.doctorChunk').find('.occupation').html(), // 职称名字
             occupationId: $(this).parents('.doctorChunk').find('.occupation').attr('name'), // 职称id
         })
-        sessionStorage.setItem('favoriteArr', JSON.stringify(favoriteArr));
+        sessionStorage.setItem('inviteDoctorArray', JSON.stringify(inviteDoctorArray));
         window.location = '../page/createCase.html';
     });
 
