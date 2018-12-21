@@ -25,15 +25,15 @@ public class ApplyForm extends BaseEntity {
 
     private String caseSummary;
 
-    private String applyUserSummary;
+    private String applySummary;
 
-    private String inviteUserSummary;
+    private String inviteSummary;
 
 
     private String applyUserId;
 
-    @NotBlank(message = "applyHospitalId is null")
-    @Size(min = 32, max = 32, message = "applyHospitalId 长度不合规")
+//    @NotBlank(message = "applyHospitalId is null")
+//    @Size(min = 32, max = 32, message = "applyHospitalId 长度不合规")
     private String applyHospitalId;
 
     @Size(min = 32, max = 32, message = "inviteUserId 长度不合规")
@@ -43,8 +43,10 @@ public class ApplyForm extends BaseEntity {
     @Size(min = 32, max = 32, message = "inviteHospitalId 长度不合规")
     private String inviteHospitalId;
 
-    @NotBlank(message = "applyBranchId is null")
-    @Size(min = 32, max = 32, message = "applyBranchId 长度不合规")
+    private String inviteBranchId;
+
+//    @NotBlank(message = "applyBranchId is null")
+//    @Size(min = 32, max = 32, message = "applyBranchId 长度不合规")
     private String applyBranchId;
 
     private Date consultantApplyTime;
@@ -54,5 +56,7 @@ public class ApplyForm extends BaseEntity {
     private String applyType;
 
     private String applyRemark;
+
+    private String applyUrgent;
 
 }
