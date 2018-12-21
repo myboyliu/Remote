@@ -38,7 +38,7 @@ public class CaseContentService implements BaseService<CaseContent> {
         }
 
         caseContentBean.getCaseRecord().setCreateUser(caseContentBean.getCreateUser());
-        caseContentBean.getCaseRecord().setPatientId(caseContentBean.getCaseRecord().getId());
+        caseContentBean.getCaseRecord().setPatientId(caseContentBean.getCasePatient().getId());
         caseRecordService.insertSelective(caseContentBean.getCaseRecord());
 
         caseContentBean.setRecordId(caseContentBean.getCaseRecord().getId());
