@@ -3,13 +3,12 @@ package com.sicmed.remote.web.entity;
 import lombok.Data;
 
 
-
 /**
  * @author Administrator
  * @version 1.0
  */
 @Data
-public class CaseContent extends BaseEntity  {
+public class CaseContent extends BaseEntity {
     private String id;
 
     private String recordId;
@@ -20,4 +19,5 @@ public class CaseContent extends BaseEntity  {
 
     private Integer orderWeight;
 
+    private String contentRemark;
 }

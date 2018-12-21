@@ -14,10 +14,11 @@
         <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime"/>
         <result column="delete_user" jdbcType="VARCHAR" property="deleteUser"/>
         <result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
+        <result column="content_remark" jdbcType="VARCHAR" property="contentRemark"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, record_id, content_type_id, content_path, order_weight, create_time, create_user, 
-    update_time, update_user, delete_time, delete_user, del_flag
+    update_time, update_user, delete_time, delete_user, del_flag,content_remark
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
@@ -33,11 +34,13 @@
     <!--添加病例需求文件-->
     <!--(select replace(uuid(), '-', '') as id from dual),-->
     <insert id="insertByMap" parameterType="com.sicmed.remote.web.bean.CaseContentBean">
-        insert into case_content(id,record_id,create_user,order_weight,content_path,content_type_id) values
+        insert into case_content(id,record_id,create_user,content_remark,order_weight,content_path,content_type_id)
+        values
         <foreach collection="weightPathTypeId" item="item" separator="," index="">
             ( (select replace(uuid(), '-', '') as id from dual),
             #{recordId,jdbcType=VARCHAR},
             #{createUser,jdbcType=VARCHAR},
+            #{item.contentRemark},
             #{item.orderWeight},
             #{item.contentPath},
             #{item.contentTypeId})
@@ -59,12 +62,13 @@
     insert into case_content (id, record_id, content_type_id, 
       content_path, order_weight, create_time, 
       create_user, update_time, update_user, 
-      delete_time, delete_user, del_flag
+      delete_time, delete_user, del_flag,content_remark
       )
     values (#{id,jdbcType=VARCHAR}, #{recordId,jdbcType=VARCHAR}, #{contentTypeId,jdbcType=VARCHAR}, 
       #{contentPath,jdbcType=VARCHAR}, #{orderWeight,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-      #{deleteTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR}, #{delFlag,jdbcType=VARCHAR}
+      #{deleteTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR}, #{delFlag,jdbcType=VARCHAR},
+      #{contentRemark,jdbcType=VARCHAR},
       )
   </insert>
     <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.CaseContent">
@@ -106,6 +110,9 @@
             <if test="delFlag != null">
                 del_flag,
             </if>
+            <if test="contentRemark != null">
+                content_remark,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -143,6 +150,9 @@
             </if>
             <if test="delFlag != null">
                 #{delFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="contentRemark != null">
+                #{contentRemark,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -182,6 +192,9 @@
             <if test="delFlag != null">
                 del_flag = #{delFlag,jdbcType=VARCHAR},
             </if>
+            <if test="contentRemark != null">
+                content_remark= #{contentRemark,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
@@ -197,7 +210,8 @@
       update_user = #{updateUser,jdbcType=VARCHAR},
       delete_time = #{deleteTime,jdbcType=TIMESTAMP},
       delete_user = #{deleteUser,jdbcType=VARCHAR},
-      del_flag = #{delFlag,jdbcType=VARCHAR}
+      del_flag = #{delFlag,jdbcType=VARCHAR},
+      content_remark = #{contentRemark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>
