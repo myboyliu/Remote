@@ -5,6 +5,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.DoctorCertified;
 import com.sicmed.remote.web.bean.BranchBean;
+import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.bean.UserBean;
 import com.sicmed.remote.web.bean.UserControllerBean;
 import com.sicmed.remote.web.entity.UserAccount;
@@ -196,10 +197,12 @@ public class UserController extends BaseController {
         }
 
         String userId = resultUserAccount.getId();
-        UserDetail userDetail = userDetailService.getByPrimaryKey(userId);
-        redisTemplate.opsForValue().set(userId, userDetail);
+//        UserDetail userDetail = userDetailService.getByPrimaryKey(userId);
+        CurrentUserBean currentUserBean = userDetailService.selectCurrentUser(userId);
+//        redisTemplate.opsForValue().set(userId, userDetail);
+        redisTemplate.opsForValue().set(userId, currentUserBean);
 
-        return succeedRequest(userDetail);
+        return succeedRequest(currentUserBean);
     }
 
     /**
@@ -268,10 +271,11 @@ public class UserController extends BaseController {
     public Map modifyPersonal(String phoneNumber, String idTypeName, String userStrong) {
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
         LinkedHashMap<String, String> resultMap = null;
         List<String> idList = new ArrayList<>();
 
+        UserDetail userDetail = new UserDetail();
+        userDetail.setId(userId);
         if (StringUtils.isNotBlank(phoneNumber)) {
             // 更新用户电话
             userDetail.setTelephone(phoneNumber);
@@ -334,12 +338,12 @@ public class UserController extends BaseController {
     public Map managementDoctor() {
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
-        if (userDetail == null) {
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        if (currentUserBean == null) {
             return badRequestOfSelect("redis查询userId对应数据失败");
         }
 
-        String hospitalId = userDetail.getHospitalId();
+        String hospitalId = currentUserBean.getHospitalId();
         // 查出该医院所有医生,并按照科室分类
         List<BranchBean> branchBeans = userDetailService.selectByHospital(hospitalId);
         return succeedRequest(branchBeans);

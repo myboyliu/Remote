@@ -3,6 +3,7 @@ package com.sicmed.remote.web.controller;
 import com.sicmed.remote.common.validation.Insert;
 import com.sicmed.remote.common.validation.Select;
 import com.sicmed.remote.common.validation.Update;
+import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.SpecialistType;
 import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.service.SpecialistTypeService;
@@ -47,9 +48,9 @@ public class SpecialistTypeController extends BaseController {
 
         String userId = getRequestToken();
 
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
-        if (userDetail != null) {
-            specialistType.setHospitalId(userDetail.getHospitalId());
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        if (currentUserBean != null) {
+            specialistType.setHospitalId(currentUserBean.getHospitalId());
         }
         int i = specialistTypeService.insertSelective(specialistType);
 
@@ -142,11 +143,11 @@ public class SpecialistTypeController extends BaseController {
 
         String userId = getRequestToken();
 
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
         SpecialistType specialistType = new SpecialistType();
 
-        specialistType.setHospitalId(userDetail.getHospitalId());
+        specialistType.setHospitalId(currentUserBean.getHospitalId());
 
         List<SpecialistType> specialistTypeList = specialistTypeService.findByDynamicParam(specialistType);
 

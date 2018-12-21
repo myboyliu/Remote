@@ -1,6 +1,7 @@
 package com.sicmed.remote.web.service;
 
 import com.sicmed.remote.web.bean.BranchBean;
+import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.bean.UserBean;
 import com.sicmed.remote.web.bean.UserControllerBean;
 import com.sicmed.remote.web.entity.UserDetail;
@@ -63,5 +64,9 @@ public class UserDetailService implements BaseService<UserDetail> {
     @Override
     public List<UserDetail> findByDynamicParam(UserDetail userDetail) {
         return null;
+    }
+
+    public CurrentUserBean selectCurrentUser(String userId) {
+        return userDetailMapper.selectCurrentUser(userId);
     }
 }

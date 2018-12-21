@@ -453,4 +453,47 @@ where ud.id = #{userId}
       del_flag = #{delFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+    <resultMap id="CurrentUserResultMap" type="com.sicmed.remote.web.bean.CurrentUserBean">
+        <id column="userId" jdbcType="VARCHAR" property="id"/>
+        <result column="userName" jdbcType="VARCHAR" property="userName"/>
+        <result column="userAge" jdbcType="VARCHAR" property="userAge"/>
+        <result column="userSex" jdbcType="VARCHAR" property="userSex"/>
+        <result column="userAddress" jdbcType="VARCHAR" property="userAddress"/>
+        <result column="userCardNumber" jdbcType="VARCHAR" property="userCardNumber"/>
+        <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
+        <result column="hospitalId" jdbcType="VARCHAR" property="hospitalId"/>
+        <result column="branchId" jdbcType="VARCHAR" property="branchId"/>
+        <result column="titleName" jdbcType="VARCHAR" property="titleName"/>
+        <result column="specialistTypeId" jdbcType="VARCHAR" property="specialistTypeId"/>
+        <result column="headImg" jdbcType="VARCHAR" property="headImg"/>
+        <result column="userResume" jdbcType="VARCHAR" property="userResume"/>
+        <result column="userStrong" jdbcType="VARCHAR" property="userStrong"/>
+        <result column="needCaseType" jdbcType="VARCHAR" property="needCaseType"/>
+        <result column="consultation_picture_price" jdbcType="VARCHAR" property="consultationPicturePrice"/>
+        <result column="consultation_video_price" jdbcType="VARCHAR" property="consultationVideoPrice"/>
+        <result column="branchName" jdbcType="VARCHAR" property="branchName"/>
+        <result column="hospitalName" jdbcType="VARCHAR" property="hospitalName"/>
+        <result column="specialistTypeName" jdbcType="VARCHAR" property="specialistTypeName"/>
+    </resultMap>
+    <sql id="CurrentUser_Column_List">
+        user.id userId, user.user_name userName, user.user_age userAge, user.user_sex userSex, user.user_address userAddress,
+        user.user_card_number userCardNumber, user.telephone telephone, user.hospital_id hospitalId,
+        user.branch_id branchId, user.title_name titleName, user.head_img headImg, user.user_resume userResume,
+        user.user_strong userStrong, user.need_case_type needCaseType,
+        user.consultation_picture_price consultation_picture_price, user.consultation_video_price consultation_video_price,
+        hospital.hospital_name hospitalName,
+        branch.custom_name branchName,
+        st.specialist_name specialistTypeName
+    </sql>
+    <select id="selectCurrentUser" parameterType="java.lang.String" resultMap="CurrentUserResultMap">
+        select
+        <include refid="CurrentUser_Column_List"/>
+        from user_detail user
+        LEFT JOIN base_hospital hospital ON hospital.id = user.hospital_id
+        LEFT JOIN custom_branch branch ON branch.id = user.branch_id
+        LEFT JOIN specialist_type st ON st.id = user.specialist_type_id
+        where user.id = #{id,jdbcType=VARCHAR}
+    </select>
+
 </mapper>

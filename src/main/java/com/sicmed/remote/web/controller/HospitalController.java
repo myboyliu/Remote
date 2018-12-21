@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.controller;
 
+import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.Hospital;
 import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.mapper.UserDetailMapper;
@@ -145,8 +146,8 @@ public class HospitalController extends BaseController {
     public Map selectByUser() {
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
-        String hospitalId = userDetail.getHospitalId();
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        String hospitalId = currentUserBean.getHospitalId();
         Hospital hospital1 = hospitalService.getByPrimaryKey(hospitalId);
         return succeedRequest(hospital1);
     }

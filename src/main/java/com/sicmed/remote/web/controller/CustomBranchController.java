@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.CustomBranchType;
-import com.sicmed.remote.web.bean.BranchBean;
-import com.sicmed.remote.web.bean.CustomBranchBean;
-import com.sicmed.remote.web.bean.HospitalBean;
-import com.sicmed.remote.web.bean.UpdateCustomBranchBean;
+import com.sicmed.remote.web.bean.*;
 import com.sicmed.remote.web.entity.CustomBranch;
 import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.service.CustomBranchService;
@@ -70,7 +67,7 @@ public class CustomBranchController extends BaseController {
     @PostMapping(value = "update")
     public Object update(String customBranchStr) {
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
         // json 解析
         List<UpdateCustomBranchBean> updateCustomBranchBeanList;
         updateCustomBranchBeanList = JSON.parseObject(customBranchStr, new TypeReference<List<UpdateCustomBranchBean>>() {
@@ -83,7 +80,7 @@ public class CustomBranchController extends BaseController {
             if (updateCustomBranchBean.getType().equals(CustomBranchType.REMOVE_BRANCH.toString())) {
                 removeCustomBranchBeanList.add(updateCustomBranchBean.getCustomBranchId());
             } else {
-                updateCustomBranchBean.setHospitalId(userDetail.getHospitalId());
+                updateCustomBranchBean.setHospitalId(currentUserBean.getHospitalId());
                 addCustomBranchBeanList.add(updateCustomBranchBean);
             }
             log.debug(updateCustomBranchBean.toString());
@@ -126,9 +123,9 @@ public class CustomBranchController extends BaseController {
 
         String userId = getRequestToken();
 
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
-        List<BranchBean> customBranchList = customBranchService.selectByHospitalId(userDetail.getHospitalId());
+        List<BranchBean> customBranchList = customBranchService.selectByHospitalId(currentUserBean.getHospitalId());
 
         return succeedRequestOfSelect(customBranchList);
     }
