@@ -7,13 +7,13 @@ import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.YoonaLtUtils.IdentityCardUtil;
+import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
 import com.sicmed.remote.web.bean.ApplyTimeBean;
 import com.sicmed.remote.web.bean.CaseContentBean;
 import com.sicmed.remote.web.entity.*;
 import com.sicmed.remote.web.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.omg.CORBA.BAD_CONTEXT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -22,10 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author YoonaLt
@@ -166,12 +163,23 @@ public class ApplyController extends BaseController {
             return badRequestOfArguments("startEndTime is null");
         }
 
-        LinkedHashMap<String, String> resultMap;
+        List<String> lists;
+        LinkedHashMap<String, String> resultMap = new LinkedHashMap<>();
         try {
-            resultMap = JSON.parseObject(startEndTime, new TypeReference<LinkedHashMap<String, String>>() {
+            lists = JSON.parseObject(startEndTime, new TypeReference<List<String>>() {
             }, Feature.OrderedField);
         } catch (Exception e) {
+            e.printStackTrace();
             return badRequestOfArguments("startEndTime 格式有误");
+        }
+        if (lists == null) {
+            return badRequestOfArguments("日期输入有误");
+        }
+        for (String time : lists) {
+            Date date = YtDateUtils.stringToDate(time);
+            String start = YtDateUtils.dateToString(YtDateUtils.parmDateBegin(date));
+            String end = YtDateUtils.dateToString(YtDateUtils.intradayEnd(date));
+            resultMap.put(start, end);
         }
 
         // 添加 转诊申请 时间

@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -55,17 +56,67 @@ public class YtDateUtils {
     }
 
     /**
+     * Input Parameter Date To String("yyyy-MM-dd HH:mm:ss")
+     *
+     * @param date
+     * @return string
+     */
+    public static String dateToString(Date date) {
+
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        String string = format.format(date);
+
+        return string;
+    }
+
+
+    /**
+     * The Morning Of Input Parameter Day 00:00:00
+     */
+    public static Date parmDateBegin(Date date) {
+
+        Calendar day = Calendar.getInstance();
+        day.setTime(date);
+        day.set(Calendar.HOUR_OF_DAY, 0);
+        day.set(Calendar.MINUTE, 0);
+        day.set(Calendar.SECOND, 0);
+        day.set(Calendar.MILLISECOND, 0);
+        Date resDate = day.getTime();
+
+        return resDate;
+
+    }
+
+    /**
+     * The Middle Of The Night Of Input Parameter Day 23:59:59
+     */
+    public static Date intradayEnd(Date date) {
+
+        Calendar day = Calendar.getInstance();
+        day.setTime(date);
+        day.set(Calendar.HOUR_OF_DAY, 23);
+        day.set(Calendar.MINUTE, 59);
+        day.set(Calendar.SECOND, 59);
+        day.set(Calendar.MILLISECOND, 999);
+        Date resDate = day.getTime();
+
+        return resDate;
+    }
+
+    /**
      * 计算两个时间差,返回小时
-     * @param startDate		开始时间
-     * @param endDate		结束时间
+     *
+     * @param startDate 开始时间
+     * @param endDate   结束时间
      * @return
      */
-    public static float timeDifference(String startDate,String endDate){
-        if (stringToDates(endDate).getTime() > stringToDates(startDate).getTime()){
-            long date = stringToDates(endDate).getTime()-stringToDates(startDate).getTime();
-            DecimalFormat df=new DecimalFormat("0.0");
-            return (float)date/3600000;
-        }else {
+    public static float timeDifference(String startDate, String endDate) {
+        if (stringToDates(endDate).getTime() > stringToDates(startDate).getTime()) {
+            long date = stringToDates(endDate).getTime() - stringToDates(startDate).getTime();
+            DecimalFormat df = new DecimalFormat("0.0");
+            return (float) date / 3600000;
+        } else {
             return 0;
         }
     }
