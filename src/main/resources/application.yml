@@ -25,7 +25,7 @@ spring:
   servlet:
     multipart:
       max-request-size: 1048576000
-      max-file-size: 104857600
+      max-file-size: 1048576000
 mybatis:
   mapper-locations: classpath:mapping/**/*.xml
 logging:

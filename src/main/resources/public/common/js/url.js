@@ -52,4 +52,6 @@ const getDoctorListByBranchIdUrl = "/user/addressBook";
 
 const uploadFileUrl = "/file/upload";
 
+const createCaseUrl = "/case/insertNewCase"; //创建病历接口
+
 

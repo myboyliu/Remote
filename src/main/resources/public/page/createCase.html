@@ -18,7 +18,10 @@
     <script src="../common/js/root.js"></script>
     <script src="../common/js/PDFObject.min.js"></script>
     <script src="../common/js/imgFileupload.js"></script>
+    <script src="../common/js/ajaxRequestUtils.js"></script>
+    <script src="../common/js/url.js"></script>
     <script src="../js/createCase.js"></script>
+
     <!--[if lt IE9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -84,20 +87,7 @@
         <div class="foundBox clearfix">
             <div class="leftBox">
                 <ul class="oneLevelUl">
-                    <!-- <li class="hospitalItem active">
-                        <p class="hospitalName">北京朝阳医院西北京朝阳医院西</p>
-                        <ul class="sectionUl">
-                            <li class="sectionItem active">
-                                <p class="sectionName">内科内科内科内科内科</p>
-                                <ul class="deptUl">
-                                    <li class="deptItem active">心脏中心心脏中心</li>
-                                    <li class="deptItem">心脏中心心脏中心</li>
-                                    <li class="deptItem">心脏中心</li>
-                                    <li class="deptItem">心脏中心</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li> -->
+
                 </ul>
             </div>
             <div class="rightBox">
@@ -112,13 +102,15 @@
                     <div class="clearfix">
                         <div class="fl">
                             <p>姓名</p>
-                            <input type="text" name="" id="username" class="w140 curp" placeholder="请输入姓名"
+                            <input maxlength="16" type="text" name="" id="username" class="w140 curp"
+                                   placeholder="请输入姓名"
                                    autocomplete="off">
                         </div>
 
                         <div class="fl">
                             <p>身份证号</p>
-                            <input type="text" name="" id="idCard" class="w200 curp" placeholder="请输入身份证号">
+                            <input maxlength="18" type="text" name="" id="idCard" class="w200 curp"
+                                   placeholder="请输入身份证号">
                         </div>
 
                         <div class="fl">
@@ -133,7 +125,7 @@
                                 <i class="age_ico"></i>
                             </div>
                             </p>
-                            <input type="text" name="" id="age" class="w140 curp" placeholder="请输入年龄">
+                            <input maxlength="3" type="text" name="" id="age" class="w140 curp" placeholder="请输入年龄">
                         </div>
                         <div class="fl">
                             <p>性别</p>
@@ -154,32 +146,34 @@
                     <div style="width: 810px;" class="clearfix">
                         <div class="fl">
                             <p>身高/cm</p>
-                            <input type="text" name="" id="high" class="w140 curp" placeholder="请输入身高">
+                            <input maxlength="3" type="text" name="" id="high" class="w140 curp" placeholder="请输入身高">
                         </div>
 
                         <div class="fl">
                             <p>体重/kg</p>
-                            <input type="text" name="" id="weight" class="w200 curp" placeholder="请输入体重">
+                            <input maxlength="3" type="text" name="" id="weight" class="w200 curp" placeholder="请输入体重">
                         </div>
                         <div class="fl">
                             <p>电话号码</p>
-                            <input type="text" name="" id="phone" class="w140 curp " placeholder="请输入电话号码">
+                            <input maxlength="11" type="text" name="" id="phone" class="w140 curp "
+                                   placeholder="请输入电话号码">
                         </div>
 
                         <div class="fl">
                             <p>常住城市</p>
-                            <input type="text" name="" id="address" class="w200 curp" placeholder="请输入常住城市">
+                            <input maxlength="32" type="text" name="" id="address" class="w200 curp"
+                                   placeholder="请输入常住城市">
                         </div>
                     </div>
                 </div>
                 <p class="mg20">初步诊断
                     <span class="choose">请简要记录疾病名称等</span>
                 </p>
-                <textarea id="createCase_textDiagnose" class="text-adaption curp" rows="1"></textarea>
+                <textarea maxlength="255" id="createCase_textDiagnose" class="text-adaption curp" rows="1"></textarea>
                 <p class="mg20">会/转诊目的
                     <span class="choose">将您想对接诊医生说的话写在这里...</span>
                 </p>
-                <textarea id="createCase_textGola" class="text-adaption curp" rows="1"></textarea>
+                <textarea maxlength="255" id="createCase_textGola" class="text-adaption curp" rows="1"></textarea>
 
                 <!--电子病历附件 -->
                 <div class="hosp clearfix">
@@ -189,22 +183,7 @@
                     <div class="wire" style="width: 390PX;"></div>
                 </div>
                 <ul class="upfileUl">
-                    <!-- <li class="upfileItem clearfix">
-                        <div class="upfileContent">
-                            <div class="operateLeft">首页-封面(<span class="">0</span>张)</div>
-                            <ul class="fileContent clearfix">
-                                <li class="fileAdd">
-                                    <a class="addfileBtn" href="javascript:;"></a>
-                                    <input class="fileInput" type="file" multiple>
-                                    <p class="fileName">添加文件</p>
-                                </li>
-                                <li class="fileItem">
-                                    <div></div>
-                                    <p class="fileName active">文件名字</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </li> -->
+
                 </ul>
             </div>
         </div>
@@ -212,20 +191,7 @@
         <div class="chooseBox clearfix">
             <div class="leftBox">
                 <ul class="hospitalUl">
-                    <!-- <li class="hospitalItem active">
-                        <p class="hospitalName">北京朝阳医院西北京朝阳医院西</p>
-                        <ul class="sectionUl">
-                            <li class="sectionItem active">
-                                <p class="sectionName">内科内科内科内科内科</p>
-                                <ul class="deptUl">
-                                    <li class="deptItem active">心脏中心心脏中心</li>
-                                    <li class="deptItem">心脏中心心脏中心</li>
-                                    <li class="deptItem">心脏中心</li>
-                                    <li class="deptItem">心脏中心</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li> -->
+
                 </ul>
             </div>
             <div class="rightBox">
@@ -236,34 +202,9 @@
                     </p>
                 </div>
                 <ul class="favoriteUl clearfix">
-                    <!-- <li class="clearfix"><span><北京朝阳医院本院;心脏中心;童朝辉;主任医师>;</span><img src="../images/delDoc.png" alt=""></li>
-                    <li class="clearfix"><span>主会诊人:<北京朝阳医院本院;心脏中心;童朝辉;主任医师>;</span></li>
-                    <li class="clearfix"><span>主会诊人:未选择</span></li> -->
                 </ul>
                 <div class="briefing">
                     <ul class="doctorUl clearfix">
-                        <!-- <li class="doctorChunk">
-                            <div class="diamond"></div>
-                            <div class="message">
-                                <span class="mess_l">童朝辉</span>
-                                <span>主任医师</span>
-                                <p class="p1">北京朝阳医院本部</p>
-                                <p class="p2">呼吸危重症、呼吸系感染性疾病、呼吸内镜及其介入诊治技术。烟草控制与戒烟</p>
-                                <p class="p3">图文&nbsp;300/视频&nbsp;500元</p>
-                            </div>
-                            <div class="present">
-                                <h4>联系电话
-                                    <span>15137907996</span>
-                                </h4>
-                                <h4>擅长</h4>
-                                <p>选择此项,申请将发送至对方医院远程中心,由医务人员将为您调度医院资源,诊费会在选定医院后确定。</p>
-                                <h4>病例要求</h4>
-                                <p>首页——封面、首页-正面、首页-反面、首页——封面、首页-正面、首页-反面、首页——封面、首页-正面、首页-反面、</p>
-                                <input type="button" value="图文会诊" class="presentBtnOne">
-                                <input type="button" value="视频会诊">
-                                <input type="button" value="转诊">
-                            </div>
-                        </li> -->
                     </ul>
                 </div>
             </div>
