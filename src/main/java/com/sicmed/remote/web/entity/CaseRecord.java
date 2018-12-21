@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import javax.validation.constraints.Max;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
  * @version 1.0
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CaseRecord extends BaseEntity {
     private String id;
 
