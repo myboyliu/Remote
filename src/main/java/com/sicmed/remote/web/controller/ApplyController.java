@@ -10,6 +10,7 @@ import com.sicmed.remote.web.YoonaLtUtils.IdentityCardUtil;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
 import com.sicmed.remote.web.bean.ApplyTimeBean;
 import com.sicmed.remote.web.bean.CaseContentBean;
+import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.*;
 import com.sicmed.remote.web.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -113,13 +114,13 @@ public class ApplyController extends BaseController {
         }
 
         // 添加applyForm,applyStatus申请状态为草稿
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
-        if (userDetail == null) {
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        if (currentUserBean == null) {
             return badRequestOfArguments("获取医生详细信息失败");
         }
 
-        applyForm.setApplyHospitalId(userDetail.getHospitalId());
-        applyForm.setApplyBranchId(userDetail.getBranchId());
+        applyForm.setApplyHospitalId(currentUserBean.getHospitalId());
+        applyForm.setApplyBranchId(currentUserBean.getBranchId());
         applyForm.setApplyUserId(userId);
         String applyType = String.valueOf(ApplyType.APPLY_DRAFT);
         applyForm.setApplyType(applyType);
@@ -144,16 +145,17 @@ public class ApplyController extends BaseController {
         }
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
-
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        String applySummary = "<"+currentUserBean.getUserName()+"/"+currentUserBean.getTitleName()+"/"+currentUserBean.getBranchName()+"/"+currentUserBean.getHospitalName()+">";
         // 添加 转诊 申请表
         String applyType = String.valueOf(ApplyType.APPLY_REFERRAL);
         String applyStatues = String.valueOf(InquiryStatus.INQUIRY_APPLY_CREATE_SUCCESS);
-        applyForm.setApplyBranchId(userDetail.getBranchId());
-        applyForm.setApplyHospitalId(userDetail.getHospitalId());
+        applyForm.setApplyBranchId(currentUserBean.getBranchId());
+        applyForm.setApplyHospitalId(currentUserBean.getHospitalId());
         applyForm.setApplyType(applyType);
         applyForm.setApplyUserId(userId);
         applyForm.setApplyStatus(applyStatues);
+        applyForm.setApplySummary(applySummary);
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("转诊记录保存失败");
@@ -210,13 +212,13 @@ public class ApplyController extends BaseController {
         }
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
         // 添加 视频会诊 申请表
         String applyType = String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO);
         String applyStatues = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_CREATE_SUCCESS);
-        applyForm.setApplyBranchId(userDetail.getBranchId());
-        applyForm.setApplyHospitalId(userDetail.getHospitalId());
+        applyForm.setApplyBranchId(currentUserBean.getBranchId());
+        applyForm.setApplyHospitalId(currentUserBean.getHospitalId());
         applyForm.setApplyUserId(userId);
         applyForm.setApplyType(applyType);
         applyForm.setApplyStatus(applyStatues);
@@ -265,12 +267,12 @@ public class ApplyController extends BaseController {
         }
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
         // 添加 图文会诊 申请表
         applyForm.setApplyUserId(userId);
-        applyForm.setApplyBranchId(userDetail.getBranchId());
-        applyForm.setApplyHospitalId(userDetail.getHospitalId());
+        applyForm.setApplyBranchId(currentUserBean.getBranchId());
+        applyForm.setApplyHospitalId(currentUserBean.getHospitalId());
         String applyType = String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT);
         applyForm.setApplyType(applyType);
         String applyStatues = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_CREATE_SUCCESS);
