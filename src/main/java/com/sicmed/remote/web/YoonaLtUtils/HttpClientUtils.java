@@ -39,13 +39,11 @@ public class HttpClientUtils {
         HttpPost httpPost = null;
         String result = null;
         try {
-            httpClient =  new SSLClient();// 创建httpClient实例
-            httpPost = new HttpPost(Constant.BASEPATH+ Constant.AUTHTOKEN_URL); // 创建httpget实例
+            // 创建httpClient实例
+            httpClient =  new SSLClient();
+            // 创建httpget实例
+            httpPost = new HttpPost(Constant.BASEPATH+ Constant.AUTHTOKEN_URL);
             //设置参数
-
-            System.out.println(Constant.BASEPATH+ Constant.AUTHTOKEN_URL);
-
-            //谷歌的Gson
             httpPost.addHeader("Content-Type", "application/json");
             Map map = new LinkedHashMap();
             map.put("mobile", mobile);
@@ -76,10 +74,6 @@ public class HttpClientUtils {
             }
         }
         return result;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(getMethod("13782619243","刘医生"));
     }
 
     /**
