@@ -5,6 +5,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.web.YoonaLtUtils.IdentityCardUtil;
 import com.sicmed.remote.web.bean.CaseContentBean;
+import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.CaseContent;
 import com.sicmed.remote.web.entity.CasePatient;
 import com.sicmed.remote.web.entity.CaseRecord;
