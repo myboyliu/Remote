@@ -61,23 +61,20 @@ public class ApplyController extends BaseController {
      * @param weightPathTypeId
      */
     @PostMapping(value = "draft")
-    public Map draft(CasePatient casePatient, CaseRecord caseRecord, String weightPathTypeId) {
+    public Map draft(CasePatient casePatient, CaseRecord caseRecord, String weightPathTypeId, ApplyForm applyForm) {
+
+        if (casePatient != null) {
+            if (StringUtils.isNotBlank(casePatient.getPatientCard())) {
+
+                if (!IdentityCardUtil.validateCard(casePatient.getPatientCard())) {
+                    return badRequestOfArguments("身份证输入有误");
+                }
+            }
+        }
 
         String userId = getRequestToken();
 
-        ApplyForm applyForm = new ApplyForm();
-        applyForm.setApplyUserId(userId);
-
-        CaseContentBean caseContentBean = new CaseContentBean();
-
-        // 添加病例患者基本信息
-        String str = casePatient.getPatientCard();
-        if (StringUtils.isNotBlank(str)) {
-
-            if (!IdentityCardUtil.validateCard(casePatient.getPatientCard())) {
-                return badRequestOfArguments("身份证输入有误");
-            }
-        }
+        // 添加病例患者基本信喜
 
         casePatient.setCreateUser(userId);
         int i = casePatientService.insertSelective(casePatient);
@@ -94,6 +91,7 @@ public class ApplyController extends BaseController {
             return badRequestOfInsert("添加caseRecord的caseDiagnosis失败");
         }
 
+        CaseContentBean caseContentBean = new CaseContentBean();
         caseContentBean.setRecordId(caseRecord.getId());
         applyForm.setCaseRecordId(caseRecord.getId());
 
@@ -122,7 +120,8 @@ public class ApplyController extends BaseController {
         if (userDetail == null) {
             return badRequestOfArguments("获取医生详细信息失败");
         }
-
+        
+        applyForm.setApplyHospitalId(userDetail.getHospitalId());
         applyForm.setApplyBranchId(userDetail.getBranchId());
         applyForm.setApplyUserId(userId);
         String applyType = String.valueOf(ApplyType.APPLY_DRAFT);

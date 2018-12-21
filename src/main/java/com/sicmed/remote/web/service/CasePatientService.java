@@ -28,7 +28,7 @@ public class CasePatientService implements BaseService<CasePatient> {
 
     @Override
     public int deleteByPrimaryKey(String id) {
-        return 0;
+        return casePatientMapper.deleteByPrimaryKey(id);
     }
 
     @Override

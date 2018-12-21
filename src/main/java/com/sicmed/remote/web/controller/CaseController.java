@@ -64,13 +64,17 @@ public class CaseController extends BaseController {
         if (caseRecordBr.hasErrors()) {
             return fieldErrorsBuilder(caseRecordBr);
         }
-
-        String userId = getRequestToken();
-
-        // 添加病例患者基本信息
+        if (StringUtils.isBlank(weightPathTypeId)) {
+            return badRequestOfArguments("weightPathTypeId is null");
+        }
         if (!IdentityCardUtil.validateCard(casePatient.getPatientCard())) {
             return badRequestOfArguments("身份证输入有误");
         }
+
+        String userId = getRequestToken();
+
+/*
+        // 添加病例患者基本信息
         casePatient.setCreateUser(userId);
 
         // 查询患者是否已经存在
@@ -81,20 +85,25 @@ public class CaseController extends BaseController {
                 return badRequestOfInsert("添加casePatient失败");
             }
         }
-        int k = casePatientService.updateByCard(casePatient);
-        if (k < 1) {
-            return badRequestOfInsert("添加casePatient失败");
-        }
+
+        if (rel != null) {
+            casePatient.setId(rel.getId());
+            int k = casePatientService.updateByCard(casePatient);
+            if (k < 1) {
+                return badRequestOfInsert("添加casePatient失败");
+            }
+        }*/
 
         // 添加病例初步诊断结果
-        caseRecord.setCreateUser(userId);
+/*        caseRecord.setCreateUser(userId);
         caseRecord.setPatientId(casePatient.getId());
         int j = caseRecordService.insertSelective(caseRecord);
         if (j < 1) {
             return badRequestOfInsert("添加caseRecord的caseDiagnosis失败");
-        }
+        }*/
 
         // 文件路径 与 病例文件id map解析,添加病例附件
+
         List<CaseContent> resultList;
         try {
             resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList>() {
@@ -103,15 +112,14 @@ public class CaseController extends BaseController {
             return badRequestOfArguments("pathWeightTypeId 填写错误");
         }
         CaseContentBean caseContentBean = new CaseContentBean();
-        caseContentBean.setRecordId(caseRecord.getId());
-        caseContentBean.setRecordId(caseRecord.getId());
+        caseContentBean.setCasePatient(casePatient);
+        caseContentBean.setCaseRecord(caseRecord);
         caseContentBean.setCreateUser(userId);
         caseContentBean.setWeightPathTypeId(resultList);
         int l = caseContentService.insertByMap(caseContentBean);
         if (l < 0) {
-            return badRequestOfInsert("添加CaseContent失败");
+            return badRequestOfInsert("添加病例失败");
         }
-
 
         return succeedRequest(caseRecord);
     }

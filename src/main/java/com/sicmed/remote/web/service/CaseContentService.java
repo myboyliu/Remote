@@ -2,9 +2,11 @@ package com.sicmed.remote.web.service;
 
 import com.sicmed.remote.web.bean.CaseContentBean;
 import com.sicmed.remote.web.entity.CaseContent;
+import com.sicmed.remote.web.entity.CasePatient;
 import com.sicmed.remote.web.mapper.CaseContentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,7 +16,34 @@ public class CaseContentService implements BaseService<CaseContent> {
     @Autowired
     private CaseContentMapper caseContentMapper;
 
+    @Autowired
+    private CasePatientService casePatientService;
+
+    @Autowired
+    private CaseRecordService caseRecordService;
+
+    @Transactional
     public int insertByMap(CaseContentBean caseContentBean) {
+
+        caseContentBean.getCasePatient().setCreateUser(caseContentBean.getCreateUser());
+        CasePatient rel = casePatientService.selectByCard(caseContentBean.getCasePatient().getPatientCard());
+        if (rel == null) {
+            return casePatientService.insertSelective(caseContentBean.getCasePatient());
+        }
+        if (rel != null) {
+            caseContentBean.getCasePatient().setId(rel.getId());
+            return casePatientService.updateByCard(caseContentBean.getCasePatient());
+        }
+
+        caseContentBean.getCaseRecord().setCreateUser(caseContentBean.getCreateUser());
+        caseContentBean.getCaseRecord().setPatientId(caseContentBean.getCaseRecord().getId());
+        int i = caseRecordService.insertSelective(caseContentBean.getCaseRecord());
+        if (i < 1) {
+            return i;
+        }
+
+        caseContentBean.setRecordId(caseContentBean.getCaseRecord().getId());
+
         return caseContentMapper.insertByMap(caseContentBean);
     }
 
