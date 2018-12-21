@@ -54,4 +54,9 @@ const uploadFileUrl = "/file/upload";
 
 const createCaseUrl = "/case/insertNewCase"; //创建病历接口
 
+const createDraftApplyUrl = "/apply/draft"; //创建申请草稿地址
+const createReferralApplyUrl = "/apply/transfer"; //创建转诊申请接口
+const createPictureApplyUrl = "/apply/picture"; //创建图文会诊接口
+const createVideoApplyUrl = "/apply/video"; //创建视频会诊接口
+
 
