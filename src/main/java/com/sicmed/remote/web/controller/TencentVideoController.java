@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.sicmed.remote.common.Constant;
 import com.sicmed.remote.web.YoonaLtUtils.HttpConnectionUtils;
 import com.sicmed.remote.web.YoonaLtUtils.SignatureUtils;
@@ -31,6 +32,11 @@ import java.util.*;
 @RequestMapping(value = "tencentVideo")
 public class TencentVideoController extends BaseController {
 
+    /**
+     * 腾讯云返回json关键数据
+     */
+    private static final String PARAM = "code";
+    private static final String CODE = "0";
 
     @Autowired
     private TencentVideoService tencentVideoService;
@@ -116,7 +122,7 @@ public class TencentVideoController extends BaseController {
         if (i > 0) {
             return succeedRequest(null);
         } else {
-            return badRequestOfInsert("修改优享课程失败");
+            return succeedRequestOfUpdate("修改优享课程失败");
         }
     }
 
@@ -139,7 +145,7 @@ public class TencentVideoController extends BaseController {
             }
             return succeedRequest(null);
         } else {
-            return badRequestOfInsert("删除优享课程失败");
+            return badRequestOfDelete("删除优享课程失败");
         }
     }
 
@@ -185,12 +191,12 @@ public class TencentVideoController extends BaseController {
         //TODO 总条数
         int i = tencentVideoService.findVideoListByTypeSize(tencentVideo);
         if (i > 0){
-            if (typeName != null && typeName.equals(Constant.VIDEO_NEW)) {
+            if (Constant.VIDEO_NEW.equals(typeName)) {
                 videoList = tencentVideoService.findVideoListByTypeNew(tencentVideo);
                 map.put("pageTotal", i);
                 map.put("videoList", videoList);
                 return succeedRequest(map);
-            } else if (typeName != null && typeName.equals(Constant.VIDEO_HOT)) {
+            } else if (Constant.VIDEO_HOT.equals(typeName)) {
                 videoList = tencentVideoService.findVideoListByTypeHot(tencentVideo);
                 map.put("pageTotal", i);
                 map.put("videoList", videoList);
@@ -277,7 +283,11 @@ public class TencentVideoController extends BaseController {
         SignatureUtils signatureUtils = new SignatureUtils( );
         String signature = signatureUtils.hmacSHA1(url, privateKey);
         signature = java.net.URLEncoder.encode(signature, "utf8");
-        HttpConnectionUtils.get("https://vod.api.qcloud.com/v2/index.php", "Action=" + action + "&Region=" + Region + "&Timestamp=" + timestamp + "&Nonce=" + Nonce + "&SecretId=" + SecretId + "&fileId=" + fileId + "&isScreenshot=" + "1" + "&Signature=" + signature);
+        String str = HttpConnectionUtils.get("https://vod.api.qcloud.com/v2/index.php", "Action=" + action + "&Region=" + Region + "&Timestamp=" + timestamp + "&Nonce=" + Nonce + "&SecretId=" + SecretId + "&fileId=" + fileId + "&isScreenshot=" + "1" + "&Signature=" + signature);
+        Map <String, Object> map = (Map) JSON.parse(str.toString());
+        if (!map.get(CODE).toString().equals(PARAM)){
+            log.info("filedId:"+ fileId + "的视频转码失败!!"+map.get("message").toString());
+        }
     }
 
     /**

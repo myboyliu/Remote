@@ -232,8 +232,8 @@ public class YqyLiveService implements BaseService<YqyLive> {
                 yqyLive.setLiveStartTime(YtDateUtils.stringToDates(startDate));
                 yqyLive.setLiveEndTime(YtDateUtils.stringToDates(endDate));
                 yqyLive.setLiveCoverUrl(pictureUrl);
-                yqyLive.setLiveUserId(userDetail.getId( ));
-                yqyLive.setCreateUser(userDetail.getId( ));
+                yqyLive.setUpdateUser(userDetail.getId());
+                yqyLive.setUpdateTime(new Date());
                 return yqyLiveMapper.updateByPrimaryKeySelective(yqyLive);
             } else {
                 YqyLive yqyLive = new YqyLive( );
@@ -250,8 +250,8 @@ public class YqyLiveService implements BaseService<YqyLive> {
                 yqyLive.setLiveDescribe(liveDescribe);
                 yqyLive.setLiveStartTime(YtDateUtils.stringToDates(startDate));
                 yqyLive.setLiveEndTime(YtDateUtils.stringToDates(endDate));
-                yqyLive.setLiveUserId(userDetail.getId( ));
-                yqyLive.setCreateUser(userDetail.getId( ));
+                yqyLive.setUpdateUser(userDetail.getId( ));
+                yqyLive.setUpdateTime(new Date());
                 return yqyLiveMapper.updateByPrimaryKeySelective(yqyLive);
             }
         } else {
@@ -304,6 +304,8 @@ public class YqyLiveService implements BaseService<YqyLive> {
         if (map1.get("code") != null && "200".equals(map1.get("code").toString( ))) {
             yqyLive.setId(id);
             yqyLive.setDelFlag("1");
+            yqyLive.setDeleteTime(new Date());
+            yqyLive.setDeleteUser(userDetail.getId());
             yqyLiveMapper.updateByPrimaryKeySelective(yqyLive);
             delFile(coverUrl);
             return 1;
@@ -347,7 +349,7 @@ public class YqyLiveService implements BaseService<YqyLive> {
         YqyLive yqyLive = new YqyLive( );
         yqyLive.setLiveClass(liveClass);
         yqyLive.setDelFlag("0");
-        yqyLive.setPageNo(pageNo);
+        yqyLive.setPageNo((pageNo-1)*pageSize);
         yqyLive.setPageSize(pageSize);
         //结束时间大于当前时间
         yqyLive.setLiveEndTime(new Date( ));
@@ -361,7 +363,7 @@ public class YqyLiveService implements BaseService<YqyLive> {
         YqyLive yqyLive = new YqyLive( );
         yqyLive.setLiveClass(liveClass);
         yqyLive.setDelFlag("0");
-        yqyLive.setPageNo(pageNo);
+        yqyLive.setPageNo((pageNo-1)*pageSize);
         yqyLive.setPageSize(pageSize);
         //结束时间大于当前时间
         yqyLive.setLiveEndTime(new Date( ));
@@ -395,7 +397,7 @@ public class YqyLiveService implements BaseService<YqyLive> {
         yqyLive.setLiveName(liveName);
         yqyLive.setLiveEndTime(new Date( ));
         yqyLive.setDelFlag("0");
-        yqyLive.setPageNo(pageNo);
+        yqyLive.setPageNo((pageNo-1)*pageSize);
         yqyLive.setPageSize(pageSize);
         return yqyLiveMapper.searchAnnouncementNew(yqyLive);
     }
@@ -413,7 +415,7 @@ public class YqyLiveService implements BaseService<YqyLive> {
         yqyLive.setLiveName(liveName);
         yqyLive.setDelFlag("0");
         yqyLive.setLiveEndTime(new Date( ));
-        yqyLive.setPageNo(pageNo);
+        yqyLive.setPageNo((pageNo-1)*pageSize);
         yqyLive.setPageSize(pageSize);
         return yqyLiveMapper.searchAnnouncementHot(yqyLive);
     }

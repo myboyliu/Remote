@@ -49,9 +49,9 @@ public class YqyLiveController extends BaseController {
         UserDetail userDetail = (UserDetail) redisTemplate.opsForValue( ).get(getRequestToken( ));
         int i = yqyLiveService.announcement(file, title, customBranchId, liveDescribe, startDate, endDate, liveClass, userDetail);
         if (i > 0) {
-            return succeedRequest(null);
+            return succeedRequestOfInsert(null);
         } else {
-            return badRequestOfArguments("添加失败");
+            return badRequestOfInsert("添加失败");
         }
     }
 
@@ -103,7 +103,7 @@ public class YqyLiveController extends BaseController {
         if (i > 0) {
             return succeedRequest(null);
         } else {
-            return badRequestOfArguments("添加失败");
+            return badRequestOfUpdate("添加失败");
         }
     }
 
@@ -144,7 +144,7 @@ public class YqyLiveController extends BaseController {
         if (i > 0) {
             return succeedRequest(null);
         } else {
-            return badRequestOfArguments("删除失败");
+            return badRequestOfDelete("删除失败");
         }
     }
 
@@ -245,7 +245,7 @@ public class YqyLiveController extends BaseController {
         if (i > 0) {
             return succeedRequest(null);
         } else {
-            return badRequestOfArguments("设置失败");
+            return badRequestOfUpdate("设置失败");
         }
     }
 
