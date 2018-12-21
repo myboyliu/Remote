@@ -29,6 +29,9 @@ public class EventProcessing {
     @Autowired
     private TencentVideoService tencentVideoService;
 
+    public static final String EVENT_TYPE_NAME = "TranscodeComplete";
+    public static final String EVENT_TYPE = "eventType";
+
     /**
      * 事件回调函数,目前只处理转码后回调
      * @param str
@@ -38,7 +41,7 @@ public class EventProcessing {
     public void eventProcessing(@RequestBody String str) throws Exception {
         TencentVideo video = new TencentVideo();
         Map <String, Object> map = (Map) JSON.parse(str.toString());
-        if ("TranscodeComplete".equals(map.get("eventType").toString())) {
+        if (EVENT_TYPE_NAME.equals(map.get(EVENT_TYPE).toString())) {
             Map <String, Object> map1 = (Map) JSON.parse(map.get("data").toString());
             video.setVideoFileId(map1.get("fileId").toString());
             video.setVideoCoverUrl(map1.get("coverUrl").toString());
