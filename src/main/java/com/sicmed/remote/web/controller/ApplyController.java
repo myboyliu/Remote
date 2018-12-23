@@ -133,6 +133,15 @@ public class ApplyController extends BaseController {
     }
 
     /**
+     * 获取申请发起人摘要信息
+     * @return
+     */
+    private String getApplySummary(){
+        String userId = getRequestToken();
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        return "<"+currentUserBean.getUserName()+"/"+currentUserBean.getTitleName()+"/"+currentUserBean.getBranchName()+"/"+currentUserBean.getHospitalName()+">";
+    }
+    /**
      * 转诊
      *
      * @param applyForm
@@ -146,7 +155,7 @@ public class ApplyController extends BaseController {
 
         String userId = getRequestToken();
         CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
-        String applySummary = "<"+currentUserBean.getUserName()+"/"+currentUserBean.getTitleName()+"/"+currentUserBean.getBranchName()+"/"+currentUserBean.getHospitalName()+">";
+        String applySummary = getApplySummary();
         // 添加 转诊 申请表
         String applyType = String.valueOf(ApplyType.APPLY_REFERRAL);
         String applyStatues = String.valueOf(InquiryStatus.INQUIRY_APPLY_CREATE_SUCCESS);
@@ -260,15 +269,18 @@ public class ApplyController extends BaseController {
      * @param applyFormBr
      */
     @PostMapping(value = "picture")
-    public Map pictureConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr) {
+    public Map pictureConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr,String consultantUserList) {
 
         if (applyFormBr.hasErrors()) {
             return fieldErrorsBuilder(applyFormBr);
         }
+        CaseConsultant caseConsultant = new CaseConsultant();
+        caseConsultant.setConsultantUserList(consultantUserList);
+
 
         String userId = getRequestToken();
         CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
-
+        applyForm.setApplySummary(getApplySummary());
         // 添加 图文会诊 申请表
         applyForm.setApplyUserId(userId);
         applyForm.setApplyBranchId(currentUserBean.getBranchId());
