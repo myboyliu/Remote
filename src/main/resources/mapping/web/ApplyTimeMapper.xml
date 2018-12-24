@@ -102,6 +102,9 @@
       )
   </insert>
     <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.ApplyTime">
+        <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
         insert into apply_time
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">

@@ -36,6 +36,9 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.sicmed.remote.web.entity.CaseConsultant">
+    <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
     insert into case_consultant (id, apply_user_id, invite_user_id, 
       consultant_user_list, consultant_start_time, 
       consultant_end_time, consultant_report, 
@@ -52,6 +55,9 @@
       #{delFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.CaseConsultant">
+    <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
     insert into case_consultant
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

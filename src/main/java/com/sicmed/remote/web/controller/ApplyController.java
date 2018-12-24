@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -50,6 +51,8 @@ public class ApplyController extends BaseController {
 
     @Autowired
     private ApplyTimeService applyTimeService;
+    @Autowired
+    private CaseConsultantService caseConsultantService;
 
     /**
      * 添加草稿
@@ -134,13 +137,15 @@ public class ApplyController extends BaseController {
 
     /**
      * 获取申请发起人摘要信息
+     *
      * @return
      */
-    private String getApplySummary(){
+    private String getApplySummary() {
         String userId = getRequestToken();
         CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
-        return "<"+currentUserBean.getUserName()+"/"+currentUserBean.getTitleName()+"/"+currentUserBean.getBranchName()+"/"+currentUserBean.getHospitalName()+">";
+        return "<" + currentUserBean.getUserName() + "/" + currentUserBean.getTitleName() + "/" + currentUserBean.getBranchName() + "/" + currentUserBean.getHospitalName() + ">";
     }
+
     /**
      * 转诊
      *
@@ -269,13 +274,12 @@ public class ApplyController extends BaseController {
      * @param applyFormBr
      */
     @PostMapping(value = "picture")
-    public Map pictureConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr,String consultantUserList) {
+    public Map pictureConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice) {
 
         if (applyFormBr.hasErrors()) {
             return fieldErrorsBuilder(applyFormBr);
         }
-        CaseConsultant caseConsultant = new CaseConsultant();
-        caseConsultant.setConsultantUserList(consultantUserList);
+
 
 
         String userId = getRequestToken();
@@ -295,14 +299,16 @@ public class ApplyController extends BaseController {
             return badRequestOfArguments("图文会诊记录保存失败");
         }
 
-        // 添加申请时间
-        ApplyTime applyTime = new ApplyTime();
-        applyTime.setApplyFormId(applyForm.getId());
-        applyTime.setCreateUser(userId);
-        applyTime.setApplyStatus(applyForm.getApplyStatus());
-        int j = applyTimeService.insertSelective(applyTime);
+        CaseConsultant caseConsultant = new CaseConsultant();
+        caseConsultant.setConsultantUserList(consultantUserList);
+        caseConsultant.setConsultantPrice(consultantPrice);
+        caseConsultant.setHospitalPrice(hospitalPrice);
+        caseConsultant.setInviteUserId(applyForm.getInviteUserId());
+        caseConsultant.setApplyUserId(userId);
+
+        int j = caseConsultantService.insertSelective(caseConsultant);
         if (j < 1) {
-            return badRequestOfArguments("添加申请时间失败");
+            return badRequestOfArguments("添加失败");
         }
 
         return succeedRequest(applyForm);
