@@ -323,7 +323,7 @@ public class YqyLiveService implements BaseService<YqyLive> {
         //TODO 路径截取
         File file = new File(staticPathImage +"/"+path);
         if (file.exists()) {
-            file.delete();
+           boolean b =  file.delete();
         }
     }
 

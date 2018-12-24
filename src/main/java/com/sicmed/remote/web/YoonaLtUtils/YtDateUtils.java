@@ -114,7 +114,6 @@ public class YtDateUtils {
     public static float timeDifference(String startDate, String endDate) {
         if (stringToDates(endDate).getTime() > stringToDates(startDate).getTime()) {
             long date = stringToDates(endDate).getTime() - stringToDates(startDate).getTime();
-            DecimalFormat df = new DecimalFormat("0.0");
             return (float) date / 3600000;
         } else {
             return 0;

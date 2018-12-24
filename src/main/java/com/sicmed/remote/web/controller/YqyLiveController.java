@@ -203,7 +203,7 @@ public class YqyLiveController extends BaseController {
         Map map = new LinkedHashMap( );
         int pageTotal = yqyLiveService.searchAnnouncementSize(liveName.trim());
         if (pageTotal > 0){
-            List <YqyLiveBean> liveList = new ArrayList <>();
+            List <YqyLiveBean> liveList;
             if (Constant.LIVE_NEW.equals(findType)) {
                 liveList = yqyLiveService.searchAnnouncementNew(liveName.trim(), pageNo, pageSize);
                 map.put("pageTotal",pageTotal);

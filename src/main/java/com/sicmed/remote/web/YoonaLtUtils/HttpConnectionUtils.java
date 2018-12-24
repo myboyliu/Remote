@@ -54,7 +54,7 @@ public class HttpConnectionUtils {
     }
 
     public static String get(String path, String params) throws Exception {
-        String result = "";
+        StringBuffer result = new StringBuffer();
         BufferedReader in = null;
         try {
             String urlNameString = path + "?" + params;
@@ -72,7 +72,7 @@ public class HttpConnectionUtils {
                     connection.getInputStream()));
             String line;
             while ((line = in.readLine()) != null) {
-                result += line;
+                result.append(line);
             }
         } catch (Exception e) {
             System.out.println("发送GET请求出现异常！" + e);
@@ -88,7 +88,7 @@ public class HttpConnectionUtils {
                 e2.printStackTrace();
             }
         }
-        return result;
+        return result.toString();
     }
 
 }

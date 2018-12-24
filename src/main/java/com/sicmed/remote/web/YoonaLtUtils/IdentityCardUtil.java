@@ -252,8 +252,8 @@ public class IdentityCardUtil {
             Calendar cal = Calendar.getInstance();
             if (birthDate != null)
                 cal.setTime(birthDate);
-            if (!valiDate(cal.get(Calendar.YEAR), Integer.valueOf(birthCode.substring(2, 4)),
-                    Integer.valueOf(birthCode.substring(4, 6)))) {
+            if (!valiDate(cal.get(Calendar.YEAR), Integer.parseInt(birthCode.substring(2, 4)),
+                    Integer.parseInt(birthCode.substring(4, 6)))) {
                 return false;
             }
         } else {
@@ -324,10 +324,10 @@ public class IdentityCardUtil {
         char[] chars = mid.toCharArray();
         Integer iflag = 8;
         for (char c : chars) {
-            sum = sum + Integer.valueOf(c + "") * iflag;
+            sum = sum + Integer.parseInt(c + "") * iflag;
             iflag--;
         }
-        return (sum % 10 == 0 ? 0 : (10 - sum % 10)) == Integer.valueOf(end) ? true : false;
+        return (sum % 10 == 0 ? 0 : (10 - sum % 10)) == Integer.parseInt(end) ? true : false;
     }
 
     /**
@@ -358,13 +358,13 @@ public class IdentityCardUtil {
         char[] chars = mid.toCharArray();
         Integer iflag = 7;
         for (char c : chars) {
-            sum = sum + Integer.valueOf(c + "") * iflag;
+            sum = sum + Integer.parseInt(c + "") * iflag;
             iflag--;
         }
         if (end.toUpperCase().equals("A")) {
             sum = sum + 10;
         } else {
-            sum = sum + Integer.valueOf(end);
+            sum = sum + Integer.parseInt(end);
         }
         return (sum % 11 == 0) ? true : false;
     }
@@ -450,6 +450,9 @@ public class IdentityCardUtil {
             case 0:
                 sCode = "1";
                 break;
+             default:
+                 sCode = "-1";
+                 break;
         }
         return sCode;
     }
@@ -468,7 +471,7 @@ public class IdentityCardUtil {
         String year = idCard.substring(6, 10);
         Calendar cal = Calendar.getInstance();
         int iCurrYear = cal.get(Calendar.YEAR);
-        iAge = iCurrYear - Integer.valueOf(year);
+        iAge = iCurrYear - Integer.parseInt(year);
         return iAge;
     }
 
