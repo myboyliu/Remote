@@ -10,6 +10,7 @@ import com.sicmed.remote.web.YoonaLtUtils.IdentityCardUtil;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
 import com.sicmed.remote.web.bean.ApplyTimeBean;
 import com.sicmed.remote.web.bean.CaseContentBean;
+import com.sicmed.remote.web.bean.ConsultationTimeBean;
 import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.*;
 import com.sicmed.remote.web.service.*;
@@ -219,7 +220,7 @@ public class ApplyController extends BaseController {
      * @param applyFormBr
      */
     @PostMapping(value = "video")
-    public Map videoConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String startEndTime) {
+    public Map videoConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String startEndTime, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice) {
 
         if (applyFormBr.hasErrors()) {
             return fieldErrorsBuilder(applyFormBr);
@@ -236,6 +237,7 @@ public class ApplyController extends BaseController {
         applyForm.setApplyUserId(userId);
         applyForm.setApplyType(applyType);
         applyForm.setApplyStatus(applyStatues);
+        applyForm.setApplySummary(getApplySummary());
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("视频会诊记录保存失败");
@@ -245,14 +247,19 @@ public class ApplyController extends BaseController {
             return badRequestOfArguments("startEndTime is null");
         }
 
-        LinkedHashMap<String, String> resultMap;
+        Map<String, String> resultMap = new LinkedHashMap<>();
+        List<ConsultationTimeBean> consultationTimeBeanList;
         try {
-            resultMap = JSON.parseObject(startEndTime, new TypeReference<LinkedHashMap<String, String>>() {
+            consultationTimeBeanList = JSON.parseObject(startEndTime, new TypeReference<List<ConsultationTimeBean>>() {
             }, Feature.OrderedField);
         } catch (Exception e) {
             return badRequestOfArguments("startEndTime 格式有误");
         }
-
+        if (consultationTimeBeanList!=null){
+            for (ConsultationTimeBean consultationTimeBean : consultationTimeBeanList) {
+                resultMap.put(consultationTimeBean.getStartTime(),consultationTimeBean.getEntTime());
+            }
+        }
         // 添加申请时间
         ApplyTimeBean applyTimeBean = new ApplyTimeBean();
         applyTimeBean.setApplyFormId(applyForm.getId());
@@ -262,6 +269,18 @@ public class ApplyController extends BaseController {
         int j = applyTimeService.insertStartEndTimes(applyTimeBean);
         if (j < 1) {
             return badRequestOfArguments("添加申请时间失败");
+        }
+
+        CaseConsultant caseConsultant = new CaseConsultant();
+        caseConsultant.setConsultantUserList(consultantUserList);
+        caseConsultant.setConsultantPrice(consultantPrice);
+        caseConsultant.setHospitalPrice(hospitalPrice);
+        caseConsultant.setInviteUserId(applyForm.getInviteUserId());
+        caseConsultant.setApplyUserId(userId);
+
+        int k = caseConsultantService.insertSelective(caseConsultant);
+        if (k < 1) {
+            return badRequestOfArguments("添加失败");
         }
 
         return succeedRequest(applyForm);
