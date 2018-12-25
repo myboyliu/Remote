@@ -646,6 +646,14 @@ public class ApplyController extends BaseController {
         return updateStatus(applyForm, applyStatus, msg1, msg2);
     }
 
+    // 查询相关代码
+    private final static List<String> consultantTypeList = new ArrayList<>();
+
+    static {
+        consultantTypeList.add(String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO));
+        consultantTypeList.add(String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT));
+    }
+
     /**
      * 发出会诊查询
      *
@@ -655,17 +663,14 @@ public class ApplyController extends BaseController {
     public Map sendSelect(List<String> statusList, String msg) {
 
         String userId = getRequestToken();
-        List<String> typeList = new ArrayList<>();
-        typeList.add(String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO));
-        typeList.add(String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT));
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setApplyUserId(userId);
         applyFormBean.setConsultationStatusList(statusList);
-        applyFormBean.setConsultationTypeList(typeList);
+        applyFormBean.setConsultationTypeList(consultantTypeList);
 
         List<ApplyForm> applyFormList = applyFormService.getByApplyFormBean(applyFormBean);
-        if (applyFormList == null || applyFormList.isEmpty()) {
+        if (applyFormList != null && applyFormList.size() == 0) {
             return badRequestOfArguments(msg);
         }
 
@@ -779,17 +784,14 @@ public class ApplyController extends BaseController {
     public Map receiveSelect(List<String> statusList, String msg) {
 
         String userId = getRequestToken();
-        List<String> typeList = new ArrayList<>();
-        typeList.add(String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO));
-        typeList.add(String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT));
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
-        applyFormBean.setConsultationTypeList(typeList);
+        applyFormBean.setConsultationTypeList(consultantTypeList);
         applyFormBean.setConsultationStatusList(statusList);
         applyFormBean.setInviteUserId(userId);
 
         List<ApplyForm> applyFormList = applyFormService.getByApplyFormBean(applyFormBean);
-        if (applyFormList == null || applyFormList.isEmpty()) {
+        if (applyFormList != null && applyFormList.size() == 0) {
             return badRequestOfArguments(msg);
         }
 
@@ -893,4 +895,5 @@ public class ApplyController extends BaseController {
 
         return receiveSelect(statusList, msg);
     }
+    
 }
