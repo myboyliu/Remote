@@ -13,6 +13,13 @@ public class ApplyFormService implements BaseService<ApplyForm> {
     @Autowired
     private ApplyFormMapper applyFormMapper;
 
+    public List<ApplyForm> selectSendConsultant(String userId, String applyStatus) {
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setApplyUserId(userId);
+        applyForm.setApplyStatus(applyStatus);
+        return applyFormMapper.selectSendConsultant(applyForm);
+    }
+
     public int updateStatus(ApplyForm applyForm, String applyStatus, String userId) {
         applyForm.setApplyStatus(applyStatus);
         applyForm.setUpdateUser(userId);
@@ -46,6 +53,6 @@ public class ApplyFormService implements BaseService<ApplyForm> {
 
     @Override
     public List<ApplyForm> findByDynamicParam(ApplyForm applyForm) {
-        return null;
+        return applyFormMapper.findByDynamicParam(applyForm);
     }
 }

@@ -255,9 +255,9 @@ public class ApplyController extends BaseController {
         } catch (Exception e) {
             return badRequestOfArguments("startEndTime 格式有误");
         }
-        if (consultationTimeBeanList!=null){
+        if (consultationTimeBeanList != null) {
             for (ConsultationTimeBean consultationTimeBean : consultationTimeBeanList) {
-                resultMap.put(consultationTimeBean.getStartTime(),consultationTimeBean.getEntTime());
+                resultMap.put(consultationTimeBean.getStartTime(), consultationTimeBean.getEntTime());
             }
         }
         // 添加申请时间
@@ -298,7 +298,6 @@ public class ApplyController extends BaseController {
         if (applyFormBr.hasErrors()) {
             return fieldErrorsBuilder(applyFormBr);
         }
-
 
 
         String userId = getRequestToken();
@@ -440,7 +439,7 @@ public class ApplyController extends BaseController {
     }
 
     /**
-     * 确认转诊,图文视频会诊时间
+     * 确认转诊,视频会诊时间
      */
     @PostMapping(value = "dateTime")
     public Map dateTime(ApplyForm applyForm, String startEndTime) {
@@ -650,13 +649,106 @@ public class ApplyController extends BaseController {
         return updateStatus(applyForm, applyStatus, msg1, msg2);
     }
 
-    // 按照登录id显示不同查询结果
-    @GetMapping(value = "respectivelyCheck")
-    public Map respectivelyCheck() {
+    /**
+     * 发出会诊查询
+     *
+     * @param applyStatus
+     * @param msg
+     */
+    public Map sendSelect(String applyStatus, String msg) {
 
-        // 医政
         String userId = getRequestToken();
-        return null;
+
+        List<ApplyForm> applyFormList = applyFormService.selectSendConsultant(userId, applyStatus);
+        if (applyFormList == null || applyFormList.isEmpty()) {
+            return badRequestOfArguments(msg);
+        }
+
+        return succeedRequest(applyFormList);
+
     }
 
+    /**
+     * 发出会诊待审核
+     */
+    @GetMapping(value = "sendApplyCreateSuccess")
+    public Map sendApplyCreateSuccess() {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_CREATE_SUCCESS);
+        String msg = "无待审核";
+
+        return sendSelect(applyStatus, msg);
+    }
+
+    /**
+     * 发出会诊待收诊
+     */
+    @GetMapping(value = "sendApplyAccede")
+    public Map sendApplyAccede() {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_ACCEDE);
+        String msg = "无待收诊";
+
+        return sendSelect(applyStatus, msg);
+    }
+
+    /**
+     * 发出会诊已拒收
+     */
+    @GetMapping(value = "sendMasterReject")
+    public Map sendMasterReject() {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_REJECT);
+        String msg = "无已拒收";
+
+        return sendSelect(applyStatus, msg);
+    }
+
+    /**
+     * 发出会诊已排期
+     */
+    @GetMapping(value = "sendDateTimeLocked")
+    public Map sendDateTimeLocked() {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
+        String msg = "无已排期";
+
+        return sendSelect(applyStatus, msg);
+    }
+
+    /**
+     * 发出会诊会诊中
+     */
+    @GetMapping(value = "sendBegin")
+    public Map sendBegin() {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
+        String msg = "无会诊中";
+
+        return sendSelect(applyStatus, msg);
+    }
+
+    /**
+     * 发出会诊待反馈
+     */
+    @GetMapping(value = "sendReportSubmitted")
+    public Map sendReportSubmitted() {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_REPORT_SUBMITTED);
+        String msg = "无待反馈";
+
+        return sendSelect(applyStatus, msg);
+    }
+
+    /**
+     * 发出会诊已结束
+     */
+    @GetMapping(value = "sendEnd")
+    public Map sendEnd() {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_END);
+        String msg = "无已结束";
+
+        return sendSelect(applyStatus, msg);
+    }
 }

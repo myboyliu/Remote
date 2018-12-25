@@ -2,6 +2,8 @@ package com.sicmed.remote.web.mapper;
 
 import com.sicmed.remote.web.entity.ApplyForm;
 
+import java.util.List;
+
 public interface ApplyFormMapper {
     int deleteByPrimaryKey(String id);
 
@@ -14,4 +16,9 @@ public interface ApplyFormMapper {
     int updateByPrimaryKeySelective(ApplyForm record);
 
     int updateByPrimaryKey(ApplyForm record);
+
+    List<ApplyForm> findByDynamicParam(ApplyForm applyForm);
+
+    List<ApplyForm> selectSendConsultant(ApplyForm applyForm);
+
 }

@@ -28,7 +28,7 @@
         <result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, apply_number, case_record_id, case_summary, apply_summary, invite_summary, 
+    id, apply_number, case_record_id, case_summary, apply_summary, invite_summary,
     apply_user_id, apply_hospital_id, invite_user_id, invite_hospital_id,invite_branch_id, apply_branch_id,
     consultant_apply_time, apply_status, apply_type, apply_remark,applyUrgent, create_time, create_user,
     update_time, update_user, delete_time, delete_user, del_flag
@@ -39,6 +39,37 @@
         from apply_form
         where id = #{id,jdbcType=VARCHAR}
     </select>
+
+    <!--会诊医生相关查询-->
+    <select id="selectSendConsultant" parameterType="com.sicmed.remote.web.entity.ApplyForm" resultMap="BaseResultMap">
+        select case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
+        apply_type, apply_remark,apply_urgent, create_time,update_time
+        from apply_form
+        <where>
+            del_flag = "0"
+            <if test="caseRecordId != null">
+                AND case_record_id = #{caseRecordId,jdbcType=VARCHAR}
+            </if>
+            <if test="applyUserId != null">
+                AND apply_user_id = #{applyUserId,jdbcType=VARCHAR}
+            </if>
+            <if test="inviteUserId != null">
+                AND invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
+            </if>
+            <if test="consultantApplyTime != null">
+                AND consultant_apply_time = #{consultantApplyTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="applyStatus != null">
+                AND apply_status = #{applyStatus,jdbcType=VARCHAR}
+            </if>
+            <if test="createUser != null">
+                AND create_user = #{createUser,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by update_time,create_time
+        limit #{beginNo},#{pageSize}
+    </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from apply_form
     where id = #{id,jdbcType=VARCHAR}
@@ -103,7 +134,7 @@
             <if test="applyBranchId != null">
                 apply_branch_id,
             </if>
-                consultant_apply_time,
+            consultant_apply_time,
             <if test="applyStatus != null">
                 apply_status,
             </if>
@@ -175,7 +206,7 @@
             <if test="applyBranchId != null">
                 #{applyBranchId,jdbcType=VARCHAR},
             </if>
-                now(),
+            now(),
             <if test="applyStatus != null">
                 #{applyStatus,jdbcType=VARCHAR},
             </if>
