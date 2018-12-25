@@ -8,10 +8,7 @@ import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.YoonaLtUtils.IdentityCardUtil;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
-import com.sicmed.remote.web.bean.ApplyTimeBean;
-import com.sicmed.remote.web.bean.CaseContentBean;
-import com.sicmed.remote.web.bean.ConsultationTimeBean;
-import com.sicmed.remote.web.bean.CurrentUserBean;
+import com.sicmed.remote.web.bean.*;
 import com.sicmed.remote.web.entity.*;
 import com.sicmed.remote.web.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -652,14 +649,22 @@ public class ApplyController extends BaseController {
     /**
      * 发出会诊查询
      *
-     * @param applyStatus
+     * @param statusList
      * @param msg
      */
-    public Map sendSelect(String applyStatus, String msg) {
+    public Map sendSelect(List<String> statusList, String msg) {
 
         String userId = getRequestToken();
+        List<String> typeList = new ArrayList<>();
+        typeList.add(String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO));
+        typeList.add(String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT));
 
-        List<ApplyForm> applyFormList = applyFormService.selectSendConsultant(userId, applyStatus);
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setApplyUserId(userId);
+        applyFormBean.setConsultationStatusList(statusList);
+        applyFormBean.setConsultationTypeList(typeList);
+
+        List<ApplyForm> applyFormList = applyFormService.getByApplyFormBean(applyFormBean);
         if (applyFormList == null || applyFormList.isEmpty()) {
             return badRequestOfArguments(msg);
         }
@@ -673,23 +678,31 @@ public class ApplyController extends BaseController {
      */
     @GetMapping(value = "sendApplyCreateSuccess")
     public Map sendApplyCreateSuccess() {
-
+        List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_CREATE_SUCCESS);
+        statusList.add(applyStatus);
         String msg = "无待审核";
 
-        return sendSelect(applyStatus, msg);
+        return sendSelect(statusList, msg);
     }
 
     /**
      * 发出会诊待收诊
      */
-    @GetMapping(value = "sendApplyAccede")
-    public Map sendApplyAccede() {
-
-        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_ACCEDE);
+    @GetMapping(value = "sendApplySlaveDoctor")
+    public Map sendApplySlaveDoctor() {
+        List<String> statusList = new ArrayList<>();
+        String applyStatus1 = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_ACCEDE);
+        String applyStatus2 = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_REJECT);
+        String applyStatus3 = String.valueOf(ConsultationStatus.CONSULTATION_DOCTOR_LOCKED);
+        String applyStatus4 = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_ACCEDE);
+        statusList.add(applyStatus1);
+        statusList.add(applyStatus2);
+        statusList.add(applyStatus3);
+        statusList.add(applyStatus4);
         String msg = "无待收诊";
 
-        return sendSelect(applyStatus, msg);
+        return sendSelect(statusList, msg);
     }
 
     /**
@@ -697,11 +710,12 @@ public class ApplyController extends BaseController {
      */
     @GetMapping(value = "sendMasterReject")
     public Map sendMasterReject() {
-
+        List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_REJECT);
+        statusList.add(applyStatus);
         String msg = "无已拒收";
 
-        return sendSelect(applyStatus, msg);
+        return sendSelect(statusList, msg);
     }
 
     /**
@@ -709,11 +723,12 @@ public class ApplyController extends BaseController {
      */
     @GetMapping(value = "sendDateTimeLocked")
     public Map sendDateTimeLocked() {
-
+        List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
+        statusList.add(applyStatus);
         String msg = "无已排期";
 
-        return sendSelect(applyStatus, msg);
+        return sendSelect(statusList, msg);
     }
 
     /**
@@ -721,11 +736,12 @@ public class ApplyController extends BaseController {
      */
     @GetMapping(value = "sendBegin")
     public Map sendBegin() {
-
+        List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
+        statusList.add(applyStatus);
         String msg = "无会诊中";
 
-        return sendSelect(applyStatus, msg);
+        return sendSelect(statusList, msg);
     }
 
     /**
@@ -734,10 +750,12 @@ public class ApplyController extends BaseController {
     @GetMapping(value = "sendReportSubmitted")
     public Map sendReportSubmitted() {
 
+        List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_REPORT_SUBMITTED);
+        statusList.add(applyStatus);
         String msg = "无待反馈";
 
-        return sendSelect(applyStatus, msg);
+        return sendSelect(statusList, msg);
     }
 
     /**
@@ -745,10 +763,134 @@ public class ApplyController extends BaseController {
      */
     @GetMapping(value = "sendEnd")
     public Map sendEnd() {
-
-        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_END);
+        List<String> statusList = new ArrayList<>();
+        String applyStatus1 = String.valueOf(ConsultationStatus.CONSULTATION_END);
+        String applyStatus2 = String.valueOf(ConsultationStatus.CONSULTATION_FEEDBACK_SUBMITTED);
+        statusList.add(applyStatus1);
+        statusList.add(applyStatus2);
         String msg = "无已结束";
 
-        return sendSelect(applyStatus, msg);
+        return sendSelect(statusList, msg);
+    }
+
+    /**
+     * 受邀会诊查询
+     */
+    public Map receiveSelect(List<String> statusList, String msg) {
+
+        String userId = getRequestToken();
+        List<String> typeList = new ArrayList<>();
+        typeList.add(String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO));
+        typeList.add(String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT));
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setConsultationTypeList(typeList);
+        applyFormBean.setConsultationStatusList(statusList);
+        applyFormBean.setInviteUserId(userId);
+
+        List<ApplyForm> applyFormList = applyFormService.getByApplyFormBean(applyFormBean);
+        if (applyFormList == null || applyFormList.isEmpty()) {
+            return badRequestOfArguments(msg);
+        }
+
+        return succeedRequest(applyFormList);
+
+    }
+
+    /**
+     * 受邀会诊待收诊
+     */
+    @GetMapping(value = "receiveApplyAccede")
+    public Map receiveApplyAccede() {
+        List<String> statusList = new ArrayList<>();
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_ACCEDE);
+        statusList.add(applyStatus);
+        String msg = "无待收诊";
+
+        return receiveSelect(statusList, msg);
+    }
+
+    /**
+     * 受邀会诊已拒收
+     */
+    @GetMapping(value = "receiveSlaveMasterReject")
+    public Map receiveSlaveMasterReject() {
+        List<String> statusList = new ArrayList<>();
+        String applyStatus1 = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_REJECT);
+        String applyStatus2 = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_REJECT);
+        statusList.add(applyStatus1);
+        statusList.add(applyStatus2);
+        String msg = "无已拒收";
+
+        return receiveSelect(statusList, msg);
+    }
+
+    /**
+     * 受邀会诊排期审核
+     */
+    @GetMapping(value = "receiveSlaveDoctor")
+    public Map receiveSlaveDoctor() {
+        List<String> statusList = new ArrayList<>();
+        String applyStatus1 = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE);
+        String applyStatus2 = String.valueOf(ConsultationStatus.CONSULTATION_DOCTOR_LOCKED);
+        statusList.add(applyStatus1);
+        statusList.add(applyStatus2);
+        String msg = "无排期审核";
+
+        return receiveSelect(statusList, msg);
+    }
+
+    /**
+     * 受邀会诊已排期
+     */
+    @GetMapping(value = "receiveDateTimeLocked")
+    public Map receiveDateTimeLocked() {
+        List<String> statusList = new ArrayList<>();
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
+        statusList.add(applyStatus);
+        String msg = "无已排期";
+
+        return receiveSelect(statusList, msg);
+    }
+
+    /**
+     * 受邀会诊会诊中
+     */
+    @GetMapping(value = "receiveBegin")
+    public Map receiveBegin() {
+        List<String> statusList = new ArrayList<>();
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
+        statusList.add(applyStatus);
+        String msg = "无会诊中";
+
+        return receiveSelect(statusList, msg);
+    }
+
+    /**
+     * 受邀会诊待反馈
+     */
+    @GetMapping(value = "receiveReportSubmitted")
+    public Map receiveReportSubmitted() {
+        List<String> statusList = new ArrayList<>();
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_REPORT_SUBMITTED);
+        statusList.add(applyStatus);
+        String msg = "无待反馈";
+
+        return receiveSelect(statusList, msg);
+    }
+
+    /**
+     * 受邀会诊已结束
+     */
+    @GetMapping(value = "receiveEnd")
+    public Map receiveEnd() {
+        List<String> statusList = new ArrayList<>();
+        String applyStatus1 = String.valueOf(ConsultationStatus.CONSULTATION_END);
+        String applyStatus2 = String.valueOf(ConsultationStatus.CONSULTATION_FEEDBACK_SUBMITTED);
+        statusList.add(applyStatus1);
+        statusList.add(applyStatus2);
+        String msg = "无已结束";
+
+        return receiveSelect(statusList, msg);
     }
 }

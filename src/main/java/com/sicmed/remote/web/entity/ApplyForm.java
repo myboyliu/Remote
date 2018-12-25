@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
@@ -32,7 +33,7 @@ public class ApplyForm extends BaseEntity {
 
     private String applyUserId;
 
-//    @NotBlank(message = "applyHospitalId is null")
+    //    @NotBlank(message = "applyHospitalId is null")
 //    @Size(min = 32, max = 32, message = "applyHospitalId 长度不合规")
     private String applyHospitalId;
 
@@ -45,10 +46,11 @@ public class ApplyForm extends BaseEntity {
 
     private String inviteBranchId;
 
-//    @NotBlank(message = "applyBranchId is null")
+    //    @NotBlank(message = "applyBranchId is null")
 //    @Size(min = 32, max = 32, message = "applyBranchId 长度不合规")
     private String applyBranchId;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date consultantApplyTime;
 
     private String applyStatus;
@@ -58,5 +60,6 @@ public class ApplyForm extends BaseEntity {
     private String applyRemark;
 
     private String applyUrgent;
+
 
 }
