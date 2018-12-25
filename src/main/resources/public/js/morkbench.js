@@ -61,18 +61,18 @@ function getReferralList(orderStateId, pageNo, pageSize) {
     //                     }
     //                 }
     //                 _html += '<td>\
-	// 						<p class = "overHidden3" title="***/' + tempArr[i].sex + ' / ' + tempArr[i].age + ' / ' + tempArr[i].diagnosis + '"> ' + '***' + ' / ' + tempArr[i].sex + ' / ' + tempArr[i].age + ' / ' + tempArr[i].diagnosis + ' </p>\
-	// 					</td>\
+    // 						<p class = "overHidden3" title="***/' + tempArr[i].sex + ' / ' + tempArr[i].age + ' / ' + tempArr[i].diagnosis + '"> ' + '***' + ' / ' + tempArr[i].sex + ' / ' + tempArr[i].age + ' / ' + tempArr[i].diagnosis + ' </p>\
+    // 					</td>\
     //                     <td>\
-	// 						<p class="overHidden1" title="' + (tempArr[i].inName ? tempArr[i].inName + ';' : '') + (tempArr[i].inTitle ? tempArr[i].inTitle + ';' : '') + (tempArr[i].inDeptName ? tempArr[i].inDeptName + ';' : '') + tempArr[i].inHospitalName + '">\
-	// 							<' + (tempArr[i].inName ? tempArr[i].inName + ';' : '') + (tempArr[i].inTitle ? tempArr[i].inTitle + ';' : '') + (tempArr[i].inDeptName ? tempArr[i].inDeptName + ';' : '') + tempArr[i].inHospitalName + '>\
-	// 						</p>\
-	// 					</td>\
-	// 					<td>\
-	// 						<p class="overHidden2" style=" width:160px;" title="' + (tempArr[i].outName ? tempArr[i].outName + ';' : '') + (tempArr[i].outTitle ? tempArr[i].outTitle + ';' : '') + (tempArr[i].outDeptName ? tempArr[i].outDeptName + ';' : '') + tempArr[i].outHospitalName + '">\
-	// 							<' + (tempArr[i].outName ? tempArr[i].outName + ';' : '') + (tempArr[i].outTitle ? tempArr[i].outTitle + ';' : '') + (tempArr[i].outDeptName ? tempArr[i].outDeptName + ';' : '') + tempArr[i].outHospitalName + '>\
-	// 						</p>\
-	// 					</td>'
+    // 						<p class="overHidden1" title="' + (tempArr[i].inName ? tempArr[i].inName + ';' : '') + (tempArr[i].inTitle ? tempArr[i].inTitle + ';' : '') + (tempArr[i].inDeptName ? tempArr[i].inDeptName + ';' : '') + tempArr[i].inHospitalName + '">\
+    // 							<' + (tempArr[i].inName ? tempArr[i].inName + ';' : '') + (tempArr[i].inTitle ? tempArr[i].inTitle + ';' : '') + (tempArr[i].inDeptName ? tempArr[i].inDeptName + ';' : '') + tempArr[i].inHospitalName + '>\
+    // 						</p>\
+    // 					</td>\
+    // 					<td>\
+    // 						<p class="overHidden2" style=" width:160px;" title="' + (tempArr[i].outName ? tempArr[i].outName + ';' : '') + (tempArr[i].outTitle ? tempArr[i].outTitle + ';' : '') + (tempArr[i].outDeptName ? tempArr[i].outDeptName + ';' : '') + tempArr[i].outHospitalName + '">\
+    // 							<' + (tempArr[i].outName ? tempArr[i].outName + ';' : '') + (tempArr[i].outTitle ? tempArr[i].outTitle + ';' : '') + (tempArr[i].outDeptName ? tempArr[i].outDeptName + ';' : '') + tempArr[i].outHospitalName + '>\
+    // 						</p>\
+    // 					</td>'
     //                 if (year == _year && month == _month && day == _day) {
     //                     _html += '<td class="tl2em">今天' + time + '</td>'
     //                 } else {
@@ -160,10 +160,10 @@ function doctorScheduling(startDate, endDate) {
     //             for (let i = 0; i < tempArr.length; i++) {
     //                 const time = tempArr[i].time.split(' ')[1];
     //                 _html += '<li class="wordItem" name="' + tempArr[i].id + '" inHospitalName="' + tempArr[i].inHospitalName + '" outHospitalName="' + tempArr[i].outHospitalName + '">\
-	// 					<p><span class="timeText">' + time + '</span>已排期/视频会诊</p>\
-	// 					<div class="contentBox">\
-	// 						<p title="***/' + tempArr[i].sex + '/' + tempArr[i].age + '/' + tempArr[i].diagnosis + '">***/' + tempArr[i].sex + '/' + tempArr[i].age + '/' + tempArr[i].diagnosis + '</p>\
-	// 						<p title="收件人：' + tempArr[i].inName + ';' + tempArr[i].inTitle + ';' + tempArr[i].inDeptName + ';' + tempArr[i].inHospitalName + '">收件人：' + tempArr[i].inName + ';' + tempArr[i].inTitle + ';' + tempArr[i].inDeptName + ';' + tempArr[i].inHospitalName + '</p><p title="发件人：' + tempArr[i].outName + ';' + tempArr[i].outTitle + ';' + tempArr[i].outDeptName + ';' + tempArr[i].outHospitalName + '">发件人：' + tempArr[i].outName + ';' + tempArr[i].outTitle + ';' + tempArr[i].outDeptName + ';' + tempArr[i].outHospitalName + '</p></div></li>';
+    // 					<p><span class="timeText">' + time + '</span>已排期/视频会诊</p>\
+    // 					<div class="contentBox">\
+    // 						<p title="***/' + tempArr[i].sex + '/' + tempArr[i].age + '/' + tempArr[i].diagnosis + '">***/' + tempArr[i].sex + '/' + tempArr[i].age + '/' + tempArr[i].diagnosis + '</p>\
+    // 						<p title="收件人：' + tempArr[i].inName + ';' + tempArr[i].inTitle + ';' + tempArr[i].inDeptName + ';' + tempArr[i].inHospitalName + '">收件人：' + tempArr[i].inName + ';' + tempArr[i].inTitle + ';' + tempArr[i].inDeptName + ';' + tempArr[i].inHospitalName + '</p><p title="发件人：' + tempArr[i].outName + ';' + tempArr[i].outTitle + ';' + tempArr[i].outDeptName + ';' + tempArr[i].outHospitalName + '">发件人：' + tempArr[i].outName + ';' + tempArr[i].outTitle + ';' + tempArr[i].outDeptName + ';' + tempArr[i].outHospitalName + '</p></div></li>';
     //             }
     //             $('.workUl').append(_html);
     //             /* 日历 */
@@ -258,21 +258,23 @@ function renderApplyListView(data) {
     }
     $('#tabContent').html(_html);
 }
+
 function emptySelect() {
     $('#tabContent').html("");
 }
+
 // 医生受邀订单列表
 function getInvitedList(inviteStatus, pageNo, pageSize) {
     const data = {"inviteStatus": orderStateId, "pageNo": pageNo, "pageSize": pageSize};
     console.log(inviteStatus)
     let InviteStatus = {
-        INVITE_ACCEPT:"INVITE_ACCEPT",
-        INVITE_REVIEW:"INVITE_REVIEW",
-        INVITE_DATETIME:"INVITE_DATETIME",
-        INVITE_ONGOING:"INVITE_ONGOING",
-        INVITE_FEEDBACK:"INVITE_FEEDBACK",
-        INVITE_REJECT:"INVITE_REJECT",
-        INVITE_DONE:"INVITE_DONE"
+        INVITE_ACCEPT: "INVITE_ACCEPT",
+        INVITE_REVIEW: "INVITE_REVIEW",
+        INVITE_DATETIME: "INVITE_DATETIME",
+        INVITE_ONGOING: "INVITE_ONGOING",
+        INVITE_FEEDBACK: "INVITE_FEEDBACK",
+        INVITE_REJECT: "INVITE_REJECT",
+        INVITE_DONE: "INVITE_DONE"
     };
     switch (inviteStatus) {
         case InviteStatus.INVITE_ACCEPT:
@@ -305,13 +307,13 @@ function getInvitedList(inviteStatus, pageNo, pageSize) {
 function getApplyList(inviteStatus, pageNo, pageSize) {
     console.log(inviteStatus)
     let ApplyStatus = {
-        APPLY_REVIEW:"APPLY_REVIEW",
-        APPLY_ACCEPT:"APPLY_ACCEPT",
-        APPLY_DATETIME:"APPLY_DATETIME",
-        APPLY_ONGOING:"APPLY_ONGOING",
-        APPLY_FEEDBACK:"APPLY_FEEDBACK",
-        APPLY_REJECT:"APPLY_REJECT",
-        APPLY_DONE:"APPLY_DONE"
+        APPLY_REVIEW: "APPLY_REVIEW",
+        APPLY_ACCEPT: "APPLY_ACCEPT",
+        APPLY_DATETIME: "APPLY_DATETIME",
+        APPLY_ONGOING: "APPLY_ONGOING",
+        APPLY_FEEDBACK: "APPLY_FEEDBACK",
+        APPLY_REJECT: "APPLY_REJECT",
+        APPLY_DONE: "APPLY_DONE"
     };
     switch (inviteStatus) {
         case ApplyStatus.APPLY_REVIEW:
@@ -371,8 +373,8 @@ function getDrafts(pageNo, pageSize) {
     //                 const _month = timeStr.split('-')[1];
     //                 const _day = timeStr.split('-')[2];
     //                 _html += '<tr name="' + tempArr[i].id + '">\
-	// 					<td>\
-	// 						<p class="w520" title="' + tempArr[i].name + '/' + tempArr[i].sex + '/' + tempArr[i].age + '/' + tempArr[i].diagnosis + '">' + tempArr[i].name + '/' + tempArr[i].sex + '/' + tempArr[i].age + '/' + tempArr[i].diagnosis + '</p></td>';
+    // 					<td>\
+    // 						<p class="w520" title="' + tempArr[i].name + '/' + tempArr[i].sex + '/' + tempArr[i].age + '/' + tempArr[i].diagnosis + '">' + tempArr[i].name + '/' + tempArr[i].sex + '/' + tempArr[i].age + '/' + tempArr[i].diagnosis + '</p></td>';
     //                 if (year == _year && month == _month && day == _day) {
     //                     _html += '<td class="tl2em">今天' + time + '</td>';
     //                 } else {
@@ -395,75 +397,57 @@ function getDrafts(pageNo, pageSize) {
 
 // 查看订单详情
 function selectOrderById(orderId, type, readFlag) {
-    $.ajax({
-        type: 'POST',
-        url: IP + 'order/selectOrderById',
-        dataType: 'json',
-        data: {
-            "orderId": orderId,
-            "type": type, //是那个列表的类型(0:医政受邀列表,1:医政发出列表,2:医生受邀列表,3:医生发出列表)
-            "readFlag": readFlag,
-        },
-        xhrFields: {
-            withCredentials: true
-        },
-        crossDomain: true,
-        global: false,
-        success: function (data) {
-            console.log(data)
-            if (data.status == 200) {
-                sessionStorage.setItem('data', JSON.stringify(data));
-                localStorage.setItem('orderId', orderId);
-                if (type == 2) {
-                    // -------受邀的----------
-                    if (data.orderFormBean.statesName == "首诊待审核") {
-                        // 待审核
-                    } else if (data.orderFormBean.statesName == "待收诊" || data.orderFormBean.statesName == "专家协调") {
-                        window.location = '/yilaiyiwang/receive/RcollectingClinical.html';
-                    } else if (data.orderFormBean.statesName == "排期审核") {
-                        window.location = '/yilaiyiwang/receive/schedulingExamine.html';
-                    } else if (data.orderFormBean.statesName == "已排期") {
-                        window.location = '/yilaiyiwang/receive/scheduling.html';
-                    } else if (data.orderFormBean.statesName == "会诊中") {
-                        window.location = '/yilaiyiwang/receive/Rconsultation.html'
-                    } else if (data.orderFormBean.statesName == "待反馈") {
-                        window.location = '/yilaiyiwang/receive/Rfeedback.html'
-                    } else if (data.orderFormBean.statesName == "已结束") {
-                        window.location = '/yilaiyiwang/receive/Rfinish.html'
-                    } else if (data.orderFormBean.statesName == "会诊已拒收") {
-                        window.location = '/yilaiyiwang/receive/Rrejection.html'
-                    }
-                } else if (type == 3) {
-                    // --------------发出的-----
-                    if (data.orderFormBean.statesName == "首诊待审核") {
-                        window.location = '/yilaiyiwang/particulars/toAudit.html';
-                    } else if (data.orderFormBean.statesName == "待收诊" || data.orderFormBean.statesName == "排期审核" || data.orderFormBean.statesName == "专家协调") {
-                        window.location = '/yilaiyiwang/particulars/collectingClinical.html';
-                    } else if (data.orderFormBean.statesName == "已排期") {
-                        window.location = '/yilaiyiwang/particulars/scheduling.html';
-                    } else if (data.orderFormBean.statesName == "会诊中") {
-                        window.location = '/yilaiyiwang/particulars/consultation.html'
-                    } else if (data.orderFormBean.statesName == "待反馈") {
-                        window.location = '/yilaiyiwang/particulars/feedback.html'
-                    } else if (data.orderFormBean.statesName == "已结束") {
-                        window.location = '/yilaiyiwang/particulars/finish.html'
-                    } else if (data.orderFormBean.statesName == "会诊已拒收") {
-                        window.location = '/yilaiyiwang/particulars/rejection.html'
-                    }
-                }
-                // 成功操作
-            } else if (data.status == 250) {
-                // 未登录操作
-                window.location = '/yilaiyiwang/login/login.html';
-            } else {
-                // 其他操作
-            }
-        },
-        error: function (err) {
-            console.log(err);
+    let data = {
+        "orderId": orderId,
+        "type": type, //是那个列表的类型(0:医政受邀列表,1:医政发出列表,2:医生受邀列表,3:医生发出列表)
+        "readFlag": readFlag
+    }
+    // ajaxRequest("POST", "", data, false, false, false, null, null, null);
 
-        },
-    })
+    console.log(data)
+    window.location = '../page/collectingClinical.html';
+    sessionStorage.setItem('data', JSON.stringify(data));
+    localStorage.setItem('orderId', orderId);
+    function success() {
+
+        if (type == 2) {
+            // -------受邀的----------
+            if (data.orderFormBean.statesName == "首诊待审核") {
+                // 待审核
+            } else if (data.orderFormBean.statesName == "待收诊" || data.orderFormBean.statesName == "专家协调") {
+                window.location = '../page/RcollectingClinical.html';
+            } else if (data.orderFormBean.statesName == "排期审核") {
+                window.location = '/yilaiyiwang/receive/schedulingExamine.html';
+            } else if (data.orderFormBean.statesName == "已排期") {
+                window.location = '/yilaiyiwang/receive/scheduling.html';
+            } else if (data.orderFormBean.statesName == "会诊中") {
+                window.location = '/yilaiyiwang/receive/Rconsultation.html'
+            } else if (data.orderFormBean.statesName == "待反馈") {
+                window.location = '/yilaiyiwang/receive/Rfeedback.html'
+            } else if (data.orderFormBean.statesName == "已结束") {
+                window.location = '/yilaiyiwang/receive/Rfinish.html'
+            } else if (data.orderFormBean.statesName == "会诊已拒收") {
+                window.location = '/yilaiyiwang/receive/Rrejection.html'
+            }
+        } else if (type == 3) {
+            // --------------发出的-----
+            if (data.orderFormBean.statesName == "首诊待审核") {
+                window.location = '/yilaiyiwang/particulars/toAudit.html';
+            } else if (data.orderFormBean.statesName == "待收诊" || data.orderFormBean.statesName == "排期审核" || data.orderFormBean.statesName == "专家协调") {
+                window.location = '/yilaiyiwang/particulars/collectingClinical.html';
+            } else if (data.orderFormBean.statesName == "已排期") {
+                window.location = '/yilaiyiwang/particulars/scheduling.html';
+            } else if (data.orderFormBean.statesName == "会诊中") {
+                window.location = '/yilaiyiwang/particulars/consultation.html'
+            } else if (data.orderFormBean.statesName == "待反馈") {
+                window.location = '/yilaiyiwang/particulars/feedback.html'
+            } else if (data.orderFormBean.statesName == "已结束") {
+                window.location = '/yilaiyiwang/particulars/finish.html'
+            } else if (data.orderFormBean.statesName == "会诊已拒收") {
+                window.location = '/yilaiyiwang/particulars/rejection.html'
+            }
+        }
+    }
 }
 
 // 查看转诊订单详情
@@ -600,26 +584,26 @@ $(function () {
     //                 if (i == 0) {
     //                     if (tempArr[i].unReadFlag == 0) {
     //                         _html += '<li name="' + tempArr[i].states.id + '" class="ulAct">\
-	// 					<span> ' + tempArr[i].statesName + ' </span>\
-	// 					<div class=""></div>\
-	// 				</li>'
+    // 					<span> ' + tempArr[i].statesName + ' </span>\
+    // 					<div class=""></div>\
+    // 				</li>'
     //                     } else {
     //                         _html += '<li name="' + tempArr[i].states.id + '" class="ulAct">\
-	// 					<span> ' + tempArr[i].statesName + ' </span>\
-	// 					<div class = "unRead" > ' + tempArr[i].orderSize + ' </div>\
-	// 				</li>'
+    // 					<span> ' + tempArr[i].statesName + ' </span>\
+    // 					<div class = "unRead" > ' + tempArr[i].orderSize + ' </div>\
+    // 				</li>'
     //                     }
     //                 } else {
     //                     if (tempArr[i].unReadFlag == 0) {
     //                         _html += '<li name="' + tempArr[i].states.id + '" class="">\
-	// 					<span> ' + tempArr[i].statesName + ' </span>\
-	// 					<div class=""></div>\
-	// 				</li>'
+    // 					<span> ' + tempArr[i].statesName + ' </span>\
+    // 					<div class=""></div>\
+    // 				</li>'
     //                     } else {
     //                         _html += '<li name="' + tempArr[i].states.id + '" class="">\
-	// 					<span> ' + tempArr[i].statesName + ' </span>\
-	// 					<div class = "unRead" > ' + tempArr[i].orderSize + ' </div>\
-	// 				</li>'
+    // 					<span> ' + tempArr[i].statesName + ' </span>\
+    // 					<div class = "unRead" > ' + tempArr[i].orderSize + ' </div>\
+    // 				</li>'
     //                     }
     //                 }
     //             }
@@ -723,14 +707,14 @@ $(function () {
             //             for (let i = 0; i < tempArr.length; i++) {
             //                 if (tempArr[i].unReadFlag == 0) {
             //                     _html += '<li name="' + tempArr[i].states.id + '" class="">\
-			// 			<span>' + tempArr[i].statesName + '</span>\
-			// 			<div class=""></div>\
-			// 		</li>'
+            // 			<span>' + tempArr[i].statesName + '</span>\
+            // 			<div class=""></div>\
+            // 		</li>'
             //                 } else {
             //                     _html += '<li name="' + tempArr[i].states.id + '" class="">\
-			// 			<span> ' + tempArr[i].statesName + ' </span>\
-			// 			<div class="unRead">' + tempArr[i].orderSize + '</div>\
-			// 		</li>'
+            // 			<span> ' + tempArr[i].statesName + ' </span>\
+            // 			<div class="unRead">' + tempArr[i].orderSize + '</div>\
+            // 		</li>'
             //                 }
             //             }
             //             $('#issueUl').html(_html);
