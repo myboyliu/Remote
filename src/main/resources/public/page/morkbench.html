@@ -15,6 +15,8 @@
     <script src="../common/layui/layui.all.js"></script>
     <script src="../common/js/less.js"></script>
     <script src="../common/js/root.js"></script>
+    <script src="../common/js/ajaxRequestUtils.js"></script>
+    <script src="../common/js/url.js"></script>
     <script src="../js/morkbench.js"></script>
     <!--[if lt IE9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -74,40 +76,89 @@
         <div class="leftNav clearfix active">
             <div class="leftTitle">受邀会诊</div>
             <div class=""></div>
-            <div id="left_efefef"></div>
+            <div class="left_efefef"></div>
             <ul class="leftUL" id="inviteUl">
-                <!-- <li class="ulAct">
-                    <span>待收诊</span>
-                    <div class="unRead"></div>
-                </li> -->
+                <li name="INVITE_ACCEPT" class="ulAct"><span> 待收诊 </span>
+                    <div class=""></div>
+                </li>
+                <li name="INVITE_REVIEW" class=""><span> 排期审核 </span>
+                    <div class=""></div>
+                </li>
+                <li name="INVITE_DATETIME" class=""><span> 已排期 </span>
+                    <div class=""></div>
+                </li>
+                <li name="INVITE_ONGOING" class=""><span> 会诊中 </span>
+                    <div class=""></div>
+                </li>
+                <li name="INVITE_FEEDBACK" class=""><span> 待反馈 </span>
+                    <div class=""></div>
+                </li>
+                <li name="INVITE_REJECT" class=""><span> 已拒收 </span>
+                    <div class=""></div>
+                </li>
+                <li name="INVITE_DONE" class=""><span> 已结束 </span>
+                    <div class=""></div>
+                </li>
             </ul>
         </div>
         <div class="leftNav clearfix">
             <div class="leftTitle">发出会诊</div>
             <div class=""></div>
-            <div id="left_efefef"></div>
-
+            <div class="left_efefef"></div>
             <ul class="leftUL" id="issueUl">
-                <!-- <li class="ulAct">
-                    <span>待收诊</span>
-                    <div class="unRead"></div>
-                </li> -->
+                <li name="APPLY_REVIEW" class=""><span> 待审核 </span>
+                    <div class=""></div>
+                </li>
+                <li name="APPLY_ACCEPT" class=""><span> 待收诊 </span>
+                    <div class=""></div>
+                </li>
+                <li name="APPLY_DATETIME" class=""><span> 已排期 </span>
+                    <div class=""></div>
+                </li>
+                <li name="APPLY_ONGOING" class=""><span> 会诊中 </span>
+                    <div class=""></div>
+                </li>
+                <li name="APPLY_FEEDBACK" class=""><span> 待反馈 </span>
+                    <div class=""></div>
+                </li>
+                <li name="APPLY_REJECT" class=""><span> 已拒收 </span>
+                    <div class=""></div>
+                </li>
+                <li name="APPLY_DONE" class=""><span> 已结束 </span>
+                    <div class=""></div>
+                </li>
             </ul>
         </div>
         <div class="leftNav clearfix">
             <div class="leftTitle">转诊列表</div>
             <div class=""></div>
-            <div id="left_efefef"></div>
-
+            <div class="left_efefef"></div>
             <ul class="leftUL" id="referralUl">
-
+                <li name="fdcbd333476711e89ff400163e0571bc" class=""><span> 待审核 </span>
+                    <div class=""></div>
+                </li>
+                <li name="2e5e3aa3476811e89ff400163e0571bc" class=""><span> 待收诊 </span>
+                    <div class=""></div>
+                </li>
+                <li name="57ae8eb7476811e89ff400163e0571bc" class=""><span> 排期审核 </span>
+                    <div class=""></div>
+                </li>
+                <li name="677fbaaf4f7e11e89ff400163e0571bc" class=""><span> 已排期 </span>
+                    <div class=""></div>
+                </li>
+                <li name="2088d540476811e89ff400163e0571bc" class=""><span> 已拒收 </span>
+                    <div class=""></div>
+                </li>
+                <li name="4ba84aed476811e89ff400163e0571bc" class=""><span> 已结束 </span>
+                    <div class=""></div>
+                </li>
             </ul>
         </div>
         <div class="leftNav clearfix drafts">
             <div class="leftTitle">草稿箱</div>
             <div class="unReadNum">0</div>
             <div class=""></div>
-            <div id="left_efefef"></div>
+            <div class="left_efefef"></div>
         </div>
     </div>
     <div id="right">
@@ -121,12 +172,7 @@
                     </tr>
                     </thead>
                     <tbody class="drafts_tbody">
-                    <!-- <tr>
-                <td>
-                    <p class="w520">***/男/49岁/病毒性心肌炎、高高高高高高高高高高高高高高高高高高高高</p>
-                </td>
-                <td class="tl2em">今天14:59</td>
-            </tr> -->
+
                     </tbody>
                 </table>
             </div>
@@ -140,8 +186,8 @@
                     <thead>
                     <tr class="h50">
                         <th class="tc" style="width: 44px;padding-left: 30px;">急</th>
-                        <th class="tc" style="width: 62px;padding-left: 30px;">类型</th>
-                        <th class="" style="width: 220px;padding-left: 30px;">病历主题</th>
+                        <!--<th class="tc" style="width: 62px;padding-left: 30px;">类型</th>-->
+                        <th class="" style="width: 282px;padding-left: 30px;">病历主题</th>
                         <th class="recipients" style="width: 177px;padding-left: 30px;">收件人</th>
                         <th class="originator" style="width: 270px;padding-left: 30px;">发件人</th>
                         <th class="tc" style="width: 62px;padding-left: 30px;">方式</th>
@@ -149,27 +195,7 @@
                     </tr>
                     </thead>
                     <tbody id="tabContent">
-                    <!-- <tr>
-                <td>
-                    <img class="w14" src="../images/light.png" />
-                </td>
-                <td class="tc">会诊</td>
-                <td>
-                    <p class="overHidden1">
-                        <吴艳博;主任医师;心内科;河北省第三医院>
-                    </p>
-                </td>
-                <td>
-                    <p class="overHidden2">
-                        <吴艳博;主任医师;心内科;河北省第三医院>
-                    </p>
-                </td>
-                <td>
-                    <p class="overHidden3">***/男/49岁/病毒性心肌炎、高高高高高高高高高高高高高高高高高高高高</p>
-                </td>
-                <td class="tc">视频</td>
-                <td class="tl2em">今天14:59</td>
-            </tr> -->
+
                     </tbody>
                 </table>
             </div>
@@ -216,13 +242,7 @@
                     </div>
                 </div>
                 <ul class="workUl">
-                    <!-- <li class="wordItem">
-                        <p><span class="timeText">12：22</span>已排期/视频会诊</p>
-                        <div class="contentBox">
-                            <p>***/男/49岁/病毒性心肌炎、高...</p>
-                            <p>***/男/49岁/病毒性心肌炎、高...</p>
-                        </div>
-                    </li> -->
+
                 </ul>
             </div>
         </div>
