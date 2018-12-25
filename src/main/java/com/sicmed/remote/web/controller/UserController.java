@@ -206,6 +206,18 @@ public class UserController extends BaseController {
     }
 
     /**
+     * 退出登陆接口
+     *
+     * @return
+     */
+    @PostMapping(value = "signOut")
+    public Map signOut() {
+        String userId = getRequestToken();
+        redisTemplate.opsForValue().set(userId, "", 10);
+        return succeedRequest(null);
+    }
+
+    /**
      * 个人中心信息及医政管理中心医生详细信息展示
      */
     @GetMapping(value = "personalCenter")
