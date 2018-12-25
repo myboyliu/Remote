@@ -13,10 +13,7 @@ public class ApplyFormService implements BaseService<ApplyForm> {
     @Autowired
     private ApplyFormMapper applyFormMapper;
 
-    public List<ApplyForm> selectSendConsultant(String userId, String applyStatus) {
-        ApplyForm applyForm = new ApplyForm();
-        applyForm.setApplyUserId(userId);
-        applyForm.setApplyStatus(applyStatus);
+    public List<ApplyForm> selectSendConsultant(ApplyForm applyForm) {
         return applyFormMapper.selectSendConsultant(applyForm);
     }
 

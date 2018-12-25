@@ -47,23 +47,14 @@
         from apply_form
         <where>
             del_flag = "0"
-            <if test="caseRecordId != null">
-                AND case_record_id = #{caseRecordId,jdbcType=VARCHAR}
-            </if>
             <if test="applyUserId != null">
                 AND apply_user_id = #{applyUserId,jdbcType=VARCHAR}
             </if>
             <if test="inviteUserId != null">
                 AND invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
             </if>
-            <if test="consultantApplyTime != null">
-                AND consultant_apply_time = #{consultantApplyTime,jdbcType=TIMESTAMP}
-            </if>
             <if test="applyStatus != null">
                 AND apply_status = #{applyStatus,jdbcType=VARCHAR}
-            </if>
-            <if test="createUser != null">
-                AND create_user = #{createUser,jdbcType=VARCHAR}
             </if>
         </where>
         order by update_time,create_time
