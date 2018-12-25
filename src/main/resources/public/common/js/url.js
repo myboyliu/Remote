@@ -60,3 +60,20 @@ const createPictureApplyUrl = "/apply/picture"; //创建图文会诊接口
 const createVideoApplyUrl = "/apply/video"; //创建视频会诊接口
 
 
+/** 受邀的申请列表查询 接口 */
+const getInviteAcceptUrl = "/apply/receiveApplyAccede"               // 查询受邀列表 待收诊   列表
+const getInviteReviewUrl = "/apply/receiveSlaveDoctor"             // 查询受邀列表 排期审核 列表
+const getInviteDateTimeUrl = "/apply/receiveDateTimeLocked"             // 查询受邀列表 已排期   列表
+const getInviteOngoingUrl = "/apply/receiveBegin"                // 查询受邀列表 会诊中   列表
+const getInviteFeedbackUrl = "/apply/receiveReportSubmitted"             // 查询受邀列表 待反馈   列表
+const getInviteRejectUrl = "/apply/receiveSlaveMasterReject"               // 查询受邀列表 已拒收   列表
+const getInviteDoneUrl = "/apply/receiveEnd"                  // 查询受邀列表 已结束   列表
+
+/** 发起的申请列表查询 接口 */
+const getApplyReviewUrl = "/apply/sendApplyCreateSuccess"             // 查询发起的列表 待审核 列表
+const getApplyAcceptUrl = "/apply/sendApplySlaveDoctor"               // 查询发起的列表 待收诊   列表
+const getApplyDateTimeUrl = "/apply/sendDateTimeLocked"             // 查询发起的列表 已排期   列表
+const getApplyOngoingUrl = "/apply/sendBegin"                // 查询发起的列表 会诊中   列表
+const getApplyFeedbackUrl = "/apply/sendReportSubmitted"             // 查询发起的列表 待反馈   列表
+const getApplyRejectUrl = "/apply/sendMasterReject"               // 查询发起的列表 已拒收   列表
+const getApplyDoneUrl = "/apply/sendEnd"                  // 查询发起的列表 已结束   列表
