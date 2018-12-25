@@ -14,6 +14,8 @@ const registrationUrl = "/user/register"; //注册接口
 
 const loginUrl = "/user/login"; //登陆接口
 
+const signOutUrl = "/user/signOut"; //退出登陆接口
+
 const checkPhoneNumber = "/user/checkout"; //校验注册手机号是否可用
 
 const getSpecialistTypeByHospitalId = "/specialistType/findByParam"; //根据医院ID查询专家类型列表
