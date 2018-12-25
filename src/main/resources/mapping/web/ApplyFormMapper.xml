@@ -331,4 +331,35 @@
       del_flag = #{delFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+    <!--会诊医生相关查询-->
+    <select id="getByApplyFormBean" parameterType="com.sicmed.remote.web.bean.ApplyFormBean" resultMap="BaseResultMap">
+        select case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
+        apply_type, apply_remark,apply_urgent, create_time,update_time
+        from apply_form
+        <where>
+            del_flag = "0"
+            <if test="applyUserId != null">
+                AND apply_user_id = #{applyUserId,jdbcType=VARCHAR}
+            </if>
+            <if test="inviteUserId != null">
+                AND invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
+            </if>
+            <if test="consultationTypeList != null">
+                AND apply_type IN
+                <foreach collection="consultationTypeList" open="("  close=")"  item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="consultationStatusList != null">
+                AND apply_status IN
+                <foreach collection="consultationStatusList" open="("  close=")"  item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+        </where>
+        order by update_time,create_time
+        limit #{beginNo},#{pageSize}
+    </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.mapper;
 
+import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 
 import java.util.List;
@@ -21,4 +22,5 @@ public interface ApplyFormMapper {
 
     List<ApplyForm> selectSendConsultant(ApplyForm applyForm);
 
+    List<ApplyForm> getByApplyFormBean(ApplyFormBean applyFormBean);
 }
