@@ -21,7 +21,7 @@ import java.util.Map;
  * @date 2018/12/26
  */
 @RestController
-@RequestMapping(value = "transfer")
+@RequestMapping(value = "apply/transfer")
 public class ApplyTransferController extends BaseController {
 
     @Autowired
