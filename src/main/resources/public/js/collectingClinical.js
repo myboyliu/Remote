@@ -1,16 +1,131 @@
-$(function() {
+$(function () {
     /* 动态创建进度条 */
     var statusArr = ['待收诊', '已排期', '会诊中', '待反馈', '已完成'];
     var str = '';
     for (var i = 0; i < statusArr.length; i++) {
-        if (i<4) {
+        if (i < 4) {
             str += '<li class="libg">' + statusArr[i] + '</li>'
-        }else{
+        } else {
             str += '<li>' + statusArr[i] + '</li>'
         }
         $('.progressBar').html(str);
     }
-    // $('.progressBar li:first-child').addClass('libg');
+    let caseContentList = [];
+    caseContentList.push({
+            contentTypeId: "d1abcce0d678aec9631a0dfc171cd323",
+            contentPath: "v81V2xaep435vzD2.jpg",
+            contentRemark: "123123",
+        },{
+            contentType_id: "d1abcce0d678aec9631a0dfc171cd323",
+            contentPath: "v81V2xaep435vzD2.jpg",
+            contentRemark: "撒大声的",
+        }
+    );
+    let data = {};
+    data["consultantReport"] = "会诊报告";
+    data["consultantFeedback"] = "临床反馈";
+    data["patientSex"] = "男";
+    data["patientAge"] = "26岁";
+    data["patientHeight"] = "180";
+    data["patientWeight"] = "65";
+    data["detailAddress"] = "北京";
+    data["caseDiagnosis"] = "初步诊断";
+    data["applyUrgent"] = "1";
+    data["applyRemark"] = "会诊墓地";
+    data["caseContentList"] = caseContentList;
+
+    console.log(data);
+//网页标题
+    $('head > title').html(data.patientSex + '/' + data.patientAge + '/' + data.caseDiagnosis + '-远程会诊平台');
+    sessionStorage.removeItem('data');
+// 会诊报告
+    $('.lecturer_modules').append(data.consultantFeedback);
+// 医嘱与手术备品
+// 临床反馈
+// 患者基本信息
+    $('.patientName').html('***');
+    $('.high').html(data.patientHeight);
+    $('.sex').html(data.patientSex);
+    $('.weight').html(data.patientWeight);
+    $('.age').html(data.patientAge);
+    $('.address').html(data.detailAddress);
+    if (data.applyUrgent == 1) {
+        $('.bThree_p').show();
+    } else {
+        $('.bThree_p').hide();
+    }
+    $('.tentative').html('初步诊断：' + data.caseDiagnosis);
+    $('.telemedicineTarget').html('会/转诊目的：' + data.applyRemark);
+
+// 电子病历附件
+    ajaxRequest("GET", getAllCaseContentType, null, true, false, true, renderCaseContentView, null, null);
+    function renderCaseContentView(data) {
+        console.log(data)
+        var upfileHtml = '';
+        $.each(data, function (key, val) {
+            for (var i = 0; i < val.length; i++) {
+                upfileHtml += '<li name="' + val[i].caseTypeName + '" id="' + val[i].id + '" class="upfileItem clearfix">\
+                                 <div class="upfileContent">\
+                                     <div class="operateLeft">' + key + '-' + val[i].caseTypeName + '</div>\
+                                     <ul class="fileContent clearfix">\
+                                     </ul>\
+                                 </div>\
+                             </li>'
+            }
+        });
+        $('.upfileUl').html(upfileHtml);
+    }
+    var orderTypes = data.caseContentList;
+    /* 电子病历附件 */
+    var tempArr = data.patientCaseList;
+    for (var i = 0; i < tempArr.length; i++) {
+        var fileType = tempArr[i].filesUrl.substr(tempArr[i].filesUrl.lastIndexOf('.') + 1, tempArr[i].filesUrl.length);
+        var fileName = tempArr[i].filesUrl.substr(tempArr[i].filesUrl.lastIndexOf('/') + 1, tempArr[i].filesUrl.length);
+        fileAllArr.push(fileName);
+        if (fileType == 'png' || fileType == 'jpg') {
+            if (tempArr[i].remarks == '') {
+                $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '"  class="fileItem">\
+                                           <div style = "background-image: url(&apos;' + imgIp + tempArr[i].filesUrl + '&apos;)"></div>\
+                                            <p type="img" desc="' + tempArr[i].remarks + '" class="fileName">' + fileName + '</p>\
+                                        </li>')
+            } else {
+                $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '" class="fileItem">\
+                                           <div style = "background-image: url(&apos;' + imgIp + tempArr[i].filesUrl + '&apos;)"></div>\
+                                            <p type="img" desc="' + tempArr[i].remarks + '" class="fileName active">' + fileName + '</p>\
+                                        </li>')
+            }
+        } else if (fileType == 'pdf') {
+            if (tempArr[i].remarks == '') {
+                $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '"  class="fileItem">\
+                                            <div class="bgSize" style = "background-image: url(../images/pdf_icon.png)"> </div>\
+                                            <p type="pdf" desc="' + tempArr[i].remarks + '" class="fileName">' + fileName + '</p>\
+                                        </li>')
+            } else {
+                $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '" class="fileItem">\
+                                            <div class="bgSize" style = "background-image: url(../images/pdf_icon.png)"> </div>\
+                                            <p type="pdf" desc="' + tempArr[i].remarks + '" class="fileName active">' + fileName + '</p>\
+                                        </li>')
+            }
+        } else if (fileType == 'dcm') {
+            if (tempArr[i].remarks == '') {
+                $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '"  class="fileItem">\
+                                            <div class="bgSize" style = "background-image: url(../images/dcm_icon.png)"> </div>\
+                                            <p type="dcm" desc="' + tempArr[i].remarks + '" class="fileName">' + fileName + '</p>\
+                                        </li>')
+            } else {
+                $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '" class="fileItem">\
+                                            <div class="bgSize" style = "background-image: url(../images/dcm_icon.png)"> </div>\
+                                            <p type="dcm" desc="' + tempArr[i].remarks + '" class="fileName active">' + fileName + '</p>\
+                                        </li>')
+            }
+        }
+        $('.sum').html(fileAllArr.length);
+
+    }
+// 会诊排期
+// 订单信息
+
+
 
     var fileAllArr = []; //所有图片原始资源
     //   var fileArr = [];
@@ -49,27 +164,15 @@ $(function() {
     //         console.log(err);
     //     },
     // })
-    var data = JSON.parse(sessionStorage.getItem('data'));
-    $('head > title').html(data.orderFormBean.sex + '/' + data.orderFormBean.age + '/' + data.orderFormBean.diagnosis + '-远程会诊平台');
-    sessionStorage.removeItem('data');
-    console.log(data);
-    $('.patientName').html('***');
-    $('.high').html(data.orderFormBean.high);
-    $('.sex').html(data.orderFormBean.sex);
-    $('.weight').html(data.orderFormBean.weight);
-    $('.age').html(data.orderFormBean.age);
-    $('.address').html(data.orderFormBean.address);
-    if (data.orderFormBean.isurgent == 1) {
-        $('.bThree_p').show();
-    } else {
-        $('.bThree_p').hide();
-    }
-    $('.tentative').html('初步诊断：' + data.orderFormBean.diagnosis);
-    $('.telemedicineTarget').html('会/转诊目的：' + data.orderFormBean.telemedicineTarget);
+    // var data = JSON.parse(sessionStorage.getItem('data'));
 
 
-    /* 电子病历附件模块 */
-    var orderTypes = data.orderFormBean.orderTypes;
+
+
+
+    /**查询病历类型列表*/
+    /**查询病历类型列表*/
+
     // $.ajax({
     //     type: 'POST',
     //     url: IP + 'order/selectOrderCaseType',
@@ -105,53 +208,6 @@ $(function() {
     //         console.log(err)
     //     },
     // });
-    /* 电子病历附件 */
-    var tempArr = data.patientCaseList;
-    for (var i = 0; i < tempArr.length; i++) {
-        var fileType = tempArr[i].filesUrl.substr(tempArr[i].filesUrl.lastIndexOf('.') + 1, tempArr[i].filesUrl.length);
-        var fileName = tempArr[i].filesUrl.substr(tempArr[i].filesUrl.lastIndexOf('/') + 1, tempArr[i].filesUrl.length);
-        fileAllArr.push(fileName);
-        if (fileType == 'png' || fileType == 'jpg') {
-            if (tempArr[i].remarks == '') {
-                $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '"  class="fileItem">\
-                                           <div style = "background-image: url(&apos;' + imgIp + tempArr[i].filesUrl + '&apos;)"></div>\
-                                            <p type="img" desc="' + tempArr[i].remarks + '" class="fileName">' + fileName + '</p>\
-                                        </li>')
-            } else {
-                $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '" class="fileItem">\
-                                           <div style = "background-image: url(&apos;' + imgIp + tempArr[i].filesUrl + '&apos;)"></div>\
-                                            <p type="img" desc="' + tempArr[i].remarks + '" class="fileName active">' + fileName + '</p>\
-                                        </li>')
-            }
-        } else if (fileType == 'pdf') {
-            if (tempArr[i].remarks == '') {
-                $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '"  class="fileItem">\
-                                            <div class="bgSize" style = "background-image: url(/yilaiyiwang/images/pdf_icon.png)"> </div>\
-                                            <p type="pdf" desc="' + tempArr[i].remarks + '" class="fileName">' + fileName + '</p>\
-                                        </li>')
-            } else {
-                $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '" class="fileItem">\
-                                            <div class="bgSize" style = "background-image: url(/yilaiyiwang/images/pdf_icon.png)"> </div>\
-                                            <p type="pdf" desc="' + tempArr[i].remarks + '" class="fileName active">' + fileName + '</p>\
-                                        </li>')
-            }
-        } else if (fileType == 'dcm') {
-            if (tempArr[i].remarks == '') {
-                $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '"  class="fileItem">\
-                                            <div class="bgSize" style = "background-image: url(/yilaiyiwang/images/dcm_icon.png)"> </div>\
-                                            <p type="dcm" desc="' + tempArr[i].remarks + '" class="fileName">' + fileName + '</p>\
-                                        </li>')
-            } else {
-                $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '" class="fileItem">\
-                                            <div class="bgSize" style = "background-image: url(/yilaiyiwang/images/dcm_icon.png)"> </div>\
-                                            <p type="dcm" desc="' + tempArr[i].remarks + '" class="fileName active">' + fileName + '</p>\
-                                        </li>')
-            }
-        }
-        $('.sum').html(fileAllArr.length);
-
-    }
-
 
 
 
@@ -160,7 +216,7 @@ $(function() {
     var fileArr = []; // 当前点击块的文件数据
     var indexFile = 0; // 当前点击的索引
     var ObjArr = []; //  当前点击块的文件对象
-    $('.upfileUl').delegate('.fileItem', 'click', function() {
+    $('.upfileUl').delegate('.fileItem', 'click', function () {
         var $ = layui.jquery;
         // 弹出层
         layer.open({
@@ -226,7 +282,7 @@ $(function() {
 
 
     // 上一个
-    $('.switchBox .prev').click(function() {
+    $('.switchBox .prev').click(function () {
         if (indexFile <= 0) {
             indexFile = 0;
         } else {
@@ -257,7 +313,8 @@ $(function() {
 
             // 图片的相关操作
             $('.downlodeFile').hide();
-            $('.bigImgContainer').find('.bigImg').removeClass('bgSize').html(' ');;
+            $('.bigImgContainer').find('.bigImg').removeClass('bgSize').html(' ');
+            ;
         }
         $('.bigImgContainer').find('.bigImg').css({
             "top": 0,
@@ -272,7 +329,7 @@ $(function() {
 
     })
     // 下一个
-    $('.switchBox .next').click(function() {
+    $('.switchBox .next').click(function () {
         if (indexFile >= fileArr.length - 1) {
             indexFile = fileArr.length - 1;
         } else {
@@ -313,7 +370,7 @@ $(function() {
 
     });
     // 关闭
-    $('.closeBtnImg').click(function() {
+    $('.closeBtnImg').click(function () {
         layer.closeAll();
         $('.bigImgContainer').hide();
         var _html = '';
@@ -339,7 +396,7 @@ $(function() {
         ObjArr = []; //  当前点击块的文件对象
     });
     // 图片缩放 拖拽
-    $('.bigImgBox').on("mousewheel DOMMouseScroll", function(e) {
+    $('.bigImgBox').on("mousewheel DOMMouseScroll", function (e) {
         if (!$('.bigImgBox .bigImg').hasClass('bgSize')) {
             var delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) || // chrome & ie
                 (e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1)); // firefox
@@ -357,11 +414,11 @@ $(function() {
             $('.bigImg').css('transform', 'scale(' + scaleNum / 10 + ')')
         }
     });
-    $('.bigImgBox').on('mousedown', function(e) {
+    $('.bigImgBox').on('mousedown', function (e) {
         if (!$('.bigImgBox .bigImg').hasClass('bgSize')) {
             var x = e.clientX - parseInt($('.bigImg').css('left'));
             var y = e.clientY - parseInt($('.bigImg').css('top'));
-            $('.bigImgBox').on('mousemove', function(e) {
+            $('.bigImgBox').on('mousemove', function (e) {
                 var newX = e.clientX;
                 var newY = e.clientY;
                 console.log(newY - y)
@@ -372,10 +429,10 @@ $(function() {
             })
         }
     })
-    $('.bigImgBox').on('mouseup', function(e) {
+    $('.bigImgBox').on('mouseup', function (e) {
         $('.bigImgBox').unbind('mousemove');
     })
-    $('.bigImgBox').on('mouseleave', function() {
+    $('.bigImgBox').on('mouseleave', function () {
         $('.bigImgBox').unbind('mousemove');
     })
     // 图片缩放 拖拽 结束
@@ -400,8 +457,6 @@ $(function() {
         }
     }
     $('.schedule_modules').html(_dateHtml);
-
-
 
 
     //订单编号
@@ -463,17 +518,14 @@ $(function() {
     }
 
 
-
-
-
     /* 点击修改按钮收起显示 */
     // 患者基本信息essential_btn
-    $('.modifier1').click(function() {
+    $('.modifier1').click(function () {
         $('#cut').toggleClass("foundBtn");
         $('.essentialInformation_modules').toggle(500);
     });
     //电子病历
-    $('.modifier2').click(function() {
+    $('.modifier2').click(function () {
         if ($('#cutEle').hasClass('foundBtn')) {
             $('#cutEle').addClass("chooseBtn");
             $('#cutEle').removeClass("foundBtn");
@@ -487,7 +539,7 @@ $(function() {
     });
     // //  收件医生
 
-    $('#cutDoc').click(function() {
+    $('#cutDoc').click(function () {
         if ($('#cutDoc').hasClass('foundBtn')) {
             $('#cutDoc').addClass("chooseBtn");
             $('#cutDoc').removeClass("foundBtn");
@@ -498,7 +550,7 @@ $(function() {
 
         $('.ReceiptDoctor_modules').toggle(500);
     });
-    $('#cutSch').click(function() {
+    $('#cutSch').click(function () {
         if ($('#cutSch').hasClass('foundBtn')) {
             $('#cutSch').addClass("chooseBtn");
             $('#cutSch').removeClass("foundBtn");
@@ -531,7 +583,7 @@ $(function() {
 
 
     // 修改排期
-    $('.schedulingBtn').click(function() {
+    $('.schedulingBtn').click(function () {
         var $ = layui.jquery;
         layer.open({
             type: 1,
@@ -614,7 +666,7 @@ $(function() {
         markJson[dateTempList[i].date] = '';
     }
     // 渲染日历控件
-    layui.use('laydate', function() {
+    layui.use('laydate', function () {
         var laydate = layui.laydate;
         //执行一个laydate实例
         laydate.render({
@@ -624,7 +676,7 @@ $(function() {
             value: dateStr,
             mark: markJson,
             min: 0,
-            change: function(value, date) { //监听日期被切换
+            change: function (value, date) { //监听日期被切换
                 flag = true;
                 $('#timeUl > li').removeClass('grey');
                 $('#timeUl > li').removeClass('active');
@@ -659,7 +711,7 @@ $(function() {
         });
     });
     // 分钟选择事件、
-    $('#timeUl').delegate('li', 'click', function() {
+    $('#timeUl').delegate('li', 'click', function () {
         if (flag) {
             $(this).addClass('active').siblings('li').removeClass('active');
             flag = false;
@@ -686,14 +738,14 @@ $(function() {
         }
     });
     // 关闭事件
-    $('.closeBtnTime').click(function() {
+    $('.closeBtnTime').click(function () {
         newDateTempList = [];
         layer.closeAll();
         $('.selectTimeContainer').hide();
     })
 
     /* 弹层关闭按钮 */
-    $('.refuseBtn').click(function() {
+    $('.refuseBtn').click(function () {
         $('.background').css('display', 'none');
         document.documentElement.style.overflow = "scroll";
     });
@@ -721,7 +773,7 @@ $(function() {
     $('.layui-timeline').html(_html);
 
 
-    $('.selectTimeContainer').find('.yesBtn').click(function() {
+    $('.selectTimeContainer').find('.yesBtn').click(function () {
         layer.closeAll();
         var startTime = '';
         var endTime = '';
@@ -746,7 +798,7 @@ $(function() {
                 withCredentials: true
             },
             crossDomain: true,
-            success: function(data) {
+            success: function (data) {
                 console.log(data)
                 if (data.status == 200) {
                     // 成功操作
@@ -760,42 +812,42 @@ $(function() {
                     // 其他操作
                 }
             },
-            error: function(err) {
+            error: function (err) {
                 console.log(err);
             },
         })
     });
 
     /* 返回按钮 */
-    $('.getBack').click(function() {
+    $('.getBack').click(function () {
         window.location = '/yilaiyiwang/workbench/workbench.html'
     });
 
 
     /* 拒收按钮弹层 */
-    $('.rejection').click(function() {
+    $('.rejection').click(function () {
         $('.background').css('display', 'block');
         $('.re_layer').css('display', 'block');
         /* 开启弹层禁止屏幕滚动 */
         document.documentElement.style.overflow = "hidden";
     });
-    $('textarea').focus(function() {
+    $('textarea').focus(function () {
         //  $('.font').css('display','none');
         $('.font').hide();
-    }).blur(function() {
+    }).blur(function () {
         if ($(this).val() == "") {
             $('.font').show();
         } else {
             $('.font').hide();
         }
     });
-    $('.font').click(function() {
+    $('.font').click(function () {
         $(this).hide();
         $('textarea').focus();
     });
     var viewText = '建议多学科会诊:';
     /* 建议多学科会诊按钮点击事件  */
-    $('.suggest').click(function() {
+    $('.suggest').click(function () {
         $(this).css({
             'background': '#516dcf',
             'color': '#fff'
@@ -804,7 +856,7 @@ $(function() {
         viewText = '建议多学科会诊:';
     });
     /* 其他原因按钮点击事件  */
-    $('.otherCause').click(function() {
+    $('.otherCause').click(function () {
         $(this).css({
             'background': '#516dcf',
             'color': '#fff'
@@ -813,7 +865,7 @@ $(function() {
         viewText = '其他原因:';
     });
     /* 拒收确定按钮 */
-    $('.confirm').click(function() {
+    $('.confirm').click(function () {
         $('.background').hide();
         $.ajax({
             type: 'POST',
@@ -831,7 +883,7 @@ $(function() {
                 withCredentials: true
             },
             crossDomain: true,
-            success: function(data) {
+            success: function (data) {
                 console.log(data)
                 if (data.status == 202) {
                     var $ = layui.jquery;
@@ -845,7 +897,7 @@ $(function() {
                         time: 2000,
                         content: $('.returned')
                     });
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $('.returned').hide();
                         window.location = '/yilaiyiwang/workbench/workbench.html';
                     }, 2000)
@@ -858,14 +910,14 @@ $(function() {
                     // 其他操作
                 }
             },
-            error: function(err) {
+            error: function (err) {
                 console.log(err);
 
             },
         });
     });
     // /* 审核发布按钮事件  提示信息(200:审核成功,202:拒收成功,502:请求参数有误,555:订单状态发生改变)
-    $('.examineBtn').click(function() {
+    $('.examineBtn').click(function () {
         if (data.orderFormBean.orderBeginDate && data.orderFormBean.orderEndDate) {
             var _$ = layui.jquery;
             layer.open({
@@ -884,13 +936,13 @@ $(function() {
         }
     });
 
-    $('.submitBox .noBtn').click(function() {
+    $('.submitBox .noBtn').click(function () {
         layer.closeAll();
         $('.submitBox').hide();
     });
 
     /* 问题： 如果医政不选时间直接审核通过，时间格式传的有毛病 */
-    $('.submitBox .yesBtn').click(function() {
+    $('.submitBox .yesBtn').click(function () {
 
         var startTime = '';
         var endTime = '';
@@ -918,7 +970,7 @@ $(function() {
                 withCredentials: true
             },
             crossDomain: true,
-            success: function(data) {
+            success: function (data) {
                 console.log(data)
                 if (data.status == 200) {
                     layer.closeAll();
@@ -933,7 +985,7 @@ $(function() {
                         content: $('.accept'),
                         time: 2000,
                     });
-                    setTimeout(function() {
+                    setTimeout(function () {
                         window.location = '/yilaiyiwang/workbench/workbench.html'
                     }, 2000)
                 } else if (data.status == 250) {
@@ -951,7 +1003,7 @@ $(function() {
                     });
                 }
             },
-            error: function(err) {
+            error: function (err) {
                 console.log(err);
             },
         });

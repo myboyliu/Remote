@@ -405,7 +405,7 @@ function selectOrderById(orderId, type, readFlag) {
     // ajaxRequest("POST", "", data, false, false, false, null, null, null);
 
     console.log(data)
-    window.location = '../page/collectingClinical.html';
+    window.location = '../page/Rfinish.html';
     sessionStorage.setItem('data', JSON.stringify(data));
     localStorage.setItem('orderId', orderId);
     function success() {

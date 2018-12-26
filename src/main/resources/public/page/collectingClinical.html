@@ -15,6 +15,8 @@
     <script src="../common/js/less.js"></script>
     <script src="../common/js/PDFObject.min.js"></script>
     <script src="../common/js/root.js"></script>
+    <script src="../common/js/ajaxRequestUtils.js"></script>
+    <script src="../common/js/url.js"></script>
     <script type="text/javascript" src="../js/collectingClinical.js"></script>
     <!-- [if lt IE9]>
 		    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -73,6 +75,49 @@
     <main class="clearfix">
 
         <div class="right_main">
+            <!-- 会诊报告模块 -->
+            <div class="hosp  lecturer clearfix">
+                <img src="../images/Presentation.png" alt="会诊报告">
+                <span class="fw">会诊报告</span>
+                <div class="wire wire7"></div>
+                <div class="modifier7">
+                    <!-- <a href="/yilaiyiwang/workbench/modifyDoctor.html">
+                        <span>修改排期</span>
+                    </a> -->
+                    <!-- <i class="chooseBtn" id="cutLec"></i> -->
+                </div>
+                <!-- 会诊报告可收缩模块 -->
+                <div class="lecturer_modules">
+                </div>
+            </div>
+            <!-- 医嘱 -->
+            <div class="doctorEnjoinBox clearfix">
+                <img src="../images/doctorEnjoin.png" alt="会诊报告">
+                <span>医嘱与手术备品</span>
+                <div class="wire" style="width: 980px;"></div>
+            </div>
+            <div class="doctorEnjoinBody">
+
+            </div>
+
+            <!-- 临床反馈模块 -->
+            <div class="hosp  tickling clearfix">
+                <img src="../images/feedback.png" alt="临床反馈">
+                <span class="fw">临床反馈</span>
+                <div class="wire wire8"></div>
+                <div class="modifier8">
+                    <!-- <a href="/yilaiyiwang/workbench/modifyDoctor.html">
+                        <span>修改排期</span>
+                    </a> -->
+                    <!-- <i class="chooseBtn" id="cutTic"></i> -->
+                </div>
+                <!-- 临床反馈可收缩模块 -->
+                <div class="tickling_modules">
+                        <pre class="applyFeedBack">
+                        </pre>
+                </div>
+            </div>
+
             <!-- 患者基本信息模块 -->
             <div class="hosp  essentialInformation clearfix">
                 <img src="../images/information.png" alt="写病历患者基本信息">
@@ -147,8 +192,6 @@
                         <h4>
                             <span style="padding-right: 0px">主会诊人</span>
                             <span class="addresserInfo">
-                                <吴艳博/主任医师/心内科/北京朝阳医院本院>；
-                                    <吴艳博/主任医师/心内科/北京朝阳医院本院>
                             </span>
                         </h4>
                     </div>
@@ -246,7 +289,6 @@
                         <h4>
                             <span>发件人：</span>
                             <span class="recipientsInfo">
-                                <吴艳波/主任医师/心内科/北京朝阳医院本院>
                             </span>
                         </h4>
                     </div>
@@ -264,7 +306,6 @@
 
                                 <span>发件人:</span>
                                 <p style="display: inline;">
-                                    <吴艳波/主任医师/心内科/北京朝阳医院本院>
                                 </p>
                             </div>
                         </li>
