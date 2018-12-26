@@ -37,5 +37,6 @@ public enum InquiryStatus {
     //发起人 取消转诊
     INQUIRY_SENDER_CANCEL,
 
-
+    // 转诊已结束
+    INQUIRY_END,
 }

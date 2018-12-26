@@ -20,7 +20,9 @@ public interface ApplyFormMapper {
 
     List<ApplyForm> findByDynamicParam(ApplyForm applyForm);
 
-    List<ApplyForm> selectSendConsultant(ApplyForm applyForm);
-
     List<ApplyForm> getByApplyFormBean(ApplyFormBean applyFormBean);
+
+    List<ApplyForm> selectApplyInquiry(ApplyFormBean applyFormBean);
+
+    List<ApplyForm> selectApplyInquiryDate(ApplyFormBean applyFormBean);
 }
