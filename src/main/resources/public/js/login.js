@@ -33,9 +33,11 @@ $(function () {
 
             /**登陆成功回调方法*/
             function loginSuccess(responseJson) {
+                console.log(responseJson)
                 localStorage.setItem('token', responseJson.id);
                 localStorage.setItem('name', responseJson.userName);
                 localStorage.setItem('rolesName',"医生");
+                sessionStorage.setItem('userInfo', JSON.stringify(responseJson));
                 layer.close(index);
                 if ("1" == "医政") {
                     window.location.href = '/page/workbench.html';

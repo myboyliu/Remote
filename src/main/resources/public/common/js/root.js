@@ -45,8 +45,9 @@ $(function () {
     // $('.occupationName').html(localStorage.getItem('occupationName'))
     // $('.deptName').html(localStorage.getItem('deptName'))
     // $('.hospitalName').html(localStorage.getItem('hospitalName'))
-    $('.personalCenter').html(localStorage.getItem('name') + '/' + localStorage.getItem('hospitalName'));
-    // $('personalCenter').html("本医生")
+    let userInfo =  JSON.parse(sessionStorage.getItem('userInfo'));
+    console.log(userInfo);
+    $('.personalCenter').html(userInfo.userName + '/' +userInfo.hospitalName);
     $('div.personal').mouseenter(function () {
         $(this).find('ul').show();
     });
@@ -57,8 +58,8 @@ $(function () {
     $('a.loginOut').click(function () {
         ajaxRequest("POST", signOutUrl, null, false, false, false, signOutSuccess, null, null);
         function signOutSuccess(data) {
-            // localStorage.removeItem('token');
             localStorage.clear();
+            sessionStorage.clear();
             window.location = "../page/login.html";
         }
     });
