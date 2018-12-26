@@ -14,6 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author YoonaLt
+ * @version Running JDK 1.8
+ * @description 会诊相关查询
+ * @date 2018/12/26
+ */
 @RestController
 @RequestMapping(value = "apply/consultation")
 public class ApplyConsultationController extends BaseController {
