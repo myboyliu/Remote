@@ -1,6 +1,7 @@
 package com.sicmed.remote.web.controller;
 
 import com.sicmed.remote.common.Constant;
+import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
 import com.sicmed.remote.web.bean.LiveInfoBean;
 import com.sicmed.remote.web.bean.YqyLiveBean;
 import com.sicmed.remote.web.entity.UserDetail;
@@ -46,6 +47,13 @@ public class YqyLiveController extends BaseController {
      */
     @PostMapping(value = "announcement")
     public Object announcement(@RequestParam(value = "file", required = false) MultipartFile file, @NotEmpty String title, @Length(min = 32, max = 32, message = "请求参数有误") String customBranchId, @NotEmpty String liveDescribe, @NotEmpty @NotEmpty @Length(min = 19, max = 19, message = "请求参数有误") String startDate, @NotEmpty @NotEmpty @Length(min = 19, max = 19, message = "请求参数有误") String endDate, String liveClass) {
+        //申请的直播开始时间必须在当前时间十五分钟之后
+        if (!YtDateUtils.compareDate(startDate)){
+            return badRequestOfArguments("开始时间必须在十五分钟之后");
+        }
+        if (YtDateUtils.timeDifference(startDate, endDate)<=0){
+            return badRequestOfArguments("结束时间必须大于开始时间");
+        }
         UserDetail userDetail = (UserDetail) redisTemplate.opsForValue( ).get(getRequestToken( ));
         int i = yqyLiveService.announcement(file, title, customBranchId, liveDescribe, startDate, endDate, liveClass, userDetail);
         if (i > 0) {
@@ -98,6 +106,13 @@ public class YqyLiveController extends BaseController {
      */
     @PostMapping(value = "updateAnnouncement")
     public Object updateAnnouncement(@RequestParam(value = "file", required = false) MultipartFile file, @NotEmpty String liveRoomId, @NotEmpty String livePwd, @Length(min = 32, max = 32, message = "请求参数有误") String id, @NotEmpty String title, @Length(min = 32, max = 32, message = "请求参数有误") String customBranchId, @NotEmpty String liveDescribe, @NotEmpty @Length(min = 19, max = 19, message = "请求参数有误") String startDate, @NotEmpty @Length(min = 19, max = 19, message = "请求参数有误") String endDate, String liveClass) {
+        //申请的直播开始时间必须在当前时间十五分钟之后
+        if (!YtDateUtils.compareDate(startDate)){
+            return badRequestOfArguments("开始时间必须在十五分钟之后");
+        }
+        if (YtDateUtils.timeDifference(startDate, endDate)<=0){
+            return badRequestOfArguments("结束时间必须大于开始时间");
+        }
         UserDetail userDetail = (UserDetail) redisTemplate.opsForValue( ).get(getRequestToken( ));
         int i = yqyLiveService.updateAnnouncement(id, file, liveRoomId, livePwd, title, customBranchId, liveDescribe, startDate, endDate, liveClass, userDetail);
         if (i > 0) {

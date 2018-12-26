@@ -27,6 +27,11 @@ public class YtDateUtils {
     private static boolean LENIENT_DATE = false;
 
     /**
+     * 十五分钟换算成毫秒
+     */
+    public static long FIFTEEN_MINUTES = 15*60*1000;
+
+    /**
      * Convert String format to Date format
      */
     public static Date stringToDate(String str) {
@@ -129,6 +134,20 @@ public class YtDateUtils {
     public static Date stringToDates(String dateString) {
         return stringToDate(dateString, DATETIME_PATTERN, LENIENT_DATE);
     }
+
+    /**
+     * 判断开始时间和当前时间差大于十五分
+     */
+    public static boolean compareDate(String startDate){
+        if (stringToDates(startDate).getTime()>System.currentTimeMillis()+FIFTEEN_MINUTES){
+            System.out.println(stringToDates(startDate).getTime());
+            System.out.println(System.currentTimeMillis()+FIFTEEN_MINUTES);
+            return true;
+        }else {
+            return false;
+        }
+    }
+
 
     /**
      * java.util.Date
