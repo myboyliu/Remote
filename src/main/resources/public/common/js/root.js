@@ -46,7 +46,7 @@ $(function () {
     // $('.deptName').html(localStorage.getItem('deptName'))
     // $('.hospitalName').html(localStorage.getItem('hospitalName'))
     let userInfo =  JSON.parse(sessionStorage.getItem('userInfo'));
-    console.log(userInfo);
+    // console.log(userInfo);
     $('.personalCenter').html(userInfo.userName + '/' +userInfo.hospitalName);
     $('div.personal').mouseenter(function () {
         $(this).find('ul').show();

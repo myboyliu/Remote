@@ -39,8 +39,8 @@ $(function () {
                 localStorage.setItem('rolesName',"医生");
                 sessionStorage.setItem('userInfo', JSON.stringify(responseJson));
                 layer.close(index);
-                if ("1" == "医政") {
-                    window.location.href = '/page/workbench.html';
+                if ("医政" == "医政") {
+                    window.location.href = '/page/administrator.html';
                 } else {
                     layer.closeAll();
                     window.location.href = '/page/morkbench.html';
