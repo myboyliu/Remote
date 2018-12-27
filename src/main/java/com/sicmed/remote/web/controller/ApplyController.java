@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -268,6 +269,7 @@ public class ApplyController extends BaseController {
         }
 
         CaseConsultant caseConsultant = new CaseConsultant();
+        caseConsultant.setId(applyForm.getId());
         caseConsultant.setConsultantUserList(consultantUserList);
         caseConsultant.setConsultantPrice(consultantPrice);
         caseConsultant.setHospitalPrice(hospitalPrice);
@@ -314,6 +316,7 @@ public class ApplyController extends BaseController {
         }
 
         CaseConsultant caseConsultant = new CaseConsultant();
+        caseConsultant.setId(applyForm.getId());
         caseConsultant.setConsultantUserList(consultantUserList);
         caseConsultant.setConsultantPrice(consultantPrice);
         caseConsultant.setHospitalPrice(hospitalPrice);
@@ -645,4 +648,14 @@ public class ApplyController extends BaseController {
         return updateStatus(applyForm, applyStatus, msg1, msg2);
     }
 
+    /**
+     * 医生工作台详细信息展示
+     */
+    @GetMapping(value = "detailById")
+    public Map detailById(String applyFormId) {
+
+        ApplyFormBean applyFormBean = applyFormService.detailById(applyFormId);
+
+        return succeedRequest(applyFormBean);
+    }
 }

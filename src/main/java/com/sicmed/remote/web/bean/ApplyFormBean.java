@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.bean;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.ApplyTime;
 import com.sicmed.remote.web.entity.CaseContent;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApplyFormBean extends ApplyForm implements Serializable {
 
     List<String> consultationStatusList;
@@ -38,4 +40,4 @@ public class ApplyFormBean extends ApplyForm implements Serializable {
 
     private String detailAddress;
 
-  }
+}

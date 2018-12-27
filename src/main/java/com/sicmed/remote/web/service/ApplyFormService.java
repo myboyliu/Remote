@@ -14,21 +14,27 @@ public class ApplyFormService implements BaseService<ApplyForm> {
     @Autowired
     private ApplyFormMapper applyFormMapper;
 
-
+    // 更新applyForm表单apply_status状态
     public int updateStatus(ApplyForm applyForm, String applyStatus, String userId) {
         applyForm.setApplyStatus(applyStatus);
         applyForm.setUpdateUser(userId);
         return applyFormMapper.updateByPrimaryKeySelective(applyForm);
     }
 
-    public List<ApplyForm> selectApplyInquiry(ApplyFormBean applyFormBean){
+    // 转诊查询
+    public List<ApplyForm> selectApplyInquiry(ApplyFormBean applyFormBean) {
         return applyFormMapper.selectApplyInquiry(applyFormBean);
     }
 
-    public List<ApplyForm> selectApplyInquiryDate(ApplyFormBean applyFormBean){
+    // 会诊查询
+    public List<ApplyForm> selectApplyInquiryDate(ApplyFormBean applyFormBean) {
         return applyFormMapper.selectApplyInquiryDate(applyFormBean);
     }
 
+    // 工作台详情页由applyFormId查询
+    public ApplyFormBean detailById(String id) {
+        return applyFormMapper.detailById(id);
+    }
 
     @Override
     public int insertSelective(ApplyForm applyForm) {
@@ -52,7 +58,7 @@ public class ApplyFormService implements BaseService<ApplyForm> {
 
     @Override
     public ApplyForm getByPrimaryKey(String id) {
-        return null;
+        return applyFormMapper.selectByPrimaryKey(id);
     }
 
     @Override

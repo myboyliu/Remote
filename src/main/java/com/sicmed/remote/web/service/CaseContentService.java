@@ -24,6 +24,7 @@ public class CaseContentService implements BaseService<CaseContent> {
     @Autowired
     private CaseRecordService caseRecordService;
 
+    // 创建病例
     @Transactional
     public int insertByMap(CaseContentBean caseContentBean) {
 

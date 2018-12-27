@@ -27,6 +27,7 @@
         <result column="delete_user" jdbcType="VARCHAR" property="deleteUser"/>
         <result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
     </resultMap>
+
     <sql id="Base_Column_List">
     id, apply_number, case_record_id, case_summary, apply_summary, invite_summary,
     apply_user_id, apply_hospital_id, invite_user_id, invite_hospital_id,invite_branch_id, apply_branch_id,
@@ -42,7 +43,7 @@
 
     <!--转诊相关查询-->
     <select id="selectApplyInquiry" parameterType="com.sicmed.remote.web.entity.ApplyForm" resultMap="BaseResultMap">
-        select case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
+        select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
         apply_type, apply_remark,apply_urgent, create_time,update_time
         from apply_form
         <where>
@@ -71,8 +72,9 @@
     </select>
 
     <!--转诊排期审核查询-->
-    <select id="selectApplyInquiryDate" parameterType="com.sicmed.remote.web.entity.ApplyForm" resultMap="BaseResultMap">
-        select case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
+    <select id="selectApplyInquiryDate" parameterType="com.sicmed.remote.web.entity.ApplyForm"
+            resultMap="BaseResultMap">
+        select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
         apply_type, apply_remark,apply_urgent, create_time,update_time
         from apply_form
         <where>
@@ -95,6 +97,83 @@
         </where>
         order by update_time,create_time
         limit #{beginNo},#{pageSize}
+    </select>
+
+    <resultMap id="BeanResultMap" type="com.sicmed.remote.web.bean.ApplyFormBean">
+        <id column="ayfId" jdbcType="VARCHAR" property="id"/>
+        <result column="ayfapplyNumber" jdbcType="VARCHAR" property="applyNumber"/>
+        <result column="ayfcaseRecordId" jdbcType="VARCHAR" property="caseRecordId"/>
+        <result column="ayfcaseSummary" jdbcType="VARCHAR" property="caseSummary"/>
+        <result column="ayfapplySummary" jdbcType="VARCHAR" property="applySummary"/>
+        <result column="ayfinviteSummary" jdbcType="VARCHAR" property="inviteSummary"/>
+        <result column="ayfapplyUserId" jdbcType="VARCHAR" property="applyUserId"/>
+        <result column="ayfapplyHospitalId" jdbcType="VARCHAR" property="applyHospitalId"/>
+        <result column="ayfapplyBranchId" jdbcType="VARCHAR" property="applyBranchId"/>
+        <result column="ayfinviteUserId" jdbcType="VARCHAR" property="inviteUserId"/>
+        <result column="ayfinviteHospitalId" jdbcType="VARCHAR" property="inviteHospitalId"/>
+        <result column="ayfinviteBranchId" jdbcType="VARCHAR" property="inviteBranchId"/>
+        <result column="ayfconsultantApplyTime" jdbcType="TIMESTAMP" property="consultantApplyTime"/>
+        <result column="ayfapplyStatus" jdbcType="VARCHAR" property="applyStatus"/>
+        <result column="ayfapplyType" jdbcType="VARCHAR" property="applyType"/>
+        <result column="atyapplyRemark" jdbcType="VARCHAR" property="applyRemark"/>
+        <result column="ayfapplyUrgent" jdbcType="VARCHAR" property="applyUrgent"/>
+
+        <result column="crpatientAge" jdbcType="INTEGER" property="patientAge"/>
+        <result column="crpatientSex" jdbcType="CHAR" property="patientSex"/>
+        <result column="crpatientHeight" jdbcType="INTEGER" property="patientHeight"/>
+        <result column="crpatientWeight" jdbcType="INTEGER" property="patientWeight"/>
+        <result column="crcaseDiagnosis" jdbcType="VARCHAR" property="caseDiagnosis"/>
+
+        <result column="cpdetailAddress" jdbcType="VARCHAR" property="detailAddress"/>
+
+        <result column="cctconsultantStartTime" jdbcType="VARCHAR" property="consultantStartTime"/>
+        <result column="cctconsultantEndTime" jdbcType="TIMESTAMP" property="consultantEndTime"/>
+        <result column="cctconsultantReport" jdbcType="VARCHAR" property="consultantReport"/>
+        <result column="cctconsultantFeedback" jdbcType="VARCHAR" property="consultantFeedback"/>
+        <result column="cctconsultantPrice" jdbcType="VARCHAR" property="consultantPrice"/>
+        <result column="ccthospitalPrice" jdbcType="VARCHAR" property="hospitalPrice"/>
+
+        <collection property="applyTimeList" ofType="com.sicmed.remote.web.entity.ApplyTime" javaType="ArrayList">
+            <result column="ayteventStartTime" jdbcType="TIMESTAMP" property="eventStartTime"/>
+            <result column="ayteventEndTime" jdbcType="TIMESTAMP" property="eventEndTime"/>
+        </collection>
+
+        <collection property="caseContentList" ofType="com.sicmed.remote.web.entity.CaseContent" javaType="ArrayList">
+            <result column="cccontentTypeId" jdbcType="VARCHAR" property="contentTypeId"/>
+            <result column="cccontentPath" jdbcType="VARCHAR" property="contentPath"/>
+            <result column="ccorderWeight" jdbcType="INTEGER" property="orderWeight"/>
+            <result column="cccontentRemark" jdbcType="VARCHAR" property="contentRemark"/>
+            <result column="ccid" jdbcType="VARCHAR" property="id"/>
+        </collection>
+    </resultMap>
+    <sql id="Bean_Column_List">
+        ayf.id ayfId,ayf.apply_number ayfapplyNumber,ayf.case_record_id ayfcaseRecordId,ayf.case_summary ayfcaseSummary,
+        ayf.apply_summary ayfapplySummary,ayf.invite_summary ayfinviteSummary,ayf.apply_user_id ayfapplyUserId,
+        ayf.apply_hospital_id ayfapplyHospitalId,ayf.apply_branch_id ayfapplyBranchId,ayf.invite_user_id ayfinviteUserId,
+        ayf.invite_hospital_id ayfinviteHospitalId,ayf.invite_branch_id ayfinviteBranchId,
+        ayf.consultant_apply_time ayfconsultantApplyTime,ayf.apply_status ayfapplyStatus,ayf.apply_type ayfapplyType,
+        ayf.apply_remark atyapplyRemark,ayf.apply_urgent ayfapplyUrgent,
+        ayt.event_start_time ayteventStartTime,ayt.event_end_time ayteventEndTime,
+        cr.patient_age crpatientAge,cr.patient_sex crpatientSex,cr.patient_height crpatientHeight,
+        cr.patient_weight crpatientWeight,cr.case_diagnosis crcaseDiagnosis,
+        cp.detail_address cpdetailAddress,
+        cc.content_type_id cccontentTypeId,cc.content_path cccontentPath,cc.order_weight ccorderWeight,
+        cc.content_remark cccontentRemark,cc.id ccid,
+        cct.consultant_start_time cctconsultantStartTime,cct.consultant_end_time  cctconsultantEndTime,
+        cct.consultant_report cctconsultantReport,cct.consultant_feedback cctconsultantFeedback,
+        cct.consultant_price cctconsultantPrice,cct.hospital_price ccthospitalPrice
+    </sql>
+    <!--工作台会诊详细信息查询-->
+    <select id="detailById" parameterType="java.lang.String" resultMap="BeanResultMap">
+        select
+        <include refid="Bean_Column_List"/>
+        from apply_form ayf
+        left join case_record cr on cr.id = ayf.case_record_id
+        left join case_patient cp on cp.id = cr.patient_id
+        left join case_consultant cct on cct.id = ayf.id
+        left join apply_time ayt on ayt.apply_form_id = ayf.id
+        left join case_content cc on cc.record_id = cr.id
+        where ayf.id = #{id} and ayf.del_flag= "0" order by cc.order_weight
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
@@ -370,7 +449,7 @@
 
     <!--会诊医生相关查询-->
     <select id="getByApplyFormBean" parameterType="com.sicmed.remote.web.bean.ApplyFormBean" resultMap="BaseResultMap">
-        select case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
+        select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
         apply_type, apply_remark,apply_urgent, create_time,update_time
         from apply_form
         <where>
