@@ -22,6 +22,8 @@ public interface ApplyFormMapper {
 
     List<ApplyForm> getByApplyFormBean(ApplyFormBean applyFormBean);
 
+    List<ApplyForm> sirGetByApplyFormBean(ApplyFormBean applyFormBean);
+
     List<ApplyForm> selectApplyInquiry(ApplyFormBean applyFormBean);
 
     List<ApplyForm> selectApplyInquiryDate(ApplyFormBean applyFormBean);

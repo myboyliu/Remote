@@ -66,7 +66,13 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         return applyFormMapper.findByDynamicParam(applyForm);
     }
 
+    // 医生会诊查询
     public List<ApplyForm> getByApplyFormBean(ApplyFormBean applyFormBean) {
         return applyFormMapper.getByApplyFormBean(applyFormBean);
+    }
+
+    //  医政会诊查询
+    public List<ApplyForm> sirGetByApplyFormBean(ApplyFormBean applyFormBean) {
+        return applyFormMapper.sirGetByApplyFormBean(applyFormBean);
     }
 }
