@@ -654,8 +654,14 @@ public class ApplyController extends BaseController {
     @GetMapping(value = "detailById")
     public Map detailById(String applyFormId) {
 
-        ApplyFormBean applyFormBean = applyFormService.detailById(applyFormId);
+        if (StringUtils.isBlank(applyFormId)) {
+            return badRequestOfArguments("参数为空");
+        }
 
+        ApplyFormBean applyFormBean = applyFormService.detailById(applyFormId);
+        if (applyFormBean == null) {
+            return badRequestOfArguments("查询失败");
+        }
         return succeedRequest(applyFormBean);
     }
 }
