@@ -224,11 +224,11 @@ function renderApplyListView(data) {
         const _day = timeStr.split('-')[2];
         if (data[i].applyUrgent == 0) {
             // 未读
-            _html += '<tr class="unread" applyFlag="' + data[i].applyUrgent + '" type="2" name="' + data[i].caseRecordId + '">\
+            _html += '<tr class="unread" applyFlag="' + data[i].applyUrgent + '" type="2" name="' + data[i].id + '">\
                             <td>';
         } else {
             // 已读
-            _html += '<tr class="read" applyFlag="' + data[i].applyUrgent + '" type="2" name="' + data[i].caseRecordId + '">\
+            _html += '<tr class="read" applyFlag="' + data[i].applyUrgent + '" type="2" name="' + data[i].id + '">\
                             <td>';
         }
         if (data[i].applyUrgent == 1) {
@@ -397,15 +397,21 @@ function getDrafts(pageNo, pageSize) {
 
 // 查看订单详情
 function selectOrderById(orderId, type, readFlag) {
-    let data = {
-        "orderId": orderId,
-        "type": type, //是那个列表的类型(0:医政受邀列表,1:医政发出列表,2:医生受邀列表,3:医生发出列表)
-        "readFlag": readFlag
-    }
+    // let data = {
+    //     "orderId": orderId,
+    //     "type": type, //是那个列表的类型(0:医政受邀列表,1:医政发出列表,2:医生受邀列表,3:医生发出列表)
+    //     "readFlag": readFlag
+    // }
     // ajaxRequest("POST", "", data, false, false, false, null, null, null);
+    let data = {"applyFormId": orderId};
+    ajaxRequest("GET", getApplyInfoUrl, data, true, "application/json", true, getApplyInfoSuccess, null, null)
 
+    function getApplyInfoSuccess(result) {
+        console.log(result);
+        sessionStorage.setItem('applyInfo', JSON.stringify(result));
+        window.location = '../page/Rfinish.html';
+    }
     console.log(data)
-    window.location = '../page/Rfinish.html';
     sessionStorage.setItem('data', JSON.stringify(data));
     localStorage.setItem('orderId', orderId);
     function success() {
