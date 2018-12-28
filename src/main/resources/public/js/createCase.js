@@ -363,7 +363,7 @@ function createPictureApplyData(caseId, caseSummary) {
 
         sessionStorage.setItem('sendOrderData', JSON.stringify(result));
 
-        // window.location = '../writeCase/sendSuccess.html';
+        window.location = '../page/sendSuccess.html';
     }
 }
 
@@ -406,7 +406,7 @@ function createVideoApplyData(caseId, caseSummary) {
     function createVideoApplySuccess(result) {
         console.log(result)
         sessionStorage.setItem('sendOrderData', JSON.stringify(data));
-        // window.location = '../writeCase/sendSuccess.html';
+        window.location = '../page/sendSuccess.html';
     }
 
 }
