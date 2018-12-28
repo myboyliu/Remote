@@ -669,7 +669,7 @@ $(function () {
                             window.location = '/yilaiyiwang/workbench/meetfeedback.html';
                         } else if (data.orderFormBean.statesName == "已结束") {
                             localStorage.setItem('orderId', orderId)
-                            window.location = '/yilaiyiwang/invitee/inviteApplyInfo.html';
+                            window.location = '/yilaiyiwang/invitee/adminApplyInfo.html';
                         } else if (data.orderFormBean.statesName == "会诊已拒收") {
                             localStorage.setItem('orderId', orderId)
                             window.location = '/yilaiyiwang/invitee/meetRejection.html'
