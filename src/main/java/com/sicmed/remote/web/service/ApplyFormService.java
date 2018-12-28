@@ -75,4 +75,9 @@ public class ApplyFormService implements BaseService<ApplyForm> {
     public List<ApplyForm> sirGetByApplyFormBean(ApplyFormBean applyFormBean) {
         return applyFormMapper.sirGetByApplyFormBean(applyFormBean);
     }
+
+    // 医政 转诊 查询
+    public List<ApplyForm> sirSelectInquiry(ApplyFormBean applyFormBean){
+        return applyFormMapper.sirSelectInquiry(applyFormBean);
+    }
 }

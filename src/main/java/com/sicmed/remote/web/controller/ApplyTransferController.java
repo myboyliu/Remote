@@ -4,6 +4,7 @@ import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.entity.ApplyForm;
+import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.service.ApplyFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +36,7 @@ public class ApplyTransferController extends BaseController {
     }
 
     /**
-     * 转诊查询
+     * 医生 转诊 查询
      */
     public Map inquirySelect(List<String> consultationStatusList, String msg) {
 
@@ -55,7 +56,7 @@ public class ApplyTransferController extends BaseController {
     }
 
     /**
-     * 转诊待收诊
+     * 医生 转诊 待收诊
      */
     @GetMapping(value = "inquiryApplyAccede")
     public Map inquiryApplyAccede() {
@@ -70,7 +71,7 @@ public class ApplyTransferController extends BaseController {
     }
 
     /**
-     * 转诊已拒收
+     * 医生 转诊 已拒收
      */
     @GetMapping(value = "inquirySlaveMasterReject")
     public Map inquirySlaveMasterReject() {
@@ -87,7 +88,7 @@ public class ApplyTransferController extends BaseController {
     }
 
     /**
-     * 转诊已排期
+     * 医生 转诊 已排期
      */
     @GetMapping(value = "inquiryDate")
     public Map inquiryDate() {
@@ -104,14 +105,16 @@ public class ApplyTransferController extends BaseController {
     }
 
     /**
-     * 已结束
+     * 医生 转诊 已结束
      */
     @GetMapping(value = "inquiryEnd")
     public Map inquiryEnd() {
 
         List<String> consultationStatusList = new ArrayList<>();
         String inquiryStatus1 = String.valueOf(InquiryStatus.INQUIRY_END);
+        String inquiryStatus2 = String.valueOf(InquiryStatus.INQUIRY_SENDER_CANCEL);
         consultationStatusList.add(inquiryStatus1);
+        consultationStatusList.add(inquiryStatus2);
 
         String msg = "无已结束";
 
@@ -119,7 +122,7 @@ public class ApplyTransferController extends BaseController {
     }
 
     /**
-     * 转诊排期审核
+     * 医生 转诊 排期审核
      */
     @GetMapping(value = "inquirySlaveMasterAccede")
     public Map inquirySlaveMasterAccede() {
@@ -145,7 +148,7 @@ public class ApplyTransferController extends BaseController {
     }
 
     /**
-     * 转诊待审核
+     * 医生 转诊 待审核
      */
     @GetMapping(value = "inquiryCreateSuccess")
     public Map inquiryCreateSuccess() {
@@ -166,5 +169,164 @@ public class ApplyTransferController extends BaseController {
             return succeedRequest("无待审核");
         }
         return succeedRequest(applyFormList);
+    }
+
+    /**
+     * 医政 转诊 查询
+     */
+    public Map sirInquirySelect(ApplyFormBean applyFormBean, List<String> consultationStatusList, String msg) {
+
+        applyFormBean.setConsultationStatusList(consultationStatusList);
+        applyFormBean.setConsultationTypeList(consultationTypeListInquiry);
+
+        List<ApplyForm> applyFormList = applyFormService.sirSelectInquiry(applyFormBean);
+        if (applyFormList != null && applyFormList.size() == 0) {
+            return badRequestOfArguments(msg);
+        }
+
+        return succeedRequest(applyFormList);
+    }
+
+    /**
+     * 医政 转诊 待审核
+     */
+    @GetMapping(value = "sirInquiryCheck")
+    public Map sirInquiryCheck() {
+
+        String userId = getRequestToken();
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        String hospitalId = userDetail.getHospitalId();
+
+        List<String> consultationStatusList = new ArrayList<>();
+        String inquiryStatus = String.valueOf(InquiryStatus.INQUIRY_APPLY_CREATE_SUCCESS);
+        consultationStatusList.add(inquiryStatus);
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setApplyHospitalId(hospitalId);
+
+        String msg = "无待审核";
+
+        return sirInquirySelect(applyFormBean, consultationStatusList, msg);
+    }
+
+    /**
+     * 医政 转诊 待接收
+     */
+    @GetMapping(value = "sirInquiryAccept")
+    public Map sirInquiryAccept() {
+
+        String userId = getRequestToken();
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        String hospitalId = userDetail.getHospitalId();
+
+        List<String> consultationStatusList = new ArrayList<>();
+        String inquiryStatus = String.valueOf(InquiryStatus.INQUIRY_APPLY_ACCEDE);
+        consultationStatusList.add(inquiryStatus);
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setApplyHospitalId(hospitalId);
+        applyFormBean.setInviteHospitalId(hospitalId);
+
+        String msg = "无待接收";
+
+        return sirInquirySelect(applyFormBean, consultationStatusList, msg);
+    }
+
+    /**
+     * 医政 转诊 排期审核
+     */
+    @GetMapping(value = "sirInquiryCheckDate")
+    public Map sirInquiryCheckDate() {
+
+        String userId = getRequestToken();
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        String hospitalId = userDetail.getHospitalId();
+
+        List<String> consultationStatusList = new ArrayList<>();
+        String inquiryStatus1 = String.valueOf(InquiryStatus.INQUIRY_SLAVE_ACCEDE);
+        String inquiryStatus2 = String.valueOf(InquiryStatus.INQUIRY_MASTER_ACCEDE);
+        consultationStatusList.add(inquiryStatus1);
+        consultationStatusList.add(inquiryStatus2);
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setApplyHospitalId(hospitalId);
+        applyFormBean.setInviteHospitalId(hospitalId);
+
+        String msg = "无排期审核";
+
+        return sirInquirySelect(applyFormBean, consultationStatusList, msg);
+    }
+
+    /**
+     * 医政 转诊 已排期
+     */
+    @GetMapping(value = "sirInquiryDate")
+    public Map sirInquiryDate() {
+        String userId = getRequestToken();
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        String hospitalId = userDetail.getHospitalId();
+
+        List<String> consultationStatusList = new ArrayList<>();
+        String inquiryStatus1 = String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED);
+        String inquiryStatus2 = String.valueOf(InquiryStatus.INQUIRY_SENDER_CONFIRM);
+        consultationStatusList.add(inquiryStatus1);
+        consultationStatusList.add(inquiryStatus2);
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setApplyHospitalId(hospitalId);
+        applyFormBean.setInviteHospitalId(hospitalId);
+
+        String msg = "无已排期";
+
+        return sirInquirySelect(applyFormBean, consultationStatusList, msg);
+    }
+
+    /**
+     * 医政 转诊 已拒收
+     */
+    @GetMapping(value = "sirInquiryReject")
+    public Map sirInquiryReject() {
+        String userId = getRequestToken();
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        String hospitalId = userDetail.getHospitalId();
+
+        List<String> consultationStatusList = new ArrayList<>();
+        String inquiryStatus1 = String.valueOf(InquiryStatus.INQUIRY_SLAVE_REJECT);
+        String inquiryStatus2 = String.valueOf(InquiryStatus.INQUIRY_MASTER_REJECT);
+        consultationStatusList.add(inquiryStatus1);
+        consultationStatusList.add(inquiryStatus2);
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setApplyHospitalId(hospitalId);
+        applyFormBean.setInviteHospitalId(hospitalId);
+
+        String msg = "无已拒收";
+
+        return sirInquirySelect(applyFormBean, consultationStatusList, msg);
+    }
+
+    /**
+     * 医政 转诊 已结束
+     */
+    @GetMapping(value = "sirInquiryEnd")
+    public Map sirInquiryEnd() {
+
+        String userId = getRequestToken();
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        String hospitalId = userDetail.getHospitalId();
+
+        List<String> consultationStatusList = new ArrayList<>();
+        String inquiryStatus1 = String.valueOf(InquiryStatus.INQUIRY_SENDER_CANCEL);
+        String inquiryStatus2 = String.valueOf(InquiryStatus.INQUIRY_END);
+        consultationStatusList.add(inquiryStatus1);
+        consultationStatusList.add(inquiryStatus2);
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setApplyHospitalId(hospitalId);
+        applyFormBean.setInviteHospitalId(hospitalId);
+
+        String msg = "无已结束";
+
+        return sirInquirySelect(applyFormBean, consultationStatusList, msg);
     }
 }

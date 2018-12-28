@@ -41,8 +41,8 @@
         where id = #{id,jdbcType=VARCHAR}
     </select>
 
-    <!--转诊相关查询-->
-    <select id="selectApplyInquiry" parameterType="com.sicmed.remote.web.entity.ApplyForm" resultMap="BaseResultMap">
+    <!--转诊医生相关查询-->
+    <select id="selectApplyInquiry" parameterType="com.sicmed.remote.web.bean.ApplyFormBean" resultMap="BaseResultMap">
         select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
         apply_type, apply_remark,apply_urgent, create_time,update_time
         from apply_form
@@ -71,8 +71,8 @@
         limit #{beginNo},#{pageSize}
     </select>
 
-    <!--转诊排期审核查询-->
-    <select id="selectApplyInquiryDate" parameterType="com.sicmed.remote.web.entity.ApplyForm"
+    <!--转诊医生排期审核查询-->
+    <select id="selectApplyInquiryDate" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
             resultMap="BaseResultMap">
         select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
         apply_type, apply_remark,apply_urgent, create_time,update_time
@@ -99,6 +99,37 @@
         limit #{beginNo},#{pageSize}
     </select>
 
+    <!--转诊医政查询-->
+    <select id="sirSelectInquiry" parameterType="com.sicmed.remote.web.bean.ApplyFormBean" resultMap="BaseResultMap">
+        select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
+        apply_type, apply_remark,apply_urgent, create_time,update_time
+        from apply_form
+        <where>
+            del_flag = "0"
+            <if test="consultationTypeList != null">
+                AND apply_type IN
+                <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="consultationStatusList != null">
+                AND apply_status IN
+                <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="applyHospitalId != null">
+                AND (apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
+            </if>
+            <if test="inviteHospitalId != null">
+                or invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR})
+            </if>
+        </where>
+        order by update_time,create_time
+        limit #{beginNo},#{pageSize}
+    </select>
+
+    <!--工作台会诊详细信息查询-->
     <resultMap id="BeanResultMap" type="com.sicmed.remote.web.bean.ApplyFormBean">
         <id column="ayfId" jdbcType="VARCHAR" property="id"/>
         <result column="ayfapplyNumber" jdbcType="VARCHAR" property="applyNumber"/>
@@ -163,7 +194,6 @@
         cct.consultant_report cctconsultantReport,cct.consultant_feedback cctconsultantFeedback,
         cct.consultant_price cctconsultantPrice,cct.hospital_price ccthospitalPrice
     </sql>
-    <!--工作台会诊详细信息查询-->
     <select id="detailById" parameterType="java.lang.String" resultMap="BeanResultMap">
         select
         <include refid="Bean_Column_List"/>
@@ -479,7 +509,8 @@
     </select>
 
     <!--会诊医政相关查询-->
-    <select id="sirGetByApplyFormBean" parameterType="com.sicmed.remote.web.bean.ApplyFormBean" resultMap="BaseResultMap">
+    <select id="sirGetByApplyFormBean" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
+            resultMap="BaseResultMap">
         select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
         apply_type, apply_remark,apply_urgent, create_time,update_time
         from apply_form
