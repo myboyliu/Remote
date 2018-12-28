@@ -317,25 +317,25 @@ function getApplyList(inviteStatus, pageNo, pageSize) {
     };
     switch (inviteStatus) {
         case ApplyStatus.APPLY_REVIEW:
-            ajaxRequest("GET", getApplyReviewUrl, null, false, false, false, renderApplyListView, emptySelect, null);
+            ajaxRequest("GET", getApplyReviewByAdminUrl, null, false, false, false, renderApplyListView, emptySelect, null);
             break;
         case ApplyStatus.APPLY_ACCEPT:
-            ajaxRequest("GET", getApplyAcceptUrl, null, false, false, false, renderApplyListView, emptySelect, null);
+            ajaxRequest("GET", getApplyAcceptByAdminUrl, null, false, false, false, renderApplyListView, emptySelect, null);
             break;
         case ApplyStatus.APPLY_DATETIME:
-            ajaxRequest("GET", getApplyDateTimeUrl, null, false, false, false, renderApplyListView, emptySelect, null);
+            ajaxRequest("GET", getApplyDateTimeByAdminUrl, null, false, false, false, renderApplyListView, emptySelect, null);
             break;
         case ApplyStatus.APPLY_ONGOING:
-            ajaxRequest("GET", getApplyOngoingUrl, null, false, false, false, renderApplyListView, emptySelect, null);
+            ajaxRequest("GET", getApplyOngoingByAdminUrl, null, false, false, false, renderApplyListView, emptySelect, null);
             break;
         case ApplyStatus.APPLY_FEEDBACK:
-            ajaxRequest("GET", getApplyFeedbackUrl, null, false, false, false, renderApplyListView, emptySelect, null);
+            ajaxRequest("GET", getApplyFeedbackByAdminUrl, null, false, false, false, renderApplyListView, emptySelect, null);
             break;
         case ApplyStatus.APPLY_REJECT:
-            ajaxRequest("GET", getApplyRejectUrl, null, false, false, false, renderApplyListView, emptySelect, null);
+            ajaxRequest("GET", getApplyRejectByAdminUrl, null, false, false, false, renderApplyListView, emptySelect, null);
             break;
         case ApplyStatus.APPLY_DONE:
-            ajaxRequest("GET", getApplyDoneUrl, null, false, false, false, renderApplyListView, emptySelect, null);
+            ajaxRequest("GET", getApplyDoneByAdminUrl, null, false, false, false, renderApplyListView, emptySelect, null);
             break;
         default:
             return false;
@@ -409,7 +409,7 @@ function selectOrderById(orderId, type, readFlag) {
     function getApplyInfoSuccess(result) {
         console.log(result);
         sessionStorage.setItem('applyInfo', JSON.stringify(result));
-        window.location = '../page/inviteApplyInfo.html';
+        window.location = '../page/adminApplyInfo.html';
     }
     console.log(data)
     sessionStorage.setItem('data', JSON.stringify(data));
