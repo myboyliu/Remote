@@ -49,12 +49,12 @@ public class Hospital extends BaseEntity {
     private String hospitalPhone;
 
     @NotNull(message = "consultationPicturePrice is null")
-    @Max(value = 9,message = "超出最大数值")
+    @Max(value = 100000,message = "超出最大数值")
     @Min(value = 1,message = "数值过小")
     private Integer consultationPicturePrice;
 
     @NotNull(message = "consultationVideoPrice is null")
-    @Max(value = 9,message = "超出最大数值")
+    @Max(value = 100000,message = "超出最大数值")
     @Min(value = 1,message = "数值过小")
     private Integer consultationVideoPrice;
 }
