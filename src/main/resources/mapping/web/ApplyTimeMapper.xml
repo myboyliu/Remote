@@ -43,7 +43,7 @@
         </foreach>
     </insert>
 
-    <!--申请状态修改-->
+    <!--通过FormId修改-->
     <update id="updateApplyFormId" parameterType="com.sicmed.remote.web.entity.ApplyTime">
         update apply_time
         <set>

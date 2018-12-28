@@ -48,7 +48,7 @@ public class ApplyFormService implements BaseService<ApplyForm> {
 
     @Override
     public int updateByPrimaryKeySelective(ApplyForm applyForm) {
-        return 0;
+        return applyFormMapper.updateByPrimaryKeySelective(applyForm);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class ApplyFormService implements BaseService<ApplyForm> {
     }
 
     // 医政 转诊 查询
-    public List<ApplyForm> sirSelectInquiry(ApplyFormBean applyFormBean){
+    public List<ApplyForm> sirSelectInquiry(ApplyFormBean applyFormBean) {
         return applyFormMapper.sirSelectInquiry(applyFormBean);
     }
 }

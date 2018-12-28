@@ -138,8 +138,8 @@ public class ApplyController extends BaseController {
      *
      * @return
      */
-    private String getApplySummary() {
-        String userId = getRequestToken();
+    private String getApplySummary(String userId) {
+//        String userId = getRequestToken();
         CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
         return "<" + currentUserBean.getUserName() + "/" + currentUserBean.getTitleName() + "/" + currentUserBean.getBranchName() + "/" + currentUserBean.getHospitalName() + ">";
     }
@@ -158,7 +158,7 @@ public class ApplyController extends BaseController {
 
         String userId = getRequestToken();
         CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
-        String applySummary = getApplySummary();
+        String applySummary = getApplySummary(userId);
         // 添加 转诊 申请表
         String applyType = String.valueOf(ApplyType.APPLY_REFERRAL);
         String applyStatues = String.valueOf(InquiryStatus.INQUIRY_APPLY_CREATE_SUCCESS);
@@ -234,7 +234,7 @@ public class ApplyController extends BaseController {
         applyForm.setApplyUserId(userId);
         applyForm.setApplyType(applyType);
         applyForm.setApplyStatus(applyStatues);
-        applyForm.setApplySummary(getApplySummary());
+        applyForm.setApplySummary(getApplySummary(userId));
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("视频会诊记录保存失败");
@@ -300,7 +300,7 @@ public class ApplyController extends BaseController {
 
         String userId = getRequestToken();
         CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
-        applyForm.setApplySummary(getApplySummary());
+        applyForm.setApplySummary(getApplySummary(userId));
         // 添加 图文会诊 申请表
         applyForm.setApplyUserId(userId);
         applyForm.setApplyBranchId(currentUserBean.getBranchId());
@@ -435,41 +435,6 @@ public class ApplyController extends BaseController {
         String msg2 = "受诊医生拒绝转诊,time修改失败";
 
         return updateStatus(applyForm, applyStatus, msg1, msg2);
-    }
-
-    /**
-     * 确认转诊,视频会诊时间
-     */
-    @PostMapping(value = "dateTime")
-    public Map dateTime(ApplyForm applyForm, String startEndTime) {
-
-        // 删除原时间
-        if (applyForm == null || StringUtils.isBlank(startEndTime)) {
-            return badRequestOfArguments("applyForm or startEndTime is null");
-        }
-
-        int i = applyTimeService.delByApplyForm(applyForm.getId());
-        if (i < 1) {
-            return badRequestOfArguments("删除原applyTime失败");
-        }
-
-        String userId = getRequestToken();
-        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED);
-
-        int j = applyFormService.updateStatus(applyForm, applyStatus, userId);
-        if (j < 1) {
-            return badRequestOfArguments("确认时间,form修改失败");
-        }
-
-        ApplyTimeBean applyTimeBean = new ApplyTimeBean();
-        applyTimeBean.setApplyFormId(applyForm.getId());
-        applyTimeBean.setApplyStatus(applyStatus);
-        applyTimeBean.setUpdateUser(userId);
-        int k = applyTimeService.insertStartEndTimes(applyTimeBean);
-        if (k < 1) {
-            return badRequestOfArguments("确认时间,time修改失败");
-        }
-        return succeedRequest(applyForm);
     }
 
     /**
