@@ -36,10 +36,10 @@ $(function () {
                 console.log(responseJson)
                 localStorage.setItem('token', responseJson.id);
                 localStorage.setItem('name', responseJson.userName);
-                localStorage.setItem('rolesName',"医生");
+                localStorage.setItem('rolesName', "医生");
                 sessionStorage.setItem('userInfo', JSON.stringify(responseJson));
                 layer.close(index);
-                if ("医政" == "医政") {
+                if (responseJson.telephone === "18888888888" || responseJson.telephone === "17777777777") {
                     window.location.href = '/page/administrator.html';
                 } else {
                     layer.closeAll();
