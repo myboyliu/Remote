@@ -408,10 +408,12 @@ public class ApplyConsultationController extends BaseController {
 
         String userId = getRequestToken();
 
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setConsultationTypeList(consultantTypeList);
         applyFormBean.setConsultationStatusList(statusList);
-        applyFormBean.setInviteHospitalId(userId);
+        applyFormBean.setInviteHospitalId(userDetail.getHospitalId());
 
         List<ApplyForm> applyFormList = applyFormService.sirGetByApplyFormBean(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
