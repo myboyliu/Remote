@@ -278,7 +278,7 @@ function getInvitedList(inviteStatus, pageNo, pageSize) {
     };
     switch (inviteStatus) {
         case InviteStatus.INVITE_ACCEPT:
-            ajaxRequest("GET", getInviteAcceptUrl, null, false, false, false, renderApplyListView, emptySelect, null);
+            ajaxRequest("GET", sirReceiveApplyAccede, null, false, false, false, renderApplyListView, emptySelect, null);
             break;
         case InviteStatus.INVITE_REVIEW:
             ajaxRequest("GET", getInviteReviewUrl, null, false, false, false, renderApplyListView, emptySelect, null);

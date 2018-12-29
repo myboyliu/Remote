@@ -20,6 +20,8 @@
     <script src="../common/js/PDFObject.min.js"></script>
     <script src="../common/js/jQuery.print.min.js"></script>
     <script type="text/javascript" src="../js/adminApplyInfo.js"></script>
+    <script src="../common/js/datePluginUtils.js"></script>
+    <script src="../common/js/picturePluginUtils.js"></script>
     <!-- [if lt IE9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif] -->
@@ -55,7 +57,7 @@
     </div>
     <ul class="guide clearfix">
         <li>
-            <a class="active" href="../page/workbench.html">医政工作台</a>
+            <a class="active" href="../page/administrator.html">医政工作台</a>
         </li>
         <li>
             <a href="../page/DeskCalendar.html">科室日历</a>
@@ -69,7 +71,7 @@
         <li>
             <a href="../page/premierCourseMain.html">会员优享课程</a>
         </li>
-        <li >
+        <li>
             <a href="../page/statistics.html">数据统计</a>
         </li>
     </ul>
@@ -83,8 +85,8 @@
             <img src="../images/information.png" alt="写病历患者基本信息">
             <span class="fw">患者基本信息</span>
             <div class="wire wire1"></div>
-            <div class="modifier1">
-                <a href="/yilaiyiwang/workbench/modifyRecords.html">
+            <div class="modifier1" style="display: none;">
+                <a href="../page/modifyRecords.html">
                     <span>修改</span>
                 </a>
                 <i class="chooseBtn" id="cut"></i>
@@ -115,37 +117,27 @@
                                                                                  style="padding-right:0px">0</span><span
                     style="padding-right:0px">)</span>张</span>
             <div class="wire wire2"></div>
-            <div class="modifier2">
+            <div class="modifier2" style="display: none;">
                 <span>查看全部内容</span>
                 <i class="chooseBtn" id="cutEle"></i>
             </div>
+            <div class="modifier22" style="display: none;">
+                <a href="../page/modifyRecords.html#positionimg">
+                    <span>修改</span>
+                </a>
+                <i class="chooseBtn" id="cutEle2"></i>
+            </div>
             <!-- 电子病历的可收缩模块 -->
             <ul class="upfileUl">
-                <!-- <li class="upfileItem clearfix">
-                    <div class="upfileContent">
-                        <div class="operateLeft">首页-封面(<span class="">0</span>张)</div>
-                        <ul class="fileContent clearfix">
-                            <li class="fileAdd">
-                                <a class="addfileBtn" href="javascript:;"></a>
-                                <input class="fileInput" type="file" multiple>
-                                <p class="fileName">添加文件</p>
-                            </li>
-                            <li class="fileItem">
-                                <div></div>
-                                <p class="fileName active">文件名字</p>
-                            </li>
-                        </ul>
-                    </div>
-                </li> -->
-            </ul>
 
+            </ul>
             <!-- 收件医生模块 -->
             <div class="hosp  ReceiptDoctor clearfix">
                 <img src="../images/selectDoc.png" alt="收件医生">
                 <span class="fw">收件医生</span>
                 <div class="wire wire3"></div>
-                <div class="modifier3">
-                    <a href="/yilaiyiwang/workbench/modifyDoctor.html">
+                <div class="modifier3" style="display: none;">
+                    <a href="../page/modifyDoctor.html">
                         <span>重新分配</span>
                     </a>
                     <i class="chooseBtn" id="cutDoc"></i>
@@ -166,7 +158,7 @@
                 <span class="fw">会诊排期</span>
                 <div class="wire wire5"></div>
                 <div class="modifier5">
-                    <a href="/yilaiyiwang/workbench/modifyDoctor.html">
+                    <a class="schedulingBtn" href="javascript:;">
                         <span>修改排期</span>
                     </a>
                     <i class="chooseBtn" id="cutSch"></i>
@@ -180,7 +172,7 @@
                 </div>
             </div>
             <!-- 会诊报告模块 -->
-            <div class="hosp  lecturer clearfix">
+            <div id="applyRecord" class="hosp  lecturer clearfix" style="display: none;">
                 <img src="../images/Presentation.png" alt="会诊报告">
                 <span class="fw">会诊报告</span>
                 <div class="wire wire7"></div>
@@ -191,37 +183,17 @@
                 </div>
             </div>
             <!-- 医嘱 -->
-            <div class="doctorEnjoinBox clearfix">
-                <img src="../images/doctorEnjoin.png" alt="会诊报告">
+            <div id="doctorEnjoin" class="doctorEnjoinBox clearfix" style="display: none;">
+                <img src="../images/doctorEnjoin.png" alt="医嘱">
                 <span>医嘱与手术备品</span>
                 <div class="wire" style="width: 980px;"></div>
             </div>
             <div class="doctorEnjoinBody">
-                <!-- <div class="chunkContent">
-                    <h2><span>01</span><p class="chunkType">长期医嘱</p></h2>
-                    <div class="oneList">
-                        <div class="oneListItem">
-                            <p class="headTop">01-药物      执行时间：2018-10-01  15:30    结束时间：2018-10-01  15:30</p>
-                            <div class="twoList">
-                                <p class="twoListItem"><b>阿斯匹林</b>      单次50mg；tid；口服</p>
-                                <p class="twoListItem"><b>阿斯匹林</b>      单次50mg；tid；口服</p>
-                            </div>
-                        </div>
-                        <p class="boundary"></p>
-                        <div class="oneListItem">
-                            <p class="headTop">01-药物      执行时间：2018-10-01  15:30    结束时间：2018-10-01  15:30</p>
-                            <div class="twoList">
-                                <p class="twoListItem"><b>阿斯匹林</b>      单次50mg；tid；口服</p>
-                            </div>
-                        </div>
-                        <p class="boundary"></p>
-                        <p class="remarkBox">备注：内容内容内容</p>
-                    </div>
-                </div> -->
+
             </div>
 
             <!-- 临床反馈模块 -->
-            <div class="hosp  tickling clearfix">
+            <div id="consultantFeedback" class="hosp  tickling clearfix" style="display: none;">
                 <img src="../images/feedback.png" alt="临床反馈">
                 <span class="fw">临床反馈</span>
                 <div class="wire wire8"></div>
@@ -338,12 +310,38 @@
 <div class="nav">
     <div class="handle">
         <input type="button" value="返回" class="getBack">
-        <input type="button" value="退回" class="sendBack">
-        <input type="button" value="审核发布" class="audit">
+        <input type="button" value="退回" class="sendBack" style="display: none;">
+        <input type="button" value="审核发布" class="audit" style="display: none;">
     </div>
 </div>
 <div class="footer marginBottom70">
     Copyright © 2018 医来医往(北京)科技有限公司
+</div>
+<!-- 视频会诊时间选择 -->
+<div class="selectTimeContainer clearfix">
+    <div class="closeBtnTime clearfix">
+        <span>关闭</span>
+        <img src="../images/close.png" alt="">
+    </div>
+    <div class="selectTimeContent clearfix">
+        <div class="leftContent">
+            <h3>发送视频会诊
+                <span>选择时间</span>
+            </h3>
+            <div class="timeBox" id="timeBox"></div>
+            <p>*选择您可接受的时间并上传，专家会根据您的选择确定最终时间</p>
+            <p>*您选择时段越多，越利于会/转诊的顺利进行</p>
+        </div>
+        <ul class="rightContent clearfix" id="timeUl">
+
+        </ul>
+        <div class="clearBox">
+            <a class="clearBtn" href="javascript:;">清空本页</a>
+        </div>
+        <div class="btnBox">
+            <a href="javascript:;" class="yesBtn">确定</a>
+        </div>
+    </div>
 </div>
 <!-- 查看大图部分 -->
 <div class="bigImgContainer clearfix">
@@ -371,6 +369,26 @@
         </div>
     </div>
     <a class="closeBtnImg" href="javascript:;">关闭</a>
+</div>
+<!-- 确定退回此订单弹层 -->
+<div class="invite inviteObj">
+    <p>确定退回此订单？</p>
+    <input type="button" value="取消" class="agin">
+    <input type="button" value="是的，&nbsp;我确定" class="yes">
+</div>
+<div class="invite auditObj">
+    <p>是否确认审核发布病历？</p>
+    <input type="button" value="取消" class="agin">
+    <input type="button" value="发布" class="yes">
+</div>
+<div class="change">
+    <p>此订单已经发生改变</p>
+</div>
+<div class="succeed">
+    <p>发布成功</p>
+</div>
+<div class="returned">
+    <p>退回成功</p>
 </div>
 </body>
 

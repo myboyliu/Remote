@@ -31,7 +31,7 @@
     <sql id="Base_Column_List">
     id, apply_number, case_record_id, case_summary, apply_summary, invite_summary,
     apply_user_id, apply_hospital_id, invite_user_id, invite_hospital_id,invite_branch_id, apply_branch_id,
-    consultant_apply_time, apply_status, apply_type, apply_remark,applyUrgent, create_time, create_user,
+    consultant_apply_time, apply_status, apply_type, apply_remark,apply_urgent, create_time, create_user,
     update_time, update_user, delete_time, delete_user, del_flag
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">

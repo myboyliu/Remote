@@ -1,5 +1,7 @@
 let isInvite;
-function renderViewByRole(applyStatus){
+let applyFormId;
+
+function renderViewByRole(applyStatus) {
     /* 动态创建进度条 */
     const statusArr = ["已拒收", '待收诊', '已排期', '会诊中', '待反馈', '已完成'];
     let str = '';
@@ -56,6 +58,13 @@ function renderViewByRole(applyStatus){
         if (applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
             //创建成功
             $(".progressBar").hide()
+            $(".sendBack").show();
+            $(".audit").show();
+            $(".modifier1").show();
+            $(".modifier3").show();
+            $(".modifier5").show();
+            // $(".modifier2").show();
+            $(".modifier22").show();
         } else if (applyStatus === "CONSULTATION_MASTER_REJECT") {
             //会诊医政已拒绝
             $('.progressBar').empty();
@@ -91,7 +100,26 @@ function renderViewByRole(applyStatus){
             $(".progressBar li:nth-child(1)").addClass("libg");
         }
     }
+    // $(".rejection").show();
+    // $(".receive").show();
+    // $(".MDTBtn").show();
+    // $(".compileReport").show();
+    // $(".entrance").show();
+    // $(".editClinicalFeedback").show();
+
+    // $("#applyRecord").show();
+    // $("#consultantFeedback").show();
+    // $("#doctorEnjoin").show();
 }
+
+/**修改会诊排期*/
+function updateApplyTime(dateList) {
+    let data = {"dateList": dateList, "applyFormId": applyFormId}
+
+    ajaxRequest("POST", "", data, false, false, true, null, null, null)
+
+}
+
 $(function () {
 
     var scaleNum = 10; // 图片缩放倍数
@@ -101,6 +129,7 @@ $(function () {
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     let applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
     isInvite = userInfo.hospitalId === applyInfo.inviteHospitalId ? true : false;
+    applyFormId = applyInfo.id;
     let applyStatus = applyInfo.applyStatus;
     console.log(userInfo);
     console.log(applyInfo);
@@ -253,7 +282,20 @@ $(function () {
         }
 
     });
+    //电子病历
+    $('.modifier22').click(function () {
 
+        $('.upfileUl').toggle(500);
+        // console.log($('#cutEle').attr("class"))
+        if ($('#cutEle').attr("class") == "chooseBtn") {
+            $('#cutEle').addClass('foundBtn');
+            $('#cutEle').removeClass('chooseBtn');
+        } else {
+            $('#cutEle').addClass('chooseBtn');
+            $('#cutEle').removeClass(' foundBtn');
+        }
+
+    });
     //  收件医生
     $('#cutDoc').click(function () {
         $(this).toggleClass("foundBtn");
@@ -386,231 +428,10 @@ $(function () {
     // }
 
 
-
-
-
-    // 图片点击查看大图
-    var objParent = null; // 当前点击块的父级
-    var fileArr = []; // 当前点击块的文件数据
-    var indexFile = 0; // 当前点击的索引
-    var ObjArr = []; //  当前点击块的文件对象
-    $('.upfileUl').delegate('.fileItem', 'click', function () {
-        var $ = layui.jquery;
-        // 弹出层
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['1167px', '700px'], skin: "noBackground",
-            closeBtn: false,
-            shade: [0.7, '#000000'],
-            shadeClose: false,
-            scrollbar: false,
-            content: $('.bigImgContainer'),
-        });
-        // 整理一组图片展示数据
-
-        objParent = $(this).parent('.fileContent');
-        indexFile = $(this).index();
-        ObjArr = $(this).parent('.fileContent').find('.fileItem');
-        for (var i = 0; i < ObjArr.length; i++) {
-            fileArr.push({
-                'id': ObjArr.eq(i).attr('id'),
-                'name': ObjArr.eq(i).find('p').html(),
-                'type': ObjArr.eq(i).find('p').attr('type'),
-                'src': ObjArr.eq(i).find('div').css('backgroundImage'),
-                'desc': ObjArr.eq(i).find('p').attr('desc'),
-                'filePath': ObjArr.eq(i).attr('filepath'),
-            });
-        }
-        $('.bigImgContainer').find('.bigImg').css({
-            "top": 0,
-            "left": 0,
-            "transform": "scale(1)",
-        })
-        if (fileArr[indexFile].type != 'img') {
-            // pdf dcm
-            $('.bigImgContainer').find('.bigImg').addClass('bgSize');
-            if (fileArr[indexFile].type == 'pdf') {
-                PDFObject.embed(imgIp + fileArr[indexFile].filePath, ".bigImg", {
-                    page: "1"
-                });
-                $('.downlodeFile').hide();
-
-            } else {
-                // dcm 相关操作
-                // 1、显示下载按钮
-                // 2、imgIp + fileArr[indexFile].filePath 下载路径
-                // 3、清空 .bigImg 的内容，显示背景
-                $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', imgIp + fileArr[indexFile].filePath);
-                $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
-            }
-        } else {
-            $('.downlodeFile').hide();
-            $('.bigImgContainer').find('.bigImg').removeClass('bgSize').html('');
-
-        }
-        $('.bigImgContainer').find('.bigImg').css('backgroundImage', fileArr[indexFile].src);
-        $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
-        $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
-
-    });
-
-
-    // 上一个
-    $('.switchBox .prev').click(function () {
-        if (indexFile <= 0) {
-            indexFile = 0;
-        } else {
-            indexFile--;
-        }
-        if (fileArr[indexFile].type != 'img') {
-            // pdf dcm
-            $('.bigImgContainer').find('.bigImg').addClass('bgSize');
-            if (fileArr[indexFile].type == 'pdf') {
-                // pdf 相关操作
-                // 1、往 .bigImg 渲染pdf
-                PDFObject.embed(imgIp + fileArr[indexFile].filePath, ".bigImg", {
-                    page: "1"
-                });
-                $('.downlodeFile').hide();
-
-            } else {
-                // dcm 相关操作
-                // 1、显示下载按钮
-                // 2、imgIp + fileArr[indexFile].filePath 下载路径
-                // 3、清空 .bigImg 的内容，显示背景
-                $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', imgIp + fileArr[indexFile].filePath);
-                $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
-            }
-        } else {
-            // 图片的相关操作
-            $('.downlodeFile').hide();
-            $('.bigImgContainer').find('.bigImg').removeClass('bgSize').html(' ');
-            ;
-        }
-        $('.bigImgContainer').find('.bigImg').css({
-            "top": 0,
-            "left": 0,
-            "transform": "scale(1)",
-        })
-        scaleNum = 10;
-        $('.bigImgContainer').find('.bigImg').css('backgroundImage', fileArr[indexFile].src);
-        $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
-        $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
-
-
+    // 修改排期
+    $('.schedulingBtn').click(function () {
+        showDateView(applyTimeList);
     })
-    // 下一个
-    $('.switchBox .next').click(function () {
-        if (indexFile >= fileArr.length - 1) {
-            indexFile = fileArr.length - 1;
-        } else {
-            indexFile++;
-        }
-        if (fileArr[indexFile].type != 'img') {
-            $('.bigImgContainer').find('.bigImg').addClass('bgSize');
-            if (fileArr[indexFile].type == 'pdf') {
-                PDFObject.embed(imgIp + fileArr[indexFile].filePath, ".bigImg", {
-                    page: "1"
-                });
-                $('.downlodeFile').hide();
-
-            } else {
-                // dcm 相关操作
-                // 1、显示下载按钮
-                // 2、imgIp + fileArr[indexFile].filePath 下载路径
-                // 3、清空 .bigImg 的内容，显示背景
-                $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', imgIp + fileArr[indexFile].filePath);
-                $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
-            }
-        } else {
-            $('.downlodeFile').hide();
-            $('.bigImgContainer').find('.bigImg').removeClass('bgSize').html(' ');
-        }
-        $('.bigImgContainer').find('.bigImg').css({
-            "top": 0,
-            "left": 0,
-            "transform": "scale(1)",
-        })
-        scaleNum = 10;
-        $('.bigImgContainer').find('.bigImg').css('backgroundImage', fileArr[indexFile].src);
-        $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
-        $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
-
-    });
-    // 关闭
-    $('.closeBtnImg').click(function () {
-        layer.closeAll();
-        $('.bigImgContainer').hide();
-        var _html = '';
-        for (var i = 0; i < fileArr.length; i++) {
-            _html += `<li class="fileItem fileNewItem" id="${fileArr[i].id}" filePath="${fileArr[i].filePath}">`;
-            if (fileArr[i].type != 'img') {
-                _html += `<div class="bgSize" style='background-image:${fileArr[i].src};'></div>`
-            } else {
-                _html += `<div style='background-image:${fileArr[i].src};'></div>`
-            }
-            if (fileArr[i].desc == '') {
-                _html += '<p type="' + fileArr[i].type + '" desc="" class="fileName">' + fileArr[i].name + '</p>';
-            } else {
-                _html += '<p type="' + fileArr[i].type + '" desc="' + fileArr[i].desc + '" class="fileName active">' + fileArr[i].name + '</p>';
-            }
-            _html += '</li>'
-        }
-        objParent.html(_html);
-        selectFileArr = [];
-        objParent = null; // 当前点击块的父级
-        fileArr = []; // 当前点击块的文件数据
-        indexFile = 0; // 当前点击的索引
-        ObjArr = []; //  当前点击块的文件对象
-    });
-    // 图片缩放 拖拽
-    $('.bigImgBox').on("mousewheel DOMMouseScroll", function (e) {
-        if (!$('.bigImgBox .bigImg').hasClass('bgSize')) {
-            var delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) || // chrome & ie
-                (e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1)); // firefox
-            if (delta > 0) {
-                // 向上滚
-                if (scaleNum <= 50) {
-                    scaleNum += 2
-                }
-            } else if (delta < 0) {
-                // 向下滚
-                if (scaleNum > 4) {
-                    scaleNum -= 2
-                }
-            }
-            $('.bigImg').css('transform', 'scale(' + scaleNum / 10 + ')')
-        }
-    });
-    $('.bigImgBox').on('mousedown', function (e) {
-        if (!$('.bigImgBox .bigImg').hasClass('bgSize')) {
-            var x = e.clientX - parseInt($('.bigImg').css('left'));
-            var y = e.clientY - parseInt($('.bigImg').css('top'));
-            $('.bigImgBox').on('mousemove', function (e) {
-                var newX = e.clientX;
-                var newY = e.clientY;
-                console.log(newY - y)
-                $('.bigImg').css({
-                    'top': newY - y + 'px',
-                    'left': newX - x + 'px',
-                });
-            })
-        }
-    })
-    $('.bigImgBox').on('mouseup', function (e) {
-        $('.bigImgBox').unbind('mousemove');
-    })
-    $('.bigImgBox').on('mouseleave', function () {
-        $('.bigImgBox').unbind('mousemove');
-    })
-    // 图片缩放 拖拽 结束
-
-
-
     // //   收件人信息
     // var recipientsArr = data.orderDoctorsList;
     // var _html = '';
@@ -705,10 +526,65 @@ $(function () {
     // }
     // $('.layui-timeline').html(_html);
 
+    /**  退回按钮弹出层 */
+    $('.sendBack').click(function () {
+        var $ = layui.jquery;
+        // 弹出层
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['500px', '200px'],
+            closeBtn: false,
+            shade: [0.7, '#000000'],
+            shadeClose: false,
+            content: $('.inviteObj') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+        });
+    });
+    // 弹出层取消按钮
+    $(".inviteObj").find('.agin').click(function () {
+        layer.closeAll();
+        $('.inviteObj').hide();
+    });
+    // 弹出层是的按钮
+    $(".inviteObj").find('.yes').click(function () {
+        let data = new FormData();
+        data.append("id", applyFormId);
+        ajaxRequest("POST", sirSendCheckReject, data, false, false, true, sirSendCheckRejectSuccess, null, null)
+        function sirSendCheckRejectSuccess(result){
+            console.log(result);
+        }
+    });
 
-    /* 返回按钮 */
+    /** 返回按钮 */
     $('.getBack').click(function () {
         window.location = '../page/administrator.html'
+    });
+    /** 审核发布按钮接口 */
+    $('.audit').click(function () {
+        var $ = layui.jquery;
+        // 弹出层
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['500px', '200px'],
+            closeBtn: false,
+            shade: [0.7, '#000000'],
+            shadeClose: false,
+            content: $('.auditObj') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+        });
+
+    })
+    $(".auditObj").find(".agin").click(function () {
+        layer.closeAll();
+        $('.auditObj').hide();
+    });
+    $(".auditObj").find(".yes").click(function () {
+        let data = new FormData();
+        data.append("id", applyFormId);
+        ajaxRequest("POST", sirSendCheckAccede, data, false,false, true, sirSendCheckAccedeSuccess, null, null)
+        function sirSendCheckAccedeSuccess(result){
+            console.log(result);
+        }
     });
 
     renderViewByRole(applyStatus);

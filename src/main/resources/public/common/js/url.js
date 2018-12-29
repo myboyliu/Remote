@@ -86,5 +86,12 @@ const getApplyOngoingByAdminUrl = "/apply/consultation/sirSendBegin"            
 const getApplyFeedbackByAdminUrl = "/apply/consultation/sirSendReportSubmitted"             // 查询发起的列表 待反馈   列表
 const getApplyRejectByAdminUrl = "/apply/consultation/sirSendMasterReject"               // 查询发起的列表 已拒收   列表
 const getApplyDoneByAdminUrl = "/apply/consultation/sirSendEnd"                  // 查询发起的列表 已结束   列表
+/** 医政查询受邀的申请列表查询 接口 */
+const sirReceiveApplyAccede = "/apply/consultation/sirReceiveApplyAccede"               // 查询发起的列表 待收诊   列表
+
+/**首诊医政操作接口*/
+
+const sirSendCheckAccede = "/apply/dispose/sirSendCheckAccede"; //通过会诊申请接口
+const sirSendCheckReject = "/apply/dispose/sirSendCheckReject"; //回退会诊申请接口
 
 
