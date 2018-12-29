@@ -20,7 +20,7 @@ public class CaseConsultantService implements BaseService<CaseConsultant> {
 
     @Override
     public int deleteByPrimaryKey(String id) {
-        return 0;
+        return caseConsultantMapper.deleteByPrimaryKey(id);
     }
 
     @Override
