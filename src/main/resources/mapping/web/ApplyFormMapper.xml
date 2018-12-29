@@ -433,7 +433,7 @@
             <if test="createUser != null">
                 create_user = #{createUser,jdbcType=VARCHAR},
             </if>
-            update_time = new(),
+            update_time = now(),
             <if test="updateUser != null">
                 update_user = #{updateUser,jdbcType=VARCHAR},
             </if>
