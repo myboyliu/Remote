@@ -281,10 +281,7 @@ public class ApplyDisposeController extends BaseController {
         }
 
         // 删除CaseConsultant表对应字段
-        int k = caseConsultantService.deleteByPrimaryKey(id);
-        if (k < 1) {
-            return badRequestOfArguments("删除CaseConsultant失败");
-        }
+        caseConsultantService.deleteByPrimaryKey(id);
 
         // 设置applyForm类型为草稿
         ApplyForm applyForm = new ApplyForm();
