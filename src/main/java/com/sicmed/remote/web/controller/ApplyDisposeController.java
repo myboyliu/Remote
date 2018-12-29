@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(value = "apply/dispose")
@@ -137,17 +136,16 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 会诊 更新申请状态
      *
-     * @param applyForm
-     * @param applyTime
+     * @param id
      * @param applyStatus
      * @param msg1
      * @param msg2
      * @param report
      */
-    public Map updateStatus(ApplyForm applyForm, ApplyTime applyTime, String applyStatus, String msg1,
+    public Map updateStatus(String id, String applyStatus, String msg1,
                             String msg2, String report) {
 
-        if (StringUtils.isBlank(applyForm.getId())) {
+        if (StringUtils.isBlank(id)) {
             return badRequestOfArguments("applyForm.id is null");
         }
 
@@ -157,7 +155,7 @@ public class ApplyDisposeController extends BaseController {
         if (StringUtils.isNotBlank(report)) {
 
             CaseConsultant caseConsultant = new CaseConsultant();
-            caseConsultant.setId(applyForm.getId());
+            caseConsultant.setId(id);
             caseConsultant.setConsultantReport(report);
             caseConsultant.setUpdateUser(userId);
             int i = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
@@ -166,11 +164,14 @@ public class ApplyDisposeController extends BaseController {
             }
         }
 
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setId(id);
         int i = applyFormService.updateStatus(applyForm, applyStatus, userId);
         if (i < 1) {
             return badRequestOfArguments(msg1);
         }
 
+        ApplyTime applyTime = new ApplyTime();
         applyTime.setApplyFormId(applyForm.getId());
         applyTime.setApplyStatus(applyStatus);
         applyTime.setUpdateUser(userId);
@@ -186,26 +187,25 @@ public class ApplyDisposeController extends BaseController {
      * 医政 受邀会诊 拒收
      */
     @PostMapping(value = "sirReceiveMasterReject")
-    public Map sirConsultationMasterReject(ApplyForm applyForm, ApplyTime applyTime, String report) {
+    public Map sirConsultationMasterReject(String id, String report) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_REJECT);
 
         String msg1 = "受邀会诊收诊医政拒收,form修改失败";
         String msg2 = "受邀会诊收诊医政拒收,time修改失败";
 
-        return updateStatus(applyForm, applyTime, applyStatus, msg1, msg2, report);
+        return updateStatus(id, applyStatus, msg1, msg2, report);
     }
 
     /**
      * 医政 受邀会诊 待收诊 接收
      */
     @PostMapping(value = "sirReceiveMasterAccede")
-    public Map sirConsultationMasterAccede(ApplyForm applyForm, ApplyTime applyTime, String report) {
+    public Map sirConsultationMasterAccede(String id, String applyType) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_ACCEDE);
 
         // 图文会诊接收后立刻变为会诊中
-        String applyType = applyForm.getApplyType();
         String resultType = String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT);
         if (resultType.equals(applyType)) {
             applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
@@ -214,20 +214,20 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "受邀会诊收诊医政待收诊接受,form修改失败";
         String msg2 = "受邀会诊收诊医政待收诊接受,time修改失败";
 
-        return updateStatus(applyForm, applyTime, applyStatus, msg1, msg2, report);
+        return updateStatus(id, applyStatus, msg1, msg2, null);
     }
 
     /**
      * 医政 受邀会诊  排期审核 接收
      */
     @PostMapping(value = "sirReceiveDateCheckAccede")
-    public Map sirDateCheckAccede(ApplyForm applyForm, ApplyTime applyTime, String report) {
+    public Map sirDateCheckAccede(String id) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
         String msg1 = "受邀会诊收诊医政排期审核接受,form修改失败";
         String msg2 = "受邀会诊收诊医政排期审核接受,time修改失败";
 
-        return updateStatus(applyForm, applyTime, applyStatus, msg1, msg2, report);
+        return updateStatus(id, applyStatus, msg1, msg2, null);
     }
 
 
@@ -235,12 +235,11 @@ public class ApplyDisposeController extends BaseController {
      * 医政 受邀会诊 砖家协调 确认协调
      */
     @PostMapping(value = "sirReceiveHarmonizeAccede")
-    public Map sirReceiveHarmonizeAccede(ApplyForm applyForm, ApplyTime applyTime, String report) {
+    public Map sirReceiveHarmonizeAccede(String id, String applyType) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
 
         // 图文会诊砖家协调后立刻变为会诊中
-        String applyType = applyForm.getApplyType();
         String resultType = String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT);
         if (resultType.equals(applyType)) {
             applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
@@ -249,51 +248,52 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "受邀会诊收诊医政确认砖家协调,form修改失败";
         String msg2 = "受邀会诊收诊医政确认砖家协调,time修改失败";
 
-        return updateStatus(applyForm, applyTime, applyStatus, msg1, msg2, report);
+        return updateStatus(id, applyStatus, msg1, msg2, null);
     }
 
     /**
      * 医政 发出会诊 待审核 通过
      */
     @PostMapping(value = "sirSendCheckAccede")
-    public Map sirSendCheckAccede(ApplyForm applyForm, ApplyTime applyTime, String report) {
+    public Map sirSendCheckAccede(String id) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_ACCEDE);
         String msg1 = "发出会诊医政待审核通过,form修改失败";
         String msg2 = "发出会诊医政待审核通过,time修改失败";
 
-        return updateStatus(applyForm, applyTime, applyStatus, msg1, msg2, report);
+        return updateStatus(id, applyStatus, msg1, msg2, null);
     }
 
     /**
      * 医政 发出会诊 待审核 退回
      */
     @PostMapping(value = "sirSendCheckReject")
-    public Map sirSendCheckReject(ApplyForm applyForm) {
+    public Map sirSendCheckReject(String id, String applyType) {
 
-        if (StringUtils.isBlank(applyForm.getId())) {
+        if (StringUtils.isBlank(id)) {
             return badRequestOfArguments("applyFormId is null");
         }
 
         // 删除applyFormId对应的applyTime表中字段
-        int j = applyTimeService.delByApplyForm(applyForm.getId());
+        int j = applyTimeService.delByApplyForm(id);
         if (j < 1) {
             return badRequestOfArguments("删除applyTime失败");
         }
 
         // 删除CaseConsultant表对应字段
-        String applyTypeO = String.valueOf(ApplyType.APPLY_REFERRAL);
-        if (!applyTypeO.equals(applyForm.getApplyType())) {
-            int k = caseConsultantService.deleteByPrimaryKey(applyForm.getId());
+        String applyType1 = String.valueOf(ApplyType.APPLY_REFERRAL);
+        if (!applyType1.equals(applyType)) {
+            int k = caseConsultantService.deleteByPrimaryKey(id);
             if (k < 1) {
                 return badRequestOfArguments("删除CaseConsultant失败");
             }
         }
 
         // 设置applyForm类型为草稿
+        ApplyForm applyForm = new ApplyForm();
         String userId = getRequestToken();
-        String applyType = String.valueOf(ApplyType.APPLY_DRAFT);
-        applyForm.setApplyType(applyType);
+        String applyType2 = String.valueOf(ApplyType.APPLY_DRAFT);
+        applyForm.setApplyType(applyType2);
         applyForm.setUpdateUser(userId);
         int i = applyFormService.updateByPrimaryKeySelective(applyForm);
         if (i < 1) {
