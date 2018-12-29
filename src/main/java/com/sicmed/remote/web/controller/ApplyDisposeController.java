@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.controller;
 
+import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.ApplyTime;
@@ -144,6 +145,14 @@ public class ApplyDisposeController extends BaseController {
     public Map sirConsultationMasterAccede(ApplyForm applyForm, ApplyTime applyTime, String report) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_ACCEDE);
+
+        // 图文会诊接收后立刻变为会诊中
+        String applyType = applyForm.getApplyType();
+        String resultType = String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT);
+        if (resultType.equals(applyType)) {
+            applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
+        }
+
         String msg1 = "受邀会诊收诊医政待收诊接受,form修改失败";
         String msg2 = "受邀会诊收诊医政待收诊接受,time修改失败";
 
@@ -171,10 +180,18 @@ public class ApplyDisposeController extends BaseController {
     public Map sirReceiveHarmonizeAccede(ApplyForm applyForm, ApplyTime applyTime, String report) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
+
+        // 图文会诊砖家协调后立刻变为会诊中
+        String applyType = applyForm.getApplyType();
+        String resultType = String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT);
+        if (resultType.equals(applyType)) {
+            applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
+        }
+
         String msg1 = "受邀会诊收诊医政确认砖家协调,form修改失败";
         String msg2 = "受邀会诊收诊医政确认砖家协调,time修改失败";
 
         return updateStatus(applyForm, applyTime, applyStatus, msg1, msg2, report);
     }
-    
+
 }
