@@ -14,6 +14,7 @@ import com.sicmed.remote.web.entity.CaseConsultant;
 import com.sicmed.remote.web.service.ApplyFormService;
 import com.sicmed.remote.web.service.ApplyTimeService;
 import com.sicmed.remote.web.service.CaseConsultantService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "apply/dispose")
 public class ApplyDisposeController extends BaseController {
@@ -170,14 +172,16 @@ public class ApplyDisposeController extends BaseController {
         if (i < 1) {
             return badRequestOfArguments(msg1);
         }
-
-        ApplyTime applyTime = new ApplyTime();
-        applyTime.setApplyFormId(applyForm.getId());
-        applyTime.setApplyStatus(applyStatus);
-        applyTime.setUpdateUser(userId);
-        int j = applyTimeService.updateStatus(applyTime);
-        if (j < 1) {
-            return badRequestOfArguments(msg2);
+        applyForm = applyFormService.getByPrimaryKey(id);
+        if (ApplyType.APPLY_CONSULTATION_VIDEO.toString().equals(applyForm.getApplyType())) {
+            ApplyTime applyTime = new ApplyTime();
+            applyTime.setApplyFormId(applyForm.getId());
+            applyTime.setApplyStatus(applyStatus);
+            applyTime.setUpdateUser(userId);
+            int j = applyTimeService.updateStatus(applyTime);
+            if (j < 1) {
+                return badRequestOfArguments(msg2);
+            }
         }
         return succeedRequest(applyForm);
     }
