@@ -268,7 +268,7 @@ public class ApplyDisposeController extends BaseController {
      * 医政 发出会诊 待审核 退回
      */
     @PostMapping(value = "sirSendCheckReject")
-    public Map sirSendCheckReject(String id, String applyType) {
+    public Map sirSendCheckReject(String id) {
 
         if (StringUtils.isBlank(id)) {
             return badRequestOfArguments("applyFormId is null");
@@ -281,12 +281,9 @@ public class ApplyDisposeController extends BaseController {
         }
 
         // 删除CaseConsultant表对应字段
-        String applyType1 = String.valueOf(ApplyType.APPLY_REFERRAL);
-        if (!applyType1.equals(applyType)) {
-            int k = caseConsultantService.deleteByPrimaryKey(id);
-            if (k < 1) {
-                return badRequestOfArguments("删除CaseConsultant失败");
-            }
+        int k = caseConsultantService.deleteByPrimaryKey(id);
+        if (k < 1) {
+            return badRequestOfArguments("删除CaseConsultant失败");
         }
 
         // 设置applyForm类型为草稿
