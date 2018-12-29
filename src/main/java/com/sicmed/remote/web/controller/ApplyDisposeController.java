@@ -287,6 +287,7 @@ public class ApplyDisposeController extends BaseController {
         ApplyForm applyForm = new ApplyForm();
         String userId = getRequestToken();
         String applyType2 = String.valueOf(ApplyType.APPLY_DRAFT);
+        applyForm.setId(id);
         applyForm.setApplyType(applyType2);
         applyForm.setUpdateUser(userId);
         int i = applyFormService.updateByPrimaryKeySelective(applyForm);
