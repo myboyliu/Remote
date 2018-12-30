@@ -136,7 +136,7 @@ public class ApplyDisposeController extends BaseController {
     // 医政 工作台 修改价格 数据库暂无表格
 
     /**
-     * 医政 会诊 更新申请状态
+     * 医政 会诊 转诊 更新申请状态
      *
      * @param id
      * @param applyStatus
@@ -173,7 +173,8 @@ public class ApplyDisposeController extends BaseController {
             return badRequestOfArguments(msg1);
         }
         applyForm = applyFormService.getByPrimaryKey(id);
-        if (ApplyType.APPLY_CONSULTATION_VIDEO.toString().equals(applyForm.getApplyType())) {
+        if (ApplyType.APPLY_CONSULTATION_VIDEO.toString().equals(applyForm.getApplyType()) ||
+                ApplyType.APPLY_REFERRAL.toString().equals(applyForm.getApplyType())) {
             ApplyTime applyTime = new ApplyTime();
             applyTime.setApplyFormId(applyForm.getId());
             applyTime.setApplyStatus(applyStatus);
@@ -299,5 +300,111 @@ public class ApplyDisposeController extends BaseController {
             return badRequestOfArguments("医政发出会诊待审核退回修改applyForm失败");
         }
         return succeedRequest(applyForm);
+    }
+
+    /**
+     * 医政 转诊 待审核 审核通过
+     */
+    @PostMapping(value = "sirTransferCheckAccede")
+    public Map sirTransferCheckAccede(String id) {
+
+        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_APPLY_ACCEDE);
+        String msg1 = "转诊医政待审核通过,form修改失败";
+        String msg2 = "转诊医政待审核通过,time修改失败";
+
+        return updateStatus(id, applyStatus, msg1, msg2, null);
+    }
+
+    /**
+     * 医政 转诊 待审核 拒绝
+     */
+    @PostMapping(value = "sirTransferCheckReject")
+    public Map sirTransferCheckReject(String id, String report) {
+
+        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_APPLY_REJECT);
+        String msg1 = "转诊医政待审核拒绝,form修改失败";
+        String msg2 = "转诊医政待审核拒绝,time修改失败";
+
+        return updateStatus(id, applyStatus, msg1, msg2, report);
+    }
+
+    /**
+     * 医政 转诊 代收诊 同意
+     */
+    @PostMapping(value = "sirTransferMasterAccede")
+    public Map sirTransferMasterAccede(String id) {
+
+        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_MASTER_ACCEDE);
+        String msg1 = "转诊医政待收诊同意,form修改失败";
+        String msg2 = "转诊医政待收诊同意,time修改失败";
+
+        return updateStatus(id, applyStatus, msg1, msg2, null);
+    }
+
+    /**
+     * 医政 转诊 代收诊 拒绝
+     */
+    @PostMapping(value = "sirTransferMasterReject")
+    public Map sirTransferMasterReject(String id, String report) {
+
+        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_MASTER_REJECT);
+        String msg1 = "转诊医政待收诊拒绝,form修改失败";
+        String msg2 = "转诊医政待收诊拒绝,time修改失败";
+
+        return updateStatus(id, applyStatus, msg1, msg2, report);
+    }
+
+    /**
+     * 医政 转诊 排期审核 同意
+     */
+    @PostMapping(value = "sirTransferDateCheckAccede")
+    public Map sirTransferDateCheckAccede(String id) {
+
+        // 选定转诊时间
+        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED);
+        String msg1 = "转诊医政排期审核同意,form修改失败";
+        String msg2 = "转诊医政排期审核同意,time修改失败";
+
+        return updateStatus(id, applyStatus, msg1, msg2, null);
+    }
+
+    /**
+     * 医政 转诊 排期审核 拒绝
+     */
+    @PostMapping(value = "sirTransferDateCheckReject")
+    public Map sirTransferDateCheckReject(String id, String report) {
+
+        // 选定转诊时间
+        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_MASTER_REJECT);
+        String msg1 = "转诊医政排期审核拒绝,form修改失败";
+        String msg2 = "转诊医政排期审核拒绝,time修改失败";
+
+        return updateStatus(id, applyStatus, msg1, msg2, report);
+    }
+
+    /**
+     * 医政 转诊 已排期 同意
+     */
+    @PostMapping(value = "sirTransferDateAccede")
+    public Map sirTransferDateAccede(String id) {
+
+        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SENDER_CONFIRM);
+        String msg1 = "转诊医政排期审核拒绝,form修改失败";
+        String msg2 = "转诊医政排期审核拒绝,time修改失败";
+
+        return updateStatus(id, applyStatus, msg1, msg2, null);
+    }
+
+    /**
+     * 医政 转诊 已排期 取消
+     */
+    @PostMapping(value = "sirTransferDateReject")
+    public Map sirTransferDateReject(String id, String report) {
+
+        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SENDER_CANCEL);
+        String msg1 = "转诊医政排期审核拒绝,form修改失败";
+        String msg2 = "转诊医政排期审核拒绝,time修改失败";
+
+        return updateStatus(id, applyStatus, msg1, msg2, report);
     }
 }
