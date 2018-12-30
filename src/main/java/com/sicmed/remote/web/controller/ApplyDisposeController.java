@@ -441,6 +441,10 @@ public class ApplyDisposeController extends BaseController {
     }
 
     /**
+     * 医生 受邀会诊 会诊中 编辑会诊报告 暂存
+     */
+
+    /**
      * 医生 发出会诊 带反馈 编辑会诊报告 暂存
      */
     @PostMapping(value = "doctorSendFeedbackMoment")
