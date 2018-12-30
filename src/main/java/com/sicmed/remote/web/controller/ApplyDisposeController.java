@@ -441,46 +441,63 @@ public class ApplyDisposeController extends BaseController {
     }
 
     /**
-     * 医生 受邀会诊 会诊中 编辑会诊报告 暂存
+     * 医生 发出会诊 带反馈 编辑临床反馈 暂存 /医生 受邀会诊 会诊中 编辑会诊报告 暂存
      */
-
-    /**
-     * 医生 发出会诊 带反馈 编辑会诊报告 暂存
-     */
-    @PostMapping(value = "doctorSendFeedbackMoment")
-    public Map doctorSendFeedbackMoment(String id, String consultantFeedback) {
+    @PostMapping(value = "doctorSendFeedbackReportMoment")
+    public Map doctorSendFeedbackReportMoment(String id, String consultantFeedback, String report) {
 
         String userId = getRequestToken();
 
         CaseConsultant caseConsultant = new CaseConsultant();
         caseConsultant.setId(id);
-        caseConsultant.setConsultantFeedback(consultantFeedback);
+        if (StringUtils.isNotBlank(consultantFeedback)) {
+            caseConsultant.setConsultantFeedback(consultantFeedback);
+        }
+        if (StringUtils.isNotBlank(report)) {
+            caseConsultant.setConsultantReport(report);
+        }
         caseConsultant.setUpdateUser(userId);
         int k = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
         if (k < 1) {
-            return badRequestOfArguments("发出会诊医生待反馈暂存会诊报告,CaseConsultant修改失败");
+            return badRequestOfArguments("CaseConsultant修改失败");
         }
-        return succeedRequest("发出会诊医生待反馈暂存会诊报告暂存成功");
+        return succeedRequest(caseConsultant);
     }
 
     /**
-     * 医生 发出会诊 带反馈 编辑会诊报告 提交
+     * 医生 发出会诊 带反馈 编辑临床反馈 提交 /医生 受邀会诊 会诊中 编辑会诊报告 提交
      */
-    @PostMapping(value = "doctorSendFeedback")
-    public Map doctorSendFeedback(String id, String consultantFeedback) {
+    @PostMapping(value = "doctorSendFeedbackReport")
+    public Map doctorSendFeedbackReport(String id, String consultantFeedback, String report) {
 
         if (StringUtils.isBlank(id)) {
             return badRequestOfArguments("applyForm.id is null");
         }
 
         String userId = getRequestToken();
-        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_FEEDBACK_SUBMITTED);
+        String applyStatus = null;
+
+        CaseConsultant caseConsultant = new CaseConsultant();
+        caseConsultant.setId(id);
+        if (StringUtils.isNotBlank(consultantFeedback)) {
+            applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_FEEDBACK_SUBMITTED);
+            caseConsultant.setConsultantFeedback(consultantFeedback);
+        }
+        if (StringUtils.isNotBlank(report)) {
+            applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_REPORT_SUBMITTED);
+            caseConsultant.setConsultantReport(report);
+        }
+        caseConsultant.setUpdateUser(userId);
+        int k = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
+        if (k < 1) {
+            return badRequestOfArguments("CaseConsultant修改失败");
+        }
 
         ApplyForm applyForm = new ApplyForm();
         applyForm.setId(id);
         int i = applyFormService.updateStatus(applyForm, applyStatus, userId);
         if (i < 1) {
-            return badRequestOfArguments("发出会诊医生待反馈提交会诊报告,form修改失败");
+            return badRequestOfArguments("form修改失败");
         }
 
         applyForm = applyFormService.getByPrimaryKey(id);
@@ -491,18 +508,10 @@ public class ApplyDisposeController extends BaseController {
             applyTime.setUpdateUser(userId);
             int j = applyTimeService.updateStatus(applyTime);
             if (j < 1) {
-                return badRequestOfArguments("发出会诊医生待反馈提交会诊报告,time修改失败");
+                return badRequestOfArguments("time修改失败");
             }
         }
 
-        CaseConsultant caseConsultant = new CaseConsultant();
-        caseConsultant.setId(id);
-        caseConsultant.setConsultantFeedback(consultantFeedback);
-        caseConsultant.setUpdateUser(userId);
-        int k = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
-        if (k < 1) {
-            return badRequestOfArguments("发出会诊医生待反馈提交会诊报告,CaseConsultant修改失败");
-        }
 
         return succeedRequest(applyForm);
     }
