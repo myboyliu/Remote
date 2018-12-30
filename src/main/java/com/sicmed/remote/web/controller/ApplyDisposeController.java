@@ -71,14 +71,14 @@ public class ApplyDisposeController extends BaseController {
         }
 
         int j = applyTimeService.delByApplyForm(applyTime.getApplyFormId());
-        if (j < 1) {
+        if (j < 0) {
             return badRequestOfArguments("删除原applyTime失败");
         }
 
         String userId = getRequestToken();
 
-        applyTime.setUpdateUser(userId);
-        int k = applyTimeService.updateByForm(applyTime);
+        applyTime.setCreateUser(userId);
+        int k = applyTimeService.insertSelective(applyTime);
         if (k < 1) {
             return badRequestOfArguments("确认时间,time修改失败");
         }
@@ -407,6 +407,37 @@ public class ApplyDisposeController extends BaseController {
         String msg2 = "转诊医政排期审核拒绝,time修改失败";
 
         return updateStatus(id, applyStatus, msg1, msg2, report);
+    }
+
+    /**
+     * 医生 受邀会诊 代收诊 拒收
+     */
+    @PostMapping(value = "doctor")
+    public Map doctorReceiveReject(String id, String report) {
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_REJECT);
+        String msg1 = "受邀胡子很医生拒收,form修改失败";
+        String msg2 = "受邀胡子很医生拒收,time修改失败";
+
+        return updateStatus(id, applyStatus, msg1, msg2, report);
+    }
+
+    /**
+     * 医生 受邀会诊 代收诊 MDT协调
+     */
+    @PostMapping(value = "doctorReceiveAccede")
+    public Map doctorReceiveAccede(String id, String consultantUserList) {
+
+        CaseConsultant caseConsultant = new CaseConsultant();
+        caseConsultant.setConsultantUserList(consultantUserList);
+        caseConsultant.setId(id);
+        caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE);
+        String msg1 = "受邀胡子很医生拒收,form修改失败";
+        String msg2 = "受邀胡子很医生拒收,time修改失败";
+
+        return updateStatus(id, applyStatus, msg1, msg2, null);
     }
 
     /**
