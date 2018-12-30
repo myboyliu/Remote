@@ -36,6 +36,7 @@ public class ApplyFormBean extends ApplyForm implements Serializable {
     private String consultantFeedback;
     private BigDecimal consultantPrice;
     private BigDecimal hospitalPrice;
+    private String consultantUserList;
 
 
     private String detailAddress;

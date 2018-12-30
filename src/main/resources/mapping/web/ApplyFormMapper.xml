@@ -163,6 +163,7 @@
         <result column="cctconsultantFeedback" jdbcType="VARCHAR" property="consultantFeedback"/>
         <result column="cctconsultantPrice" jdbcType="VARCHAR" property="consultantPrice"/>
         <result column="ccthospitalPrice" jdbcType="VARCHAR" property="hospitalPrice"/>
+        <result column="consultantUserList" jdbcType="VARCHAR" property="consultantUserList"/>
 
         <collection property="applyTimeList" ofType="com.sicmed.remote.web.entity.ApplyTime" javaType="ArrayList">
             <result column="ayteventStartTime" jdbcType="TIMESTAMP" property="eventStartTime"/>
@@ -192,7 +193,8 @@
         cc.content_remark cccontentRemark,cc.id ccid,
         cct.consultant_start_time cctconsultantStartTime,cct.consultant_end_time  cctconsultantEndTime,
         cct.consultant_report cctconsultantReport,cct.consultant_feedback cctconsultantFeedback,
-        cct.consultant_price cctconsultantPrice,cct.hospital_price ccthospitalPrice
+        cct.consultant_price cctconsultantPrice,cct.hospital_price ccthospitalPrice,
+        cct.consultant_user_list consultantUserList
     </sql>
     <select id="detailById" parameterType="java.lang.String" resultMap="BeanResultMap">
         select
