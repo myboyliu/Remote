@@ -17,6 +17,7 @@ import com.sicmed.remote.web.service.CaseConsultantService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -407,4 +408,108 @@ public class ApplyDisposeController extends BaseController {
 
         return updateStatus(id, applyStatus, msg1, msg2, report);
     }
+
+    /**
+     * 医生 发出会诊 带反馈 编辑会诊报告 暂存
+     */
+    @PostMapping(value = "doctorSendFeedbackMoment")
+    public Map doctorSendFeedbackMoment(String id, String consultantFeedback) {
+
+        String userId = getRequestToken();
+
+        CaseConsultant caseConsultant = new CaseConsultant();
+        caseConsultant.setId(id);
+        caseConsultant.setConsultantFeedback(consultantFeedback);
+        caseConsultant.setUpdateUser(userId);
+        int k = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
+        if (k < 1) {
+            return badRequestOfArguments("发出会诊医生待反馈暂存会诊报告,CaseConsultant修改失败");
+        }
+        return succeedRequest("发出会诊医生待反馈暂存会诊报告暂存成功");
+    }
+
+    /**
+     * 医生 发出会诊 带反馈 编辑会诊报告 提交
+     */
+    @PostMapping(value = "doctorSendFeedback")
+    public Map doctorSendFeedback(String id, String consultantFeedback) {
+
+        if (StringUtils.isBlank(id)) {
+            return badRequestOfArguments("applyForm.id is null");
+        }
+
+        String userId = getRequestToken();
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_FEEDBACK_SUBMITTED);
+
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setId(id);
+        int i = applyFormService.updateStatus(applyForm, applyStatus, userId);
+        if (i < 1) {
+            return badRequestOfArguments("发出会诊医生待反馈提交会诊报告,form修改失败");
+        }
+
+        applyForm = applyFormService.getByPrimaryKey(id);
+        if (!ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyForm.getApplyType())) {
+            ApplyTime applyTime = new ApplyTime();
+            applyTime.setApplyFormId(applyForm.getId());
+            applyTime.setApplyStatus(applyStatus);
+            applyTime.setUpdateUser(userId);
+            int j = applyTimeService.updateStatus(applyTime);
+            if (j < 1) {
+                return badRequestOfArguments("发出会诊医生待反馈提交会诊报告,time修改失败");
+            }
+        }
+
+        CaseConsultant caseConsultant = new CaseConsultant();
+        caseConsultant.setId(id);
+        caseConsultant.setConsultantFeedback(consultantFeedback);
+        caseConsultant.setUpdateUser(userId);
+        int k = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
+        if (k < 1) {
+            return badRequestOfArguments("发出会诊医生待反馈提交会诊报告,CaseConsultant修改失败");
+        }
+
+        return succeedRequest(applyForm);
+    }
+
+    /**
+     * 医生 转诊 已排期 同意
+     */
+    @PostMapping(value = "doctorTransferDateAccede")
+    public Map doctorTransferDateAccede(String id) {
+
+        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SENDER_CONFIRM);
+        String msg1 = "转诊医生已排期同意转诊,form修改失败";
+        String msg2 = "转诊医生已排期同意转诊,time修改失败";
+
+        return updateStatus(id, applyStatus, msg1, msg2, null);
+    }
+
+    /**
+     * 医生 转诊 已排期 取消
+     */
+    @PostMapping(value = "doctorTransferDateReject")
+    public Map doctorTransferDateReject(String id, String report) {
+
+        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SENDER_CANCEL);
+        String msg1 = "转诊医生已排期拒绝转诊,form修改失败";
+        String msg2 = "转诊医生已排期拒绝转诊,time修改失败";
+
+        return updateStatus(id, applyStatus, msg1, msg2, report);
+    }
+
+    /**
+     * 医生 草稿箱 删除
+     */
+    @GetMapping(value = "DraftDel")
+    public Map draftDel(String id) {
+
+        int i = applyFormService.softDel(id);
+        if (i < 1) {
+            return badRequestOfArguments("删除草稿失败");
+        }
+
+        return succeedRequest("删除成功");
+    }
+
 }

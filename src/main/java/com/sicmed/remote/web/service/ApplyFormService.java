@@ -36,6 +36,11 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         return applyFormMapper.detailById(id);
     }
 
+    // 草稿删除
+    public int softDel(String id) {
+        return applyFormMapper.softDel(id);
+    }
+
     @Override
     public int insertSelective(ApplyForm applyForm) {
         return applyFormMapper.insertSelective(applyForm);
