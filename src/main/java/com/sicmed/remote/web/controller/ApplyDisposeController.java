@@ -209,7 +209,7 @@ public class ApplyDisposeController extends BaseController {
     @PostMapping(value = "sirReceiveMasterAccede")
     public Map sirConsultationMasterAccede(String id, String applyType) {
 
-        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_ACCEDE);
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
 
         // 图文会诊接收后立刻变为会诊中
         String resultType = String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT);
