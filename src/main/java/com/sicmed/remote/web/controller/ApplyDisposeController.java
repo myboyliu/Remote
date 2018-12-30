@@ -480,7 +480,7 @@ public class ApplyDisposeController extends BaseController {
         CaseConsultant caseConsultant = new CaseConsultant();
         caseConsultant.setId(id);
         if (StringUtils.isNotBlank(consultantFeedback)) {
-            applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_FEEDBACK_SUBMITTED);
+            applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_END);
             caseConsultant.setConsultantFeedback(consultantFeedback);
         }
         if (StringUtils.isNotBlank(report)) {
