@@ -12,88 +12,79 @@ let dateStr = myDate.getFullYear() + '-' + double(myDate.getMonth() + 1) + '-' +
 let currentMonth = myDate.getMonth() + 1;
 
 // 医生转诊订单列表
-function getReferralList(orderStateId, pageNo, pageSize) {
+function getReferralList(inviteStatus, pageNo, pageSize) {
 
-    // ajaxRequest("POST", createPictureApplyUrl, data, false, false, true, createPictureApplySuccess, requestField, null);
-    // $.ajax({
-    //     type: 'POST',
-    //     url: IP + 'transferTreatment/doctorFindList',
-    //     dataType: 'json',
-    //     data: {
-    //         "stateId": orderStateId,
-    //         "pageNo": pageNo,
-    //         "pageSize": pageSize,
-    //     },
-    //     xhrFields: {
-    //         withCredentials: true
-    //     },
-    //     crossDomain: true,
-    //     global: false,
-    //     success: function (data) {
-    //         console.log(data);
-    //         if (data.code == 1) {
-    //             const myDate = new Date();
-    //             const year = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
-    //             const month = double(myDate.getMonth() + 1); //获取当前月份(0-11,0代表1月)
-    //             const day = double(myDate.getDate()); //获取当前日(1-31)
-    //             let _html = '';
-    //             const tempArr = data.data.orderList;
-    //
-    //             for (let i = 0; i < tempArr.length; i++) {
-    //                 const timeStr = tempArr[i].time.split(' ')[0];
-    //                 const time = tempArr[i].time.split(' ')[1];
-    //                 const _year = timeStr.split('-')[0];
-    //                 const _month = timeStr.split('-')[1];
-    //                 const _day = timeStr.split('-')[2];
-    //                 if (tempArr[i].inDoctorId && tempArr[i].inDoctorId == localStorage.getItem("userId")) {
-    //                     // 会诊医生
-    //                     if (tempArr[i].readFlag == 0) {
-    //                         _html += '<tr class="unread" applyFlag="' + tempArr[i].readFlag + '" type="4" name="' + tempArr[i].id + '">'
-    //                     } else {
-    //                         _html += '<tr class="read" applyFlag="' + tempArr[i].readFlag + '" type="4" name="' + tempArr[i].id + '">'
-    //                     }
-    //                 } else {
-    //                     // 首诊医生
-    //                     if (tempArr[i].applyFlag == 0) {
-    //                         _html += '<tr class="unread" applyFlag="' + tempArr[i].applyFlag + '" type="4" name="' + tempArr[i].id + '">'
-    //                     } else {
-    //                         _html += '<tr class="read" applyFlag="' + tempArr[i].applyFlag + '" type="4" name="' + tempArr[i].id + '">'
-    //                     }
-    //                 }
-    //                 _html += '<td>\
-    // 						<p class = "overHidden3" title="***/' + tempArr[i].sex + ' / ' + tempArr[i].age + ' / ' + tempArr[i].diagnosis + '"> ' + '***' + ' / ' + tempArr[i].sex + ' / ' + tempArr[i].age + ' / ' + tempArr[i].diagnosis + ' </p>\
-    // 					</td>\
-    //                     <td>\
-    // 						<p class="overHidden1" title="' + (tempArr[i].inName ? tempArr[i].inName + ';' : '') + (tempArr[i].inTitle ? tempArr[i].inTitle + ';' : '') + (tempArr[i].inDeptName ? tempArr[i].inDeptName + ';' : '') + tempArr[i].inHospitalName + '">\
-    // 							<' + (tempArr[i].inName ? tempArr[i].inName + ';' : '') + (tempArr[i].inTitle ? tempArr[i].inTitle + ';' : '') + (tempArr[i].inDeptName ? tempArr[i].inDeptName + ';' : '') + tempArr[i].inHospitalName + '>\
-    // 						</p>\
-    // 					</td>\
-    // 					<td>\
-    // 						<p class="overHidden2" style=" width:160px;" title="' + (tempArr[i].outName ? tempArr[i].outName + ';' : '') + (tempArr[i].outTitle ? tempArr[i].outTitle + ';' : '') + (tempArr[i].outDeptName ? tempArr[i].outDeptName + ';' : '') + tempArr[i].outHospitalName + '">\
-    // 							<' + (tempArr[i].outName ? tempArr[i].outName + ';' : '') + (tempArr[i].outTitle ? tempArr[i].outTitle + ';' : '') + (tempArr[i].outDeptName ? tempArr[i].outDeptName + ';' : '') + tempArr[i].outHospitalName + '>\
-    // 						</p>\
-    // 					</td>'
-    //                 if (year == _year && month == _month && day == _day) {
-    //                     _html += '<td class="tl2em">今天' + time + '</td>'
-    //                 } else {
-    //                     _html += '<td class="tl2em">' + tempArr[i].time + '</td>'
-    //                 }
-    //                 _html += '</tr>'
-    //             }
-    //
-    //             $('#referralTableBody').html(_html);
-    //         } else if (data.code == 250) {
-    //             window.location = '/yilaiyiwang/login/login.html';
-    //
-    //         } else if (data.code == 205) {
-    //             // 其他操作
-    //             $('#referralTableBody').html('');
-    //         }
-    //     },
-    //     error: function (err) {
-    //         console.log(err);
-    //     },
-    // })
+    const data = {"inviteStatus": orderStateId, "pageNo": pageNo, "pageSize": pageSize};
+    console.log(inviteStatus)
+    let InviteStatus = {
+        INVITE_ACCEPT: "INQUIRY_APPLY_CREATE_SUCCESS",
+        INVITE_REVIEW: "INQUIRY_APPLY_ACCEDE",
+        INVITE_DATETIME: "INQUIRY_SLAVE_ACCEDE",
+        INVITE_ONGOING: "INQUIRY_DATETIME_LOCKED",
+        INVITE_FEEDBACK: "INQUIRY_MASTER_REJECT",
+        INVITE_REJECT: "INQUIRY_END"
+    };
+    switch (inviteStatus) {
+        case InviteStatus.INVITE_ACCEPT:
+            ajaxRequest("GET", inquiryCreateSuccess, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        case InviteStatus.INVITE_REVIEW:
+            ajaxRequest("GET", inquiryApplyAccede, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        case InviteStatus.INVITE_DATETIME:
+            ajaxRequest("GET", inquirySlaveMasterAccede, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        case InviteStatus.INVITE_ONGOING:
+            ajaxRequest("GET", inquiryDate, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        case InviteStatus.INVITE_FEEDBACK:
+            ajaxRequest("GET", inquirySlaveMasterReject, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        case InviteStatus.INVITE_REJECT:
+            ajaxRequest("GET", inquiryEnd, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        default:
+            return false;
+    }
+}
+
+function renderApplyInquiryListView(data) {
+    console.log(data)
+    const myDate = new Date();
+    const year = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
+    const month = double(myDate.getMonth() + 1); //获取当前月份(0-11,0代表1月)
+    const day = double(myDate.getDate()); //获取当前日(1-31)
+    let _html = '';
+    for (let i = 0; i < data.length; i++) {
+        const timeStr = data[i].consultantApplyTime.split(' ')[0];
+        const time = data[i].consultantApplyTime.split(' ')[1];
+        const _year = timeStr.split('-')[0];
+        const _month = timeStr.split('-')[1];
+        const _day = timeStr.split('-')[2];
+        if (0 == 0) {
+            // 未读
+            _html += '<tr class="unread" applyFlag="' + data[i].applyUrgent + '" type="2" name="' + data[i].id + '">';
+        } else {
+            // 已读
+            _html += '<tr class="read" applyFlag="' + data[i].applyUrgent + '" type="2" name="' + data[i].id + '">';
+        }
+        _html += '<td>\
+                    <p class="overHidden3" title="' + data[i].caseSummary + '">' + data[i].caseSummary + '</p>\
+                </td>\
+                <td>\
+                    <p class="overHidden1" title="' + data[i].inviteSummary + '">' + data[i].inviteSummary + '</p>\
+                </td>\
+                <td>\
+                    <p class="overHidden2" title="' + data[i].applySummary + '">' + data[i].applySummary + '</p>\
+                </td>'
+        if (year == _year && month == _month && day == _day) {
+            _html += '<td class="tl2em">今天' + time + '</td>'
+        } else {
+            _html += '<td class="tl2em">' + data[i].consultantApplyTime + '</td>'
+        }
+        _html += '</tr>'
+    }
+    $('#referralTableBody').html(_html);
 }
 
 // 日期标记
@@ -396,100 +387,11 @@ function getDrafts(pageNo, pageSize) {
 }
 
 // 查看订单详情
-function selectOrderById(orderId, type, readFlag) {
-    // let data = {
-    //     "orderId": orderId,
-    //     "type": type, //是那个列表的类型(0:医政受邀列表,1:医政发出列表,2:医生受邀列表,3:医生发出列表)
-    //     "readFlag": readFlag
-    // }
-    // ajaxRequest("POST", "", data, false, false, false, null, null, null);
-    let data = {"applyFormId": orderId};
-    ajaxRequest("GET", getApplyInfoUrl, data, true, "application/json", true, getApplyInfoSuccess, null, null)
-
-    function getApplyInfoSuccess(result) {
-        console.log(result);
-        sessionStorage.setItem('applyInfo', JSON.stringify(result));
-        window.location = '../page/Rfinish.html';
-    }
-    console.log(data)
-    sessionStorage.setItem('data', JSON.stringify(data));
-    localStorage.setItem('orderId', orderId);
-    function success() {
-
-        if (type == 2) {
-            // -------受邀的----------
-            if (data.orderFormBean.statesName == "首诊待审核") {
-                // 待审核
-            } else if (data.orderFormBean.statesName == "待收诊" || data.orderFormBean.statesName == "专家协调") {
-                window.location = '../page/RcollectingClinical.html';
-            } else if (data.orderFormBean.statesName == "排期审核") {
-                window.location = '/yilaiyiwang/receive/schedulingExamine.html';
-            } else if (data.orderFormBean.statesName == "已排期") {
-                window.location = '/yilaiyiwang/receive/scheduling.html';
-            } else if (data.orderFormBean.statesName == "会诊中") {
-                window.location = '/yilaiyiwang/receive/Rconsultation.html'
-            } else if (data.orderFormBean.statesName == "待反馈") {
-                window.location = '/yilaiyiwang/receive/Rfeedback.html'
-            } else if (data.orderFormBean.statesName == "已结束") {
-                window.location = '/yilaiyiwang/receive/Rfinish.html'
-            } else if (data.orderFormBean.statesName == "会诊已拒收") {
-                window.location = '/yilaiyiwang/receive/Rrejection.html'
-            }
-        } else if (type == 3) {
-            // --------------发出的-----
-            if (data.orderFormBean.statesName == "首诊待审核") {
-                window.location = '/yilaiyiwang/particulars/toAudit.html';
-            } else if (data.orderFormBean.statesName == "待收诊" || data.orderFormBean.statesName == "排期审核" || data.orderFormBean.statesName == "专家协调") {
-                window.location = '/yilaiyiwang/particulars/collectingClinical.html';
-            } else if (data.orderFormBean.statesName == "已排期") {
-                window.location = '/yilaiyiwang/particulars/scheduling.html';
-            } else if (data.orderFormBean.statesName == "会诊中") {
-                window.location = '/yilaiyiwang/particulars/consultation.html'
-            } else if (data.orderFormBean.statesName == "待反馈") {
-                window.location = '/yilaiyiwang/particulars/feedback.html'
-            } else if (data.orderFormBean.statesName == "已结束") {
-                window.location = '/yilaiyiwang/particulars/finish.html'
-            } else if (data.orderFormBean.statesName == "会诊已拒收") {
-                window.location = '/yilaiyiwang/particulars/rejection.html'
-            }
-        }
-    }
+function selectOrderById(orderId) {
+    sessionStorage.setItem('applyFormId', orderId);
+    window.location = '../page/Rfinish.html';
 }
 
-// 查看转诊订单详情
-// transferTreatmentId 订单id readFlag 未读标记(0:未读,1:已读)
-function findTransferTreatmentInfo(transferTreatmentId, readFlag) {
-    $.ajax({
-        type: 'POST',
-        url: IP + 'transferTreatment/findTransferTreatmentInfo',
-        dataType: 'json',
-        data: {
-            "transferTreatmentId": transferTreatmentId,
-            "group": 0, //(0:医生,1:医政)
-            "readFlag": readFlag,
-        },
-        xhrFields: {
-            withCredentials: true
-        },
-        crossDomain: true,
-        global: false,
-        success: function (data) {
-            console.log(data)
-            if (data.code == 1) {
-                localStorage.setItem('transferTreatmentId', transferTreatmentId);
-                window.location = '/yilaiyiwang/referralOrder/referralDoctorOrder.html';
-            } else if (data.code == 250) {
-                // 未登录操作
-                window.location = '/yilaiyiwang/login/login.html';
-            } else {
-                // 其他操作
-            }
-        },
-        error: function (err) {
-            console.log(err);
-        },
-    })
-}
 
 // 草稿箱分页
 // layui.use('laypage', function () {
@@ -541,93 +443,8 @@ $(function () {
     redrawDate();
 
     // 查询草稿数量
-    // $.ajax({
-    //     type: 'GET',
-    //     url: IP + 'order/draftSize',
-    //     dataType: 'json',
-    //     xhrFields: {
-    //         withCredentials: true
-    //     },
-    //     async: false,
-    //     crossDomain: true,
-    //     global: false,
-    //     success: function (data) {
-    //         if (data.status == 200) {
-    //             // 成功操作
-    //             $('.unReadNum').html(data.size);
-    //             draftsCount = data.size;
-    //         } else if (data.status == 250) {
-    //             // 未登录操作
-    //             window.location = '/yilaiyiwang/login/login.html';
-    //         } else {
-    //         }
-    //     },
-    //     error: function (err) {
-    //         console.log(err);
-    //     },
-    // });
 
     /* 左边导航栏 医生受邀请列表 */
-    // $.ajax({
-    //     type: 'POST',
-    //     url: IP + 'doctorOrderStatus/findOrderStatus',
-    //     dataType: 'json',
-    //     data: {
-    //         "type": '2', //(0:医政受邀列表,1:医政发出列表,2:医生受邀，3医生发出
-    //     },
-    //     async: false,
-    //     xhrFields: {
-    //         withCredentials: true
-    //     },
-    //     crossDomain: true,
-    //     global: false,
-    //     success: function (data) {
-    //         console.log(data)
-    //         if (data.status == 200) {
-    //             const tempArr = data.doctorOrderStatusList;
-    //             let _html = '';
-    //             for (let i = 0; i < tempArr.length; i++) {
-    //                 if (i == 0) {
-    //                     if (tempArr[i].unReadFlag == 0) {
-    //                         _html += '<li name="' + tempArr[i].states.id + '" class="ulAct">\
-    // 					<span> ' + tempArr[i].statesName + ' </span>\
-    // 					<div class=""></div>\
-    // 				</li>'
-    //                     } else {
-    //                         _html += '<li name="' + tempArr[i].states.id + '" class="ulAct">\
-    // 					<span> ' + tempArr[i].statesName + ' </span>\
-    // 					<div class = "unRead" > ' + tempArr[i].orderSize + ' </div>\
-    // 				</li>'
-    //                     }
-    //                 } else {
-    //                     if (tempArr[i].unReadFlag == 0) {
-    //                         _html += '<li name="' + tempArr[i].states.id + '" class="">\
-    // 					<span> ' + tempArr[i].statesName + ' </span>\
-    // 					<div class=""></div>\
-    // 				</li>'
-    //                     } else {
-    //                         _html += '<li name="' + tempArr[i].states.id + '" class="">\
-    // 					<span> ' + tempArr[i].statesName + ' </span>\
-    // 					<div class = "unRead" > ' + tempArr[i].orderSize + ' </div>\
-    // 				</li>'
-    //                     }
-    //                 }
-    //             }
-    //             $('#inviteUl').html(_html);
-    //             getInvitedList(tempArr[0].states.id, pageNo, pageSize);
-    //             orderStateId = tempArr[0].states.id;
-    //             localStorage.setItem("orderType", 2);
-    //         } else if (data.status == 250) {
-    //             // 未登录操作
-    //             window.location = '/yilaiyiwang/login/login.html';
-    //         } else {
-    //             // 其他操作
-    //         }
-    //     },
-    //     error: function (err) {
-    //         console.log(err);
-    //     },
-    // });
 
     // 列表的切换
     $('.leftNav').click(function () {
@@ -636,7 +453,6 @@ $(function () {
         console.log(_index)
         if (_index == 0) {
             // 医生受邀列表
-            localStorage.setItem('orderType', '2');
             $('.drafts_table').css("display", 'none');
             $('.referralTable').css("display", 'none');
             $('.tables').css('display', 'block');
@@ -646,36 +462,7 @@ $(function () {
             $(this).find(".leftUL li").eq(0).addClass("ulAct");
             let inviteStatus = $(this).find(".leftUL li").eq(0).attr('name');
             let countNum = 0;
-            // $.ajax({
-            //     type: 'POST',
-            //     url: IP + 'order/queryReceiveOrderList',
-            //     dataType: 'json',
-            //     data: {
-            //         "orderStateId": orderStateId,
-            //         "pageNo": pageNo,
-            //         "pageSize": pageSize,
-            //     },
-            //     async: false,
-            //     xhrFields: {
-            //         withCredentials: true
-            //     },
-            //     crossDomain: true,
-            //     global: false,
-            //     success: function (data) {
-            //         console.log(data)
-            //         if (data.status == 200) {
-            //             countNum = data.pageSize * pageSize; // 当前li Tab 下的总条数
-            //         } else if (data.status == 250) {
-            //             // 未登录操作
-            //         } else if (data.status == 205) {
-            //             // 其他操作
-            //             $('#tabContent').html('');
-            //         }
-            //     },
-            //     error: function (err) {
-            //         console.log(err);
-            //     },
-            // })
+
             layui.use('laypage', function () {
                 const laypage = layui.laypage;
                 //执行一个laypage实例
@@ -690,53 +477,7 @@ $(function () {
                 });
             });
         } else if (_index == 1) {
-            // 1:医生发出列表
-            /* 左边导航栏 医生发出列表 */
-            // $.ajax({
-            //     type: 'POST',
-            //     url: IP + 'doctorOrderStatus/findOrderStatus',
-            //     dataType: 'json',
-            //     data: {
-            //         "type": '3', //(0:医政受邀列表,1:医政发出列表,2:医生受邀，3医生发出
-            //     },
-            //     xhrFields: {
-            //         withCredentials: true
-            //     },
-            //     async: false,
-            //     crossDomain: true,
-            //     global: false,
-            //     success: function (data) {
-            //         console.log(data)
-            //         if (data.status == 200) {
-            //             const tempArr = data.doctorOrderStatusList;
-            //             let _html = '';
-            //             for (let i = 0; i < tempArr.length; i++) {
-            //                 if (tempArr[i].unReadFlag == 0) {
-            //                     _html += '<li name="' + tempArr[i].states.id + '" class="">\
-            // 			<span>' + tempArr[i].statesName + '</span>\
-            // 			<div class=""></div>\
-            // 		</li>'
-            //                 } else {
-            //                     _html += '<li name="' + tempArr[i].states.id + '" class="">\
-            // 			<span> ' + tempArr[i].statesName + ' </span>\
-            // 			<div class="unRead">' + tempArr[i].orderSize + '</div>\
-            // 		</li>'
-            //                 }
-            //             }
-            //             $('#issueUl').html(_html);
-            //             // 成功操作
-            //         } else if (data.status == 250) {
-            //             // 未登录操作
-            //             window.location = '/yilaiyiwang/login/login.html';
-            //         } else {
-            //             // 其他操作
-            //         }
-            //     },
-            //     error: function (err) {
-            //         console.log(err);
-            //     },
-            // });
-            localStorage.setItem('orderType', '3');
+
             $('.drafts_table').css("display", 'none');
             $('.referralTable').css("display", 'none');
             $('.tables').css('display', 'block');
@@ -750,44 +491,14 @@ $(function () {
             // }
             let applyStatus = $(this).find('.leftUL li').eq(0).attr('name');
             let countNum = 0;
-            // $.ajax({
-            //     type: 'POST',
-            //     url: IP + 'order/queryApplyOrderList',
-            //     dataType: 'json',
-            //     data: {
-            //         "orderStateId": orderStateId,
-            //         "pageNo": pageNo,
-            //         "pageSize": pageSize,
-            //     },
-            //     async: false,
-            //     xhrFields: {
-            //         withCredentials: true
-            //     },
-            //     crossDomain: true,
-            //     global: false,
-            //     success: function (data) {
-            //         console.log(data)
-            //         if (data.status == 200) {
-            //             countNum = data.pageSize * pageSize;
-            //         } else if (data.status == 250) {
-            //             window.location = '/yilaiyiwang/login/login.html';
-            //
-            //         } else if (data.status == 205) {
-            //             // 其他操作
-            //             $('#tabContent').html('');
-            //         }
-            //     },
-            //     error: function (err) {
-            //         console.log(err);
-            //     },
-            // })
+
             layui.use('laypage', function () {
                 const laypage = layui.laypage;
                 //执行一个laypage实例
                 laypage.render({
                     elem: 'listBox',
-                    count: countNum,
-                    limit: pageSize,
+                    count: 12*12,
+                    limit: 12,
                     theme: '#f6c567',
                     jump: function (obj, first) {
                         getApplyList(applyStatus, obj.curr, pageSize);
@@ -796,7 +507,6 @@ $(function () {
             });
         } else if (_index == 2) {
             // 医生转诊列表
-            localStorage.setItem('orderType', '4');
             $('.drafts_table').css("display", 'none');
             $('.tables').css('display', 'none');
             $('.referralTable').css("display", 'block');
@@ -810,37 +520,7 @@ $(function () {
             // }
             let inviteStatus = $(this).find(".leftUL li").eq(0).attr('name');
             let countNum = 0;
-            // $.ajax({
-            //     type: 'POST',
-            //     url: IP + 'transferTreatment/doctorFindList',
-            //     dataType: 'json',
-            //     data: {
-            //         "stateId": orderStateId,
-            //         "pageNo": pageNo,
-            //         "pageSize": pageSize,
-            //     },
-            //     async: false,
-            //     xhrFields: {
-            //         withCredentials: true
-            //     },
-            //     crossDomain: true,
-            //     global: false,
-            //     success: function (data) {
-            //         console.log(data)
-            //         if (data.code == 1) {
-            //             countNum = data.data.pageSize * pageSize;
-            //         } else if (data.code == 250) {
-            //             window.location = '/yilaiyiwang/login/login.html';
-            //
-            //         } else if (data.code == 205) {
-            //             // 其他操作
-            //             $('#referralTableBody').html('');
-            //         }
-            //     },
-            //     error: function (err) {
-            //         console.log(err);
-            //     },
-            // })
+
             layui.use('laypage', function () {
                 const laypage = layui.laypage;
                 //执行一个laypage实例
@@ -925,37 +605,7 @@ $(function () {
         // }
         orderStateId = $(this).attr('name');
         let countNum = 0;
-        // $.ajax({
-        //     type: 'POST',
-        //     url: IP + 'transferTreatment/doctorFindList',
-        //     dataType: 'json',
-        //     data: {
-        //         "stateId": orderStateId,
-        //         "pageNo": pageNo,
-        //         "pageSize": pageSize,
-        //     },
-        //     async: false,
-        //     xhrFields: {
-        //         withCredentials: true
-        //     },
-        //     crossDomain: true,
-        //     global: false,
-        //     success: function (data) {
-        //         console.log(data)
-        //         if (data.code == 1) {
-        //             countNum = data.data.pageSize * pageSize;
-        //         } else if (data.code == 250) {
-        //             window.location = '/yilaiyiwang/login/login.html';
-        //
-        //         } else if (data.code == 205) {
-        //             // 其他操作
-        //             $('#referralTableBody').html('');
-        //         }
-        //     },
-        //     error: function (err) {
-        //         console.log(err);
-        //     },
-        // })
+
         layui.use('laypage', function () {
             const laypage = layui.laypage;
             //执行一个laypage实例
@@ -975,20 +625,15 @@ $(function () {
 
     // 会诊列表详情
     $('#tabContent').delegate('tr', 'click', function () {
-        selectOrderById($(this).attr('name'), $(this).attr('type'), $(this).attr('applyFlag'));
+        selectOrderById($(this).attr('name'));
     });
     // 转诊列表详情
     $('#referralTableBody').delegate('tr', 'click', function () {
-        findTransferTreatmentInfo($(this).attr('name'), $(this).attr('applyFlag'))
+        selectOrderById($(this).attr('name'))
     });
-
     // 医生工作台详情
     $('.workUl').delegate('.wordItem', "click", function () {
-        if ($(this).attr("inhospitalname") == localStorage.getItem("hospitalName")) {
-            selectOrderById($(this).attr("name"), 2, 1);
-        } else if ($(this).attr("outhospitalname") == localStorage.getItem("hospitalName")) {
-            selectOrderById($(this).attr("name"), 3, 1);
-        }
+            selectOrderById($(this).attr("name"));
     })
 
 
