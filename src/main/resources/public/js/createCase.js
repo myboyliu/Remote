@@ -320,7 +320,7 @@ function createReferralApplyData(caseId, caseSummary) {
     function createReferralApplySuccess(result) {
         console.log(result);
         sessionStorage.setItem('sendOrderData', JSON.stringify(result));
-        // window.location = '../writeCase/referralSuccess.html';
+        window.location = '../page/referralSuccess.html';
     }
 }
 
@@ -339,13 +339,15 @@ function createPictureApplyData(caseId, caseSummary) {
         data.append('inviteBranchId', inviteDoctorArray[0].branchId); // 主会诊科室id
         data.append('inviteUserId', inviteDoctorArray[0].doctorId);
         data.append('hospitalPrice', inviteDoctorArray[0].hospitalImgPrice); // 医院图文基本价格
-        let inviteSummary = "<" + inviteDoctorArray[0].doctorName + "/" + inviteDoctorArray[0].doctorTitleName + "/" + inviteDoctorArray[0].branchName + "/" + inviteDoctorArray[0].hospitalName + ">;";
-        for (let i = 1; i < inviteDoctorArray.length; i++) {
+        let inviteSummary = "";
+        for (let i = 0; i < inviteDoctorArray.length; i++) {
+            let inviteDoctor = "<" + inviteDoctorArray[i].doctorName + "/" + inviteDoctorArray[i].doctorTitleName + "/" + inviteDoctorArray[i].branchName + "/" + inviteDoctorArray[i].hospitalName + ">";
             doctorList.push({
+                "doctorName": inviteDoctor,
                 "doctorId": inviteDoctorArray[i].doctorId,
                 "price": inviteDoctorArray[i].doctorPicturePrice,
             });
-            inviteSummary += "<" + inviteDoctorArray[i].doctorName + "/" + inviteDoctorArray[i].doctorTitleName + "/" + inviteDoctorArray[i].branchName + "/" + inviteDoctorArray[i].hospitalName + ">;";
+            inviteSummary += inviteDoctor+";";
         }
         data.append("inviteSummary",inviteSummary);
         data.append('consultantUserList', JSON.stringify(doctorList));
@@ -354,12 +356,9 @@ function createPictureApplyData(caseId, caseSummary) {
         data.append('inviteBranchId', hospitalInfo.branchId);
         data.append('hospitalPrice', hospitalInfo.hospitalImgPrice); // 医院图文基本价格
     }
-
     ajaxRequest("POST", createPictureApplyUrl, data, false, false, true, createPictureApplySuccess, requestField, null);
 
     function createPictureApplySuccess(result) {
-
-        console.log(result);
 
         sessionStorage.setItem('sendOrderData', JSON.stringify(result));
 
@@ -383,16 +382,18 @@ function createVideoApplyData(caseId, caseSummary) {
         data.append('inviteBranchId', inviteDoctorArray[0].branchId); // 主会诊科室id
         data.append('inviteUserId', inviteDoctorArray[0].doctorId);
         data.append('hospitalPrice', inviteDoctorArray[0].hospitalVideoPrice); // 医院视频基本价格
-        let inviteSummary = "<" + inviteDoctorArray[0].doctorName + "/" + inviteDoctorArray[0].doctorTitleName + "/" + inviteDoctorArray[0].branchName + "/" + inviteDoctorArray[0].hospitalName + ">;";
-        for (let i = 1; i < inviteDoctorArray.length; i++) {
+        let inviteSummary = "";
+        for (let i = 0; i < inviteDoctorArray.length; i++) {
+            let inviteDoctor = "<" + inviteDoctorArray[i].doctorName + "/" + inviteDoctorArray[i].doctorTitleName + "/" + inviteDoctorArray[i].branchName + "/" + inviteDoctorArray[i].hospitalName + ">";
             doctorList.push({
+                "doctorName": inviteDoctor,
                 "doctorId": inviteDoctorArray[i].doctorId,
                 "price": inviteDoctorArray[i].doctorVideoPrice,
             });
-            inviteSummary += "<" + inviteDoctorArray[i].doctorName + "/" + inviteDoctorArray[i].doctorTitleName + "/" + inviteDoctorArray[i].branchName + "/" + inviteDoctorArray[i].hospitalName + ">;";
+            inviteSummary += inviteDoctor+";";
         }
         data.append("inviteSummary",inviteSummary);
-        data.append('doctorList', JSON.stringify(doctorList));
+        data.append('consultantUserList', JSON.stringify(doctorList));
     } else {
         data.append('inviteHospitalId', hospitalInfo.id);
         data.append('inviteBranchId', hospitalInfo.branchId);
@@ -404,8 +405,7 @@ function createVideoApplyData(caseId, caseSummary) {
     ajaxRequest("POST", createVideoApplyUrl, data, false, false, true, createVideoApplySuccess, requestField, null);
 
     function createVideoApplySuccess(result) {
-        console.log(result)
-        sessionStorage.setItem('sendOrderData', JSON.stringify(data));
+        sessionStorage.setItem('sendOrderData', JSON.stringify(result));
         window.location = '../page/sendSuccess.html';
     }
 
