@@ -281,22 +281,22 @@ function getInvitedList(inviteStatus, pageNo, pageSize) {
             ajaxRequest("GET", sirReceiveApplyAccede, null, false, false, false, renderApplyListView, emptySelect, null);
             break;
         case InviteStatus.INVITE_REVIEW:
-            ajaxRequest("GET", getInviteReviewUrl, null, false, false, false, renderApplyListView, emptySelect, null);
+            ajaxRequest("GET", sirReceiveSlaveDoctor, null, false, false, false, renderApplyListView, emptySelect, null);
             break;
         case InviteStatus.INVITE_DATETIME:
-            ajaxRequest("GET", getInviteDateTimeUrl, null, false, false, false, renderApplyListView, emptySelect, null);
+            ajaxRequest("GET", sirReceiveDateTimeLocked, null, false, false, false, renderApplyListView, emptySelect, null);
             break;
         case InviteStatus.INVITE_ONGOING:
-            ajaxRequest("GET", getInviteOngoingUrl, null, false, false, false, renderApplyListView, emptySelect, null);
+            ajaxRequest("GET", sirReceiveBegin, null, false, false, false, renderApplyListView, emptySelect, null);
             break;
         case InviteStatus.INVITE_FEEDBACK:
-            ajaxRequest("GET", getInviteFeedbackUrl, null, false, false, false, renderApplyListView, emptySelect, null);
+            ajaxRequest("GET", sirReceiveReportSubmitted, null, false, false, false, renderApplyListView, emptySelect, null);
             break;
         case InviteStatus.INVITE_REJECT:
-            ajaxRequest("GET", getInviteRejectUrl, null, false, false, false, renderApplyListView, emptySelect, null);
+            ajaxRequest("GET", sirReceiveSlaveMasterReject, null, false, false, false, renderApplyListView, emptySelect, null);
             break;
         case InviteStatus.INVITE_DONE:
-            ajaxRequest("GET", getInviteDoneUrl, null, false, false, false, renderApplyListView, emptySelect, null);
+            ajaxRequest("GET", sirReceiveEnd, null, false, false, false, renderApplyListView, emptySelect, null);
             break;
         default:
             return false;
