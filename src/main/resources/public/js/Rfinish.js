@@ -60,55 +60,15 @@ function renderLeftNavigation(data) {
 }
 
 $(function () {
-
-
-    /* 左侧导航栏锚点定位 */
-    $(window).scroll(function () {
-        $('.oneLevelUl').css({
-            'width': '145px',
-            'position': 'fixed',
-        })
-    });
-
-    function scrollTo(x) {
-        $('html, body').animate({
-            scrollTop: x - 160,
-        }, 300);
-    };
-    // 病历信息一级按钮
-    $('.oneLevelUl').delegate('.oneLevelItem', 'click', function () {
-        $(this).addClass('active').siblings('.oneLevelItem').removeClass('active');
-        $(this).find('.twoLevelUl').stop(true).slideToggle();
-        $(this).siblings('.oneLevelItem').find('.twoLevelUl').stop(true).slideUp();
-        scrollTo($('.hosp').not('.hosp:hidden').eq($(this).index()).offset().top);
-    });
-
-    // 病历信息二级按钮
-    $('.oneLevelUl').delegate('.twoLevelItem', 'click', function () {
-        if ($(this).find('.threeLevelUl').css('display') == 'none') {
-            $(this).addClass('active').siblings('.twoLevelItem').removeClass('active');
-        } else {
-            $(this).removeClass('active').siblings('.twoLevelItem').removeClass('active');
-        }
-        $(this).find('.threeLevelUl').stop(true, true).slideToggle();
-        $(this).siblings('.twoLevelItem').find('.threeLevelUl').stop(true, true).slideUp();
-        return false;
-    });
-
-    // 病历信息三级按钮
-    $('.oneLevelUl').delegate('.threeLevelUl', 'click', function () {
-        return false;
-    });
-
-    $('.oneLevelUl').delegate('.threeLevelItem', 'click', function () {
-        $('.oneLevelUl').find('.threeLevelItem').removeClass('active');
-        $(this).addClass('active');
-        scrollTo($('#' + $(this).attr('name')).offset().top);
-        return false;
-    });
-
+    let applyFormId = sessionStorage.getItem('applyFormId');
+    let formData = {"applyFormId": applyFormId};
+    ajaxRequest("GET", getApplyInfoUrl, formData, true, "application/json", false, getApplyInfoSuccess, null, null)
+    function getApplyInfoSuccess(result){
+        sessionStorage.setItem('applyInfo', JSON.stringify(result));
+    }
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     let data = JSON.parse(sessionStorage.getItem('applyInfo'));
+
     if (data.applyType === "APPLY_CONSULTATION_VIDEO") {
         applyTimeNavigationShow = true;
     }
@@ -240,7 +200,7 @@ $(function () {
     $('.patientName').html('***');
     $('.high').html(data.patientHeight);
     $('.sex').html(data.patientSex);
-    $('.weight').html(data.patientWeight);
+    $('.weight').html(data.patientWeight/1000);
     $('.age').html(data.patientAge);
     $('.address').html(data.detailAddress);
     if (data.applyUrgent == 1) {
@@ -479,6 +439,50 @@ $(function () {
             $(".doctorEnjoinBody").append(_html);
         }
     }
+    /* 左侧导航栏锚点定位 */
+    $(window).scroll(function () {
+        $('.oneLevelUl').css({
+            'width': '145px',
+            'position': 'fixed',
+        })
+    });
+
+    function scrollTo(x) {
+        $('html, body').animate({
+            scrollTop: x - 160,
+        }, 300);
+    };
+    // 病历信息一级按钮
+    $('.oneLevelUl').delegate('.oneLevelItem', 'click', function () {
+        $(this).addClass('active').siblings('.oneLevelItem').removeClass('active');
+        $(this).find('.twoLevelUl').stop(true).slideToggle();
+        $(this).siblings('.oneLevelItem').find('.twoLevelUl').stop(true).slideUp();
+        scrollTo($('.hosp').not('.hosp:hidden').eq($(this).index()).offset().top);
+    });
+
+    // 病历信息二级按钮
+    $('.oneLevelUl').delegate('.twoLevelItem', 'click', function () {
+        if ($(this).find('.threeLevelUl').css('display') == 'none') {
+            $(this).addClass('active').siblings('.twoLevelItem').removeClass('active');
+        } else {
+            $(this).removeClass('active').siblings('.twoLevelItem').removeClass('active');
+        }
+        $(this).find('.threeLevelUl').stop(true, true).slideToggle();
+        $(this).siblings('.twoLevelItem').find('.threeLevelUl').stop(true, true).slideUp();
+        return false;
+    });
+
+    // 病历信息三级按钮
+    $('.oneLevelUl').delegate('.threeLevelUl', 'click', function () {
+        return false;
+    });
+
+    $('.oneLevelUl').delegate('.threeLevelItem', 'click', function () {
+        $('.oneLevelUl').find('.threeLevelItem').removeClass('active');
+        $(this).addClass('active');
+        scrollTo($('#' + $(this).attr('name')).offset().top);
+        return false;
+    });
 
 
     // 图片点击查看大图
@@ -727,5 +731,306 @@ $(function () {
         //   返回医生工作台
         window.location = '../page/morkbench.html'
     })
+    /** 编辑会诊报告 */
+    $('.compileReport').click(function() {
+        // 判断自己是否为该订单的主会诊人
+        // 是 去到带医嘱的报告页面
+        // 否 本页编辑会诊报告
+        for(var i = 0;i < data.orderDoctorsList.length;i++){
+            if(data.orderDoctorsList[i].firstDoctor == 1 && data.orderDoctorsList[i].id == localStorage.getItem("userId")){
+                window.location = "/yilaiyiwang/doctorEnjoin/doctorEnjoin.html";
+            } else {
+                if (doctorInfo.draftFlag == 1) {
+                    $('.hold').addClass('disabled');
+                    $('.refer').addClass('disabled');
+                    $('#textarea').val(doctorInfo.feedBack);
+                    $('#textarea').attr('disabled', 'disabled');
+                }
+                /* 点击编辑会诊报告 如果有暂存内容 显示在textare标签里 */
+                $('.background').css('display', 'block');
+                $('.conversation').css('display', 'block');
+                $.ajax({
+                    type: 'POST',
+                    url: IP + 'order/findConclusionDraft',
+                    dataType: 'json',
+                    data: {
+                        "orderId": data.orderFormBean.id,
+                    },
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    crossDomain: true,
+                    success: function(data) {
+                        console.log(data)
+                        if (data.status == 200) {
+                            $('#textarea').val(data.conclusion);
+                        } else if (data.status == 250) {
+                            // 未登录操作
+                            window.location = '/yilaiyiwang/login/login.html';
+                        } else {
+                            // 其他操作
+                        }
+                    },
+                    error: function(err) {
+                        console.log(err);
+                    },
+                })
+                /* 开启弹层禁止屏幕滚动 */
+                document.documentElement.style.overflow = "hidden";
+            }
+        }
+    })
 
+    /* 编辑会诊报告提交按钮 */
+    $('.refer').click(function() {
+        if (!$(this).hasClass('disabled')) {
+            $.ajax({
+                type: 'POST',
+                url: IP + 'order/editConclusion',
+                dataType: 'json',
+                data: {
+                    "orderId": data.orderFormBean.id,
+                    "statusId": data.orderFormBean.statesId,
+                    "conclusion": $('#textarea').val(),
+                    "draftFlag": '1',
+                    "type": '2',
+                },
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function(data) {
+                    var $ = layui.jquery;
+                    console.log(data)
+                    document.documentElement.style.overflow = "scroll";
+                    if (data.status == 200) {
+                        layer.open({
+                            type: 1,
+                            title: '',
+                            area: ['500px', '200px'],
+                            closeBtn: false,
+                            //   shade: [0.7, '#000000'],
+                            shadeClose: false,
+                            zIndex: layer.zIndex,
+                            time: 2000,
+                            content: $('.working')
+                        });
+                        $('.working').html('提交成功')
+                        setTimeout(function() {
+                            window.location = "/yilaiyiwang/morkbench/morkbench.html"
+                        }, 2000);
+                    } else if (data.status == 500) {
+                        $('.background').css('display', 'none');
+                        layer.open({
+                            type: 1,
+                            title: '',
+                            area: ['500px', '200px'],
+                            closeBtn: false,
+                            //   shade: [0.7, '#000000'],
+                            shadeClose: false,
+                            zIndex: layer.zIndex,
+                            time: 3000,
+                            content: $('.promptText')
+                        });
+                        setTimeout(function() {
+                            $('.promptText').hide();
+                        }, 3000)
+                    } else if (data.status == 250) {
+                        // 未登录操作
+                        window.location = '/yilaiyiwang/login/login.html';
+                    } else {
+                        // 其他操作
+                        layer.open({
+                            type: 1,
+                            title: '',
+                            area: ['500px', '200px'],
+                            closeBtn: false,
+                            //   shade: [0.7, '#000000'],
+                            shadeClose: false,
+                            zIndex: layer.zIndex,
+                            time: 2000,
+                            content: $('.working')
+                        });
+                        $('.working').html('提交失败')
+                    }
+                },
+                error: function(err) {
+                    console.log(err);
+                },
+            })
+        }
+    })
+    /* 编辑会诊报告暂存按钮 */
+    $('.hold').click(function() {
+        if (!$(this).hasClass('disabled')) {
+            $.ajax({
+                type: 'POST',
+                url: IP + 'order/editConclusion',
+                dataType: 'json',
+                data: {
+                    "orderId": data.orderFormBean.id,
+                    "statusId": data.orderFormBean.statesId,
+                    "conclusion": $('#textarea').val(),
+                    "draftFlag": '0',
+                    "type": '2',
+                },
+                xhrFields: {
+                    withCredentials: true
+                },
+                crossDomain: true,
+                success: function(data) {
+                    var $ = layui.jquery;
+                    console.log(data)
+                    if (data.status == 202) {
+                        layer.open({
+                            type: 1,
+                            title: '',
+                            area: ['500px', '200px'],
+                            closeBtn: false,
+                            //   shade: [0.7, '#000000'],
+                            shadeClose: false,
+                            zIndex: layer.zIndex,
+                            // time: 2000,
+                            content: $('.working')
+                        });
+                        $('.working').html('暂存成功')
+                        setTimeout(function() {
+                            // window.location = "/yilaiyiwang/morkbench/morkbench.html"
+                            layer.closeAll();
+                            $('.working').hide();
+                            $('.background').hide();
+                            $('.rejectionLayer').hide();
+
+                        }, 2000);
+                        document.documentElement.style.overflow = "scroll";
+                    } else if (data.status == 250) {
+                        window.location = '/yilaiyiwang/login/login.html';
+                    } else {
+                        // 其他操作
+                        layer.open({
+                            type: 1,
+                            title: '',
+                            area: ['500px', '200px'],
+                            closeBtn: false,
+                            //   shade: [0.7, '#000000'],
+                            shadeClose: false,
+                            zIndex: layer.zIndex,
+                            time: 2000,
+                            content: $('.working')
+                        });
+                        $('.working').html('暂存失败')
+                    }
+                },
+                error: function(err) {
+                    console.log(err);
+
+                },
+            })
+        }
+
+    })
+
+
+    /** 编辑临床反馈 */
+    $('.editClinicalFeedback').click(function() {
+        $('.background').css('display', 'block');
+        $('.re_layer').css('display', 'block');
+        document.documentElement.style.overflow = "hidden";
+        $('.feedback_Val').val(data.consultantFeedback);
+    })
+    /* 弹层关闭按钮 */
+    $('.background').find('.closeBtn').click(function() {
+        $('.background').css('display', 'none');
+        $('.re_layer').css('display', 'none');
+        $('.accept_layer').css('display', 'none');
+        document.documentElement.style.overflow = "scroll";
+    });
+
+    /* 编辑会诊报告提交按钮 /order/feedBack 首诊反馈 */
+    $('.feed_SM').click(function() {
+        let newConsultantFeedback = $('.feedback_Val').val();
+        let data = new FormData();
+        data.append("consultantFeedback",newConsultantFeedback);
+        data.append("id",applyFormId);
+        ajaxRequest("POST",doctorSendFeedbackReport,data,false,false,true,doctorSendFeedbackReportSuccess,doctorSendFeedbackReportFailed,null);
+        function doctorSendFeedbackReportSuccess(result){
+            var _$ = layui.jquery;
+            layer.open({
+                type: 1,
+                title: '',
+                area: ['300px', '80px'],
+                closeBtn: false,
+                shade: [0.1, '#000000'],
+                shadeClose: false,
+                skin: 'layui-layer-nobg', //没有背景色
+                time: 2000,
+                content: _$('.alertBox'),
+            });
+            $('.alertText').html('提交成功');
+            setTimeout(function() {
+                window.location = '../page/morkbench.html'
+            }, 2000);
+        }
+        function doctorSendFeedbackReportFailed(result) {
+            console.log(result);
+            var _$ = layui.jquery;
+            layer.open({
+                type: 1,
+                title: '',
+                area: ['300px', '80px'],
+                closeBtn: false,
+                shade: [0.1, '#000000'],
+                shadeClose: false,
+                skin: 'layui-layer-nobg', //没有背景色
+                time: 2000,
+                content: _$('.alertBox'),
+            });
+            $('.alertText').html('提交失败');
+        }
+    })
+    /* 编辑会诊报告暂存按钮 */
+    $('.feed_TS').click(function() {
+        let newConsultantFeedback = $('.feedback_Val').val();
+        let data = new FormData();
+        data.append("id",applyFormId);
+        data.append("consultantFeedback",newConsultantFeedback);
+        ajaxRequest("POST",doctorSendFeedbackReportMoment,data,false,false,true,doctorSendFeedbackReportMomentSuccess,doctorSendFeedbackReportMomentFailed,null);
+        function doctorSendFeedbackReportMomentSuccess(result){
+            var _$ = layui.jquery;
+            layer.open({
+                type: 1,
+                title: '',
+                area: ['300px', '80px'],
+                closeBtn: false,
+                shade: [0.1, '#000000'],
+                shadeClose: false,
+                skin: 'layui-layer-nobg', //没有背景色
+                time: 2000,
+                content: _$('.alertBox'),
+            });
+            $('.alertText').html('保存成功');
+            setTimeout(function() {
+                $('.background').css('display', 'none');
+                $('.rejectionLayer').css('display', 'none');
+                $('.alertBox').hide();
+            }, 2000);
+            document.documentElement.style.overflow = "scroll";
+        }
+     function doctorSendFeedbackReportMomentFailed(result) {
+         console.log(result);
+         var _$ = layui.jquery;
+         layer.open({
+             type: 1,
+             title: '',
+             area: ['300px', '80px'],
+             closeBtn: false,
+             shade: [0.1, '#000000'],
+             shadeClose: false,
+             skin: 'layui-layer-nobg', //没有背景色
+             time: 2000,
+             content: _$('.alertBox'),
+         });
+         $('.alertText').html('保存失败');
+     }
+    })
 })
