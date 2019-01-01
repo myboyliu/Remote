@@ -1,23 +1,23 @@
 const myDate = new Date();
 let dateStr = myDate.getFullYear() + '-' + double(myDate.getMonth() + 1) + '-' + double(myDate.getDate());
 // 渲染日历
-var flag = true;
-var dateTempList = []; // 收集的时间段
-var startIndex = 0;
-var endIndex = 0;
+let flag = true;
+let dateTempList = []; // 收集的时间段
+let startIndex = 0;
+let endIndex = 0;
 function renderDateRightContent() {
-    var startMinute = 0; // 开始总分钟数
-    var endMinute = 0; // 结束总分钟数
-    var startHour = 0; // 开始小时数
-    var endHour = 0; // 结束小时数
-    var _html = '';
-    for (var i = 0; i < 96; i++) {
+   let startMinute = 0; // 开始总分钟数
+   let endMinute = 0; // 结束总分钟数
+   let startHour = 0; // 开始小时数
+   let endHour = 0; // 结束小时数
+   let _html = '';
+    for (let i = 0; i < 96; i++) {
         startMinute = i * 15;
         endMinute = (i + 1) * 15;
         startHour = parseInt(startMinute / 60);
         endHour = parseInt(endMinute / 60);
-        var startM = startMinute %= 60; // 计算后的开始分钟数
-        var endM = endMinute %= 60; // 计算后的开始分钟数
+        let startM = startMinute %= 60; // 计算后的开始分钟数
+        let endM = endMinute %= 60; // 计算后的开始分钟数
         if (endHour == 24) {
             _html += '<li endDate="23:59" index="' + i + '">' + double(startHour) + ':' + double(startM) + '</li>'
         } else {
@@ -49,7 +49,7 @@ function redrawDate(dateTempList) {
                 $('#timeUl > li').removeClass('active');
                 flag = true;
                 dateStr = value;
-                for (var i = 0; i < dateTempList.length; i++) {
+                for (let i = 0; i < dateTempList.length; i++) {
                     if (dateStr == dateTempList[i].date) {
                         if (dateTempList[i].startIndex <= dateTempList[i].endIndex) {
                             for (var j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
@@ -62,9 +62,9 @@ function redrawDate(dateTempList) {
                         }
                     }
                 }
-                for (var i = 0; i < dateTempList.length; i++) {
+                for (let i = 0; i < dateTempList.length; i++) {
                     if (value == dateTempList[i].date) {
-                        for (var j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
+                        for (let j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
                             $('#timeUl > li').eq(j).addClass('active');
                         }
                     }
@@ -73,9 +73,9 @@ function redrawDate(dateTempList) {
         });
     });
 
-    for (var i = 0; i < dateTempList.length; i++) {
+    for (let i = 0; i < dateTempList.length; i++) {
         if (dateStr == dateTempList[i].date) {
-            for (var j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
+            for (let j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
                 $('#timeUl > li').eq(j).addClass('active');
             }
         }
@@ -114,8 +114,36 @@ function showDateView(applyTimeList) {
 }
 
 $(function () {
-
-// 分钟选择事件、
+    // 分钟选择事件、
+    // $('#timeUl').delegate('li', 'click', function() {
+    //
+    //     if (flag) {
+    //         $(this).addClass('active').siblings('li').removeClass('active');
+    //         flag = false;
+    //         startIndex = $(this).attr('index');
+    //     } else {
+    //         $(this).addClass('active');
+    //         flag = true;
+    //         endIndex = $(this).attr('index');
+    //         if (startIndex <= endIndex) {
+    //             for (let i = startIndex; i < endIndex; i++) {
+    //                 $('#timeUl > li').eq(i).addClass('active');
+    //             }
+    //         } else {
+    //             for (let i = endIndex; i < startIndex; i++) {
+    //                 $('#timeUl > li').eq(i).addClass('active');
+    //             }
+    //         }
+    //         dateTempList = [];
+    //         dateTempList.push({
+    //             "date": dateStr,
+    //             "startIndex": startIndex,
+    //             "endIndex": endIndex,
+    //         });
+    //         redrawDate(dateTempList);
+    //     }
+    // });
+    // 分钟选择事件、
     $('#timeUl').delegate('li', 'click', function () {
         if (flag) {
             $(this).addClass('active').siblings('li').removeClass('active');
@@ -126,33 +154,43 @@ $(function () {
             flag = true;
             endIndex = $(this).attr('index');
             if (startIndex <= endIndex) {
-                for (var i = startIndex; i < endIndex; i++) {
+                for (let i = startIndex; i < endIndex; i++) {
                     $('#timeUl > li').eq(i).addClass('active');
                 }
             } else {
-                for (var i = endIndex; i < startIndex; i++) {
+                for (let i = endIndex; i < startIndex; i++) {
                     $('#timeUl > li').eq(i).addClass('active');
                 }
             }
-            if (dateTempList.length == 0) {
+            console.log(isInvite);
+            if(isInvite){
+                dateTempList = [];
                 dateTempList.push({
                     "date": dateStr,
                     "startIndex": startIndex,
                     "endIndex": endIndex,
                 });
-            } else {
-                for (var i = 0; i < dateTempList.length; i++) {
-                    if (dateTempList[i].date == dateStr) {
-                        dateTempList.splice(i, 1);
+            }else{
+                if (dateTempList.length == 0) {
+                    dateTempList.push({
+                        "date": dateStr,
+                        "startIndex": startIndex,
+                        "endIndex": endIndex,
+                    });
+                } else {
+                    for (let i = 0; i < dateTempList.length; i++) {
+                        if (dateTempList[i].date == dateStr) {
+                            dateTempList.splice(i, 1);
+                        }
                     }
+                    dateTempList.push({
+                        "date": dateStr,
+                        "startIndex": startIndex,
+                        "endIndex": endIndex,
+                    });
                 }
-                dateTempList.push({
-                    "date": dateStr,
-                    "startIndex": startIndex,
-                    "endIndex": endIndex,
-                });
             }
-            redrawDate();
+            redrawDate(dateTempList);
         }
     });
 // 清空当页数据
@@ -176,7 +214,7 @@ $(function () {
     $('.yesBtn').click(function () {
         layer.closeAll();
         $('.selectTimeContainer').hide();
-        var dateList = []; // 选择的时间数据
+        let dateList = []; // 选择的时间数据
         for (var i = 0; i < dateTempList.length; i++) {
             if (dateTempList[i].startIndex <= dateTempList[i].endIndex) {
                 dateList.push({
@@ -191,6 +229,7 @@ $(function () {
             }
 
         }
+        console.log(dateList)
         updateApplyTime(dateList);
     })
 })
