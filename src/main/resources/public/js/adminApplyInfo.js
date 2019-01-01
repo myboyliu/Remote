@@ -1,5 +1,8 @@
 let isInvite;
 let applyFormId;
+let inviteDoctorCount;
+let applyTypeStr;
+let newApplyTime = [];
 
 function renderViewByRole(applyStatus) {
     /* 动态创建进度条 */
@@ -16,22 +19,39 @@ function renderViewByRole(applyStatus) {
     // $('.progressBar li:nth-child(4)').addClass('libg');
     // $('.progressBar li:nth-child(5)').addClass('libg');
     console.log(isInvite);
+    console.log(applyStatus);
+    console.log(inviteDoctorCount);
     if (isInvite) {
         if (applyStatus === "CONSULTATION_APPLY_ACCEDE") {
             //待收诊
             $(".progressBar li:nth-child(1)").addClass("libg");
-        } else if (applyStatus === "CONSULTATION_SLAVE_ACCEDE") {
-            //待收诊
+            $(".modifier2").show();
+            $(".modifier3").show();
+            $(".modifier5").show();
+            $(".rejection").show();
+            if (inviteDoctorCount > 2) {
+                $(".MDTBtn").show();
+            } else {
+                $(".accept").show();
+            }
+        } else if (applyStatus === "CONSULTATION_SLAVE_ACCEDE" || applyStatus === "CONSULTATION_MASTER_ACCEDE") {
+            //排期审核
             $(".progressBar li:nth-child(1)").addClass("libg");
+            $(".modifier2").show();
+            $(".rejection").show();
         } else if (applyStatus === "CONSULTATION_DATETIME_LOCKED") {
             //已排期
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
+            $(".modifier2").show();
+            $(".rejection").show();
         } else if (applyStatus === "CONSULTATION_BEGIN") {
             //会诊中
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
+            $(".modifier2").show();
+            $(".rejection").show();
         } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
             //待反馈
             $(".progressBar li:nth-child(1)").addClass("libg");
@@ -50,10 +70,13 @@ function renderViewByRole(applyStatus) {
             consultantFeedbackNavigationShow = true;
         } else if (applyStatus === "CONSULTATION_MASTER_REJECT") {
             //会诊医政已拒绝
+            $(".modifier2").show();
+            $("#refuseReasonBox").show();
             $('.progressBar').empty();
             $('.progressBar').html('<li>' + statusArr[0] + '</li>');
             $(".progressBar li:nth-child(1)").addClass("libg");
         }
+
     } else {
         if (applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
             //创建成功
@@ -63,10 +86,11 @@ function renderViewByRole(applyStatus) {
             $(".modifier1").show();
             $(".modifier3").show();
             $(".modifier5").show();
-            // $(".modifier2").show();
+
             $(".modifier22").show();
         } else if (applyStatus === "CONSULTATION_MASTER_REJECT") {
             //会诊医政已拒绝
+            $("#refuseReasonBox").show();
             $('.progressBar').empty();
             $('.progressBar').html('<li>' + statusArr[0] + '</li>');
             $(".progressBar li:nth-child(1)").addClass("libg");
@@ -74,6 +98,8 @@ function renderViewByRole(applyStatus) {
             //已排期
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
+
+            $(".modifier2").show();
         } else if (applyStatus === "CONSULTATION_BEGIN") {
             //会诊中
             $(".progressBar li:nth-child(1)").addClass("libg");
@@ -98,6 +124,7 @@ function renderViewByRole(applyStatus) {
         } else {
             //待收诊
             $(".progressBar li:nth-child(1)").addClass("libg");
+            $(".modifier2").show();
         }
     }
     // $(".rejection").show();
@@ -112,11 +139,42 @@ function renderViewByRole(applyStatus) {
     // $("#doctorEnjoin").show();
 }
 
+/** 渲染会诊排期 */
+function renderApplyTimeView(applyTimeList) {
+    let _dateHtml = '';
+    for (let i = 0, len = applyTimeList.length; i < len; i++) {
+        _dateHtml += ' <p>\
+             <span class="startDate">从&nbsp;&nbsp;' + applyTimeList[i].eventStartTime + '</span> 到&nbsp;&nbsp;\
+             <span class="endDate">' + applyTimeList[i].eventEndTime + '</span>\
+                        </p>'
+    }
+    $('.schedule_modules').html(_dateHtml);
+}
+
 /**修改会诊排期*/
 function updateApplyTime(dateList) {
-    let data = {"dateList": dateList, "applyFormId": applyFormId}
+    if (isInvite) {
+        let data = new FormData();
+        data.append("eventStartTime", dateList[0].startDate);
+        data.append("eventEndTime", dateList[0].endDate);
+        data.append("applyFormId", applyFormId);
+        ajaxRequest("POST", sirUpdateDate, data, false, false, true, sirUpdateDateSuccess, null, null)
+    } else {
+        let data = new FormData();
+        data.append("startEndTime", JSON.stringify(dateList));
+        data.append("applyFormId", applyFormId);
+        ajaxRequest("POST", sirSendUpdateDate, data, false, false, true, sirUpdateDateSuccess, null, null)
+    }
 
-    ajaxRequest("POST", "", data, false, false, true, null, null, null)
+    function sirUpdateDateSuccess() {
+        let data = {"applyFormId": applyFormId};
+        ajaxRequest("GET", getApplyInfoUrl, data, true, "application/json", true, getApplyInfoSuccess, null, null)
+
+        function getApplyInfoSuccess(result) {
+            sessionStorage.setItem('applyInfo', JSON.stringify(result));
+            renderApplyTimeView(result.applyTimeList);
+        }
+    }
 
 }
 
@@ -130,14 +188,18 @@ $(function () {
     let applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
     isInvite = userInfo.hospitalId === applyInfo.inviteHospitalId ? true : false;
     applyFormId = applyInfo.id;
+    applyTypeStr = applyInfo.applyType;
     let applyStatus = applyInfo.applyStatus;
+    let consultantUserList = JSON.parse(applyInfo.consultantUserList);
     console.log(userInfo);
     console.log(applyInfo);
     /**网页标题*/
     $('head > title').html(applyInfo.patientSex + '/' + applyInfo.patientAge + '/' + applyInfo.caseDiagnosis + '-远程会诊平台');
+    /** 拒收原因 */
+    $("#refuseReason").html(applyInfo.consultantReport);
     /**患者基本信息*/
     $('.patientName').html('***');
-    $('.high').html(applyInfo.patientHeight);
+    $('.high').html(applyInfo.patientHeight/1000);
     $('.sex').html(applyInfo.patientSex);
     $('.weight').html(applyInfo.patientWeight);
     $('.age').html(applyInfo.patientAge);
@@ -238,16 +300,11 @@ $(function () {
     $('.recipientsInfo').html(applyInfo.applySummary);
     // 收件人信息
     $('.addresserInfo').html(applyInfo.inviteSummary);
-    /** 会诊排期 */
-    let _dateHtml = '';
+    inviteDoctorCount = applyInfo.inviteSummary.split(";").length;
     let applyTimeList = applyInfo.applyTimeList;
-    for (let i = 0, len = applyTimeList.length; i < len; i++) {
-        _dateHtml += ' <p>\
-             <span class="startDate">从&nbsp;&nbsp;' + applyTimeList[i].eventStartTime + '</span> 到&nbsp;&nbsp;\
-             <span class="endDate">' + applyTimeList[i].eventEndTime + '</span>\
-                        </p>'
-    }
-    $('.schedule_modules').html(_dateHtml);
+    renderApplyTimeView(applyTimeList);
+
+
     //    临床反馈
     $('.applyFeedBack').html(applyInfo.consultantFeedback);
     //如果是图文会诊
@@ -450,30 +507,24 @@ $(function () {
 
 
     /* 诊费 */
-    // var _fees = '';
-    // for (var i = 0; i < recipientsArr.length; i++) {
-    //     _fees += '<tr>\
-    //                     <td>\
-    //                         <' + recipientsArr[i].name + ' / ' + recipientsArr[i].occupation + ' / ' + recipientsArr[i].deptName + ' / ' + recipientsArr[i].hospitalName + ' > \
-    //                     </td>'
-    //     if (data.orderFormBean.orderTypes == 0) {
-    //         _fees += '<td class = "yuan" >' + recipientsArr[i].originalPrice + '</td>'
-    //     } else {
-    //         _fees += '<td class = "yuan" >' + recipientsArr[i].originalPrice + '</td>'
-    //     }
-    //     _fees += '<td>'
-    //     if (data.orderFormBean.orderTypes == 0) {
-    //         _fees += '<input type="text" value="' + recipientsArr[i].price + '" class="fees_input gai" readonly="readonly">'
-    //     } else {
-    //         _fees += '<input type="text" value="' + recipientsArr[i].price + '" class="fees_input gai" readonly="readonly">'
-    //     }
-    //     _fees += '</td></tr>'
-    // }
-    // $('.basePic').html(data.orderFormBean.basePrice);
-    // $('.basePicInput').val(data.orderFormBean.hospitalPrice);
-    // $('.tbody_doc').html(_fees);
-    // $('.aggregate').html(data.orderFormBean.originalPrice);
-    // $('.dynamicAggregate').html(data.orderFormBean.money);
+    let consultantPrice = applyInfo.consultantPrice;
+    let hospitalPrice = applyInfo.hospitalPrice;
+    console.log(consultantUserList);
+    console.log(consultantPrice);
+    console.log(hospitalPrice);
+    let _fees = '';
+    for (let i = 0; i < consultantUserList.length; i++) {
+        _fees += '<tr><td>' + consultantUserList[i].doctorName + '</td>'
+        _fees += '<td class = "yuan" >' + consultantUserList[i].price + '.00</td>'
+        _fees += '<td>'
+        _fees += '<input type="text" value="' + consultantUserList[i].price + '.00" class="fees_input gai" readonly="readonly">'
+        _fees += '</td></tr>'
+    }
+    $('.basePic').html(hospitalPrice+".00");
+    $('.basePicInput').val(hospitalPrice+".00");
+    $('.tbody_doc').html(_fees);
+    $('.aggregate').html(consultantPrice+".00");
+    $('.dynamicAggregate').html(consultantPrice+".00");
 
 
     var deptNumber = '';
@@ -550,7 +601,8 @@ $(function () {
         let data = new FormData();
         data.append("id", applyFormId);
         ajaxRequest("POST", sirSendCheckReject, data, false, false, true, sirSendCheckRejectSuccess, null, null)
-        function sirSendCheckRejectSuccess(result){
+
+        function sirSendCheckRejectSuccess(result) {
             console.log(result);
         }
     });
@@ -581,11 +633,209 @@ $(function () {
     $(".auditObj").find(".yes").click(function () {
         let data = new FormData();
         data.append("id", applyFormId);
-        ajaxRequest("POST", sirSendCheckAccede, data, false,false, true, sirSendCheckAccedeSuccess, null, null)
-        function sirSendCheckAccedeSuccess(result){
-            console.log(result);
+        ajaxRequest("POST", sirSendCheckAccede, data, false, false, true, sirSendCheckAccedeSuccess, null, null)
+
+        function sirSendCheckAccedeSuccess(result) {
+            $('.succeed').hide();
+            window.location = "../page/administrator.html";
+        }
+    });
+    /**MDT协调按钮*/
+    $('.MDTBtn').click(function () {
+        console.log(222222222)
+        let _$ = layui.jquery;
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['500px', '200px'],
+            closeBtn: false,
+            shade: [0.1, '#000000'],
+            shadeClose: false,
+            content: _$('.MDTBox'),
+        });
+    });
+    /** 会诊医政接收按钮*/
+    $('.accept').click(function () {
+        let _$ = layui.jquery;
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['500px', '200px'],
+            closeBtn: false,
+            shade: [0.1, '#000000'],
+            shadeClose: false,
+            content: _$('.Receive'),
+        });
+    });
+
+    $('.submitBox .noBtn').click(function () {
+        layer.closeAll();
+        $('.submitBox').hide();
+    });
+
+    $('.submitBox .acceptBtn').click(function () {
+        console.log(inviteDoctorCount)
+        console.log($('.schedule_modules >p').length)
+        if (inviteDoctorCount <= 0) {
+            layer.closeAll();
+            $('.submitBox').hide();
+            let _$ = layui.jquery;
+            layer.open({
+                type: 1,
+                title: '',
+                area: ['500px', '200px'],
+                closeBtn: false,
+                shade: [0.7, '#000000'],
+                shadeClose: false,
+                time: 1000,
+                zIndex: layer.zIndex,
+                content: _$('.inviteDoctorFiled')
+            });
+        } else if ($('.schedule_modules >p').length !== 1) {
+            layer.closeAll();
+            $('.submitBox').hide();
+            let _$ = layui.jquery;
+            layer.open({
+                type: 1,
+                title: '',
+                area: ['500px', '200px'],
+                closeBtn: false,
+                shade: [0.7, '#000000'],
+                shadeClose: false,
+                time: 1000,
+                zIndex: layer.zIndex,
+                content: _$('.applyTimeFiled')
+            });
+            showDateView(applyTimeList);
+        } else {
+            if (applyTypeStr === "APPLY_CONSULTATION_IMAGE_TEXT") {
+                let data = new FormData();
+                data.append("id", applyFormId);
+                ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, sirReceiveMasterAccedeSuccess, null, null)
+            } else {
+                // 视频会诊
+                var startTime = '';
+                var endTime = '';
+                if (dateTempList[0].startIndex <= dateTempList[0].endIndex) {
+                    startTime = dateTempList[0].date + ' ' + $('#timeUl > li').eq(dateTempList[0].startIndex).html() + ':00';
+                    endTime = dateTempList[0].date + ' ' + $('#timeUl>li').eq(dateTempList[0].endIndex).attr('enddate') + ':00';
+                } else {
+                    startTime = dateTempList[0].date + ' ' + $('#timeUl > li').eq(dateTempList[0].endIndex).html() + ':00';
+                    endTime = dateTempList[0].date + ' ' + $('#timeUl > li').eq(dateTempList[0].startIndex).attr('enddate') + ':00';
+                }
+                let data = new FormData();
+                data.append("id", applyFormId);
+                ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, sirReceiveMasterAccedeSuccess, null, null)
+            }
+
+            //接收 成功回调
+            function sirReceiveMasterAccedeSuccess() {
+                $('.submitBox').hide();
+                var _$ = layui.jquery;
+                layer.open({
+                    type: 1,
+                    title: '',
+                    area: ['500px', '200px'],
+                    closeBtn: false,
+                    shade: [0.7, '#000000'],
+                    shadeClose: false,
+                    content: _$('.acceptSuccess'),
+                    time: 2000,
+                });
+                setTimeout(function () {
+                    window.location = '../page/administrator.html'
+                }, 2000)
+            }
+
+            return false;
         }
     });
 
+    /** 拒收按钮事件 */
+    $('.rejection').click(function () {
+        $('.background').css('display', 'block');
+        $('.re_layer').css('display', 'block');
+        /* 开启弹层禁止屏幕滚动 */
+        document.documentElement.style.overflow = "hidden";
+    });
+    $('textarea').focus(function () {
+        //  $('.font').css('display','none');
+        $('.font').hide();
+    }).blur(function () {
+        if ($(this).val() == "") {
+            $('.font').show();
+        } else {
+            $('.font').hide();
+        }
+    });
+    $('.font').click(function () {
+        $(this).hide();
+        $('textarea').focus();
+    })
+    var viewText = '建议多学科会诊:';
+    /* 建议多学科会诊按钮点击事件  */
+    $('.suggest').click(function () {
+        $(this).css({
+            'background': '#516dcf',
+            'color': '#fff'
+        });
+        $('.otherCause').removeAttr('style');
+        viewText = '建议多学科会诊:';
+    });
+    /* 其他原因按钮点击事件  */
+    $('.otherCause').click(function () {
+        $(this).css({
+            'background': '#516dcf',
+            'color': '#fff'
+        });
+        $('.suggest').removeAttr('style');
+        viewText = '其他原因:';
+    });
+    /* 拒收确定按钮 */
+    $('.confirm').click(function () {
+        if ($('.refuseReason').val() == '') {
+            var _$ = layui.jquery;
+            layer.open({
+                type: 1,
+                title: '',
+                area: ['500px', '200px'],
+                closeBtn: false,
+                shade: [0.7, '#000000'],
+                shadeClose: false,
+                time: 2000,
+                //    zIndex: layer.zIndex,
+                content: _$('.pleaseWirte')
+            });
+        } else {
+            let data = new FormData();
+            data.append("id", applyFormId);
+            data.append("report", viewText + $('.refuseReason').val());
+            console.log(viewText + $('.refuseReason').val());
+            ajaxRequest("POST", sirReceiveMasterReject, data, false, false, true, sirReceiveMasterRejectSuccess, null, null)
+
+            function sirReceiveMasterRejectSuccess(result) {
+                var _$ = layui.jquery;
+                layer.open({
+                    type: 1,
+                    title: '',
+                    area: ['500px', '200px'],
+                    closeBtn: false,
+                    shade: [0.7, '#000000'],
+                    shadeClose: false,
+                    time: 2000,
+                    zIndex: layer.zIndex,
+                    content: _$('.rejectSuccess')
+                });
+                setTimeout(function () {
+                    window.location = '../page/administrator.html';
+                }, 2000);
+            }
+        }
+    });
+    /* 弹层关闭按钮 */
+    $('.refuseBtn').click(function () {
+        $('.background').css('display', 'none');
+        document.documentElement.style.overflow = "scroll";
+    });
     renderViewByRole(applyStatus);
 });

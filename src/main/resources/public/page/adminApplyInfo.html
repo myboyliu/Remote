@@ -19,9 +19,9 @@
     <script src="../common/js/url.js"></script>
     <script src="../common/js/PDFObject.min.js"></script>
     <script src="../common/js/jQuery.print.min.js"></script>
-    <script type="text/javascript" src="../js/adminApplyInfo.js"></script>
     <script src="../common/js/datePluginUtils.js"></script>
     <script src="../common/js/picturePluginUtils.js"></script>
+    <script src="../js/adminApplyInfo.js"></script>
     <!-- [if lt IE9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif] -->
@@ -80,6 +80,16 @@
 <main class="clearfix">
 
     <div class="right_main">
+        <!--拒收原因-->
+        <div id="refuseReasonBox" class="hosp rejectionBox clearfix"  style="display: none;">
+            <img src="../images/rejectionCause.png" alt="拒收原因">
+            <span class="fw">拒收原因</span>
+            <div class="wire wire5"></div>
+            <!-- 会诊排期可收缩模块 -->
+            <div class="rejectionBox">
+                <pre id="refuseReason">建议多学科会诊:12</pre>
+            </div>
+        </div>
         <!-- 患者基本信息模块 -->
         <div class="hosp  essentialInformation clearfix">
             <img src="../images/information.png" alt="写病历患者基本信息">
@@ -113,8 +123,7 @@
         <!-- 电子病历模块 -->
         <div class="hosp EMR clearfix ">
             <img src="../images/Enclosure.png" alt="写病历患者基本信息" style="    margin-top: -4px;">
-            <span class="fw">电子病历附件<span style="padding-right:0px">(</span><span class="sum"
-                                                                                 style="padding-right:0px">0</span><span
+            <span class="fw">电子病历附件<span style="padding-right:0px">(</span><span class="sum" style="padding-right:0px">0</span><span
                     style="padding-right:0px">)</span>张</span>
             <div class="wire wire2"></div>
             <div class="modifier2" style="display: none;">
@@ -157,7 +166,7 @@
                 <img src="../images/Scheduling.png" alt="会诊排期">
                 <span class="fw">会诊排期</span>
                 <div class="wire wire5"></div>
-                <div class="modifier5">
+                <div class="modifier5"  style="display: none;">
                     <a class="schedulingBtn" href="javascript:;">
                         <span>修改排期</span>
                     </a>
@@ -312,6 +321,9 @@
         <input type="button" value="返回" class="getBack">
         <input type="button" value="退回" class="sendBack" style="display: none;">
         <input type="button" value="审核发布" class="audit" style="display: none;">
+        <input type="button" value="拒收" class="rejection" style="display: none;">
+        <input type="button" value="接收" class="accept" style="display: none;">
+        <input type="button" value="MDT协调" class="MDTBtn" style="display: none;">
     </div>
 </div>
 <div class="footer marginBottom70">
@@ -381,15 +393,71 @@
     <input type="button" value="取消" class="agin">
     <input type="button" value="发布" class="yes">
 </div>
-<div class="change">
-    <p>此订单已经发生改变</p>
-</div>
 <div class="succeed">
     <p>发布成功</p>
 </div>
 <div class="returned">
     <p>退回成功</p>
 </div>
+
+<div class="operateBox submitBox MDTBox">
+    <p>确认已协调专家并接收吗？</p>
+    <div class="btnBox">
+        <a class="noBtn" href="javascript:;">我再想想</a>
+        <a class="acceptBtn" href="javascript:;">是的，接收</a>
+    </div>
+</div>
+<div class="operateBox submitBox Receive">
+    <p>确定要接诊吗？</p>
+    <div class="btnBox">
+        <a class="noBtn" href="javascript:;">取消</a>
+        <a class="acceptBtn" href="javascript:;">确定</a>
+    </div>
+</div>
+<!-- 弹层 -->
+<div class="applyTimeFiled">
+    <p>请选定会诊时间</p>
+</div>
+<div class="inviteDoctorFiled">
+    <p>请先分配主会诊医生</p>
+</div>
+<div class="rejectSuccess">
+    <p>拒收成功</p>
+</div>
+<div class="acceptSuccess">
+    <p>接收成功</p>
+</div>
+<div class="change">
+    <p>此订单已经发生改变</p>
+</div>
+<div class="pleaseWirte">
+    <p>请填写拒收原因</p>
+</div>
+<!-- 弹层部分 背景图加三个弹层 -->
+<div class="background">
+    <!-- 拒收弹层 -->
+    <div class="rejectionLayer re_layer">
+        <div class="rejectionLayer_top">
+            <span>填写拒收原因</span>
+            <input style="background: rgb(81, 109, 207); color: rgb(255, 255, 255);" type="button" value="建议多学科会诊" class="suggest ip">
+            <input type="button" value="其它原因" class="otherCause ip">
+        </div>
+        <div class="rejectionLayer_buttom">
+            <textarea name="" class="refuseReason"></textarea>
+            <div class="font">
+                请尽量多的填写对医务人员和发件医生有参考价值的建议及原因
+                <br> 1.选择多学科会诊，根据自身判断给出MDT的参与学科或参与人建议...
+                <br> 2.选择其它原因，请具体备注“排期已满”、“病历需完善”、“学科不匹配”...
+                <br>
+            </div>
+        </div>
+        <input type="button" value="确定" class="confirm">
+        <div class="closeBtn clearfix refuseBtn"><img src="../images/close.png" alt="">
+            <span>关闭</span></div>
+    </div>
+</div>
+
+
 </body>
 
 </html>
