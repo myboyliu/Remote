@@ -6,6 +6,7 @@ import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.service.ApplyFormService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import java.util.Map;
  * @description 会诊相关查询
  * @date 2018/12/26
  */
+@Slf4j
 @RestController
 @RequestMapping(value = "apply/consultation")
 public class ApplyConsultationController extends BaseController {

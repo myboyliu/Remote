@@ -494,7 +494,7 @@
                 AND invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
             </if>
             <if test="inviteBranchId != null">
-                AND invite_branch_id = #{inviteBranchId,jdbc=VARCHAR}
+                AND invite_branch_id = #{inviteBranchId,jdbcType=VARCHAR}
             </if>
             <if test="consultationTypeList != null">
                 AND apply_type IN
