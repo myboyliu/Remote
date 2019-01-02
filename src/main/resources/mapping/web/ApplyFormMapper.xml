@@ -68,7 +68,7 @@
                 or invite_user_id = #{inviteUserId,jdbcType=VARCHAR})
             </if>
         </where>
-        order by apply_urgent,update_time,create_time
+        order by apply_urgent desc,update_time,create_time
         limit #{beginNo},#{pageSize}
     </select>
 
@@ -96,7 +96,7 @@
                 AND invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
             </if>
         </where>
-        order by apply_urgent,update_time,create_time
+        order by apply_urgent desc,update_time,create_time
         limit #{beginNo},#{pageSize}
     </select>
 
@@ -126,7 +126,7 @@
                 or invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR})
             </if>
         </where>
-        order by apply_urgent,update_time,create_time
+        order by apply_urgent desc,update_time,create_time
         limit #{beginNo},#{pageSize}
     </select>
 
@@ -510,7 +510,7 @@
             </if>
 
         </where>
-        order by apply_urgent,update_time,create_time
+        order by apply_urgent desc ,update_time,create_time
         limit #{beginNo},#{pageSize}
     </select>
 
@@ -542,7 +542,7 @@
             </if>
 
         </where>
-        order by apply_urgent,update_time,create_time
+        order by apply_urgent desc,update_time,create_time
         limit #{beginNo},#{pageSize}
     </select>
 </mapper>
