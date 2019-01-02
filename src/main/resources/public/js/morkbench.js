@@ -636,7 +636,7 @@ $(function () {
             selectOrderById($(this).attr("name"));
     })
 
-
+    getInvitedList("INVITE_ACCEPT", 0, 10)
     // 草稿箱详情
     $('.drafts_tbody').delegate('tr', 'click', function () {
         localStorage.setItem('detailsId', $(this).attr('name'));
