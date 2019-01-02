@@ -187,6 +187,7 @@ $(function () {
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     let applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
     isInvite = userInfo.hospitalId === applyInfo.inviteHospitalId ? true : false;
+    let applyNodeList = applyInfo.applyNodeList;
     applyFormId = applyInfo.id;
     applyTypeStr = applyInfo.applyType;
     let applyStatus = applyInfo.applyStatus;
@@ -560,26 +561,25 @@ $(function () {
     //
     //     },
     // });
-    /* 循环时间轴 orderStatesList*/
-    // var orderStatesList = data.orderStatesList;
-    // var _html = '';
-    // for (var i = 0; i < orderStatesList.length; i++) {
-    //     _html += '<li class="layui-timeline-item">\
-    //                                 <i class="layui-icon layui-timeline-axis">&#xe63f;</i>\
-    //                                 <div class="layui-timeline-content layui-text">\
-    //                                     <h3 class="layui-timeline-title">\
-    //                                         <span class="fw">' + orderStatesList[i].time + '</span>\
-    //                                         <span class = "fw pl30" > ' + orderStatesList[i].statesName + ' </span>\
-    //                                     </h3>'
-    //     if (orderStatesList[i].statesName == '已结束') {
-    //         _html += ''
-    //     } else {
-    //         _html += '<p>操作人：' + orderStatesList[i].remarks + '</p>\
-    //                                 </div>\
-    //                             </li>'
-    //     }
-    // }
-    // $('.layui-timeline').html(_html);
+    /* 循环时间轴 */
+    let _html = '';
+    for (let i = 0; i < applyNodeList.length; i++) {
+        _html += '<li class="layui-timeline-item">\
+                                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>\
+                                        <div class="layui-timeline-content layui-text">\
+                                            <h3 class="layui-timeline-title">\
+                                                <span class="fw">' + applyNodeList[i].nodeTime + '</span>\
+                                                <span class = "fw pl30" > ' + applyNodeList[i].nodeName + ' </span>\
+                                            </h3>'
+        if (applyNodeList[i].nodeName == '已结束') {
+            _html += ''
+        } else {
+            _html += '<p>操作人：' + applyNodeList[i].nodeOperator + '</p>\
+                                        </div>\
+                                    </li>'
+        }
+    }
+    $('.layui-timeline').html(_html);
 
     /**  退回按钮弹出层 */
     $('.sendBack').click(function () {
@@ -717,15 +717,6 @@ $(function () {
                 ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, sirReceiveMasterAccedeSuccess, null, null)
             } else {
                 // 视频会诊
-                var startTime = '';
-                var endTime = '';
-                if (dateTempList[0].startIndex <= dateTempList[0].endIndex) {
-                    startTime = dateTempList[0].date + ' ' + $('#timeUl > li').eq(dateTempList[0].startIndex).html() + ':00';
-                    endTime = dateTempList[0].date + ' ' + $('#timeUl>li').eq(dateTempList[0].endIndex).attr('enddate') + ':00';
-                } else {
-                    startTime = dateTempList[0].date + ' ' + $('#timeUl > li').eq(dateTempList[0].endIndex).html() + ':00';
-                    endTime = dateTempList[0].date + ' ' + $('#timeUl > li').eq(dateTempList[0].startIndex).attr('enddate') + ':00';
-                }
                 let data = new FormData();
                 data.append("id", applyFormId);
                 ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, sirReceiveMasterAccedeSuccess, null, null)

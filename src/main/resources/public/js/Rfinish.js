@@ -2,7 +2,9 @@ let applyRecordNavigationShow = false;
 let consultantFeedbackNavigationShow = false;
 let applyTimeNavigationShow = false;
 let consultantReport = [];
-
+let fileAllArr = []; //所有图片原始资源
+//   var fileArr = [];
+let scaleNum = 10; // 图片缩放倍数
 /**渲染左侧导航栏*/
 function renderLeftNavigation(data) {
     let _html = "";
@@ -72,6 +74,7 @@ $(function () {
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     let data = JSON.parse(sessionStorage.getItem('applyInfo'));
     let inviteDoctorCount = JSON.parse(data.consultantUserList).length;
+    let applyNodeList = data.applyNodeList;
     let isInvite = userInfo.id === data.inviteUserId ? true : false;
     if (data.applyType === "APPLY_CONSULTATION_VIDEO") {
         applyTimeNavigationShow = true;
@@ -88,9 +91,9 @@ $(function () {
             //待收诊
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".rejection").show();
-            if (inviteDoctorCount>1){
+            if (inviteDoctorCount > 1) {
                 $(".MDTBtn").show();
-            } else{
+            } else {
                 $(".receive").show();
             }
         } else if (data.applyStatus === "CONSULTATION_SLAVE_ACCEDE") {
@@ -129,7 +132,7 @@ $(function () {
             $("#consultantFeedbackContext").show();
             applyRecordNavigationShow = true;
             consultantFeedbackNavigationShow = true;
-        } else if (data.applyStatus === "CONSULTATION_MASTER_REJECT"|| data.applyStatus === "CONSULTATION_SLAVE_REJECT") {
+        } else if (data.applyStatus === "CONSULTATION_MASTER_REJECT" || data.applyStatus === "CONSULTATION_SLAVE_REJECT") {
             //会诊医政已拒绝
             $('.progressBar').empty();
             $('.progressBar').html('<li>' + statusArr[0] + '</li>');
@@ -181,33 +184,21 @@ $(function () {
             $(".progressBar li:nth-child(1)").addClass("libg");
         }
     }
-    // $(".progressBar li:nth-child(1)").addClass("libg");
-    // $(".progressBar li:nth-child(2)").addClass("libg");
-    // $(".progressBar li:nth-child(3)").addClass("libg");
-    // $(".progressBar li:nth-child(4)").addClass("libg");
-    // $(".progressBar li:nth-child(5)").addClass("libg");
-    // $(".rejection").show();
-    // $(".receive").show();
-    // $(".MDTBtn").show();
-    // $(".compileReport").show();
-    // $(".entrance").show();
-    // $(".editClinicalFeedback").show();
 
     /**网页标题*/
     $('head > title').html(data.patientSex + '/' + data.patientAge + '/' + data.caseDiagnosis + '-远程会诊平台');
     /**会诊报告*/
     if (data.applyStatus === "CONSULTATION_SLAVE_REJECT") {
-        let goalHtml = '<pre class="report">'+data.consultantReport+'</pre>'
+        let goalHtml = '<pre class="report">' + data.consultantReport + '</pre>'
         $('.goalObj').html(goalHtml);
-    }else{
+    } else {
         consultantReport = JSON.parse(data.consultantReport);
         let goalHtml = '';
         for (let item of consultantReport) {
-            goalHtml += '<pre class="report">'+item.doctorName+':<br />'+item.report+'</pre>'
+            goalHtml += '<pre class="report">' + item.doctorName + ':<br />' + item.report + '</pre>'
         }
         $('.goalObj').html(goalHtml);
     }
-
 
     /**临床反馈*/
     $('.applyFeedBack').html(data.consultantFeedback);
@@ -309,7 +300,7 @@ $(function () {
 
     $('.money').html(data.consultantPrice);
     //订单编号
-    if(data.applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS"){
+    if (data.applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
         $('#applyNumber').hide();
     }
     //订单编号
@@ -344,9 +335,7 @@ $(function () {
         $('.schedule_modules ').show();
     }
     /**------------------------------------------*/
-    var fileAllArr = []; //所有图片原始资源
-    //   var fileArr = [];
-    var scaleNum = 10; // 图片缩放倍数
+
 
 
     // 医嘱
@@ -547,7 +536,7 @@ $(function () {
             // pdf dcm
             $('.bigImgContainer').find('.bigImg').addClass('bgSize');
             if (fileArr[indexFile].type == 'pdf') {
-                PDFObject.embed(imgIp + fileArr[indexFile].filePath, ".bigImg", {
+                PDFObject.embed(baseUrl+"/" + fileArr[indexFile].filePath, ".bigImg", {
                     page: "1"
                 });
                 $('.downlodeFile').hide();
@@ -558,7 +547,7 @@ $(function () {
                 // 2、imgIp + fileArr[indexFile].filePath 下载路径
                 // 3、清空 .bigImg 的内容，显示背景
                 $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', imgIp + fileArr[indexFile].filePath);
+                $('.downlodeFile').children('a').attr('href', baseUrl+"/" + fileArr[indexFile].filePath);
                 $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
             }
         } else {
@@ -725,26 +714,26 @@ $(function () {
     // 图片缩放 拖拽 结束
 
 
-    /* 循环时间轴 orderStatesList*/
-    // var orderStatesList = data.orderStatesList;
-    // var _html = '';
-    // for (var i = 0; i < orderStatesList.length; i++) {
-    //     _html += '<li class="layui-timeline-item">\
-    //                                 <i class="layui-icon layui-timeline-axis">&#xe63f;</i>\
-    //                                 <div class="layui-timeline-content layui-text">\
-    //                                     <h3 class="layui-timeline-title">\
-    //                                         <span class="fw">' + orderStatesList[i].time + '</span>\
-    //                                         <span class = "fw pl30" > ' + orderStatesList[i].statesName + ' </span>\
-    //                                     </h3>'
-    //     if (orderStatesList[i].statesName == '已结束') {
-    //         _html += ''
-    //     } else {
-    //         _html += '<p>操作人：' + orderStatesList[i].remarks + '</p>\
-    //                                 </div>\
-    //                             </li>'
-    //     }
-    // }
-    // $('.layui-timeline').html(_html);
+    /* 循环时间轴 */
+    let _html = '';
+    for (let i = 0; i < applyNodeList.length; i++) {
+        _html += '<li class="layui-timeline-item">\
+                                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>\
+                                        <div class="layui-timeline-content layui-text">\
+                                            <h3 class="layui-timeline-title">\
+                                                <span class="fw">' + applyNodeList[i].nodeTime + '</span>\
+                                                <span class = "fw pl30" > ' + applyNodeList[i].nodeName + ' </span>\
+                                            </h3>'
+        if (applyNodeList[i].nodeName == '已结束') {
+            _html += ''
+        } else {
+            _html += '<p>操作人：' + applyNodeList[i].nodeOperator + '</p>\
+                                        </div>\
+                                    </li>'
+        }
+    }
+    $('.layui-timeline').html(_html);
+
 
     /* 返回按钮 */
     $('.getBack').click(function () {
@@ -861,7 +850,8 @@ $(function () {
         data.append("id", applyFormId);
         ajaxRequest("POST", doctorSendFeedbackReportMoment, data, false, false, true, success, failed, null);
         console.log(consultantReport);
-        function  success() {
+
+        function success() {
             layer.open({
                 type: 1,
                 title: '',
@@ -883,6 +873,7 @@ $(function () {
             }, 2000);
             document.documentElement.style.overflow = "scroll";
         }
+
         function failed() {
             // 其他操作
             layer.open({
@@ -1012,7 +1003,7 @@ $(function () {
     }
 
     /* 拒收按钮弹层 */
-    $('.rejection').click(function() {
+    $('.rejection').click(function () {
         if (isInvite) {
             $('#rejectIframe').css('display', 'block');
             $('#rejectView').css('display', 'block');
@@ -1021,23 +1012,23 @@ $(function () {
             layer.msg('只有主会诊医生才能进行此操作');
         }
     });
-    $('textarea').focus(function() {
+    $('textarea').focus(function () {
         //  $('.font').css('display','none');
         $('.font').hide();
-    }).blur(function() {
+    }).blur(function () {
         if ($(this).val() == "") {
             $('.font').show();
         } else {
             $('.font').hide();
         }
     });
-    $('.font').click(function() {
+    $('.font').click(function () {
         $(this).hide();
         $('textarea').focus();
     })
     var viewText = '建议多学科会诊:';
     /* 建议多学科会诊按钮点击事件  */
-    $('.suggest').click(function() {
+    $('.suggest').click(function () {
         $(this).css({
             'background': '#516dcf',
             'color': '#fff'
@@ -1046,7 +1037,7 @@ $(function () {
         viewText = '建议多学科会诊:';
     })
     /* 其他原因按钮点击事件  */
-    $('.otherCause').click(function() {
+    $('.otherCause').click(function () {
         $(this).css({
             'background': '#516dcf',
             'color': '#fff'
@@ -1056,12 +1047,12 @@ $(function () {
     })
 
     /* 弹层关闭按钮 */
-    $('.refuseBtn').click(function() {
+    $('.refuseBtn').click(function () {
         $('.background').css('display', 'none');
         document.documentElement.style.overflow = "scroll";
     })
     // 拒绝确定按钮
-    $('.confirm').click(function() {
+    $('.confirm').click(function () {
         if ($('.refuseReason').val() == '') {
             var _$ = layui.jquery;
             layer.open({
@@ -1081,6 +1072,7 @@ $(function () {
             data.append("report", viewText + $('.refuseReason').val());
             console.log(viewText + $('.refuseReason').val());
             ajaxRequest("POST", doctorReceiveReject, data, false, false, true, doctorReceiveRejectSuccess, null, null)
+
             function doctorReceiveRejectSuccess(result) {
                 var _$ = layui.jquery;
                 layer.open({
@@ -1094,7 +1086,7 @@ $(function () {
                     time: 1000,
                     content: _$('.returned')
                 });
-                setTimeout(function() {
+                setTimeout(function () {
                     window.location = '../page/morkbench.html'
                 }, 1000);
             }
@@ -1102,7 +1094,7 @@ $(function () {
     })
 
     // MDT协调按钮     MDTBtn
-    $('.MDTBtn').click(function() {
+    $('.MDTBtn').click(function () {
         if (doctorInfo.firstDoctor == 1) {
             window.location = '/yilaiyiwang/particulars/MTD.html';
         } else {
@@ -1111,7 +1103,7 @@ $(function () {
     })
 
     //  接收按钮事件 receive
-    $('.receive').click(function() {
+    $('.receive').click(function () {
         if (isInvite) {
             var _$ = layui.jquery;
             layer.open({
@@ -1145,11 +1137,11 @@ $(function () {
         }
     });
 
-    $('.submitBox .noBtn').click(function() {
+    $('.submitBox .noBtn').click(function () {
         layer.closeAll();
         $('.submitBox').hide();
     })
-    $('.submitBox .yesBtn').click(function() {
+    $('.submitBox .yesBtn').click(function () {
         $.ajax({
             type: 'POST',
             url: IP + 'order/receiveOrder',
@@ -1168,7 +1160,7 @@ $(function () {
                 withCredentials: true
             },
             crossDomain: true,
-            success: function(data) {
+            success: function (data) {
                 console.log(data)
                 if (data.status == 200) {
                     $('.submitBox').hide();
@@ -1183,7 +1175,7 @@ $(function () {
                         content: _$('.accept'),
                         time: 2000,
                     });
-                    setTimeout(function() {
+                    setTimeout(function () {
                         window.location = '/yilaiyiwang/morkbench/morkbench.html'
                     }, 2000)
                 } else if (data.status == 250) {
@@ -1194,15 +1186,16 @@ $(function () {
                 } else if (data.status == 500) {
 
                     layer.msg('订单状态已发生改变')
-                } else {}
+                } else {
+                }
             },
-            error: function(err) {
+            error: function (err) {
                 console.log(err);
             },
         })
     })
     // 关闭事件
-    $('.closeBtnTime').click(function() {
+    $('.closeBtnTime').click(function () {
         newDateTempList = [];
         layer.closeAll();
         $('.selectTimeContainer').hide();
