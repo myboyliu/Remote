@@ -50,7 +50,7 @@ public class ApplyForm extends BaseEntity {
 //    @Size(min = 32, max = 32, message = "applyBranchId 长度不合规")
     private String applyBranchId;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     private Date consultantApplyTime;
 
     private String applyStatus;
