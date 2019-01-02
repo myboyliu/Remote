@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sicmed.remote.web.mapper.ApplyNodeMapper">
+  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.ApplyNode">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="node_name" jdbcType="VARCHAR" property="nodeName" />
+    <result column="node_time" jdbcType="TIMESTAMP" property="nodeTime" />
+    <result column="node_operator" jdbcType="VARCHAR" property="nodeOperator" />
+    <result column="apply_id" jdbcType="VARCHAR" property="applyId" />
+  </resultMap>
+
+  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.ApplyNode">
+    <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into apply_node
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="nodeName != null">
+        node_name,
+      </if>
+        node_time,
+      <if test="nodeOperator != null">
+        node_operator,
+      </if>
+      <if test="applyId != null">
+        apply_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeName != null">
+        #{nodeName,jdbcType=VARCHAR},
+      </if>
+       now(),
+      <if test="nodeOperator != null">
+        #{nodeOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="applyId != null">
+        #{applyId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+</mapper>
