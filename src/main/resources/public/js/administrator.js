@@ -990,7 +990,7 @@ $(function () {
             selectOrderById($(this).attr("name"), 3, 1);
         }
     })
-
+    getInvitedList("INVITE_ACCEPT", 0, 10)
 
     // 草稿箱详情
     $('.drafts_tbody').delegate('tr', 'click', function () {
