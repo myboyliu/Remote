@@ -176,7 +176,7 @@ public class ApplyConsultationController extends BaseController {
 
         List<ApplyForm> applyFormList = applyFormService.getByApplyFormBean(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
-            return badRequestOfArguments(msg);
+            return badRequestOfArguments(applyFormList);
         }
 
         return succeedRequest(applyFormList);
@@ -295,7 +295,7 @@ public class ApplyConsultationController extends BaseController {
 
         List<ApplyForm> applyFormList = applyFormService.sirGetByApplyFormBean(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
-            return badRequestOfArguments(msg);
+            return badRequestOfArguments(applyFormList);
         }
 
         return succeedRequest(applyFormList);
@@ -417,7 +417,7 @@ public class ApplyConsultationController extends BaseController {
 
         List<ApplyForm> applyFormList = applyFormService.sirGetByApplyFormBean(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
-            return badRequestOfArguments(msg);
+            return badRequestOfArguments(applyFormList);
         }
 
         return succeedRequest(applyFormList);

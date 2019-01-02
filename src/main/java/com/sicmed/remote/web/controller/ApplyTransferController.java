@@ -49,7 +49,7 @@ public class ApplyTransferController extends BaseController {
         applyFormBean.setInviteUserId(userId);
         List<ApplyForm> applyFormList = applyFormService.selectApplyInquiry(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
-            return succeedRequest(msg);
+            return succeedRequest(applyFormList);
         }
 
         return succeedRequest(applyFormList);
@@ -142,7 +142,7 @@ public class ApplyTransferController extends BaseController {
 
         List<ApplyForm> applyFormList = applyFormService.selectApplyInquiryDate(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
-            return succeedRequest("无排期审核");
+            return succeedRequest(applyFormList);
         }
         return succeedRequest(applyFormList);
     }
@@ -166,7 +166,7 @@ public class ApplyTransferController extends BaseController {
 
         List<ApplyForm> applyFormList = applyFormService.getByApplyFormBean(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
-            return succeedRequest("无待审核");
+            return succeedRequest(applyFormList);
         }
         return succeedRequest(applyFormList);
     }
@@ -181,7 +181,7 @@ public class ApplyTransferController extends BaseController {
 
         List<ApplyForm> applyFormList = applyFormService.sirSelectInquiry(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
-            return badRequestOfArguments(msg);
+            return badRequestOfArguments(applyFormList);
         }
 
         return succeedRequest(applyFormList);
