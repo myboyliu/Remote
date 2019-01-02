@@ -199,9 +199,9 @@ $(function () {
     $("#refuseReason").html(applyInfo.consultantReport);
     /**患者基本信息*/
     $('.patientName').html('***');
-    $('.high').html(applyInfo.patientHeight/1000);
+    $('.high').html(applyInfo.patientHeight);
     $('.sex').html(applyInfo.patientSex);
-    $('.weight').html(applyInfo.patientWeight);
+    $('.weight').html(applyInfo.patientWeight/1000);
     $('.age').html(applyInfo.patientAge);
     $('.address').html(applyInfo.detailAddress);
     if (applyInfo.applyUrgent == 1) {
@@ -242,7 +242,7 @@ $(function () {
                         var fileName = tempArr[i].contentPath.substr(tempArr[i].contentPath.lastIndexOf('/') + 1, tempArr[i].contentPath.length);
                         fileAllArr.push(fileName);
                         if (fileType == 'png' || fileType == 'jpg') {
-                            if (tempArr[i].remarks == '') {
+                            if (tempArr[i].contentRemark == '') {
                                 $('.upfileUl').find('#' + tempArr[i].contentTypeId).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].contentPath + '"  class="fileItem">\
                                            <div style = "background-image: url(&apos;' + baseUrl + "/" + tempArr[i].contentPath + '&apos;)"></div>\
                                             <p type="img" desc="' + tempArr[i].contentRemark + '" class="fileName">' + fileName + '</p>\
@@ -254,7 +254,7 @@ $(function () {
                                         </li>')
                             }
                         } else if (fileType == 'pdf') {
-                            if (tempArr[i].remarks == '') {
+                            if (tempArr[i].contentRemark == '') {
                                 $('.upfileUl').find('#' + tempArr[i].contentTypeId).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].contentPath + '"  class="fileItem">\
                                             <div class="bgSize" style = "background-image: url(../images/pdf_icon.png)"> </div>\
                                             <p type="pdf" desc="' + tempArr[i].contentRemark + '" class="fileName">' + fileName + '</p>\
@@ -266,7 +266,7 @@ $(function () {
                                         </li>')
                             }
                         } else if (fileType == 'dcm') {
-                            if (tempArr[i].remarks == '') {
+                            if (tempArr[i].contentRemark == '') {
                                 $('.upfileUl').find('#' + tempArr[i].contentTypeId).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].contentPath + '"  class="fileItem">\
                                             <div class="bgSize" style = "background-image: url(../images/dcm_icon.png)"> </div>\
                                             <p type="dcm" desc="' + tempArr[i].contentRemark + '" class="fileName">' + fileName + '</p>\
@@ -291,6 +291,10 @@ $(function () {
     }
 
     $('.money').html(applyInfo.consultantPrice);
+    //订单编号
+    if(applyInfo.applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS"){
+        $('#applyNumber').hide();
+    }
     //订单编号
     $('.numbers').html(applyInfo.applyNumber);
 
@@ -642,7 +646,6 @@ $(function () {
     });
     /**MDT协调按钮*/
     $('.MDTBtn').click(function () {
-        console.log(222222222)
         let _$ = layui.jquery;
         layer.open({
             type: 1,
@@ -706,7 +709,7 @@ $(function () {
                 zIndex: layer.zIndex,
                 content: _$('.applyTimeFiled')
             });
-            showDateView(applyTimeList);
+            // showDateView(applyTimeList);
         } else {
             if (applyTypeStr === "APPLY_CONSULTATION_IMAGE_TEXT") {
                 let data = new FormData();
