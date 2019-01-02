@@ -7,6 +7,7 @@
         <result column="case_record_id" jdbcType="VARCHAR" property="caseRecordId"/>
         <result column="case_summary" jdbcType="VARCHAR" property="caseSummary"/>
         <result column="apply_summary" jdbcType="VARCHAR" property="applySummary"/>
+        <result column="apply_summary" jdbcType="VARCHAR" property="applySummary"/>
         <result column="invite_summary" jdbcType="VARCHAR" property="inviteSummary"/>
         <result column="apply_user_id" jdbcType="VARCHAR" property="applyUserId"/>
         <result column="apply_hospital_id" jdbcType="VARCHAR" property="applyHospitalId"/>
@@ -491,6 +492,9 @@
             </if>
             <if test="inviteUserId != null">
                 AND invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
+            </if>
+            <if test="inviteBranchId != null">
+                AND invite_branch_id = #{inviteBranchId,jdbc=VARCHAR}
             </if>
             <if test="consultationTypeList != null">
                 AND apply_type IN

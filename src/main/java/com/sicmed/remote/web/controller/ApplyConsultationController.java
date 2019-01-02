@@ -167,15 +167,19 @@ public class ApplyConsultationController extends BaseController {
     /**
      * 医生 受邀会诊 查询
      */
-    public Map receiveSelect(List<String> statusList, String msg) {
+    public Map receiveSelect(List<String> statusList) {
 
         String userId = getRequestToken();
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setConsultationTypeList(consultantTypeList);
         applyFormBean.setConsultationStatusList(statusList);
         applyFormBean.setInviteUserId(userId);
-
+        if (statusList.size() == 1 && String.valueOf(ConsultationStatus.CONSULTATION_APPLY_ACCEDE).equals(statusList.get(0))) {
+            applyFormBean.setInviteBranchId(userDetail.getBranchId());
+            applyFormBean.setInviteUserId(null);
+        }
         List<ApplyForm> applyFormList = applyFormService.getByApplyFormBean(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
             return badRequestOfArguments(applyFormList);
@@ -193,9 +197,8 @@ public class ApplyConsultationController extends BaseController {
         List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_ACCEDE);
         statusList.add(applyStatus);
-        String msg = "无待收诊";
 
-        return receiveSelect(statusList, msg);
+        return receiveSelect(statusList);
     }
 
     /**
@@ -208,9 +211,8 @@ public class ApplyConsultationController extends BaseController {
         String applyStatus2 = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_REJECT);
         statusList.add(applyStatus1);
         statusList.add(applyStatus2);
-        String msg = "无已拒收";
 
-        return receiveSelect(statusList, msg);
+        return receiveSelect(statusList);
     }
 
     /**
@@ -223,9 +225,8 @@ public class ApplyConsultationController extends BaseController {
         String applyStatus2 = String.valueOf(ConsultationStatus.CONSULTATION_DOCTOR_LOCKED);
         statusList.add(applyStatus1);
         statusList.add(applyStatus2);
-        String msg = "无排期审核";
 
-        return receiveSelect(statusList, msg);
+        return receiveSelect(statusList);
     }
 
     /**
@@ -237,9 +238,8 @@ public class ApplyConsultationController extends BaseController {
         List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
         statusList.add(applyStatus);
-        String msg = "无已排期";
 
-        return receiveSelect(statusList, msg);
+        return receiveSelect(statusList);
     }
 
     /**
@@ -251,9 +251,8 @@ public class ApplyConsultationController extends BaseController {
         List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
         statusList.add(applyStatus);
-        String msg = "无会诊中";
 
-        return receiveSelect(statusList, msg);
+        return receiveSelect(statusList);
     }
 
     /**
@@ -264,9 +263,8 @@ public class ApplyConsultationController extends BaseController {
         List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_REPORT_SUBMITTED);
         statusList.add(applyStatus);
-        String msg = "无待反馈";
 
-        return receiveSelect(statusList, msg);
+        return receiveSelect(statusList);
     }
 
     /**
@@ -279,9 +277,8 @@ public class ApplyConsultationController extends BaseController {
         String applyStatus2 = String.valueOf(ConsultationStatus.CONSULTATION_FEEDBACK_SUBMITTED);
         statusList.add(applyStatus1);
         statusList.add(applyStatus2);
-        String msg = "无已结束";
 
-        return receiveSelect(statusList, msg);
+        return receiveSelect(statusList);
     }
 
     /**
