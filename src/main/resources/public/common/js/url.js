@@ -2,7 +2,7 @@
  * 统一接口管理JS
  * @type {string}
  */
-const baseUrl = "http://127.0.0.1"; //服务地址
+const baseUrl = "http://192.168.0.222"; //服务地址
 
 const getAllHospital = "/hospital/select"; //查询所有医院类别
 
@@ -97,6 +97,8 @@ const sirReceiveEnd = "/apply/consultation/sirReceiveEnd";                      
 /** 首診醫生 操作接口*/
 const doctorSendFeedbackReportMoment = "/apply/dispose/doctorSendFeedbackReportMoment"; //医生 发出会诊 带反馈 编辑临床反馈 暂存 /医生 受邀会诊 会诊中 编辑会诊报告 暂存
 const doctorSendFeedbackReport = "/apply/dispose/doctorSendFeedbackReport"; //医生 发出会诊 带反馈 编辑临床反馈 暂存 /医生 受邀会诊 会诊中 编辑会诊报告 提交
+const doctorReceiveReject = "/apply/dispose/doctor"; //会诊中状态以及会诊中状态之前状态申请 拒收
+
 /**首诊医政操作接口*/
 
 const sirSendCheckAccede = "/apply/dispose/sirSendCheckAccede"; //通过会诊申请接口

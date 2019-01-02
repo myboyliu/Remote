@@ -3,7 +3,9 @@ var objParent = null; // 当前点击块的父级
 var fileArr = []; // 当前点击块的文件数据
 var indexFile = 0; // 当前点击的索引
 var ObjArr = []; //  当前点击块的文件对象
-
+var fileAllArr = []; //所有图片原始资源
+//   var fileArr = [];
+var scaleNum = 10; // 图片缩放倍数
 $(function () {
 
 

@@ -215,7 +215,7 @@
                 <div class="wire wire5"></div>
             </div>
             <div class="orderInformation">
-                <h4>
+                <h4 id="applyNumber">
                     <span>订单编号：</span>
                     <span class="numbers"></span>
                 </h4>
@@ -310,14 +310,14 @@
     <a class="closeBtnImg" href="javascript:;">关闭</a>
 </div>
 <!-- 弹层部分 背景图加三个弹层 -->
-<div class="background">
+<div id="consultantFeedbackIframe" class="background">
     <!-- 编辑临床反馈弹层 -->
-    <div class="rejectionLayer re_layer">
+    <div id="consultantFeedbackView" class="rejectionLayer re_layer">
         <div class="rejectionLayer_top">
             <span>临床反馈</span>
         </div>
         <div class="rejectionLayer_buttom">
-            <textarea name="" placeholder="请输入..." class="feedback_Val"></textarea>
+            <textarea id="consultantFeedbackValue" name="" placeholder="请输入..." class="feedback_Val"></textarea>
 
         </div>
         <input type="button" value="暂存" class="feed_TS">
@@ -334,6 +334,124 @@
     <p class="alertText">暂存成功</p>
 </div>
 
+<!-- 会诊报告弹窗 -->
+<div id="consultantReportIframe" class="background">
+    <div id="consultantReportView" class="rejectionLayer conversation">
+        <div class="rejectionLayer_top">
+            <span>会诊报告</span>
+        </div>
+        <div class="rejectionLayer_buttom">
+            <textarea name="" id="textarea" placeholder="请输入..."></textarea>
+        </div>
+        <div class="closeBtn clearfix">
+            <img src="../images/close.png" alt=""><span>关闭</span>
+        </div>
+        <input type="button" value="暂存" class="hold">
+        <input type="button" value="提交" class="refer">
+
+    </div>
+</div>
+
+<div class="returned submitter">
+    <p>提交成功</p>
+    <input type="button" value="确定" class="getBack">
+</div>
+<div class="returned working">
+    <p class="alertText">暂存成功</p>
+</div>
+<div class="returned promptText">
+    <p>主会诊医师需要等待所有医师提交会诊报告后，方可提交</p>
+</div>
 </body>
+
+
+<!-- 拒绝页面 弹窗 -->
+<div id="rejectIframe" class="background">
+    <!-- 拒收弹层 -->
+    <div id="rejectView" class="rejectionLayer re_layer">
+        <div class="rejectionLayer_top">
+            <span>填写拒收原因</span>
+            <input style="background: rgb(81, 109, 207); color: rgb(255, 255, 255);" type="button" value="建议多学科会诊" class="suggest ip">
+            <input type="button" value="其它原因" class="otherCause ip">
+        </div>
+        <div class="rejectionLayer_buttom">
+            <textarea name="" class="refuseReason"></textarea>
+            <div class="font">
+                请尽量多的填写对医务人员和发件医生有参考价值的建议及原因
+                <br> 1.选择多学科会诊，根据自身判断给出MDT的参与学科或参与人建议...
+                <br> 2.选择其它原因，请具体备注“排期已满”、“病历需完善”、“学科不匹配”...
+                <br>
+            </div>
+        </div>
+        <input type="button" value="确定" class="confirm">
+        <div class="closeBtn clearfix refuseBtn"><img src="../images/close.png" alt=""><span>关闭</span></div>
+    </div>
+</div>
+<div class="accept_layer clearfix">
+    <div class="accept_layer_left">
+        <p class="manner">接收视频会诊</p>
+        <p class="selectTime">选择时间</p>
+        <div class="rlBox">
+            <div class="site-demo-laydate">
+                <div class="layui-inline" id="test-n1"></div>
+            </div>
+        </div>
+
+        <p class="pd">*选择您可接受的时间并上传，专家会根据您的选择确定最终时间</p>
+        <p class="pd">*您选择时段越多，越利于会/转诊的顺利进行</p>
+    </div>
+    <div class="accept_layer_right">
+        <ul class="OUL clearfix">
+
+        </ul>
+    </div>
+    <div class="garyArea">灰色区域为发件医生选择的可接受会诊时间，您可据此选择您的可会诊时间</div>
+    <input type="button" value="确认接收" class="ConfirmReceive">
+    <div class="closeBtn clearfix">
+        <img src="../images/close.png" alt=""><span>关闭</span>
+    </div>
+    <!-- 确定接收此订单邀请？弹层 -->
+
+</div>
+<div class="accept">
+    <p>接收成功</p>
+</div>
+<div class="returned">
+    <p>拒收成功</p>
+</div>
+<div class="pleasewirte">
+    <p>请填写拒收原因</p>
+</div>
+<div class="operateBox submitBox">
+    <p>确定接收此订单邀请？</p>
+    <div class="btnBox">
+        <a class="noBtn" href="javascript:;">我再看下病历</a>
+        <a class="yesBtn" href="javascript:;">是的，&nbsp;我接收</a>
+    </div>
+</div>
+
+<!-- 视频会诊时间选择 -->
+<div class="selectTimeContainer clearfix">
+    <div class="closeBtnTime clearfix">
+        <span>关闭</span>
+        <img src="../images/close.png" alt="">
+    </div>
+    <div class="selectTimeContent clearfix">
+        <div class="leftContent">
+            <h3>发送视频会诊
+                <span>选择时间</span>
+            </h3>
+            <div class="timeBox" id="timeBox"></div>
+            <p>*选择您可接受的时间并上传，专家会根据您的选择确定最终时间</p>
+            <p>*您选择时段越多，越利于会/转诊的顺利进行</p>
+        </div>
+        <ul class="rightContent clearfix" id="timeUl">
+
+        </ul>
+        <div class="btnBox">
+            <a href="javascript:;" class="yesBtn">确定</a>
+        </div>
+    </div>
+</div>
 
 </html>
