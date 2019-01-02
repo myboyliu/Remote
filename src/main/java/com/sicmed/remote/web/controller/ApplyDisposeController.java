@@ -3,6 +3,7 @@ package com.sicmed.remote.web.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
+import com.sicmed.remote.common.ApplyNodeConstant;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
@@ -13,6 +14,7 @@ import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.ApplyTime;
 import com.sicmed.remote.web.entity.CaseConsultant;
 import com.sicmed.remote.web.service.ApplyFormService;
+import com.sicmed.remote.web.service.ApplyNodeService;
 import com.sicmed.remote.web.service.ApplyTimeService;
 import com.sicmed.remote.web.service.CaseConsultantService;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +46,9 @@ public class ApplyDisposeController extends BaseController {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private ApplyNodeService applyNodeService;
 
     /**
      * 医政 工作台 重新分配医生
@@ -192,6 +197,18 @@ public class ApplyDisposeController extends BaseController {
             if (j < 1) {
                 return badRequestOfArguments(msg2);
             }
+        }
+        if (applyStatus == "CONSULTATION_DATETIME_LOCKED" && applyForm.getApplyStatus() != ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString()) {
+            applyNodeService.insertByNodeOperator(applyForm.getId(), ApplyNodeConstant.已接诊.toString(), applyForm.getInviteSummary().substring(0, applyForm.getInviteSummary().indexOf(";")));
+            applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已排期.toString());
+        } else if (applyStatus == "CONSULTATION_DATETIME_LOCKED") {
+            applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已排期.toString());
+        }else if(applyStatus == ConsultationStatus.CONSULTATION_REPORT_SUBMITTED.toString()){
+            applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已提交会诊报告.toString());
+        }else if(applyStatus == ConsultationStatus.CONSULTATION_END.toString()){
+            applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已反馈.toString());
+            applyNodeService.insertByNodeOperator(applyForm.getId(), ApplyNodeConstant.已接诊.toString(), "");
+
         }
         return succeedRequest(applyForm);
     }

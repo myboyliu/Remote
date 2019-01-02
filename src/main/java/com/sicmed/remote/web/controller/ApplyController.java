@@ -3,6 +3,7 @@ package com.sicmed.remote.web.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
+import com.sicmed.remote.common.ApplyNodeConstant;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
@@ -49,8 +50,12 @@ public class ApplyController extends BaseController {
 
     @Autowired
     private ApplyTimeService applyTimeService;
+
     @Autowired
     private CaseConsultantService caseConsultantService;
+
+    @Autowired
+    private ApplyNodeService applyNodeService;
 
     /**
      * 添加草稿
@@ -215,6 +220,7 @@ public class ApplyController extends BaseController {
         if (k < 1) {
             return badRequestOfArguments("添加失败");
         }
+        applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.发起会诊.toString());
 
         return succeedRequest(applyForm);
     }
@@ -290,7 +296,7 @@ public class ApplyController extends BaseController {
         if (k < 1) {
             return badRequestOfArguments("添加失败");
         }
-
+        applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.发起会诊.toString());
         return succeedRequest(applyForm);
     }
 
@@ -338,7 +344,7 @@ public class ApplyController extends BaseController {
         if (j < 1) {
             return badRequestOfArguments("添加失败");
         }
-
+        applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.发起会诊.toString());
         return succeedRequest(applyForm);
     }
 
