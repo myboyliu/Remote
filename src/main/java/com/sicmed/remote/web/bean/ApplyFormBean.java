@@ -2,6 +2,7 @@ package com.sicmed.remote.web.bean;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sicmed.remote.web.entity.ApplyForm;
+import com.sicmed.remote.web.entity.ApplyNode;
 import com.sicmed.remote.web.entity.ApplyTime;
 import com.sicmed.remote.web.entity.CaseContent;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class ApplyFormBean extends ApplyForm implements Serializable {
 
     List<ApplyTime> applyTimeList;
     List<CaseContent> caseContentList;
+    List<ApplyNode> applyNodeList;
 
 
     private String patientSex;

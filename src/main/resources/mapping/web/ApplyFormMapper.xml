@@ -178,6 +178,12 @@
             <result column="cccontentRemark" jdbcType="VARCHAR" property="contentRemark"/>
             <result column="ccid" jdbcType="VARCHAR" property="id"/>
         </collection>
+        <collection property="applyNodeList" ofType="com.sicmed.remote.web.entity.ApplyNode" javaType="ArrayList">
+            <result column="applyNodeId" jdbcType="VARCHAR" property="id"/>
+            <result column="applyNodeName" jdbcType="VARCHAR" property="nodeName"/>
+            <result column="applyNodeTime" jdbcType="INTEGER" property="nodeTime"/>
+            <result column="applyNodeOperator" jdbcType="VARCHAR" property="nodeOperator"/>
+        </collection>
     </resultMap>
     <sql id="Bean_Column_List">
         ayf.id ayfId,ayf.apply_number ayfapplyNumber,ayf.case_record_id ayfcaseRecordId,ayf.case_summary ayfcaseSummary,
@@ -195,7 +201,12 @@
         cct.consultant_start_time cctconsultantStartTime,cct.consultant_end_time  cctconsultantEndTime,
         cct.consultant_report cctconsultantReport,cct.consultant_feedback cctconsultantFeedback,
         cct.consultant_price cctconsultantPrice,cct.hospital_price ccthospitalPrice,
-        cct.consultant_user_list consultantUserList
+        cct.consultant_user_list consultantUserList,
+        an.id applyNodeId,
+        an.node_name applyNodeName,
+        an.node_time applyNodeTime,
+        an.node_operator applyNodeOperator
+
     </sql>
     <select id="detailById" parameterType="java.lang.String" resultMap="BeanResultMap">
         select
@@ -206,6 +217,7 @@
         left join case_consultant cct on cct.id = ayf.id
         left join apply_time ayt on ayt.apply_form_id = ayf.id AND ayt.del_flag = "0"
         left join case_content cc on cc.record_id = cr.id AND cc.del_flag = "0"
+        left join apply_node an on an.apply_id = ayf.id
         where ayf.id = #{id} and ayf.del_flag= "0" order by cc.order_weight
     </select>
 
