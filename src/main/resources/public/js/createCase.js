@@ -104,7 +104,7 @@ function renderDoctorNavigation(data) {
     hospitalInfo["hospitalImgPrice"] = data[0].consultationPicturePrice;
     hospitalInfo["hospitalVideoPrice"] = data[0].consultationVideoPrice;
     hospitalInfo["branchId"] = $('.hospitalUl').find('.deptItem').eq(0).attr('name');
-    hospitalInfo["branchName"] =  $('.hospitalUl').find('.deptItem').eq(0).html();
+    hospitalInfo["branchName"] = $('.hospitalUl').find('.deptItem').eq(0).html();
     // 获取默认科室的医生
     getDoctorByBranchId($('.hospitalUl').find('.deptItem').eq(0).attr('name'));
 
@@ -217,7 +217,12 @@ function buildCaseData(successCallBack) {
     let caseSummary = "***/" + patientSex + "/" + patientAge + "/" + caseDiagnosis;
 
     /** 提交病历信息*/
-    ajaxRequest("POST", createCaseUrl, data, false, false, true, createCaseSuccess, requestField, null);
+    ajaxRequest("POST", createCaseUrl, data, false, false, true, createCaseSuccess, failedParam, null);
+
+    function failedParam(data) {
+        layer.closeAll();
+        layer.msg(data.result);
+    }
 
     function createCaseSuccess(result) {
         console.log(result);
@@ -334,7 +339,8 @@ function createPictureApplyData(caseId, caseSummary) {
     data.append("applyRemark", $('#createCase_textGola').val()); //会诊目的
     data.append("consultantPrice", $('.imgPric').html()); // 费用
     if (inviteDoctorArray.length > 0) {
-        const doctorList = [];
+        let doctorList = [];
+        let consultantReport = [];
         data.append('inviteHospitalId', inviteDoctorArray[0].hospitalId); // 会诊医院id
         data.append('inviteBranchId', inviteDoctorArray[0].branchId); // 主会诊科室id
         data.append('inviteUserId', inviteDoctorArray[0].doctorId);
@@ -347,9 +353,16 @@ function createPictureApplyData(caseId, caseSummary) {
                 "doctorId": inviteDoctorArray[i].doctorId,
                 "price": inviteDoctorArray[i].doctorPicturePrice,
             });
-            inviteSummary += inviteDoctor+";";
+            consultantReport.push({
+                "doctorName": inviteDoctorArray[i].doctorName,
+                "doctorId": inviteDoctorArray[i].doctorId,
+                "report": "",
+                "reportStatus": "1"
+            })
+            inviteSummary += inviteDoctor + ";";
         }
-        data.append("inviteSummary",inviteSummary);
+        data.append("inviteSummary", inviteSummary);
+        data.append("consultantReport", JSON.stringify(consultantReport));
         data.append('consultantUserList', JSON.stringify(doctorList));
     } else {
         data.append('inviteHospitalId', hospitalInfo.id);
@@ -370,7 +383,6 @@ function createPictureApplyData(caseId, caseSummary) {
 const dateList = []; // 选择的时间数据
 function createVideoApplyData(caseId, caseSummary) {
     const data = new FormData();
-
     data.append('caseRecordId', caseId); //病历ID
     data.append("caseSummary", caseSummary); //病历摘要信息
     data.append('applyUrgent', $('.urgent > a.active').attr('value')); //是否加急(1加急/是，0不加急/否)
@@ -378,6 +390,7 @@ function createVideoApplyData(caseId, caseSummary) {
     data.append('consultantPrice', $('.videoPric').html()); // 费用
     if (inviteDoctorArray.length > 0) {
         const doctorList = [];
+        let consultantReport = [];
         data.append('inviteHospitalId', inviteDoctorArray[0].hospitalId); // 会诊医院id
         data.append('inviteBranchId', inviteDoctorArray[0].branchId); // 主会诊科室id
         data.append('inviteUserId', inviteDoctorArray[0].doctorId);
@@ -390,9 +403,16 @@ function createVideoApplyData(caseId, caseSummary) {
                 "doctorId": inviteDoctorArray[i].doctorId,
                 "price": inviteDoctorArray[i].doctorVideoPrice,
             });
-            inviteSummary += inviteDoctor+";";
+            consultantReport.push({
+                "doctorName": inviteDoctorArray[i].doctorName,
+                "doctorId": inviteDoctorArray[i].doctorId,
+                "report": "",
+                "reportStatus": "1"
+            })
+            inviteSummary += inviteDoctor + ";";
         }
-        data.append("inviteSummary",inviteSummary);
+        data.append("inviteSummary", inviteSummary);
+        data.append("consultantReport", JSON.stringify(consultantReport));
         data.append('consultantUserList', JSON.stringify(doctorList));
     } else {
         data.append('inviteHospitalId', hospitalInfo.id);
@@ -520,8 +540,8 @@ $(function () {
         hospitalInfo["hospitalPhone"] = $('.hospitalItem.active').attr("hospitaltel");
         hospitalInfo["hospitalImgPrice"] = $('.hospitalItem.active').attr("imgpric");
         hospitalInfo["hospitalVideoPrice"] = $('.hospitalItem.active').attr("videopric");
-        hospitalInfo["branchId"] =  $(this).attr('name');
-        hospitalInfo["branchName"] =  $(this).html();
+        hospitalInfo["branchId"] = $(this).attr('name');
+        hospitalInfo["branchName"] = $(this).html();
 
 
         $('.hospitalTel').html($('.hospitalItem.active').attr("hospitaltel"));
@@ -1496,15 +1516,15 @@ $(function () {
             layer.msg('输入内容格式有误，请修改');
         } else {
             discriCard($(this).val());
-                $('#age').val(idCardInfo.age);
-                $('.choiceAge').val(idCardInfo.unit);
-                $('#address').val(idCardInfo.city);
-                //获取性别
-                if (idCardInfo.sex % 2 == 1) {
-                    $('#man').addClass('active').siblings('a').removeClass('active');
-                } else {
-                    $('#woman').addClass('active').siblings('a').removeClass('active');
-                }
+            $('#age').val(idCardInfo.age);
+            $('.choiceAge').val(idCardInfo.unit);
+            // $('#address').val(idCardInfo.city);
+            //获取性别
+            if (idCardInfo.sex % 2 == 1) {
+                $('#man').addClass('active').siblings('a').removeClass('active');
+            } else {
+                $('#woman').addClass('active').siblings('a').removeClass('active');
+            }
         }
     });
     // 校验年龄 身高 体重
