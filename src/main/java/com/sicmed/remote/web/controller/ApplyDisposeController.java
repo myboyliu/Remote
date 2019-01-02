@@ -6,6 +6,7 @@ import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
+import com.sicmed.remote.web.YoonaLtUtils.OrderNumUtils;
 import com.sicmed.remote.web.bean.ApplyTimeBean;
 import com.sicmed.remote.web.bean.ConsultationTimeBean;
 import com.sicmed.remote.web.entity.ApplyForm;
@@ -17,6 +18,7 @@ import com.sicmed.remote.web.service.CaseConsultantService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +41,9 @@ public class ApplyDisposeController extends BaseController {
 
     @Autowired
     private CaseConsultantService caseConsultantService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 医政 工作台 重新分配医生
@@ -145,7 +150,7 @@ public class ApplyDisposeController extends BaseController {
      * @param msg2
      * @param report
      */
-    public Map updateStatus(String id, String applyStatus, String msg1,
+    public Map updateStatus(String id, String orderNumber, String applyStatus, String msg1,
                             String msg2, String report) {
 
         if (StringUtils.isBlank(id)) {
@@ -169,6 +174,9 @@ public class ApplyDisposeController extends BaseController {
 
         ApplyForm applyForm = new ApplyForm();
         applyForm.setId(id);
+        if (StringUtils.isNotBlank(orderNumber)) {
+            applyForm.setApplyNumber(orderNumber);
+        }
         int i = applyFormService.updateStatus(applyForm, applyStatus, userId);
         if (i < 1) {
             return badRequestOfArguments(msg1);
@@ -200,7 +208,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "受邀会诊收诊医政拒收,form修改失败";
         String msg2 = "受邀会诊收诊医政拒收,time修改失败";
 
-        return updateStatus(id, applyStatus, msg1, msg2, report);
+        return updateStatus(id, null, applyStatus, msg1, msg2, report);
     }
 
     /**
@@ -220,7 +228,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "受邀会诊收诊医政待收诊接受,form修改失败";
         String msg2 = "受邀会诊收诊医政待收诊接受,time修改失败";
 
-        return updateStatus(id, applyStatus, msg1, msg2, null);
+        return updateStatus(id, null, applyStatus, msg1, msg2, null);
     }
 
     /**
@@ -233,7 +241,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "受邀会诊收诊医政排期审核接受,form修改失败";
         String msg2 = "受邀会诊收诊医政排期审核接受,time修改失败";
 
-        return updateStatus(id, applyStatus, msg1, msg2, null);
+        return updateStatus(id, null, applyStatus, msg1, msg2, null);
     }
 
 
@@ -254,7 +262,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "受邀会诊收诊医政确认砖家协调,form修改失败";
         String msg2 = "受邀会诊收诊医政确认砖家协调,time修改失败";
 
-        return updateStatus(id, applyStatus, msg1, msg2, null);
+        return updateStatus(id, null, applyStatus, msg1, msg2, null);
     }
 
     /**
@@ -266,8 +274,9 @@ public class ApplyDisposeController extends BaseController {
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_ACCEDE);
         String msg1 = "发出会诊医政待审核通过,form修改失败";
         String msg2 = "发出会诊医政待审核通过,time修改失败";
+        String orderNumber = OrderNumUtils.getOrderNo(redisTemplate);
 
-        return updateStatus(id, applyStatus, msg1, msg2, null);
+        return updateStatus(id, orderNumber, applyStatus, msg1, msg2, null);
     }
 
     /**
@@ -312,8 +321,8 @@ public class ApplyDisposeController extends BaseController {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_APPLY_ACCEDE);
         String msg1 = "转诊医政待审核通过,form修改失败";
         String msg2 = "转诊医政待审核通过,time修改失败";
-
-        return updateStatus(id, applyStatus, msg1, msg2, null);
+        String orderNumber = OrderNumUtils.getOrderNo(redisTemplate);
+        return updateStatus(id, orderNumber, applyStatus, msg1, msg2, null);
     }
 
     /**
@@ -326,7 +335,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "转诊医政待审核拒绝,form修改失败";
         String msg2 = "转诊医政待审核拒绝,time修改失败";
 
-        return updateStatus(id, applyStatus, msg1, msg2, report);
+        return updateStatus(id, null, applyStatus, msg1, msg2, report);
     }
 
     /**
@@ -339,7 +348,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "转诊医政待收诊同意,form修改失败";
         String msg2 = "转诊医政待收诊同意,time修改失败";
 
-        return updateStatus(id, applyStatus, msg1, msg2, null);
+        return updateStatus(id, null, applyStatus, msg1, msg2, null);
     }
 
     /**
@@ -352,7 +361,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "转诊医政待收诊拒绝,form修改失败";
         String msg2 = "转诊医政待收诊拒绝,time修改失败";
 
-        return updateStatus(id, applyStatus, msg1, msg2, report);
+        return updateStatus(id, null, applyStatus, msg1, msg2, report);
     }
 
     /**
@@ -366,7 +375,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "转诊医政排期审核同意,form修改失败";
         String msg2 = "转诊医政排期审核同意,time修改失败";
 
-        return updateStatus(id, applyStatus, msg1, msg2, null);
+        return updateStatus(id, null, applyStatus, msg1, msg2, null);
     }
 
     /**
@@ -380,7 +389,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "转诊医政排期审核拒绝,form修改失败";
         String msg2 = "转诊医政排期审核拒绝,time修改失败";
 
-        return updateStatus(id, applyStatus, msg1, msg2, report);
+        return updateStatus(id, null, applyStatus, msg1, msg2, report);
     }
 
     /**
@@ -393,7 +402,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "转诊医政排期审核拒绝,form修改失败";
         String msg2 = "转诊医政排期审核拒绝,time修改失败";
 
-        return updateStatus(id, applyStatus, msg1, msg2, null);
+        return updateStatus(id, null, applyStatus, msg1, msg2, null);
     }
 
     /**
@@ -406,7 +415,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "转诊医政排期审核拒绝,form修改失败";
         String msg2 = "转诊医政排期审核拒绝,time修改失败";
 
-        return updateStatus(id, applyStatus, msg1, msg2, report);
+        return updateStatus(id, null, applyStatus, msg1, msg2, report);
     }
 
     /**
@@ -419,7 +428,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "受邀胡子很医生拒收,form修改失败";
         String msg2 = "受邀胡子很医生拒收,time修改失败";
 
-        return updateStatus(id, applyStatus, msg1, msg2, report);
+        return updateStatus(id, null, applyStatus, msg1, msg2, report);
     }
 
     /**
@@ -437,7 +446,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "受邀胡子很医生拒收,form修改失败";
         String msg2 = "受邀胡子很医生拒收,time修改失败";
 
-        return updateStatus(id, applyStatus, msg1, msg2, null);
+        return updateStatus(id, null, applyStatus, msg1, msg2, null);
     }
 
     /**
@@ -526,7 +535,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "转诊医生已排期同意转诊,form修改失败";
         String msg2 = "转诊医生已排期同意转诊,time修改失败";
 
-        return updateStatus(id, applyStatus, msg1, msg2, null);
+        return updateStatus(id, null, applyStatus, msg1, msg2, null);
     }
 
     /**
@@ -539,7 +548,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "转诊医生已排期拒绝转诊,form修改失败";
         String msg2 = "转诊医生已排期拒绝转诊,time修改失败";
 
-        return updateStatus(id, applyStatus, msg1, msg2, report);
+        return updateStatus(id, null, applyStatus, msg1, msg2, report);
     }
 
     /**
