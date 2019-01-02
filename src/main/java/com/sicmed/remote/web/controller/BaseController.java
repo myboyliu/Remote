@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.controller;
 
+import com.sicmed.remote.web.service.ProcedureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,6 +32,9 @@ public abstract class BaseController {
     
     @Autowired
     public StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    public ProcedureService procedureService;
 
     private Map<String, Object> responseMap;
 

@@ -226,7 +226,7 @@ public class ApplyController extends BaseController {
      * @param applyFormBr
      */
     @PostMapping(value = "video")
-    public Map videoConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String startEndTime, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice) {
+    public Map videoConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String startEndTime, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice,String consultantReport) {
 
         if (applyFormBr.hasErrors()) {
             return fieldErrorsBuilder(applyFormBr);
@@ -284,6 +284,7 @@ public class ApplyController extends BaseController {
         caseConsultant.setHospitalPrice(hospitalPrice);
         caseConsultant.setInviteUserId(applyForm.getInviteUserId());
         caseConsultant.setApplyUserId(userId);
+        caseConsultant.setConsultantReport(consultantReport);
 
         int k = caseConsultantService.insertSelective(caseConsultant);
         if (k < 1) {
@@ -300,7 +301,7 @@ public class ApplyController extends BaseController {
      * @param applyFormBr
      */
     @PostMapping(value = "picture")
-    public Map pictureConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice) {
+    public Map pictureConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice,String consultantReport) {
 
         if (applyFormBr.hasErrors()) {
             return fieldErrorsBuilder(applyFormBr);
@@ -331,6 +332,7 @@ public class ApplyController extends BaseController {
         caseConsultant.setHospitalPrice(hospitalPrice);
         caseConsultant.setInviteUserId(applyForm.getInviteUserId());
         caseConsultant.setApplyUserId(userId);
+        caseConsultant.setConsultantReport(consultantReport);
 
         int j = caseConsultantService.insertSelective(caseConsultant);
         if (j < 1) {
