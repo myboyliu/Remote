@@ -111,6 +111,7 @@ public class ApplyConsultationController extends BaseController {
      */
     @GetMapping(value = "sendDateTimeLocked")
     public Map sendDateTimeLocked() {
+        procedureService.applyChecked();
         List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
         statusList.add(applyStatus);
@@ -124,6 +125,7 @@ public class ApplyConsultationController extends BaseController {
      */
     @GetMapping(value = "sendBegin")
     public Map sendBegin() {
+        procedureService.applyChecked();
         List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
         statusList.add(applyStatus);
@@ -231,6 +233,7 @@ public class ApplyConsultationController extends BaseController {
      */
     @GetMapping(value = "receiveDateTimeLocked")
     public Map receiveDateTimeLocked() {
+        procedureService.applyChecked();
         List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
         statusList.add(applyStatus);
@@ -244,6 +247,7 @@ public class ApplyConsultationController extends BaseController {
      */
     @GetMapping(value = "receiveBegin")
     public Map receiveBegin() {
+        procedureService.applyChecked();
         List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
         statusList.add(applyStatus);
@@ -351,6 +355,7 @@ public class ApplyConsultationController extends BaseController {
      */
     @GetMapping(value = "sirSendDateTimeLocked")
     public Map sirSendDateTimeLocked() {
+        procedureService.applyChecked();
         List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
         statusList.add(applyStatus);
@@ -364,6 +369,7 @@ public class ApplyConsultationController extends BaseController {
      */
     @GetMapping(value = "sirSendBegin")
     public Map sirSendBegin() {
+        procedureService.applyChecked();
         List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
         statusList.add(applyStatus);
@@ -471,6 +477,7 @@ public class ApplyConsultationController extends BaseController {
      */
     @GetMapping(value = "sirReceiveDateTimeLocked")
     public Map sirReceiveDateTimeLocked() {
+        procedureService.applyChecked();
         List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
         statusList.add(applyStatus);
@@ -484,6 +491,7 @@ public class ApplyConsultationController extends BaseController {
      */
     @GetMapping(value = "sirReceiveBegin")
     public Map sirReceiveBegin() {
+        procedureService.applyChecked();
         List<String> statusList = new ArrayList<>();
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
         statusList.add(applyStatus);
