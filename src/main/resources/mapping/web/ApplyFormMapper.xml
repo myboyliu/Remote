@@ -491,7 +491,16 @@
       del_flag = #{delFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
-
+    <update id="updateInviteDoctorByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.ApplyForm">
+        update apply_form
+        <set>
+            invite_summary = #{inviteSummary,jdbcType=VARCHAR},
+            invite_user_id = #{inviteUserId,jdbcType=VARCHAR},
+            invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR},
+            invite_branch_id = #{inviteBranchId,jdbcType=VARCHAR},
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
     <!--会诊医生相关查询-->
     <select id="getByApplyFormBean" parameterType="com.sicmed.remote.web.bean.ApplyFormBean" resultMap="BaseResultMap">
         select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,

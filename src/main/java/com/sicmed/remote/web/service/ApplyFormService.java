@@ -85,4 +85,8 @@ public class ApplyFormService implements BaseService<ApplyForm> {
     public List<ApplyForm> sirSelectInquiry(ApplyFormBean applyFormBean) {
         return applyFormMapper.sirSelectInquiry(applyFormBean);
     }
+
+    public int updateInviteDoctorByPrimaryKeySelective(ApplyForm applyForm) {
+        return applyFormMapper.updateInviteDoctorByPrimaryKeySelective(applyForm);
+    }
 }
