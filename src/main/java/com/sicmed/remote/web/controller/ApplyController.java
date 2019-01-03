@@ -269,7 +269,7 @@ public class ApplyController extends BaseController {
         }
         if (consultationTimeBeanList != null) {
             for (ConsultationTimeBean consultationTimeBean : consultationTimeBeanList) {
-                resultMap.put(consultationTimeBean.getStartTime(), consultationTimeBean.getEntTime());
+                resultMap.put(consultationTimeBean.getStartTime(), consultationTimeBean.getEndTime());
             }
         }
         // 添加申请时间
