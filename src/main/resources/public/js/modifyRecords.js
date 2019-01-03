@@ -1,3 +1,7 @@
+let isVideo = false;// 选择的医生信息数组
+let applyInfo = {};// 选择的医生信息数组
+var fileAllArr = []; //所有图片原始资源
+var scaleNum = 10; // 图片缩放倍数
 /** 渲染 病历页面 左侧导航 */
 function renderCaseTypeLeftNavigation(data) {
     let _html = '<li class="oneLevelItem patientInfo active">\
@@ -49,6 +53,7 @@ function renderCaseTypeLeftNavigation(data) {
     });
     $('.upfileUl').html(upfileHtml);
 }
+
 /** 渲染 病例图片列表 */
 let fileParentUi = null; // 当前点击块的父级
 
@@ -62,11 +67,104 @@ function renderFileListView(baseUrl, url, type, fileName) {
 
 $(function () {
     /**查询病历类型列表*/
-    ajaxRequest("GET", getAllCaseContentType, null, true, false, true, renderCaseTypeLeftNavigation, null, null);
+    ajaxRequest("GET", getAllCaseContentType, null, true, false, false, renderCaseTypeLeftNavigation, null, null);
+    if (JSON.parse(sessionStorage.getItem('applyInfo'))) {
+        applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
+        if ("APPLY_CONSULTATION_VIDEO" === applyInfo.applyType) {
+            isVideo = true;
+        }
+    }
+    if (JSON.parse(sessionStorage.getItem('applyInfo'))) {
+        applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
+        if ("APPLY_CONSULTATION_VIDEO" === applyInfo.applyType) {
+            isVideo = true;
+        }
+        $('#username').val(applyInfo.patientName)
+        $('#idCard').val(applyInfo.patientCard)
+        $('#phone').val(applyInfo.patientPhone)
+        $('#address').val(applyInfo.detailAddress)
+        var choiceAge = applyInfo.patientAge;
+        // $('#age').val(applyInfo.patientAge);
+        // $('.choiceAge').val(applyInfo.patientAge);
+        $('#high').val(applyInfo.patientHeight);
+        $('#weight').val(applyInfo.patientWeight / 1000);
+        $('.fileCount').html(applyInfo.caseContentList.length); // 图片总张数
+        if (applyInfo.patientSex == '男') {
+            $('.sex > a').removeClass('active').eq(0).addClass('active');
+        } else {
+            $('.sex > a').removeClass('active').eq(1).addClass('active');
+        }
+        $('.urgent > a').removeClass('active').eq(applyInfo.applyUrgent).addClass('active');
+        $('#createCase_textDiagnose').val(applyInfo.caseDiagnosis); //初步诊断
+        $('#createCase_textGola').val(applyInfo.applyRemark); //会诊目的
+        // 男女选择
+        $('.sex > a').click(function () {
+            $(this).addClass('active').siblings('a').removeClass('active');
+        });
+        // 加急选择
+        $('.urgent > a').click(function () {
+            $(this).addClass('active').siblings('a').removeClass('active');
+        });
+        /* 电子病历附件 */
+        var tempArr = applyInfo.caseContentList;
+        for (var i = 0; i < tempArr.length; i++) {
+            var fileType = tempArr[i].contentPath.substr(tempArr[i].contentPath.lastIndexOf('.') + 1, tempArr[i].contentPath.length);
+            var fileName = tempArr[i].contentPath;
+            fileAllArr.push(fileName);
+            console.log(tempArr[i].contentTypeId)
+            if (fileType == 'png' || fileType == 'jpg') {
+                if (tempArr[i].contentRemark == "") {
+                    $('.upfileUl').find('#' + tempArr[i].contentTypeId).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].orderWeight + '" filePath="' + tempArr[i].contentPath + '"  class="fileItem">\
+                                       <div style = "background-image: url(&apos;' + baseUrl + "/" + tempArr[i].contentPath + '&apos;)"></div>\
+                                        <img class="delFileBtn" src="../images/delete_file.png"/>\
+                                        <p type="img" desc="' + tempArr[i].contentRemark + '" class="fileName">' + tempArr[i].contentPath + '</p>\
+                                    </li>')
+                } else {
 
-    var fileAllArr = []; //所有图片原始资源
-    var scaleNum = 10; // 图片缩放倍数
-    // 验证中文名字
+                    $('.upfileUl').find('#' + tempArr[i].contentTypeId).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].orderWeight + '" filePath="' + tempArr[i].contentPath + '" class="fileItem">\
+                                       <div style = "background-image: url(&apos;' + baseUrl + "/" + tempArr[i].contentPath + '&apos;)"></div>\
+                                        <img class="delFileBtn" src="../images/delete_file.png"/>\
+                                        <p type="img" desc="' + tempArr[i].contentRemark + '" class="fileName active">' + tempArr[i].contentPath + '</p>\
+                                    </li>')
+                }
+            } else if (fileType == 'pdf') {
+                if (tempArr[i].contentRemark == '') {
+                    $('.upfileUl').find('#' + tempArr[i].contentTypeId).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].orderWeight + '" filePath="' + tempArr[i].contentPath + '"  class="fileItem">\
+                                        <div class="bgSize" style = "background-image: url(../images/pdf_icon.png)"> </div>\
+                                        <img class="delFileBtn" src="../images/delete_file.png"/>\
+                                        <p type="pdf" desc="' + tempArr[i].contentRemark + '" class="fileName">' + tempArr[i].contentPath + '</p>\
+                                    </li>')
+                } else {
+                    $('.upfileUl').find('#' + tempArr[i].contentTypeId).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].orderWeight + '" filePath="' + tempArr[i].contentPath + '" class="fileItem">\
+                                        <div class="bgSize" style = "background-image: url(../images/pdf_icon.png)"> </div>\
+                                        <img class="delFileBtn" src="../images/delete_file.png"/>\
+                                        <p type="pdf" desc="' + tempArr[i].contentRemark + '" class="fileName active">' + tempArr[i].contentPath + '</p>\
+                                    </li>')
+                }
+            } else if (fileType == 'dcm') {
+                if (tempArr[i].contentRemark == '') {
+                    $('.upfileUl').find('#' + tempArr[i].contentTypeId).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].orderWeight + '" filePath="' + tempArr[i].contentPath + '"  class="fileItem">\
+                                        <div class="bgSize" style = "background-image: url(../images/dcm_icon.png)"> </div>\
+                                        <img class="delFileBtn" src="../images/delete_file.png"/>\
+                                        <p type="dcm" desc="' + tempArr[i].contentRemark + '" class="fileName">' + tempArr[i].contentPath + '</p>\
+                                    </li>')
+                } else {
+                    $('.upfileUl').find('#' + tempArr[i].contentTypeId).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].orderWeight + '" filePath="' + tempArr[i].contentPath + '" class="fileItem">\
+                                        <div class="bgSize" style = "background-image: url(../images/dcm_icon.png)"> </div>\
+                                        <img class="delFileBtn" src="../images/delete_file.png"/>\
+                                        <p type="dcm" desc="' + tempArr[i].contentRemark + '" class="fileName active">' + tempArr[i].contentPath + '</p>\
+                                    </li>')
+                }
+            }
+            $('.fileCount').html(fileAllArr.length);
+            $(".fileContent").sortable({
+                items: "li:not(.fileAdd)"
+            });
+        }
+    }
+
+
+// 验证中文名字
     $('#username').blur(function () {
         if ($('#username').val().length === 0) {
             layer.msg('姓名不能为空');
@@ -75,7 +173,7 @@ $(function () {
 
         }
     });
-    //  校验身份证号
+//  校验身份证号
     $('#idCard').blur(function () {
         // 账号的验证 手机号验证
         if ($('#idCard').val().length === 0) {
@@ -87,7 +185,7 @@ $(function () {
         }
     });
 
-    //  校验年龄 身高 体重
+//  校验年龄 身高 体重
     $('#age').blur(function () {
         if (!RegExpObj.Reg_age.test($('#age').val())) {
             layer.msg('输入内容格式有误，请修改')
@@ -111,13 +209,13 @@ $(function () {
             layer.msg('体重不能为空');
         }
     });
-    //    验证电话号码
+//    验证电话号码
     $('#phone').blur(function () {
         if (!RegExpObj.Reg_isPhone.test($('#phone').val())) {
             layer.msg('输入内容格式有误，请修改')
         }
     });
-    //    验证常住城市
+//    验证常住城市
     $('#address').blur(function () {
         if ($('#address').val().length == 0) {
             layer.msg('城市不能为空');
@@ -125,20 +223,20 @@ $(function () {
             layer.msg('输入内容格式有误，请修改')
         }
     });
-    // 验证初步诊断不能为空
+// 验证初步诊断不能为空
     $('#createCase_textDiagnose').blur(function () {
         if ($('#createCase_textDiagnose').val().length == 0) {
             layer.msg('初步诊断不能为空');
         }
     });
-    // 验证会、转诊目的不能为空
+// 验证会、转诊目的不能为空
     $('#createCase_textGola').blur(function () {
         if ($('#createCase_textGola').val().length == 0) {
             layer.msg('会/转诊目的不能为空');
         }
     });
 
-    // 输入身份证号自动计算年龄 性别 idCard
+// 输入身份证号自动计算年龄 性别 idCard
     function discriCard(UUserCard) {
         console.log(UUserCard)
         var unit = '岁'; // 单位
@@ -189,197 +287,6 @@ $(function () {
         $('.choiceAge').val(unit);
     }
 
-    // 创建病历左侧列表
-    $.ajax({
-        type: 'GET',
-        url: IP + 'caseType/findList',
-        dataType: 'json',
-        xhrFields: {
-            withCredentials: true
-        },
-        async: false,
-        success: function (data) {
-            // console.log(data);
-            if (data.status == 200) {
-                var _html = '<li class="oneLevelItem patientInfo active">\
-                    <p class="oneLevelName">患者基本信息</p>\
-                </li>\
-                <li class="oneLevelItem caseHistory">\
-                    <p class="oneLevelName">电子病历附件</p>\
-                    <ul class="twoLevelUl">';
-                $.each(data.listList, function (key, val) {
-                    _html += '<li class="twoLevelItem">\
-                                <p class="twoLevelName">' + key + '</p>\
-                                <ul class="threeLevelUl">';
-                    for (var i = 0; i < val.length; i++) {
-                        _html += '<li class="threeLevelItem" name="' + val[i].id + '">' + val[i].name + '</li>'
-                    }
-                    _html += '</ul>\
-                            </li>'
-                })
-                _html += '</ul>\
-            </li>'
-                $('.oneLevelUl').html(_html);
-                $('.oneLevelItem').eq(0).addClass('active').find('.twoLevelUl').show().find('.twoLevelItem').eq(0).addClass('active').find('.tthreeLevelUl').slideDown();
-                // $('.oneLevelUl').find('.threeLevelItem').eq(0).addClass('active');
-                $('.oneLevelUl').css({
-                    'width': '145px',
-                    'position': 'fixed',
-                });
-                // $('.twoLevelUl').css({
-                //     'height': $(window).height() - 230 - $('.oneLevelUl .oneLevelItem').length * $('.oneLevelName').height(),
-                // });
-
-
-                var upfileHtml = '';
-                $.each(data.listList, function (key, val) {
-                    for (var i = 0; i < val.length; i++) {
-                        upfileHtml += '<li name="' + val[i].name + '" id="' + val[i].id + '" class="upfileItem clearfix">\
-                            <div class="upfileContent">\
-                                <div class="operateLeft">' + key + '-' + val[i].name + '</div>\
-                                <ul class="fileContent clearfix">\
-                                    <li class="fileAdd">\
-                                        <a class="addfileBtn" href="javascript:;"></a>\
-                                        <input class="fileInput" type="file">\
-                                        <p class="fileName">添加文件</p>\
-                                    </li>\
-                                </ul>\
-                            </div>\
-                        </li>'
-                    }
-                })
-                $('.upfileUl').html(upfileHtml);
-            } else if (data.status == 250) {
-                window.location = '/yilaiyiwang/login/login.html'
-            }
-        },
-        error: function (err) {
-            console.log(err)
-        },
-    });
-
-    function selectOrderById(orderId, type, readFlag) {
-        $.ajax({
-            type: 'POST',
-            url: IP + 'order/selectOrderById',
-            dataType: 'json',
-            data: {
-                "orderId": orderId,
-                "type": type, //是那个列表的类型(0:医政受邀列表,1:医政发出列表,2:医生受邀列表,3:医生发出列表)
-                "readFlag": readFlag,
-            },
-            async: false,
-            xhrFields: {
-                withCredentials: true
-            },
-            crossDomain: true,
-            success: function (data) {
-                console.log(data)
-                if (data.status == 200) {
-                    if (data.orderFormBean.statesName == "首诊待审核") {
-                        sessionStorage.setItem("data", JSON.stringify(data));
-                    } else {
-                        window.location = "/yilaiyiwang/workbench/workbench.html";
-                    }
-                } else if (data.status == 250) {
-                    // 未登录操作
-                    window.location = '/yilaiyiwang/login/login.html';
-                } else {
-                    // 其他操作
-                }
-            },
-            error: function (err) {
-                console.log(err);
-
-            },
-        })
-    }
-
-    // selectOrderById(localStorage.getItem('orderId'), localStorage.getItem('orderType'), '1')
-    // if (JSON.parse(sessionStorage.getItem('data'))) {
-    //     var data = JSON.parse(sessionStorage.getItem('data'));
-    //     sessionStorage.removeItem('data');
-    //     $('#username').val(data.orderFormBean.name)
-    //     $('#idCard').val(data.orderFormBean.idCard)
-    //     $('#phone').val(data.orderFormBean.phone)
-    //     $('#address').val(data.orderFormBean.address)
-    //     var choiceAge = data.orderFormBean.age;
-    //     $('#age').val(choiceAge.substr(0, choiceAge.length - 1));
-    //     $('.choiceAge').val(choiceAge.substr(-1, 1));
-    //     $('#high').val(data.orderFormBean.high);
-    //     $('#weight').val(data.orderFormBean.weight);
-    //     $('.fileCount').html(data.patientCaseList.length); // 图片总张数
-    //     if (data.orderFormBean.sex == '男') {
-    //         $('.sex > a').removeClass('active').eq(0).addClass('active');
-    //     } else {
-    //         $('.sex > a').removeClass('active').eq(1).addClass('active');
-    //     }
-    //     $('.urgent > a').removeClass('active').eq(data.orderFormBean.isurgent).addClass('active');
-    //     $('#createCase_textDiagnose').val(data.orderFormBean.diagnosis); //初步诊断
-    //     $('#createCase_textGola').val(data.orderFormBean.telemedicineTarget); //会诊目的
-    //     // 男女选择
-    //     $('.sex > a').click(function () {
-    //         $(this).addClass('active').siblings('a').removeClass('active');
-    //     });
-    //     // 加急选择
-    //     $('.urgent > a').click(function () {
-    //         $(this).addClass('active').siblings('a').removeClass('active');
-    //     });
-    //     /* 电子病历附件 */
-    //     var tempArr = data.patientCaseList;
-    //     for (var i = 0; i < tempArr.length; i++) {
-    //         var fileType = tempArr[i].filesUrl.substr(tempArr[i].filesUrl.lastIndexOf('.') + 1, tempArr[i].filesUrl.length);
-    //         var fileName = tempArr[i].filesUrl.substr(tempArr[i].filesUrl.lastIndexOf('/') + 1, tempArr[i].filesUrl.length);
-    //         fileAllArr.push(fileName);
-    //         if (fileType == 'png' || fileType == 'jpg') {
-    //             if (tempArr[i].remarks == '') {
-    //                 $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '"  class="fileItem">\
-    //                                        <div style = "background-image: url(&apos;' + imgIp + tempArr[i].filesUrl + '&apos;)"></div>\
-    //                                         <img class="delFileBtn" src="../images/delete_file.png"/>\
-    //                                         <p type="img" desc="' + tempArr[i].remarks + '" class="fileName">' + fileName + '</p>\
-    //                                     </li>')
-    //             } else {
-    //                 $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '" class="fileItem">\
-    //                                        <div style = "background-image: url(&apos;' + imgIp + tempArr[i].filesUrl + '&apos;)"></div>\
-    //                                         <img class="delFileBtn" src="../images/delete_file.png"/>\
-    //                                         <p type="img" desc="' + tempArr[i].remarks + '" class="fileName active">' + fileName + '</p>\
-    //                                     </li>')
-    //             }
-    //         } else if (fileType == 'pdf') {
-    //             if (tempArr[i].remarks == '') {
-    //                 $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '"  class="fileItem">\
-    //                                         <div class="bgSize" style = "background-image: url(../images/pdf_icon.png)"> </div>\
-    //                                         <img class="delFileBtn" src="../images/delete_file.png"/>\
-    //                                         <p type="pdf" desc="' + tempArr[i].remarks + '" class="fileName">' + fileName + '</p>\
-    //                                     </li>')
-    //             } else {
-    //                 $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '" class="fileItem">\
-    //                                         <div class="bgSize" style = "background-image: url(../images/pdf_icon.png)"> </div>\
-    //                                         <img class="delFileBtn" src="../images/delete_file.png"/>\
-    //                                         <p type="pdf" desc="' + tempArr[i].remarks + '" class="fileName active">' + fileName + '</p>\
-    //                                     </li>')
-    //             }
-    //         } else if (fileType == 'dcm') {
-    //             if (tempArr[i].remarks == '') {
-    //                 $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '"  class="fileItem">\
-    //                                         <div class="bgSize" style = "background-image: url(../images/dcm_icon.png)"> </div>\
-    //                                         <img class="delFileBtn" src="../images/delete_file.png"/>\
-    //                                         <p type="dcm" desc="' + tempArr[i].remarks + '" class="fileName">' + fileName + '</p>\
-    //                                     </li>')
-    //             } else {
-    //                 $('.upfileUl').find('#' + tempArr[i].caseTypes.id).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].filesUrl + '" class="fileItem">\
-    //                                         <div class="bgSize" style = "background-image: url(../images/dcm_icon.png)"> </div>\
-    //                                         <img class="delFileBtn" src="../images/delete_file.png"/>\
-    //                                         <p type="dcm" desc="' + tempArr[i].remarks + '" class="fileName active">' + fileName + '</p>\
-    //                                     </li>')
-    //             }
-    //         }
-    //         $('.fileCount').html(fileAllArr.length);
-    //         $(".fileContent").sortable({
-    //             items: "li:not(.fileAdd)"
-    //         });
-    //     }
-    // }
 
     $(window).scroll(function () {
         $('.hospitalUl').css({
@@ -418,14 +325,14 @@ $(function () {
         }, 300);
     };
 
-    // 病历信息一级按钮
+// 病历信息一级按钮
     $('.oneLevelUl').delegate('.oneLevelItem', 'click', function () {
         $(this).addClass('active').siblings('.oneLevelItem').removeClass('active');
         $(this).find('.twoLevelUl').stop(true).slideToggle();
         $(this).siblings('.oneLevelItem').find('.twoLevelUl').stop(true).slideUp();
         scrollTo($('.hosp').not('.hosp:hidden').eq($(this).index()).offset().top);
     })
-    // 病历信息二级按钮
+// 病历信息二级按钮
     $('.oneLevelUl').delegate('.twoLevelItem', 'click', function () {
         if ($(this).find('.threeLevelUl').css('display') == 'none') {
             $(this).addClass('active').siblings('.twoLevelItem').removeClass('active');
@@ -436,7 +343,7 @@ $(function () {
         $(this).siblings('.twoLevelItem').find('.threeLevelUl').stop(true, true).slideUp();
         return false;
     })
-    // 病历信息三级按钮
+// 病历信息三级按钮
     $('.oneLevelUl').delegate('.threeLevelUl', 'click', function () {
         return false;
     });
@@ -545,7 +452,7 @@ $(function () {
     })
 
 
-    // 备注保存
+// 备注保存
     $('.descText').blur(function () {
         fileArr[indexFile].desc = $('.descText').val();
     });
