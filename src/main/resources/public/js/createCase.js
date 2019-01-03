@@ -317,6 +317,7 @@ function createReferralApplyData(caseId, caseSummary) {
         data.append('inviteBranchId', inviteDoctorArray[0].branchId); // 会诊科室id
         data.append('inviteUserId', inviteDoctorArray[0].doctorId);
     } else {
+        data.append("inviteSummary", "<" + hospitalInfo.hospitalName + ">");
         data.append('inviteHospitalId', hospitalInfo.id);
         data.append('inviteBranchId', hospitalInfo.branchId);
     }
@@ -365,6 +366,7 @@ function createPictureApplyData(caseId, caseSummary) {
         data.append("consultantReport", JSON.stringify(consultantReport));
         data.append('consultantUserList', JSON.stringify(doctorList));
     } else {
+        data.append("inviteSummary", "<" + hospitalInfo.hospitalName + ">");
         data.append('inviteHospitalId', hospitalInfo.id);
         data.append('inviteBranchId', hospitalInfo.branchId);
         data.append('hospitalPrice', hospitalInfo.hospitalImgPrice); // 医院图文基本价格
@@ -415,6 +417,7 @@ function createVideoApplyData(caseId, caseSummary) {
         data.append("consultantReport", JSON.stringify(consultantReport));
         data.append('consultantUserList', JSON.stringify(doctorList));
     } else {
+        data.append("inviteSummary", "<" + hospitalInfo.hospitalName + ">");
         data.append('inviteHospitalId', hospitalInfo.id);
         data.append('inviteBranchId', hospitalInfo.branchId);
         data.append('hospitalPrice', hospitalInfo.hospitalVideoPrice); // 医院视频基本价格

@@ -6,6 +6,9 @@ let fileAllArr = []; //所有图片原始资源
 //   var fileArr = [];
 let scaleNum = 10; // 图片缩放倍数
 let inviteDoctorCount = 0;
+let applyFormId;
+let applyInfo = {};
+
 /**渲染左侧导航栏*/
 function renderLeftNavigation(data) {
     let _html = "";
@@ -63,23 +66,27 @@ function renderLeftNavigation(data) {
     });
 }
 
-$(function () {
-    let applyFormId = sessionStorage.getItem('applyFormId');
+function getApplyInfo(){
+    applyFormId = sessionStorage.getItem('applyFormId');
     let formData = {"applyFormId": applyFormId};
     ajaxRequest("GET", getApplyInfoUrl, formData, true, "application/json", false, getApplyInfoSuccess, null, null)
+}
+function getApplyInfoSuccess(result) {
+    sessionStorage.setItem('applyInfo', JSON.stringify(result));
+    applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
+}
+$(function () {
 
-    function getApplyInfoSuccess(result) {
-        sessionStorage.setItem('applyInfo', JSON.stringify(result));
-    }
+    getApplyInfo();
 
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
-    let data = JSON.parse(sessionStorage.getItem('applyInfo'));
-    if (JSON.parse(data.consultantUserList)) {
-        inviteDoctorCount = JSON.parse(data.consultantUserList).length;
+
+    if (applyInfo.inviteUserId) {
+        inviteDoctorCount = JSON.parse(applyInfo.consultantUserList).length;
     }
-    let applyNodeList = data.applyNodeList;
-    let isInvite = userInfo.id === data.inviteUserId ? true : false;
-    if (data.applyType === "APPLY_CONSULTATION_VIDEO") {
+    let applyNodeList = applyInfo.applyNodeList;
+    let isInvite = userInfo.id === applyInfo.inviteUserId ? true : false;
+    if (applyInfo.applyType === "APPLY_CONSULTATION_VIDEO") {
         applyTimeNavigationShow = true;
     }
     /* 动态创建进度条 */
@@ -90,7 +97,7 @@ $(function () {
         $('.progressBar').html(str);
     }
     if (isInvite) {
-        if (data.applyStatus === "CONSULTATION_APPLY_ACCEDE") {
+        if (applyInfo.applyStatus === "CONSULTATION_APPLY_ACCEDE") {
             //待收诊
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".rejection").show();
@@ -99,21 +106,21 @@ $(function () {
             } else {
                 $(".receive").show();
             }
-        } else if (data.applyStatus === "CONSULTATION_SLAVE_ACCEDE") {
+        } else if (applyInfo.applyStatus === "CONSULTATION_SLAVE_ACCEDE") {
             //待收诊
             $(".progressBar li:nth-child(1)").addClass("libg");
-        } else if (data.applyStatus === "CONSULTATION_DATETIME_LOCKED") {
+        } else if (applyInfo.applyStatus === "CONSULTATION_DATETIME_LOCKED") {
             //已排期
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
-        } else if (data.applyStatus === "CONSULTATION_BEGIN") {
+        } else if (applyInfo.applyStatus === "CONSULTATION_BEGIN") {
             //会诊中
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".compileReport").show();
             $(".entrance").show();
-        } else if (data.applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
+        } else if (applyInfo.applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
             //待反馈
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
@@ -122,7 +129,7 @@ $(function () {
             $("#applyRecord").show();
             $("#applyRecordContext").show();
             applyRecordNavigationShow = true;
-        } else if (data.applyStatus === "CONSULTATION_END") {
+        } else if (applyInfo.applyStatus === "CONSULTATION_END") {
             //已完成
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
@@ -135,31 +142,31 @@ $(function () {
             $("#consultantFeedbackContext").show();
             applyRecordNavigationShow = true;
             consultantFeedbackNavigationShow = true;
-        } else if (data.applyStatus === "CONSULTATION_MASTER_REJECT" || data.applyStatus === "CONSULTATION_SLAVE_REJECT") {
+        } else if (applyInfo.applyStatus === "CONSULTATION_MASTER_REJECT" || applyInfo.applyStatus === "CONSULTATION_SLAVE_REJECT") {
             //会诊医政已拒绝
             $('.progressBar').empty();
             $('.progressBar').html('<li>' + statusArr[0] + '</li>');
             $(".progressBar li:nth-child(1)").addClass("libg");
         }
     } else {
-        if (data.applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
+        if (applyInfo.applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
             //创建成功
             $(".progressBar").hide()
-        } else if (data.applyStatus === "CONSULTATION_MASTER_REJECT") {
+        } else if (applyInfo.applyStatus === "CONSULTATION_MASTER_REJECT") {
             //会诊医政已拒绝
             $('.progressBar').empty();
             $('.progressBar').html('<li>' + statusArr[0] + '</li>');
             $(".progressBar li:nth-child(1)").addClass("libg");
-        } else if (data.applyStatus === "CONSULTATION_DATETIME_LOCKED") {
+        } else if (applyInfo.applyStatus === "CONSULTATION_DATETIME_LOCKED") {
             //已排期
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
-        } else if (data.applyStatus === "CONSULTATION_BEGIN") {
+        } else if (applyInfo.applyStatus === "CONSULTATION_BEGIN") {
             //会诊中
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
-        } else if (data.applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
+        } else if (applyInfo.applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
             //待反馈
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
@@ -169,7 +176,7 @@ $(function () {
             $("#applyRecord").show();
             $("#applyRecordContext").show();
             applyRecordNavigationShow = true;
-        } else if (data.applyStatus === "CONSULTATION_END") {
+        } else if (applyInfo.applyStatus === "CONSULTATION_END") {
             //已完成
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
@@ -189,13 +196,13 @@ $(function () {
     }
 
     /**网页标题*/
-    $('head > title').html(data.patientSex + '/' + data.patientAge + '/' + data.caseDiagnosis + '-远程会诊平台');
+    $('head > title').html(applyInfo.patientSex + '/' + applyInfo.patientAge + '/' + applyInfo.caseDiagnosis + '-远程会诊平台');
     /**会诊报告*/
-    if (data.applyStatus === "CONSULTATION_SLAVE_REJECT") {
-        let goalHtml = '<pre class="report">' + data.consultantReport + '</pre>'
+    if (applyInfo.applyStatus === "CONSULTATION_SLAVE_REJECT" || "CONSULTATION_MASTER_REJECT" === applyInfo.applyStatus) {
+        let goalHtml = '<pre class="report">' + applyInfo.consultantReport + '</pre>'
         $('.goalObj').html(goalHtml);
-    } else {
-        consultantReport = JSON.parse(data.consultantReport);
+    } else if (applyInfo.inviteUserId) {
+        consultantReport = JSON.parse(applyInfo.consultantReport);
         let goalHtml = '';
         for (let item of consultantReport) {
             goalHtml += '<pre class="report">' + item.doctorName + ':<br />' + item.report + '</pre>'
@@ -203,26 +210,27 @@ $(function () {
         $('.goalObj').html(goalHtml);
     }
 
+
     /**临床反馈*/
-    $('.applyFeedBack').html(data.consultantFeedback);
+    $('.applyFeedBack').html(applyInfo.consultantFeedback);
     /**患者基本信息*/
     $('.patientName').html('***');
-    $('.high').html(data.patientHeight);
-    $('.sex').html(data.patientSex);
-    $('.weight').html(data.patientWeight / 1000);
-    $('.age').html(data.patientAge);
-    $('.address').html(data.detailAddress);
-    if (data.applyUrgent == 1) {
+    $('.high').html(applyInfo.patientHeight);
+    $('.sex').html(applyInfo.patientSex);
+    $('.weight').html(applyInfo.patientWeight / 1000);
+    $('.age').html(applyInfo.patientAge);
+    $('.address').html(applyInfo.detailAddress);
+    if (applyInfo.applyUrgent == 1) {
         $('.bThree_p').show();
     } else {
         $('.bThree_p').hide();
     }
-    $('.tentative').html('初步诊断：' + data.caseDiagnosis);
-    $('.telemedicineTarget').html('会/转诊目的：' + data.applyRemark);
+    $('.tentative').html('初步诊断：' + applyInfo.caseDiagnosis);
+    $('.telemedicineTarget').html('会/转诊目的：' + applyInfo.applyRemark);
 
     /**电子病历附件*/
     ajaxRequest("GET", getAllCaseContentType, null, true, false, true, renderCaseContentView, null, null);
-    let tempArr = data.caseContentList;
+    let tempArr = applyInfo.caseContentList;
 
     function renderCaseContentView(data) {
         $('.sum').html(tempArr.length);
@@ -301,28 +309,26 @@ $(function () {
         renderLeftNavigation(data);
     }
 
-    $('.money').html(data.consultantPrice);
+    $('.money').html(applyInfo.consultantPrice);
     //订单编号
-    if (data.applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
+    if (applyInfo.applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
         $('#applyNumber').hide();
     }
     //订单编号
-    $('.numbers').html(data.applyNumber);
+    $('.numbers').html(applyInfo.applyNumber);
     //申请时间
-    $('.applyDate').html(data.consultantApplyTime);
+    $('.applyDate').html(applyInfo.consultantApplyTime);
     // 发件人信息
-    $('.recipientsInfo').html(data.applySummary);
+    $('.recipientsInfo').html(applyInfo.applySummary);
     // 收件人信息
-    console.log(data.inviteSummary)
-    if(data.inviteSummary){
-        $('.addresserInfo').html(data.inviteSummary);
+    console.log(applyInfo.inviteSummary)
+    if (applyInfo.inviteSummary) {
+        $('.addresserInfo').html(applyInfo.inviteSummary);
     }
 
-    //
-    //会诊排期
     /* 会诊排期 */
     let _dateHtml = '';
-    let applyTimeList = data.applyTimeList;
+    let applyTimeList = applyInfo.applyTimeList;
     for (let i = 0, len = applyTimeList.length; i < len; i++) {
         _dateHtml += ' <p>\
              <span class="startDate">从&nbsp;&nbsp;' + applyTimeList[i].eventStartTime + '</span> 到&nbsp;&nbsp;\
@@ -333,26 +339,25 @@ $(function () {
 
 
     //如果是图文会诊
-    if (data.applyType === "APPLY_CONSULTATION_IMAGE_TEXT") {
-        $('.schedule').hide();
+    if (applyInfo.applyType === "APPLY_CONSULTATION_IMAGE_TEXT") {
+        $('#applyTime').hide();
         $('.schedule_modules ').hide();
     } else {
-        $('.schedule').show();
+        $('#applyTime').show();
         $('.schedule_modules ').show();
     }
     /**------------------------------------------*/
 
 
-
     // 医嘱
-    if (data.orderFormBean) {
+    if (applyInfo.orderFormBean) {
         doctorEnjoin();
     } else {
         $(".doctorEnjoinBox").hide();
     }
 
     function doctorEnjoin() {
-        var doctorEnjoinJson = JSON.parse(data.orderFormBean.orders);
+        var doctorEnjoinJson = JSON.parse(applyInfo.orderFormBean.orders);
         if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0) {
             var _html = '<div class="chunkContent"><h2><span>01</span><p class="chunkType">长期医嘱</p><a class="printBtn no-print" href="' + IP + "download/standingOrders?orderId=" + localStorage.getItem("orderId") + '">下载</a></h2>\
                 <div class="oneList">'
@@ -542,7 +547,7 @@ $(function () {
             // pdf dcm
             $('.bigImgContainer').find('.bigImg').addClass('bgSize');
             if (fileArr[indexFile].type == 'pdf') {
-                PDFObject.embed(baseUrl+"/" + fileArr[indexFile].filePath, ".bigImg", {
+                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].filePath, ".bigImg", {
                     page: "1"
                 });
                 $('.downlodeFile').hide();
@@ -553,7 +558,7 @@ $(function () {
                 // 2、imgIp + fileArr[indexFile].filePath 下载路径
                 // 3、清空 .bigImg 的内容，显示背景
                 $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', baseUrl+"/" + fileArr[indexFile].filePath);
+                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].filePath);
                 $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
             }
         } else {
@@ -580,7 +585,7 @@ $(function () {
             if (fileArr[indexFile].type == 'pdf') {
                 // pdf 相关操作
                 // 1、往 .bigImg 渲染pdf
-                PDFObject.embed(baseUrl+"/" + fileArr[indexFile].filePath, ".bigImg", {
+                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].filePath, ".bigImg", {
                     page: "1"
                 });
                 $('.downlodeFile').hide();
@@ -591,7 +596,7 @@ $(function () {
                 // 2、imgIp + fileArr[indexFile].filePath 下载路径
                 // 3、清空 .bigImg 的内容，显示背景
                 $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', baseUrl+"/" + fileArr[indexFile].filePath);
+                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].filePath);
                 $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
             }
         } else {
@@ -622,7 +627,7 @@ $(function () {
         if (fileArr[indexFile].type != 'img') {
             $('.bigImgContainer').find('.bigImg').addClass('bgSize');
             if (fileArr[indexFile].type == 'pdf') {
-                PDFObject.embed(baseUrl+"/" + fileArr[indexFile].filePath, ".bigImg", {
+                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].filePath, ".bigImg", {
                     page: "1"
                 });
                 $('.downlodeFile').hide();
@@ -633,7 +638,7 @@ $(function () {
                 // 2、imgIp + fileArr[indexFile].filePath 下载路径
                 // 3、清空 .bigImg 的内容，显示背景
                 $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', baseUrl+"/" + fileArr[indexFile].filePath);
+                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].filePath);
                 $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
             }
         } else {
@@ -751,8 +756,8 @@ $(function () {
         // 判断自己是否为该订单的主会诊人
         // 是 去到带医嘱的报告页面
         // 否 本页编辑会诊报告
-        // for(var i = 0;i < data.orderDoctorsList.length;i++){
-        // if(data.orderDoctorsList[i].firstDoctor == 1 && data.orderDoctorsList[i].id == localStorage.getItem("userId")){
+        // for(var i = 0;i < applyInfo.orderDoctorsList.length;i++){
+        // if(applyInfo.orderDoctorsList[i].firstDoctor == 1 && applyInfo.orderDoctorsList[i].id == localStorage.getItem("userId")){
         //     window.location = "/yilaiyiwang/doctorEnjoin/doctorEnjoin.html";
         // } else {
         for (const item of consultantReport) {
@@ -904,7 +909,7 @@ $(function () {
         $('#consultantFeedbackIframe').css('display', 'block');
         $('#consultantFeedbackView').css('display', 'block');
         document.documentElement.style.overflow = "hidden";
-        $('#consultantFeedbackValue').val(data.consultantFeedback);
+        $('#consultantFeedbackValue').val(applyInfo.consultantFeedback);
     })
     /* 弹层关闭按钮 */
     $('#consultantFeedbackIframe').find('.closeBtn').click(function () {
@@ -944,12 +949,13 @@ $(function () {
             shadeClose: false,
             skin: 'layui-layer-nobg', //没有背景色
             time: 2000,
-            content: _$('.alertBox'),
+            content: _$('#feedBackSuccessMessage'),
         });
         $('.alertText').html('提交成功');
         setTimeout(function () {
             window.location = '../page/morkbench.html'
         }, 2000);
+        getApplyInfo();
     }
 
     function doctorSendFeedbackReportFailed(result) {
@@ -964,7 +970,7 @@ $(function () {
             shadeClose: false,
             skin: 'layui-layer-nobg', //没有背景色
             time: 2000,
-            content: _$('.alertBox'),
+            content: _$('#feedBackSuccessMessage'),
         });
         $('.alertText').html('提交失败');
     }
@@ -980,7 +986,7 @@ $(function () {
             shadeClose: false,
             skin: 'layui-layer-nobg', //没有背景色
             time: 2000,
-            content: _$('.alertBox'),
+            content: _$('#feedBackSuccessMessage'),
         });
         $('.alertText').html('保存成功');
         setTimeout(function () {
@@ -989,6 +995,7 @@ $(function () {
             $('.alertBox').hide();
         }, 2000);
         document.documentElement.style.overflow = "scroll";
+        getApplyInfo();
     }
 
     function doctorSendFeedbackReportMomentFailed(result) {
@@ -1003,7 +1010,7 @@ $(function () {
             shadeClose: false,
             skin: 'layui-layer-nobg', //没有背景色
             time: 2000,
-            content: _$('.alertBox'),
+            content: _$('#feedBackSuccessMessage'),
         });
         $('.alertText').html('保存失败');
     }

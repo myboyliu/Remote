@@ -1,4 +1,5 @@
 let isInvite;
+let isApply;
 let applyFormId;
 let inviteDoctorCount;
 let applyTypeStr;
@@ -14,7 +15,7 @@ function renderViewByRole(applyStatus) {
         $('.progressBar').html(str);
     }
 
-    if (isInvite) {
+    if (isInvite && !isApply) {
         if (applyStatus === "CONSULTATION_APPLY_ACCEDE") {
             //待收诊
             $(".progressBar li:nth-child(1)").addClass("libg");
@@ -137,9 +138,6 @@ function renderApplyTimeView(applyTimeList) {
 
 /**修改会诊排期*/
 function updateApplyTime(dateList) {
-    console.log(dateList)
-    console.log(isInvite)
-    console.log(JSON.stringify(dateList))
     if (isInvite) {
         let data = new FormData();
         data.append("eventStartTime", dateList[0].startTime);
@@ -167,7 +165,7 @@ function updateApplyTime(dateList) {
 }
 
 $(function () {
-    let applyFormId = sessionStorage.getItem('applyFormId');
+    applyFormId = sessionStorage.getItem('applyFormId');
     let formData = {"applyFormId": applyFormId};
     ajaxRequest("GET", getApplyInfoUrl, formData, true, "application/json", false, getApplyInfoSuccess, null, null)
 
@@ -183,10 +181,16 @@ $(function () {
 
     let applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
     isInvite = userInfo.hospitalId === applyInfo.inviteHospitalId ? true : false;
+
     let applyNodeList = applyInfo.applyNodeList;
     applyFormId = applyInfo.id;
     applyTypeStr = applyInfo.applyType;
     let applyStatus = applyInfo.applyStatus;
+    if (userInfo.hospitalId === applyInfo.applyHospitalId && applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
+        isApply = true;
+    } else {
+        isApply = false;
+    }
     let consultantUserList = [];
     if (applyInfo.inviteUserId) {
         consultantUserList = JSON.parse(applyInfo.consultantUserList);
@@ -304,6 +308,7 @@ $(function () {
     $('.recipientsInfo').html(applyInfo.applySummary);
     // 收件人信息
     $('.addresserInfo').html(applyInfo.inviteSummary);
+
     inviteDoctorCount = applyInfo.inviteSummary.split(";").length;
     let applyTimeList = applyInfo.applyTimeList;
     renderApplyTimeView(applyTimeList);
@@ -603,7 +608,24 @@ $(function () {
         ajaxRequest("POST", sirSendCheckReject, data, false, false, true, sirSendCheckRejectSuccess, null, null)
 
         function sirSendCheckRejectSuccess(result) {
-            console.log(result);
+            layer.closeAll();
+            $(".inviteObj").hide();
+            var _$ = layui.jquery;
+            // 弹出层
+            layer.open({
+                type: 1,
+                title: '',
+                area: ['500px', '200px'],
+                closeBtn: false,
+                shade: [0.7, '#000000'],
+                shadeClose: false,
+                time: 2000,
+                content: _$('.returned') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            });
+            setTimeout(function () {
+                $('.returned').hide();
+                window.location = '../page/administrator.html';
+            }, 2500)
         }
     });
 
@@ -675,7 +697,7 @@ $(function () {
     $('.submitBox .acceptBtn').click(function () {
         console.log(inviteDoctorCount)
         console.log($('.schedule_modules >p').length)
-        if (inviteDoctorCount <= 0) {
+        if (!applyInfo.inviteUserId) {
             layer.closeAll();
             $('.submitBox').hide();
             let _$ = layui.jquery;
