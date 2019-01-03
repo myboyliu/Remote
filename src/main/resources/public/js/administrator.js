@@ -270,6 +270,7 @@ function getInvitedList(inviteStatus, pageNo, pageSize) {
     let InviteStatus = {
         INVITE_ACCEPT: "INVITE_ACCEPT",
         INVITE_REVIEW: "INVITE_REVIEW",
+        INVITE_SLAVE_REJECT: "INVITE_SLAVE_REJECT",
         INVITE_DATETIME: "INVITE_DATETIME",
         INVITE_ONGOING: "INVITE_ONGOING",
         INVITE_FEEDBACK: "INVITE_FEEDBACK",
@@ -282,6 +283,9 @@ function getInvitedList(inviteStatus, pageNo, pageSize) {
             break;
         case InviteStatus.INVITE_REVIEW:
             ajaxRequest("GET", sirReceiveSlaveDoctor, null, false, false, false, renderApplyListView, emptySelect, null);
+            break;
+        case InviteStatus.INVITE_SLAVE_REJECT:
+            ajaxRequest("GET", sirReceiveSlaveReject, null, false, false, false, renderApplyListView, emptySelect, null);
             break;
         case InviteStatus.INVITE_DATETIME:
             ajaxRequest("GET", sirReceiveDateTimeLocked, null, false, false, false, renderApplyListView, emptySelect, null);
