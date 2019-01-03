@@ -4,6 +4,7 @@ let inviteDoctorCount;
 let applyTypeStr;
 let newApplyTime = [];
 
+/** 根据 不同角色 渲染 基础页面 元素 */
 function renderViewByRole(applyStatus) {
     /* 动态创建进度条 */
     const statusArr = ["已拒收", '待收诊', '已排期', '会诊中', '待反馈', '已完成'];
@@ -13,14 +14,6 @@ function renderViewByRole(applyStatus) {
         $('.progressBar').html(str);
     }
 
-    // $('.progressBar li:nth-child(1)').addClass('libg');
-    // $('.progressBar li:nth-child(2)').addClass('libg');
-    // $('.progressBar li:nth-child(3)').addClass('libg');
-    // $('.progressBar li:nth-child(4)').addClass('libg');
-    // $('.progressBar li:nth-child(5)').addClass('libg');
-    console.log(isInvite);
-    console.log(applyStatus);
-    console.log(inviteDoctorCount);
     if (isInvite) {
         if (applyStatus === "CONSULTATION_APPLY_ACCEDE") {
             //待收诊
@@ -127,16 +120,7 @@ function renderViewByRole(applyStatus) {
             $(".modifier2").show();
         }
     }
-    // $(".rejection").show();
-    // $(".receive").show();
-    // $(".MDTBtn").show();
-    // $(".compileReport").show();
-    // $(".entrance").show();
-    // $(".editClinicalFeedback").show();
 
-    // $("#applyRecord").show();
-    // $("#consultantFeedback").show();
-    // $("#doctorEnjoin").show();
 }
 
 /** 渲染会诊排期 */
@@ -153,10 +137,13 @@ function renderApplyTimeView(applyTimeList) {
 
 /**修改会诊排期*/
 function updateApplyTime(dateList) {
+    console.log(dateList)
+    console.log(isInvite)
+    console.log(JSON.stringify(dateList))
     if (isInvite) {
         let data = new FormData();
-        data.append("eventStartTime", dateList[0].startDate);
-        data.append("eventEndTime", dateList[0].endDate);
+        data.append("eventStartTime", dateList[0].startTime);
+        data.append("eventEndTime", dateList[0].endTime);
         data.append("applyFormId", applyFormId);
         ajaxRequest("POST", sirUpdateDate, data, false, false, true, sirUpdateDateSuccess, null, null)
     } else {
@@ -166,7 +153,8 @@ function updateApplyTime(dateList) {
         ajaxRequest("POST", sirSendUpdateDate, data, false, false, true, sirUpdateDateSuccess, null, null)
     }
 
-    function sirUpdateDateSuccess() {
+    function sirUpdateDateSuccess(result) {
+        console.log(result)
         let data = {"applyFormId": applyFormId};
         ajaxRequest("GET", getApplyInfoUrl, data, true, "application/json", true, getApplyInfoSuccess, null, null)
 
