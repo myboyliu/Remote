@@ -1,6 +1,7 @@
 let applyRecordNavigationShow = false;
 let consultantFeedbackNavigationShow = false;
 let applyTimeNavigationShow = false;
+let applyRefuseNavigationShow = false;
 let consultantReport = [];
 let fileAllArr = []; //所有图片原始资源
 //   var fileArr = [];
@@ -12,6 +13,11 @@ let applyInfo = {};
 /**渲染左侧导航栏*/
 function renderLeftNavigation(data) {
     let _html = "";
+    if (applyRefuseNavigationShow) {
+        _html += '<li id="applyRefuseNavigation" class="oneLevelItem patientInfo active">\
+                     <p class="oneLevelName">拒收原因</p>\
+                 </li>'
+    }
     if (applyRecordNavigationShow) {
         _html += '<li id="applyRecordNavigation" class="oneLevelItem patientInfo active">\
                      <p class="oneLevelName">会诊报告</p>\
@@ -144,6 +150,8 @@ $(function () {
             consultantFeedbackNavigationShow = true;
         } else if (applyInfo.applyStatus === "CONSULTATION_MASTER_REJECT" || applyInfo.applyStatus === "CONSULTATION_SLAVE_REJECT") {
             //会诊医政已拒绝
+            applyRefuseNavigationShow = true;
+            $('#refuseReasonBox').show();
             $('.progressBar').empty();
             $('.progressBar').html('<li>' + statusArr[0] + '</li>');
             $(".progressBar li:nth-child(1)").addClass("libg");
@@ -154,6 +162,8 @@ $(function () {
             $(".progressBar").hide()
         } else if (applyInfo.applyStatus === "CONSULTATION_MASTER_REJECT") {
             //会诊医政已拒绝
+            applyRefuseNavigationShow = true;
+            $('#refuseReasonBox').show();
             $('.progressBar').empty();
             $('.progressBar').html('<li>' + statusArr[0] + '</li>');
             $(".progressBar li:nth-child(1)").addClass("libg");
@@ -197,11 +207,10 @@ $(function () {
 
     /**网页标题*/
     $('head > title').html(applyInfo.patientSex + '/' + applyInfo.patientAge + '/' + applyInfo.caseDiagnosis + '-远程会诊平台');
+    /** 拒收原因 */
+    $("#refuseReason").html(applyInfo.refuseRemark);
     /**会诊报告*/
-    if (applyInfo.applyStatus === "CONSULTATION_SLAVE_REJECT" || "CONSULTATION_MASTER_REJECT" === applyInfo.applyStatus) {
-        let goalHtml = '<pre class="report">' + applyInfo.consultantReport + '</pre>'
-        $('.goalObj').html(goalHtml);
-    } else if (applyInfo.inviteUserId) {
+   if (applyInfo.inviteUserId) {
         consultantReport = JSON.parse(applyInfo.consultantReport);
         let goalHtml = '';
         for (let item of consultantReport) {
