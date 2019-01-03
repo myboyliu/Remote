@@ -198,17 +198,12 @@ public class ApplyDisposeController extends BaseController {
                 return badRequestOfArguments(msg2);
             }
         }
-        if (applyStatus == "CONSULTATION_DATETIME_LOCKED" && applyForm.getApplyStatus() != ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString()) {
-            applyNodeService.insertByNodeOperator(applyForm.getId(), ApplyNodeConstant.已接诊.toString(), applyForm.getInviteSummary().substring(0, applyForm.getInviteSummary().indexOf(";")));
-            applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已排期.toString());
+        if (applyStatus == ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString()) {
+            applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已接诊.toString());
         } else if (applyStatus == "CONSULTATION_DATETIME_LOCKED") {
             applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已排期.toString());
-        }else if(applyStatus == ConsultationStatus.CONSULTATION_REPORT_SUBMITTED.toString()){
-            applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已提交会诊报告.toString());
-        }else if(applyStatus == ConsultationStatus.CONSULTATION_END.toString()){
-            applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已反馈.toString());
-            applyNodeService.insertByNodeOperator(applyForm.getId(), ApplyNodeConstant.已接诊.toString(), "");
-
+        } else if (applyStatus == ConsultationStatus.CONSULTATION_MASTER_REJECT.toString()) {
+            applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已拒收.toString());
         }
         return succeedRequest(applyForm);
     }
@@ -491,7 +486,7 @@ public class ApplyDisposeController extends BaseController {
     }
 
     /**
-     * 医生 发出会诊 带反馈 编辑临床反馈 提交 /医生 受邀会诊 会诊中 编辑会诊报告 提交
+     * 医生 发出会诊 待反馈 编辑临床反馈 提交 /医生 受邀会诊 会诊中 编辑会诊报告 提交
      */
     @PostMapping(value = "doctorSendFeedbackReport")
     public Map doctorSendFeedbackReport(String id, String consultantFeedback, String report) {
@@ -538,6 +533,12 @@ public class ApplyDisposeController extends BaseController {
             }
         }
 
+        if (applyForm.getApplyStatus() == ConsultationStatus.CONSULTATION_REPORT_SUBMITTED.toString()) {
+            applyNodeService.insertByStatus(id, ApplyNodeConstant.已提交会诊报告.toString());
+        } else if (applyForm.getApplyStatus() == ConsultationStatus.CONSULTATION_END.toString()) {
+            applyNodeService.insertByStatus(id, ApplyNodeConstant.已反馈.toString());
+            applyNodeService.insertByNodeOperator(id, ApplyNodeConstant.已结束.toString(), "");
+        }
 
         return succeedRequest(applyForm);
     }
