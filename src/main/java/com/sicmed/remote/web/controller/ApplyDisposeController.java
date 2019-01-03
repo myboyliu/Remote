@@ -551,7 +551,16 @@ public class ApplyDisposeController extends BaseController {
             applyNodeService.insertByStatus(id, ApplyNodeConstant.已提交会诊报告.toString());
         } else if (applyStatus == ConsultationStatus.CONSULTATION_END.toString()) {
             applyNodeService.insertByStatus(id, ApplyNodeConstant.已反馈.toString());
-            applyNodeService.insertByNodeOperator(id, ApplyNodeConstant.已结束.toString(), "");
+
+            new Thread(() -> {
+                try {
+                    Thread.sleep(1000);
+                    applyNodeService.insertByNodeOperator(id, ApplyNodeConstant.已结束.toString(), "");
+                } catch (Exception e) {
+                    Thread.currentThread().interrupt();
+                }
+                Thread.currentThread().interrupt();
+            }).start();
         }
 
         return succeedRequest(applyForm);
