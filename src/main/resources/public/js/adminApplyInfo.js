@@ -33,6 +33,14 @@ function renderViewByRole(applyStatus) {
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".modifier2").show();
             $(".rejection").show();
+        } else if (applyStatus === "CONSULTATION_SLAVE_REJECT" ) {
+            //专家协调
+            $(".progressBar li:nth-child(1)").addClass("libg");
+            $(".modifier2").show();
+            $(".modifier3").show();
+            $(".modifier5").show();
+            $(".rejection").show();
+            $(".toBeMDT").show();
         } else if (applyStatus === "CONSULTATION_DATETIME_LOCKED") {
             //已排期
             $(".progressBar li:nth-child(1)").addClass("libg");
@@ -200,7 +208,7 @@ $(function () {
     /**网页标题*/
     $('head > title').html(applyInfo.patientSex + '/' + applyInfo.patientAge + '/' + applyInfo.caseDiagnosis + '-远程会诊平台');
     /** 拒收原因 */
-    $("#refuseReason").html(applyInfo.consultantReport);
+    $("#refuseReason").html(applyInfo.refuseRemark);
     /**患者基本信息*/
     $('.patientName').html('***');
     $('.high').html(applyInfo.patientHeight);
