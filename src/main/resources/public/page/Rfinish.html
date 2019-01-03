@@ -100,11 +100,21 @@
     </div>
     <div class="right">
         <div class="right_main">
+            <!--拒收原因-->
+            <div id="refuseReasonBox" class="hosp  clearfix"  style="display: none;">
+                <img src="../images/rejectionCause.png" alt="拒收原因">
+                <span class="">拒收原因</span>
+                <div class="wire wire1"></div>
+                <!-- 会诊排期可收缩模块 -->
+                <div class="rejectionBox">
+                    <pre id="refuseReason">建议多学科会诊:12</pre>
+                </div>
+            </div>
             <!-- 会诊报告 -->
             <div id="applyRecord" class="hosp clearfix" style="display: none;">
                 <img src="../images/Presentation.png" alt="会诊报告">
                 <span>会诊报告</span>
-                <div class="wire wire1"></div>
+                <div class="wire"></div>
             </div>
             <div id="applyRecordContext" class="goal goalObj" style="display: none;">
             </div>
@@ -335,14 +345,14 @@
     </div>
 </div>
 
-<div class="returned submitter">
+<div class="reportSubmit submitter">
     <p>提交成功</p>
     <input type="button" value="确定" class="getBack">
 </div>
-<div class="returned working">
+<div class="reportSubmit working">
     <p class="alertText">暂存成功</p>
 </div>
-<div class="returned promptText">
+<div class="reportSubmit promptText">
     <p>主会诊医师需要等待所有医师提交会诊报告后，方可提交</p>
 </div>
 </body>
