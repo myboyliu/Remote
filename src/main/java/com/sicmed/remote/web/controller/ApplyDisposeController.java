@@ -166,10 +166,9 @@ public class ApplyDisposeController extends BaseController {
      * @param applyStatus
      * @param msg1
      * @param msg2
-     * @param report
      */
     public Map updateStatus(String id, String orderNumber, String applyStatus, String msg1,
-                            String msg2, String report) {
+                            String msg2, String refuseRemark) {
 
         if (StringUtils.isBlank(id)) {
             return badRequestOfArguments("applyForm.id is null");
@@ -177,21 +176,11 @@ public class ApplyDisposeController extends BaseController {
 
         String userId = getRequestToken();
 
-        // 填写会诊报告(拒绝原因)
-        if (StringUtils.isNotBlank(report)) {
-
-            CaseConsultant caseConsultant = new CaseConsultant();
-            caseConsultant.setId(id);
-            caseConsultant.setConsultantReport(report);
-            caseConsultant.setUpdateUser(userId);
-            int i = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
-            if (i < 1) {
-                return badRequestOfArguments("拒收原因填写失败");
-            }
-        }
-
         ApplyForm applyForm = new ApplyForm();
         applyForm.setId(id);
+        if (StringUtils.isNotBlank(refuseRemark)) {
+            applyForm.setRefuseRemark(refuseRemark);
+        }
         if (StringUtils.isNotBlank(orderNumber)) {
             applyForm.setApplyNumber(orderNumber);
         }

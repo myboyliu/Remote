@@ -19,6 +19,7 @@
         <result column="apply_status" jdbcType="VARCHAR" property="applyStatus"/>
         <result column="apply_type" jdbcType="VARCHAR" property="applyType"/>
         <result column="apply_remark" jdbcType="VARCHAR" property="applyRemark"/>
+        <result column="refuse_remark" jdbcType="VARCHAR" property="refuseRemark"/>
         <result column="apply_urgent" jdbcType="VARCHAR" property="applyUrgent"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
@@ -32,7 +33,7 @@
     <sql id="Base_Column_List">
     id, apply_number, case_record_id, case_summary, apply_summary, invite_summary,
     apply_user_id, apply_hospital_id, invite_user_id, invite_hospital_id,invite_branch_id, apply_branch_id,
-    consultant_apply_time, apply_status, apply_type, apply_remark,apply_urgent, create_time, create_user,
+    consultant_apply_time, apply_status, apply_type, apply_remark,refuse_remark,apply_urgent, create_time, create_user,
     update_time, update_user, delete_time, delete_user, del_flag
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -148,6 +149,7 @@
         <result column="ayfapplyStatus" jdbcType="VARCHAR" property="applyStatus"/>
         <result column="ayfapplyType" jdbcType="VARCHAR" property="applyType"/>
         <result column="atyapplyRemark" jdbcType="VARCHAR" property="applyRemark"/>
+        <result column="atyrefuseRemark" jdbcType="VARCHAR" property="refuseRemark"/>
         <result column="ayfapplyUrgent" jdbcType="VARCHAR" property="applyUrgent"/>
 
         <result column="crpatientAge" jdbcType="INTEGER" property="patientAge"/>
@@ -191,7 +193,7 @@
         ayf.apply_hospital_id ayfapplyHospitalId,ayf.apply_branch_id ayfapplyBranchId,ayf.invite_user_id ayfinviteUserId,
         ayf.invite_hospital_id ayfinviteHospitalId,ayf.invite_branch_id ayfinviteBranchId,
         ayf.consultant_apply_time ayfconsultantApplyTime,ayf.apply_status ayfapplyStatus,ayf.apply_type ayfapplyType,
-        ayf.apply_remark atyapplyRemark,ayf.apply_urgent ayfapplyUrgent,
+        ayf.apply_remark atyapplyRemark,ayf.refuse_remark atyrefuseRemark,ayf.apply_urgent ayfapplyUrgent,
         ayt.event_start_time ayteventStartTime,ayt.event_end_time ayteventEndTime,
         cr.patient_age crpatientAge,cr.patient_sex crpatientSex,cr.patient_height crpatientHeight,
         cr.patient_weight crpatientWeight,cr.case_diagnosis crcaseDiagnosis,
@@ -230,7 +232,7 @@
       case_summary, apply_summary, invite_summary, 
       apply_user_id, apply_hospital_id, invite_user_id,
       invite_hospital_id,invite_branch_id, apply_branch_id, consultant_apply_time,
-      apply_status, apply_type, apply_remark, applyUrgent,
+      apply_status, apply_type, apply_remark,refuse_remark, applyUrgent,
       create_time, create_user, update_time, 
       update_user, delete_time, delete_user, 
       del_flag)
@@ -238,7 +240,7 @@
       #{caseSummary,jdbcType=VARCHAR}, #{applySummary,jdbcType=VARCHAR}, #{inviteSummary,jdbcType=VARCHAR}, 
       #{applyUserId,jdbcType=VARCHAR}, #{applyHospitalId,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=VARCHAR},
       #{inviteHospitalId,jdbcType=VARCHAR},#{inviteBranchId,jdbcType=VARCHAR}, #{applyBranchId,jdbcType=VARCHAR}, #{consultantApplyTime,jdbcType=TIMESTAMP},
-      #{applyStatus,jdbcType=VARCHAR}, #{applyType,jdbcType=VARCHAR}, #{applyRemark,jdbcType=VARCHAR},  #{applyUrgent,jdbcType=VARCHAR},
+      #{applyStatus,jdbcType=VARCHAR}, #{applyType,jdbcType=VARCHAR}, #{applyRemark,jdbcType=VARCHAR}, #{refuseRemark,jdbcType=VARCHAR},  #{applyUrgent,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{updateUser,jdbcType=VARCHAR}, #{deleteTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR}, 
       #{delFlag,jdbcType=VARCHAR})
@@ -294,6 +296,9 @@
             </if>
             <if test="applyRemark != null">
                 apply_remark,
+            </if>
+            <if test="refuseRemark != null">
+                refuse_remark,
             </if>
             <if test="applyUrgent != null">
                 apply_urgent,
@@ -367,6 +372,9 @@
             <if test="applyRemark != null">
                 #{applyRemark,jdbcType=VARCHAR},
             </if>
+            <if test="refuseRemark != null">
+                #{refuseRemark,jdbcType=VARCHAR},
+            </if>
             <if test="applyUrgent != null">
                 #{applyUrgent,jdbcType=VARCHAR},
             </if>
@@ -439,6 +447,9 @@
             <if test="applyRemark != null">
                 apply_remark = #{applyRemark,jdbcType=VARCHAR},
             </if>
+            <if test="refuseRemark != null">
+                refuse_remark = #{refuseRemark,jdbcType=VARCHAR},
+            </if>
             <if test="applyUrgent != null">
                 apply_urgent = #{applyUrgent,jdbcType=VARCHAR},
             </if>
@@ -481,6 +492,7 @@
       apply_status = #{applyStatus,jdbcType=VARCHAR},
       apply_type = #{applyType,jdbcType=VARCHAR},
       apply_remark = #{applyRemark,jdbcType=VARCHAR},
+      refuse_remark = #{refuseRemark,jdbcType=VARCHAR},
       apply_urgent = #{applyUrgent,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_user = #{createUser,jdbcType=VARCHAR},

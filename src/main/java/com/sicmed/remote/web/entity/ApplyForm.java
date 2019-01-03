@@ -59,6 +59,9 @@ public class ApplyForm extends BaseEntity {
 
     private String applyRemark;
 
+    //拒绝原因
+    private String refuseRemark;
+
     private String applyUrgent;
 
 
