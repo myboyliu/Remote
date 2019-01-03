@@ -58,7 +58,7 @@ public class ApplyDisposeController extends BaseController {
      * 医政 工作台 重新分配医生
      */
     @PostMapping(value = "sirUpdateDoctor")
-    public Map videoConsultation(ApplyForm applyForm, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport) {
+    public Map sirUpdateDoctor(ApplyForm applyForm, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport) {
 
         String userId = getRequestToken();
 
