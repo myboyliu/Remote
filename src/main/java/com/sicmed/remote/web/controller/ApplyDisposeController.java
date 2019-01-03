@@ -63,7 +63,7 @@ public class ApplyDisposeController extends BaseController {
         String userId = getRequestToken();
 
         applyForm.setUpdateUser(userId);
-        int i = applyFormService.updateByPrimaryKeySelective(applyForm);
+        int i = applyFormService.updateInviteDoctorByPrimaryKeySelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("修改applyForm失败");
         }
@@ -77,7 +77,7 @@ public class ApplyDisposeController extends BaseController {
         caseConsultant.setConsultantReport(consultantReport);
         caseConsultant.setUpdateUser(userId);
 
-        int k = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
+        int k = caseConsultantService.updateInviteDoctorByPrimaryKeySelective(caseConsultant);
         if (k < 1) {
             return badRequestOfArguments("添加失败");
         }
