@@ -35,7 +35,7 @@ public class CaseConsultantService implements BaseService<CaseConsultant> {
 
     @Override
     public CaseConsultant getByPrimaryKey(String id) {
-        return null;
+        return caseConsultantMapper.selectByPrimaryKey(id);
     }
 
     @Override

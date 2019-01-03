@@ -495,6 +495,7 @@ public class ApplyDisposeController extends BaseController {
         if (k < 1) {
             return badRequestOfArguments("CaseConsultant修改失败");
         }
+
         return succeedRequest(caseConsultant);
     }
 
