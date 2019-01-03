@@ -397,63 +397,8 @@ function getDrafts(pageNo, pageSize) {
 
 // 查看订单详情
 function selectOrderById(orderId, type, readFlag) {
-    // let data = {
-    //     "orderId": orderId,
-    //     "type": type, //是那个列表的类型(0:医政受邀列表,1:医政发出列表,2:医生受邀列表,3:医生发出列表)
-    //     "readFlag": readFlag
-    // }
-    // ajaxRequest("POST", "", data, false, false, false, null, null, null);
-    let data = {"applyFormId": orderId};
-    ajaxRequest("GET", getApplyInfoUrl, data, true, "application/json", true, getApplyInfoSuccess, null, null)
-
-    function getApplyInfoSuccess(result) {
-        console.log(result);
-        sessionStorage.setItem('applyInfo', JSON.stringify(result));
-        window.location = '../page/adminApplyInfo.html';
-    }
-    console.log(data)
-    sessionStorage.setItem('data', JSON.stringify(data));
-    localStorage.setItem('orderId', orderId);
-    function success() {
-
-        if (type == 2) {
-            // -------受邀的----------
-            if (data.orderFormBean.statesName == "首诊待审核") {
-                // 待审核
-            } else if (data.orderFormBean.statesName == "待收诊" || data.orderFormBean.statesName == "专家协调") {
-                window.location = '../page/RcollectingClinical.html';
-            } else if (data.orderFormBean.statesName == "排期审核") {
-                window.location = '/yilaiyiwang/receive/schedulingExamine.html';
-            } else if (data.orderFormBean.statesName == "已排期") {
-                window.location = '/yilaiyiwang/receive/scheduling.html';
-            } else if (data.orderFormBean.statesName == "会诊中") {
-                window.location = '/yilaiyiwang/receive/Rconsultation.html'
-            } else if (data.orderFormBean.statesName == "待反馈") {
-                window.location = '/yilaiyiwang/receive/Rfeedback.html'
-            } else if (data.orderFormBean.statesName == "已结束") {
-                window.location = '/yilaiyiwang/receive/Rfinish.html'
-            } else if (data.orderFormBean.statesName == "会诊已拒收") {
-                window.location = '/yilaiyiwang/receive/Rrejection.html'
-            }
-        } else if (type == 3) {
-            // --------------发出的-----
-            if (data.orderFormBean.statesName == "首诊待审核") {
-                window.location = '/yilaiyiwang/particulars/toAudit.html';
-            } else if (data.orderFormBean.statesName == "待收诊" || data.orderFormBean.statesName == "排期审核" || data.orderFormBean.statesName == "专家协调") {
-                window.location = '/yilaiyiwang/particulars/collectingClinical.html';
-            } else if (data.orderFormBean.statesName == "已排期") {
-                window.location = '/yilaiyiwang/particulars/scheduling.html';
-            } else if (data.orderFormBean.statesName == "会诊中") {
-                window.location = '/yilaiyiwang/particulars/consultation.html'
-            } else if (data.orderFormBean.statesName == "待反馈") {
-                window.location = '/yilaiyiwang/particulars/feedback.html'
-            } else if (data.orderFormBean.statesName == "已结束") {
-                window.location = '/yilaiyiwang/particulars/finish.html'
-            } else if (data.orderFormBean.statesName == "会诊已拒收") {
-                window.location = '/yilaiyiwang/particulars/rejection.html'
-            }
-        }
-    }
+    sessionStorage.setItem('applyFormId', orderId);
+    window.location = '../page/adminApplyInfo.html';
 }
 
 // 查看转诊订单详情

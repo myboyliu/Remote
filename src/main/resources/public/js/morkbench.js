@@ -228,11 +228,17 @@ function renderApplyListView(data) {
         _html += '</td>\
                 <td>\
                     <p class="overHidden3" title="' + data[i].caseSummary + '">' + data[i].caseSummary + '</p>\
-                </td>\
-                <td>\
-                    <p class="overHidden1" title="' + data[i].inviteSummary + '">' + data[i].inviteSummary + '</p>\
-                </td>\
-                <td>\
+                </td>'
+        if (data.inviteSummary) {
+            _html += '<td>\
+    <p class="overHidden1" title="' + data[i].inviteSummary + '">' + data[i].inviteSummary + '</p>\
+    </td>'
+        } else {
+            _html += '<td>\
+    <p class="overHidden1" title=""></p>\
+    </td>'
+        }
+        _html += ' <td>\
                     <p class="overHidden2" title="' + data[i].applySummary + '">' + data[i].applySummary + '</p>\
                 </td>'
         if (data[i].applyType == "APPLY_CONSULTATION_VIDEO") {
@@ -247,6 +253,7 @@ function renderApplyListView(data) {
         }
         _html += '</tr>'
     }
+
     $('#tabContent').html(_html);
 }
 
@@ -497,7 +504,7 @@ $(function () {
                 //执行一个laypage实例
                 laypage.render({
                     elem: 'listBox',
-                    count: 12*12,
+                    count: 12 * 12,
                     limit: 12,
                     theme: '#f6c567',
                     jump: function (obj, first) {
@@ -633,7 +640,7 @@ $(function () {
     });
     // 医生工作台详情
     $('.workUl').delegate('.wordItem', "click", function () {
-            selectOrderById($(this).attr("name"));
+        selectOrderById($(this).attr("name"));
     })
 
     getInvitedList("INVITE_ACCEPT", 0, 10)
