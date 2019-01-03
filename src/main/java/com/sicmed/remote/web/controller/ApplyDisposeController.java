@@ -123,7 +123,7 @@ public class ApplyDisposeController extends BaseController {
         }
         if (consultationTimeBeanList != null) {
             for (ConsultationTimeBean consultationTimeBean : consultationTimeBeanList) {
-                resultMap.put(consultationTimeBean.getStartTime(), consultationTimeBean.getEntTime());
+                resultMap.put(consultationTimeBean.getStartTime(), consultationTimeBean.getEndTime());
             }
         }
 

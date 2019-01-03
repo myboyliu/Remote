@@ -9,5 +9,5 @@ import lombok.Data;
 public class ConsultationTimeBean {
 
     private String startTime;
-    private String entTime;
+    private String endTime;
 }
