@@ -39,12 +39,12 @@ function renderLeftNavigation(data) {
                 if (array[i] === 1) {
                 } else {
                     _html += '<li class="threeLevelItem" name="' + array[i].id + '">' + array[i].caseTypeName + '</li>'
-                    _html += '</ul>\
-                             </li>'
-                }
 
+                }
             }
+            _html += '</ul></li>'
         }
+
 
     })
     _html += '</ul>\
