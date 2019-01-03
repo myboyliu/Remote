@@ -33,4 +33,6 @@ public interface ApplyFormMapper {
     ApplyFormBean detailById(String id);
 
     int softDel(String id);
+
+    int updateInviteDoctorByPrimaryKeySelective(ApplyForm applyForm);
 }

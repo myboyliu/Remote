@@ -5,6 +5,7 @@ let consultantReport = [];
 let fileAllArr = []; //所有图片原始资源
 //   var fileArr = [];
 let scaleNum = 10; // 图片缩放倍数
+let inviteDoctorCount = 0;
 /**渲染左侧导航栏*/
 function renderLeftNavigation(data) {
     let _html = "";
@@ -73,7 +74,9 @@ $(function () {
 
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     let data = JSON.parse(sessionStorage.getItem('applyInfo'));
-    let inviteDoctorCount = JSON.parse(data.consultantUserList).length;
+    if (JSON.parse(data.consultantUserList)) {
+        inviteDoctorCount = JSON.parse(data.consultantUserList).length;
+    }
     let applyNodeList = data.applyNodeList;
     let isInvite = userInfo.id === data.inviteUserId ? true : false;
     if (data.applyType === "APPLY_CONSULTATION_VIDEO") {
@@ -310,7 +313,10 @@ $(function () {
     // 发件人信息
     $('.recipientsInfo').html(data.applySummary);
     // 收件人信息
-    $('.addresserInfo').html(data.inviteSummary);
+    console.log(data.inviteSummary)
+    if(data.inviteSummary){
+        $('.addresserInfo').html(data.inviteSummary);
+    }
 
     //
     //会诊排期

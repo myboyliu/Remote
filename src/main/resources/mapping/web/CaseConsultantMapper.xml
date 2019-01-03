@@ -163,6 +163,18 @@
             </if>
         </trim>
     </insert>
+
+    <update id="updateInviteDoctorByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.CaseConsultant">
+        update case_consultant
+        <set>
+            invite_user_id = #{inviteUserId,jdbcType=VARCHAR},
+            consultant_user_list = #{consultantUserList,jdbcType=VARCHAR},
+            consultant_report = #{consultantReport,jdbcType=VARCHAR},
+            consultant_price = #{consultantPrice,jdbcType=DECIMAL},
+            hospital_price = #{hospitalPrice,jdbcType=DECIMAL},
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
     <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.CaseConsultant">
         update case_consultant
         <set>

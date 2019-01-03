@@ -167,19 +167,30 @@ function updateApplyTime(dateList) {
 }
 
 $(function () {
+    let applyFormId = sessionStorage.getItem('applyFormId');
+    let formData = {"applyFormId": applyFormId};
+    ajaxRequest("GET", getApplyInfoUrl, formData, true, "application/json", false, getApplyInfoSuccess, null, null)
+
+    function getApplyInfoSuccess(result) {
+        sessionStorage.setItem('applyInfo', JSON.stringify(result));
+    }
 
     var scaleNum = 10; // 图片缩放倍数
 
     var fileAllArr = []; //所有图片原始资源
     //   var fileArr = [];
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+
     let applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
     isInvite = userInfo.hospitalId === applyInfo.inviteHospitalId ? true : false;
     let applyNodeList = applyInfo.applyNodeList;
     applyFormId = applyInfo.id;
     applyTypeStr = applyInfo.applyType;
     let applyStatus = applyInfo.applyStatus;
-    let consultantUserList = JSON.parse(applyInfo.consultantUserList);
+    let consultantUserList = [];
+    if (applyInfo.inviteUserId) {
+        consultantUserList = JSON.parse(applyInfo.consultantUserList);
+    }
     console.log(userInfo);
     console.log(applyInfo);
     /**网页标题*/
@@ -190,7 +201,7 @@ $(function () {
     $('.patientName').html('***');
     $('.high').html(applyInfo.patientHeight);
     $('.sex').html(applyInfo.patientSex);
-    $('.weight').html(applyInfo.patientWeight/1000);
+    $('.weight').html(applyInfo.patientWeight / 1000);
     $('.age').html(applyInfo.patientAge);
     $('.address').html(applyInfo.detailAddress);
     if (applyInfo.applyUrgent == 1) {
@@ -281,7 +292,7 @@ $(function () {
 
     $('.money').html(applyInfo.consultantPrice);
     //订单编号
-    if(applyInfo.applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS"){
+    if (applyInfo.applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
         $('#applyNumber').hide();
     }
     //订单编号
@@ -502,9 +513,6 @@ $(function () {
     /* 诊费 */
     let consultantPrice = applyInfo.consultantPrice;
     let hospitalPrice = applyInfo.hospitalPrice;
-    console.log(consultantUserList);
-    console.log(consultantPrice);
-    console.log(hospitalPrice);
     let _fees = '';
     for (let i = 0; i < consultantUserList.length; i++) {
         _fees += '<tr><td>' + consultantUserList[i].doctorName + '</td>'
@@ -513,11 +521,11 @@ $(function () {
         _fees += '<input type="text" value="' + consultantUserList[i].price + '.00" class="fees_input gai" readonly="readonly">'
         _fees += '</td></tr>'
     }
-    $('.basePic').html(hospitalPrice+".00");
-    $('.basePicInput').val(hospitalPrice+".00");
+    $('.basePic').html(hospitalPrice + ".00");
+    $('.basePicInput').val(hospitalPrice + ".00");
     $('.tbody_doc').html(_fees);
-    $('.aggregate').html(consultantPrice+".00");
-    $('.dynamicAggregate').html(consultantPrice+".00");
+    $('.aggregate').html(consultantPrice + ".00");
+    $('.dynamicAggregate').html(consultantPrice + ".00");
 
 
     var deptNumber = '';

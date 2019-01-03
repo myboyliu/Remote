@@ -42,4 +42,8 @@ public class CaseConsultantService implements BaseService<CaseConsultant> {
     public List<CaseConsultant> findByDynamicParam(CaseConsultant caseConsultant) {
         return null;
     }
+
+    public int updateInviteDoctorByPrimaryKeySelective(CaseConsultant caseConsultant) {
+        return caseConsultantMapper.updateInviteDoctorByPrimaryKeySelective(caseConsultant);
+    }
 }

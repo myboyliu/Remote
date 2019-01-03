@@ -14,4 +14,6 @@ public interface CaseConsultantMapper {
     int updateByPrimaryKeySelective(CaseConsultant record);
 
     int updateByPrimaryKey(CaseConsultant record);
+
+    int updateInviteDoctorByPrimaryKeySelective(CaseConsultant caseConsultant);
 }
