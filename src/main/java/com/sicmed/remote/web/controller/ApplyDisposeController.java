@@ -547,9 +547,9 @@ public class ApplyDisposeController extends BaseController {
             }
         }
 
-        if (applyForm.getApplyStatus() == ConsultationStatus.CONSULTATION_REPORT_SUBMITTED.toString()) {
+        if (applyStatus == ConsultationStatus.CONSULTATION_REPORT_SUBMITTED.toString()) {
             applyNodeService.insertByStatus(id, ApplyNodeConstant.已提交会诊报告.toString());
-        } else if (applyForm.getApplyStatus() == ConsultationStatus.CONSULTATION_END.toString()) {
+        } else if (applyStatus == ConsultationStatus.CONSULTATION_END.toString()) {
             applyNodeService.insertByStatus(id, ApplyNodeConstant.已反馈.toString());
             applyNodeService.insertByNodeOperator(id, ApplyNodeConstant.已结束.toString(), "");
         }
