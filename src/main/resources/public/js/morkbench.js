@@ -229,14 +229,10 @@ function renderApplyListView(data) {
                 <td>\
                     <p class="overHidden3" title="' + data[i].caseSummary + '">' + data[i].caseSummary + '</p>\
                 </td>'
-        if (data.inviteSummary) {
-            _html += '<td>\
-    <p class="overHidden1" title="' + data[i].inviteSummary + '">' + data[i].inviteSummary + '</p>\
-    </td>'
+        if (data[i].inviteSummary) {
+            _html += '<td><p class="overHidden1" title="' + data[i].inviteSummary + '">' + data[i].inviteSummary + '</p></td>'
         } else {
-            _html += '<td>\
-    <p class="overHidden1" title=""></p>\
-    </td>'
+            _html += '<td><p class="overHidden1" title=""></p></td>'
         }
         _html += ' <td>\
                     <p class="overHidden2" title="' + data[i].applySummary + '">' + data[i].applySummary + '</p>\
