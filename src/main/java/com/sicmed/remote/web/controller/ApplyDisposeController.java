@@ -121,7 +121,7 @@ public class ApplyDisposeController extends BaseController {
 
         // 删除原时间
         int j = applyTimeService.delByApplyForm(applyFormId);
-        if (j < 1) {
+        if (j < 0) {
             return badRequestOfArguments("删除原applyTime失败");
         }
 
@@ -316,7 +316,7 @@ public class ApplyDisposeController extends BaseController {
 
         // 删除applyFormId对应的applyTime表中字段
         int j = applyTimeService.delByApplyForm(id);
-        if (j < 1) {
+        if (j < 0) {
             return badRequestOfArguments("删除applyTime失败");
         }
 
