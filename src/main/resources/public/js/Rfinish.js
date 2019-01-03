@@ -318,7 +318,7 @@ $(function () {
     //订单编号
     $('.numbers').html(applyInfo.applyNumber);
     //申请时间
-    $('.applyDate').html(applyInfo.consultantApplyTime);
+    $('.applyDate').html(applyInfo.consultantApplyTime+":00");
     // 发件人信息
     $('.recipientsInfo').html(applyInfo.applySummary);
     // 收件人信息
