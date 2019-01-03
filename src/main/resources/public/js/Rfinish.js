@@ -313,6 +313,7 @@ $(function () {
     //订单编号
     if (applyInfo.applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
         $('#applyNumber').hide();
+        $('.layui-timeline').hide();
     }
     //订单编号
     $('.numbers').html(applyInfo.applyNumber);
