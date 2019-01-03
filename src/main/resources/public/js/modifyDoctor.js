@@ -2,28 +2,55 @@ let hospitalInfo = {};
 let inviteDoctorArray = [];// 选择的医生信息数组
 let isVideo = false;// 选择的医生信息数组
 let applyInfo = {};// 选择的医生信息数组
+let isInvite = false;
+let userInfo;
+
 /** 渲染 医生页面 左侧导航 */
 function renderDoctorNavigation(data) {
     let _html = '';
+
     for (let i = 0; i < data.length; i++) {
-        _html += '<li hospitalId="' + data[i].id + '" imgPric="' + data[i].consultationPicturePrice + '" videoPric="' + data[i].consultationVideoPrice + '" hospitalTel="' + data[i].hospitalPhone + '" class="hospitalItem">\
+        if (isInvite) {
+            if (data[i].id === userInfo.hospitalId) {
+                _html += '<li hospitalId="' + data[i].id + '" imgPric="' + data[i].consultationPicturePrice + '" videoPric="' + data[i].consultationVideoPrice + '" hospitalTel="' + data[i].hospitalPhone + '" class="hospitalItem">\
                         <p class="hospitalName" title="' + data[i].hospitalName + '">' + data[i].hospitalName + '</p>\
                         <ul class="sectionUl">';
-        let sectionArr = data[i].branchBeanList;
-        for (let j = 0; j < sectionArr.length; j++) {
-            _html += '<li class="sectionItem">\
+                let sectionArr = data[i].branchBeanList;
+                for (let j = 0; j < sectionArr.length; j++) {
+                    _html += '<li class="sectionItem">\
                                 <p class="sectionName" title="' + sectionArr[j].branchName + '">' + sectionArr[j].branchName + '</p>\
                                 <ul class="deptUl">'
-            let deptArr = sectionArr[j].customBranchList;
-            for (let x = 0; x < deptArr.length; x++) {
-                _html += '<li name="' + deptArr[x].id + '" class="deptItem" title="' + deptArr[x].customName + '">' + deptArr[x].customName + '</li>'
+                    let deptArr = sectionArr[j].customBranchList;
+                    for (let x = 0; x < deptArr.length; x++) {
+                        _html += '<li name="' + deptArr[x].id + '" class="deptItem" title="' + deptArr[x].customName + '">' + deptArr[x].customName + '</li>'
+                    }
+                    _html += '</ul>\
+                         </li>'
+                }
+                _html += '</ul>\
+                    </li>'
+            }
+        } else {
+            _html += '<li hospitalId="' + data[i].id + '" imgPric="' + data[i].consultationPicturePrice + '" videoPric="' + data[i].consultationVideoPrice + '" hospitalTel="' + data[i].hospitalPhone + '" class="hospitalItem">\
+                        <p class="hospitalName" title="' + data[i].hospitalName + '">' + data[i].hospitalName + '</p>\
+                        <ul class="sectionUl">';
+            let sectionArr = data[i].branchBeanList;
+            for (let j = 0; j < sectionArr.length; j++) {
+                _html += '<li class="sectionItem">\
+                                <p class="sectionName" title="' + sectionArr[j].branchName + '">' + sectionArr[j].branchName + '</p>\
+                                <ul class="deptUl">'
+                let deptArr = sectionArr[j].customBranchList;
+                for (let x = 0; x < deptArr.length; x++) {
+                    _html += '<li name="' + deptArr[x].id + '" class="deptItem" title="' + deptArr[x].customName + '">' + deptArr[x].customName + '</li>'
+                }
+                _html += '</ul>\
+                         </li>'
             }
             _html += '</ul>\
-                         </li>'
-        }
-        _html += '</ul>\
                     </li>'
+        }
     }
+
     $('.hospitalUl').html(_html);
     // 默认选项
     $('.hospitalItem').eq(0).addClass('active').find('.sectionUl').show().find('.sectionItem').eq(0).addClass('active').find('.deptUl').slideDown();
@@ -137,8 +164,7 @@ $(function () {
     var hospitalPicArr = [];
     var price = 0;
 
-    /** 获取通讯录左侧导航数据 */
-    ajaxRequest("GET", getHospitalBranchListUrl, null, false, false, true, renderDoctorNavigation, null, null);
+
     // let applyFormId = sessionStorage.getItem('applyFormId');
     // let formData = {"applyFormId": applyFormId};
     // ajaxRequest("GET", getApplyInfoUrl, formData, true, "application/json", false, getApplyInfoSuccess, null, null)
@@ -148,7 +174,12 @@ $(function () {
     // }
     if (JSON.parse(sessionStorage.getItem('applyInfo'))) {
         applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
-
+        userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+        if (userInfo.hospitalId === applyInfo.inviteHospitalId && applyInfo.applyStatus !== "CONSULTATION_APPLY_CREATE_SUCCESS") {
+            isInvite = true;
+        }
+        /** 获取通讯录左侧导航数据 */
+        ajaxRequest("GET", getHospitalBranchListUrl, null, false, false, true, renderDoctorNavigation, null, null);
         if ("APPLY_CONSULTATION_VIDEO" === applyInfo.applyType) {
             isVideo = true;
         }
