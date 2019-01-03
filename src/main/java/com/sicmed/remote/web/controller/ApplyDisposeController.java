@@ -10,6 +10,7 @@ import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.YoonaLtUtils.OrderNumUtils;
 import com.sicmed.remote.web.bean.ApplyTimeBean;
 import com.sicmed.remote.web.bean.ConsultationTimeBean;
+import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.ApplyTime;
 import com.sicmed.remote.web.entity.CaseConsultant;
@@ -21,11 +22,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,20 +58,29 @@ public class ApplyDisposeController extends BaseController {
      * 医政 工作台 重新分配医生
      */
     @PostMapping(value = "sirUpdateDoctor")
-    public Map sirUpdate(ApplyForm applyForm) {
+    public Map videoConsultation(ApplyForm applyForm, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport) {
 
         String userId = getRequestToken();
-
-        if (StringUtils.isBlank(applyForm.getId())) {
-            return badRequestOfArguments("传入参数为空");
-        }
 
         applyForm.setUpdateUser(userId);
         int i = applyFormService.updateByPrimaryKeySelective(applyForm);
         if (i < 1) {
-            return badRequestOfArguments("重新分配医生失败医生失败");
+            return badRequestOfArguments("修改applyForm失败");
         }
 
+        CaseConsultant caseConsultant = new CaseConsultant();
+        caseConsultant.setId(applyForm.getId());
+        caseConsultant.setConsultantUserList(consultantUserList);
+        caseConsultant.setConsultantPrice(consultantPrice);
+        caseConsultant.setHospitalPrice(hospitalPrice);
+        caseConsultant.setInviteUserId(applyForm.getInviteUserId());
+        caseConsultant.setConsultantReport(consultantReport);
+        caseConsultant.setUpdateUser(userId);
+
+        int k = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
+        if (k < 1) {
+            return badRequestOfArguments("添加失败");
+        }
         return succeedRequest(applyForm);
     }
 
