@@ -218,7 +218,7 @@
         left join apply_time ayt on ayt.apply_form_id = ayf.id AND ayt.del_flag = "0"
         left join case_content cc on cc.record_id = cr.id AND cc.del_flag = "0"
         left join apply_node an on an.apply_id = ayf.id
-        where ayf.id = #{id} and ayf.del_flag= "0" order by cc.order_weight,an.create_time
+        where ayf.id = #{id} and ayf.del_flag= "0" order by cc.order_weight,an.node_time
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
