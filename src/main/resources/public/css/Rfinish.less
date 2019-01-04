@@ -1061,7 +1061,7 @@ main {
   margin-left: 325px;
 }
 
-.returned,.reportSubmit {
+.returned, .reportSubmit {
   width: 500px;
   height: 200px;
   border-radius: 10px;
@@ -1074,7 +1074,7 @@ main {
   display: none;
 }
 
-.returned,.reportSubmit p {
+.returned, .reportSubmit p {
   font-size: 18px;
   font-weight: bold;
   padding-top: 60px;
@@ -1450,7 +1450,7 @@ main {
   width: 300px;
   height: 75px;
   border-radius: 10px;
-  box-shadow: 0,0,0,0.1;
+  box-shadow: 0, 0, 0, 0.1;
   background-color: #fff;
   box-shadow: 0 0 10px 0 #666666;
   text-align: center; //  position: absolute;
@@ -1460,11 +1460,12 @@ main {
 }
 
 
-.pleasewirte p{
+.pleasewirte p {
   font-size: 18px;
   font-weight: bold;
   line-height: 75px;
 }
+
 /** 接收订单 弹窗样式*/
 .operateBox {
   display: none;
@@ -1503,132 +1504,6 @@ main {
 
     .noBtn {
       background: #516dcf;
-    }
-  }
-}
-
-// 视频会诊 接收 时间选择弹窗样式
-.selectTimeContainer {
-  display: none;
-  width: 1060px;
-  height: 630px;
-  // position: relative;
-
-  .closeBtnTime {
-    // height: 50px;
-    display: inline-block;
-    text-align: right;
-    font-size: 18px;
-    color: #ffffff;
-    line-height: 32px;
-    right: 0;
-    position: absolute;
-    top: -35px;
-
-    img {
-      float: right;
-      margin: 3px 5px 0 0;
-      cursor: pointer;
-    }
-
-    span {
-      float: right;
-      cursor: pointer;
-    }
-  }
-
-  .selectTimeContent {
-    box-sizing: border-box;
-    background: #f4f4f4;
-    height: 630px;
-    width: 1060px;
-    border-radius: 10px;
-    padding: 10px;
-    // 时间选择左侧部分
-    .leftContent {
-      float: left;
-      width: 290px;
-      height: 500px;
-      margin-right: 10px;
-      background: #ffffff;
-      overflow: hidden;
-
-      > h3 {
-        margin: 15px 0 0 20px;
-        font-weight: 600;
-        font-size: 18px;
-        color: #1937bc;
-
-        > span {
-          display: block;
-          font-size: 14px;
-        }
-      }
-
-      .timeBox {
-        margin: 0 0 0 10px;
-
-        .layui-laydate {
-          border: none;
-          box-shadow: none;
-        }
-      }
-
-      > p {
-        font-size: 14px;
-        color: #101010;
-        line-height: 24px;
-        margin: 25px 20px 0;
-      }
-    }
-    // 时间选择右侧部分
-    .rightContent {
-      float: right;
-      box-sizing: border-box;
-      width: 740px;
-      height: 500px;
-      background: #fff;
-      padding: 10px;
-
-      > li {
-        float: left;
-        display: block;
-        box-sizing: border-box;
-        width: 60px;
-        height: 60px;
-        border: 1px solid #f4f4f4;
-        text-align: center;
-        line-height: 60px;
-        font-size: 14px;
-        color: #101010;
-      }
-      .gary {
-        background: #bdbdbd;
-      }
-      .active {
-        background: #475bc8;
-        color: #fff;
-      }
-    }
-
-    .btnBox {
-      float: left;
-      width: 100%;
-      // 确定按钮
-      .yesBtn {
-        display: block;
-        margin: 50px auto 0;
-        box-sizing: border-box;
-        width: 200px;
-        height: 40px;
-        border: 1px solid #3249c2;
-        background: #516dcf;
-        color: #ffffff;
-        font-size: 14px;
-        text-align: center;
-        line-height: 40px;
-        border-radius: 10px;
-      }
     }
   }
 }
