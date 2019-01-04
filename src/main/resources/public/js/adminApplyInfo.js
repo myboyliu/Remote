@@ -64,6 +64,7 @@ function renderViewByRole(applyStatus) {
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".progressBar li:nth-child(4)").addClass("libg");
+            $("#applyRecord").show();
             applyRecordNavigationShow = true;
         } else if (applyStatus === "CONSULTATION_END") {
             //已完成
@@ -72,6 +73,7 @@ function renderViewByRole(applyStatus) {
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".progressBar li:nth-child(4)").addClass("libg");
             $(".progressBar li:nth-child(5)").addClass("libg");
+            $("#applyRecord").show();
             applyRecordNavigationShow = true;
             consultantFeedbackNavigationShow = true;
         } else if (applyStatus === "CONSULTATION_MASTER_REJECT") {
@@ -117,6 +119,7 @@ function renderViewByRole(applyStatus) {
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".progressBar li:nth-child(4)").addClass("libg");
+            $("#applyRecord").show();
             applyRecordNavigationShow = true;
         } else if (applyStatus === "CONSULTATION_END") {
             //已完成
@@ -125,6 +128,7 @@ function renderViewByRole(applyStatus) {
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".progressBar li:nth-child(4)").addClass("libg");
             $(".progressBar li:nth-child(5)").addClass("libg");
+            $("#applyRecord").show();
             applyRecordNavigationShow = true;
             consultantFeedbackNavigationShow = true;
         } else {
@@ -320,6 +324,13 @@ $(function () {
     $('.addresserInfo').html(applyInfo.inviteSummary);
 
     renderApplyTimeView(applyTimeList);
+    /**会诊报告*/
+    consultantReport = JSON.parse(applyInfo.consultantReport);
+    let recordHtml = '';
+    for (let item of consultantReport) {
+        recordHtml += '<pre class="report">' + item.doctorName + ':<br />' + item.report + '</pre>'
+    }
+    $('.lecturer_modules').append(recordHtml);
     //    临床反馈
     $('.applyFeedBack').html(applyInfo.consultantFeedback);
     //如果是图文会诊
@@ -513,18 +524,10 @@ $(function () {
             $('.submitBox').hide();
             $("#alertText").html("请选定会诊时间");
             alertMessage();
-            // showDateView(applyTimeList);
         } else {
-            if (applyTypeStr === "APPLY_CONSULTATION_IMAGE_TEXT") {
-                let data = new FormData();
-                data.append("id", applyFormId);
-                ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, sirReceiveMasterAccedeSuccess, null, null)
-            } else {
-                // 视频会诊
-                let data = new FormData();
-                data.append("id", applyFormId);
-                ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, sirReceiveMasterAccedeSuccess, null, null)
-            }
+            let data = new FormData();
+            data.append("id", applyFormId);
+            ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, sirReceiveMasterAccedeSuccess, null, null)
 
             //接收 成功回调
             function sirReceiveMasterAccedeSuccess() {
