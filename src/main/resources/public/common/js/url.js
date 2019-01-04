@@ -89,6 +89,7 @@ const getApplyDoneByAdminUrl = "/apply/consultation/sirSendEnd";                
 /** 医政查询受邀的申请列表查询 接口 */
 const sirReceiveApplyAccede = "/apply/consultation/sirReceiveApplyAccede";              // 查询受邀的列表 待收诊    列表
 const sirReceiveSlaveDoctor = "/apply/consultation/sirReceiveSlaveDoctor";              // 查询受邀的列表 排期审核  列表
+const sirReceiveSlaveReject = "/apply/consultation/sirReceiveSlaveReject";              // 查询受邀的列表 专家协调  列表
 const sirReceiveDateTimeLocked = "/apply/consultation/sirReceiveDateTimeLocked";        // 查询受邀的列表 已排期    列表
 const sirReceiveBegin = "/apply/consultation/sirReceiveBegin";                          // 查询受邀的列表 会诊中    列表
 const sirReceiveReportSubmitted = "/apply/consultation/sirReceiveReportSubmitted";      // 查询受邀的列表 带反馈    列表

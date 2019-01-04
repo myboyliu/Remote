@@ -348,21 +348,7 @@ function getApplyList(inviteStatus, pageNo, pageSize) {
 
 // 获取草稿箱数据
 function getDrafts(pageNo, pageSize) {
-    // $.ajax({
-    //     type: 'POST',
-    //     url: IP + 'order/queryDraft',
-    //     dataType: 'json',
-    //     data: {
-    //         "pageNo": pageNo,
-    //         "pageSize": pageSize,
-    //     },
-    //     xhrFields: {
-    //         withCredentials: true
-    //     },
-    //     crossDomain: true,
-    //     global: false,
-    //     success: function (data) {
-    //         console.log(data)
+
     //         if (data.status == 200) {
     //             const myDate = new Date();
     //             const year = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
@@ -387,16 +373,7 @@ function getDrafts(pageNo, pageSize) {
     //                 _html += '</tr>'
     //             }
     //             $('.drafts_tbody').html(_html);
-    //         } else if (data.status == 250) {
-    //             window.location = '/yilaiyiwang/login/login.html';
-    //         } else {
-    //             // 其他操作
     //         }
-    //     },
-    //     error: function (err) {
-    //         console.log(err);
-    //     },
-    // })
 }
 
 // 查看订单详情
@@ -489,103 +466,12 @@ $(function () {
     // 渲染日历控件
     redrawDate();
 
-    // 查询草稿数量
-    // $.ajax({
-    //     type: 'GET',
-    //     url: IP + 'order/draftSize',
-    //     dataType: 'json',
-    //     xhrFields: {
-    //         withCredentials: true
-    //     },
-    //     async: false,
-    //     crossDomain: true,
-    //     global: false,
-    //     success: function (data) {
-    //         if (data.status == 200) {
-    //             // 成功操作
-    //             $('.unReadNum').html(data.size);
-    //             draftsCount = data.size;
-    //         } else if (data.status == 250) {
-    //             // 未登录操作
-    //             window.location = '/yilaiyiwang/login/login.html';
-    //         } else {
-    //         }
-    //     },
-    //     error: function (err) {
-    //         console.log(err);
-    //     },
-    // });
-
-    /* 左边导航栏 医生受邀请列表 */
-    // $.ajax({
-    //     type: 'POST',
-    //     url: IP + 'doctorOrderStatus/findOrderStatus',
-    //     dataType: 'json',
-    //     data: {
-    //         "type": '2', //(0:医政受邀列表,1:医政发出列表,2:医生受邀，3医生发出
-    //     },
-    //     async: false,
-    //     xhrFields: {
-    //         withCredentials: true
-    //     },
-    //     crossDomain: true,
-    //     global: false,
-    //     success: function (data) {
-    //         console.log(data)
-    //         if (data.status == 200) {
-    //             const tempArr = data.doctorOrderStatusList;
-    //             let _html = '';
-    //             for (let i = 0; i < tempArr.length; i++) {
-    //                 if (i == 0) {
-    //                     if (tempArr[i].unReadFlag == 0) {
-    //                         _html += '<li name="' + tempArr[i].states.id + '" class="ulAct">\
-    // 					<span> ' + tempArr[i].statesName + ' </span>\
-    // 					<div class=""></div>\
-    // 				</li>'
-    //                     } else {
-    //                         _html += '<li name="' + tempArr[i].states.id + '" class="ulAct">\
-    // 					<span> ' + tempArr[i].statesName + ' </span>\
-    // 					<div class = "unRead" > ' + tempArr[i].orderSize + ' </div>\
-    // 				</li>'
-    //                     }
-    //                 } else {
-    //                     if (tempArr[i].unReadFlag == 0) {
-    //                         _html += '<li name="' + tempArr[i].states.id + '" class="">\
-    // 					<span> ' + tempArr[i].statesName + ' </span>\
-    // 					<div class=""></div>\
-    // 				</li>'
-    //                     } else {
-    //                         _html += '<li name="' + tempArr[i].states.id + '" class="">\
-    // 					<span> ' + tempArr[i].statesName + ' </span>\
-    // 					<div class = "unRead" > ' + tempArr[i].orderSize + ' </div>\
-    // 				</li>'
-    //                     }
-    //                 }
-    //             }
-    //             $('#inviteUl').html(_html);
-    //             getInvitedList(tempArr[0].states.id, pageNo, pageSize);
-    //             orderStateId = tempArr[0].states.id;
-    //             localStorage.setItem("orderType", 2);
-    //         } else if (data.status == 250) {
-    //             // 未登录操作
-    //             window.location = '/yilaiyiwang/login/login.html';
-    //         } else {
-    //             // 其他操作
-    //         }
-    //     },
-    //     error: function (err) {
-    //         console.log(err);
-    //     },
-    // });
-
     // 列表的切换
     $('.leftNav').click(function () {
         let _index = $(this).index();
         $(this).addClass('active').siblings('div').removeClass('active');
-        console.log(_index)
         if (_index == 0) {
-            // 医生受邀列表
-            localStorage.setItem('orderType', '2');
+            // 受邀列表
             $('.drafts_table').css("display", 'none');
             $('.referralTable').css("display", 'none');
             $('.tables').css('display', 'block');
@@ -595,36 +481,7 @@ $(function () {
             $(this).find(".leftUL li").eq(0).addClass("ulAct");
             let inviteStatus = $(this).find(".leftUL li").eq(0).attr('name');
             let countNum = 0;
-            // $.ajax({
-            //     type: 'POST',
-            //     url: IP + 'order/queryReceiveOrderList',
-            //     dataType: 'json',
-            //     data: {
-            //         "orderStateId": orderStateId,
-            //         "pageNo": pageNo,
-            //         "pageSize": pageSize,
-            //     },
-            //     async: false,
-            //     xhrFields: {
-            //         withCredentials: true
-            //     },
-            //     crossDomain: true,
-            //     global: false,
-            //     success: function (data) {
-            //         console.log(data)
-            //         if (data.status == 200) {
-            //             countNum = data.pageSize * pageSize; // 当前li Tab 下的总条数
-            //         } else if (data.status == 250) {
-            //             // 未登录操作
-            //         } else if (data.status == 205) {
-            //             // 其他操作
-            //             $('#tabContent').html('');
-            //         }
-            //     },
-            //     error: function (err) {
-            //         console.log(err);
-            //     },
-            // })
+
             layui.use('laypage', function () {
                 const laypage = layui.laypage;
                 //执行一个laypage实例
@@ -639,53 +496,7 @@ $(function () {
                 });
             });
         } else if (_index == 1) {
-            // 1:医生发出列表
-            /* 左边导航栏 医生发出列表 */
-            // $.ajax({
-            //     type: 'POST',
-            //     url: IP + 'doctorOrderStatus/findOrderStatus',
-            //     dataType: 'json',
-            //     data: {
-            //         "type": '3', //(0:医政受邀列表,1:医政发出列表,2:医生受邀，3医生发出
-            //     },
-            //     xhrFields: {
-            //         withCredentials: true
-            //     },
-            //     async: false,
-            //     crossDomain: true,
-            //     global: false,
-            //     success: function (data) {
-            //         console.log(data)
-            //         if (data.status == 200) {
-            //             const tempArr = data.doctorOrderStatusList;
-            //             let _html = '';
-            //             for (let i = 0; i < tempArr.length; i++) {
-            //                 if (tempArr[i].unReadFlag == 0) {
-            //                     _html += '<li name="' + tempArr[i].states.id + '" class="">\
-            // 			<span>' + tempArr[i].statesName + '</span>\
-            // 			<div class=""></div>\
-            // 		</li>'
-            //                 } else {
-            //                     _html += '<li name="' + tempArr[i].states.id + '" class="">\
-            // 			<span> ' + tempArr[i].statesName + ' </span>\
-            // 			<div class="unRead">' + tempArr[i].orderSize + '</div>\
-            // 		</li>'
-            //                 }
-            //             }
-            //             $('#issueUl').html(_html);
-            //             // 成功操作
-            //         } else if (data.status == 250) {
-            //             // 未登录操作
-            //             window.location = '/yilaiyiwang/login/login.html';
-            //         } else {
-            //             // 其他操作
-            //         }
-            //     },
-            //     error: function (err) {
-            //         console.log(err);
-            //     },
-            // });
-            localStorage.setItem('orderType', '3');
+
             $('.drafts_table').css("display", 'none');
             $('.referralTable').css("display", 'none');
             $('.tables').css('display', 'block');
@@ -699,37 +510,7 @@ $(function () {
             // }
             let applyStatus = $(this).find('.leftUL li').eq(0).attr('name');
             let countNum = 0;
-            // $.ajax({
-            //     type: 'POST',
-            //     url: IP + 'order/queryApplyOrderList',
-            //     dataType: 'json',
-            //     data: {
-            //         "orderStateId": orderStateId,
-            //         "pageNo": pageNo,
-            //         "pageSize": pageSize,
-            //     },
-            //     async: false,
-            //     xhrFields: {
-            //         withCredentials: true
-            //     },
-            //     crossDomain: true,
-            //     global: false,
-            //     success: function (data) {
-            //         console.log(data)
-            //         if (data.status == 200) {
-            //             countNum = data.pageSize * pageSize;
-            //         } else if (data.status == 250) {
-            //             window.location = '/yilaiyiwang/login/login.html';
-            //
-            //         } else if (data.status == 205) {
-            //             // 其他操作
-            //             $('#tabContent').html('');
-            //         }
-            //     },
-            //     error: function (err) {
-            //         console.log(err);
-            //     },
-            // })
+
             layui.use('laypage', function () {
                 const laypage = layui.laypage;
                 //执行一个laypage实例
@@ -744,8 +525,7 @@ $(function () {
                 });
             });
         } else if (_index == 2) {
-            // 医生转诊列表
-            localStorage.setItem('orderType', '4');
+            // 转诊列表
             $('.drafts_table').css("display", 'none');
             $('.tables').css('display', 'none');
             $('.referralTable').css("display", 'block');
@@ -759,37 +539,7 @@ $(function () {
             // }
             let inviteStatus = $(this).find(".leftUL li").eq(0).attr('name');
             let countNum = 0;
-            // $.ajax({
-            //     type: 'POST',
-            //     url: IP + 'transferTreatment/doctorFindList',
-            //     dataType: 'json',
-            //     data: {
-            //         "stateId": orderStateId,
-            //         "pageNo": pageNo,
-            //         "pageSize": pageSize,
-            //     },
-            //     async: false,
-            //     xhrFields: {
-            //         withCredentials: true
-            //     },
-            //     crossDomain: true,
-            //     global: false,
-            //     success: function (data) {
-            //         console.log(data)
-            //         if (data.code == 1) {
-            //             countNum = data.data.pageSize * pageSize;
-            //         } else if (data.code == 250) {
-            //             window.location = '/yilaiyiwang/login/login.html';
-            //
-            //         } else if (data.code == 205) {
-            //             // 其他操作
-            //             $('#referralTableBody').html('');
-            //         }
-            //     },
-            //     error: function (err) {
-            //         console.log(err);
-            //     },
-            // })
+
             layui.use('laypage', function () {
                 const laypage = layui.laypage;
                 //执行一个laypage实例
@@ -803,11 +553,6 @@ $(function () {
                     }
                 });
             });
-        } else if (_index == 3) {
-            $('.drafts_table').css("display", 'block');
-            $('.tables').css('display', 'none');
-            $('.referralTable').css("display", 'none');
-            getDrafts(pageNo, pageSize);
         }
     });
 
@@ -874,37 +619,7 @@ $(function () {
         // }
         orderStateId = $(this).attr('name');
         let countNum = 0;
-        // $.ajax({
-        //     type: 'POST',
-        //     url: IP + 'transferTreatment/doctorFindList',
-        //     dataType: 'json',
-        //     data: {
-        //         "stateId": orderStateId,
-        //         "pageNo": pageNo,
-        //         "pageSize": pageSize,
-        //     },
-        //     async: false,
-        //     xhrFields: {
-        //         withCredentials: true
-        //     },
-        //     crossDomain: true,
-        //     global: false,
-        //     success: function (data) {
-        //         console.log(data)
-        //         if (data.code == 1) {
-        //             countNum = data.data.pageSize * pageSize;
-        //         } else if (data.code == 250) {
-        //             window.location = '/yilaiyiwang/login/login.html';
-        //
-        //         } else if (data.code == 205) {
-        //             // 其他操作
-        //             $('#referralTableBody').html('');
-        //         }
-        //     },
-        //     error: function (err) {
-        //         console.log(err);
-        //     },
-        // })
+
         layui.use('laypage', function () {
             const laypage = layui.laypage;
             //执行一个laypage实例
