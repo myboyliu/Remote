@@ -24,7 +24,7 @@ function renderViewByRole(applyStatus) {
             $(".modifier5").show();
             $(".rejection").show();
             if (inviteDoctorCount > 2) {
-                $(".MDTBtn").show();
+                $("#MDTBtn").show();
             } else {
                 $(".accept").show();
             }
@@ -40,7 +40,7 @@ function renderViewByRole(applyStatus) {
             $(".modifier3").show();
             $(".modifier5").show();
             $(".rejection").show();
-            $(".toBeMDT").show();
+            $("#toBeMDT").show();
         } else if (applyStatus === "CONSULTATION_DATETIME_LOCKED") {
             //已排期
             $(".progressBar li:nth-child(1)").addClass("libg");
