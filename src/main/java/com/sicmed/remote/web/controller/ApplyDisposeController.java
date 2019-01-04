@@ -1,6 +1,7 @@
 package com.sicmed.remote.web.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.ApplyNodeConstant;
@@ -9,11 +10,13 @@ import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.YoonaLtUtils.OrderNumUtils;
 import com.sicmed.remote.web.bean.ApplyTimeBean;
+import com.sicmed.remote.web.bean.ConsultantReportBean;
 import com.sicmed.remote.web.bean.ConsultationTimeBean;
 import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.ApplyTime;
 import com.sicmed.remote.web.entity.CaseConsultant;
+import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.service.ApplyFormService;
 import com.sicmed.remote.web.service.ApplyNodeService;
 import com.sicmed.remote.web.service.ApplyTimeService;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -593,6 +597,75 @@ public class ApplyDisposeController extends BaseController {
         }
 
         return succeedRequest("删除成功");
+    }
+
+    /**
+     * 医生 受邀会诊 待收诊 接收 原接收人非本人
+     */
+    @PostMapping(value = "doctorAcceptOther")
+    public Map doctorAcceptOther(String id, String type) {
+
+        if (StringUtils.isBlank(id)) {
+            return badRequestOfArguments("传入id为空");
+        }
+
+        // 更新applyForm相关
+        String userId = getRequestToken();
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        String inviteSummary = "<" + currentUserBean.getUserName() + "/" + currentUserBean.getTitleName() + "/" + currentUserBean.getBranchName() + "/" + currentUserBean.getHospitalName() + ">";
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setId(id);
+        applyForm.setInviteUserId(userId);
+        applyForm.setInviteSummary(inviteSummary);
+        applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
+        applyForm.setUpdateUser(userId);
+        int i = applyFormService.updateByPrimaryKeySelective(applyForm);
+        if (i < 1) {
+            return badRequestOfArguments("更新form失败");
+        }
+
+        // 视频会诊,更新applyTime相关
+        if (ApplyType.APPLY_CONSULTATION_VIDEO.toString().equals(type)) {
+            ApplyTime applyTime = new ApplyTime();
+            applyTime.setApplyFormId(id);
+            applyTime.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
+            applyTime.setUpdateUser(userId);
+            int j = applyTimeService.updateByForm(applyTime);
+            if (j < 1) {
+                return badRequestOfArguments("更新applyTime失败");
+            }
+        }
+        
+        // 更新caseConsultant相关
+        ConsultantReportBean consultantReportBean = new ConsultantReportBean();
+        consultantReportBean.setDoctorName(currentUserBean.getUserName());
+        consultantReportBean.setDoctorId(userId);
+        consultantReportBean.setReport("");
+        consultantReportBean.setReportStatus("1");
+        String jsonReport = JSON.toJSONString(consultantReportBean);
+
+        Map<String, String> userList = new LinkedHashMap<>();
+        userList.put("doctorName", inviteSummary);
+        userList.put("doctorId", userId);
+        if (currentUserBean.getConsultationPicturePrice().equals(type)) {
+            userList.put("price", currentUserBean.getConsultationPicturePrice());
+        }
+        if (currentUserBean.getConsultationVideoPrice().equals(type)) {
+            userList.put("price", currentUserBean.getConsultationVideoPrice());
+        }
+        String jsonUser = JSON.toJSONString(userList);
+
+        CaseConsultant caseConsultant = new CaseConsultant();
+        caseConsultant.setId(id);
+        caseConsultant.setInviteUserId(userId);
+        caseConsultant.setConsultantUserList(jsonUser);
+        caseConsultant.setConsultantReport(jsonReport);
+        caseConsultant.setUpdateUser(userId);
+        int k = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
+        if (k < 1) {
+            return badRequestOfArguments("更新CaseConsultant失败");
+        }
+        return succeedRequest("已接收");
     }
 
 }
