@@ -513,7 +513,8 @@
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
-    <!--会诊医生相关查询-->
+
+    <!--主会诊医生相关查询-->
     <select id="getByApplyFormBean" parameterType="com.sicmed.remote.web.bean.ApplyFormBean" resultMap="BaseResultMap">
         select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
         apply_type, apply_remark,apply_urgent, create_time,update_time

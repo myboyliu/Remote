@@ -1,6 +1,10 @@
 package com.sicmed.remote.web.mapper;
 
+import com.sicmed.remote.web.bean.ApplyFormBean;
+import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.CaseConsultant;
+
+import java.util.List;
 
 public interface CaseConsultantMapper {
     int deleteByPrimaryKey(String id);
@@ -16,4 +20,6 @@ public interface CaseConsultantMapper {
     int updateByPrimaryKey(CaseConsultant record);
 
     int updateInviteDoctorByPrimaryKeySelective(CaseConsultant caseConsultant);
+
+    List<ApplyForm> selectAssist(ApplyFormBean applyFormBean);
 }

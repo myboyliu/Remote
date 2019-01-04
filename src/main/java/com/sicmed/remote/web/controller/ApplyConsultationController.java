@@ -6,6 +6,7 @@ import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.service.ApplyFormService;
+import com.sicmed.remote.web.service.CaseConsultantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,9 @@ public class ApplyConsultationController extends BaseController {
 
     @Autowired
     private ApplyFormService applyFormService;
+
+    @Autowired
+    private CaseConsultantService caseConsultantService;
 
     // 会诊查询相关代码
     private final static List<String> consultantTypeList = new ArrayList<>();
@@ -167,7 +171,7 @@ public class ApplyConsultationController extends BaseController {
 
 
     /**
-     * 医生 受邀会诊 查询
+     * 医生 受邀会诊 主会诊医生查询
      */
     public Map receiveSelect(List<String> statusList) {
 
@@ -232,6 +236,23 @@ public class ApplyConsultationController extends BaseController {
     }
 
     /**
+     * 医生 受邀会诊  查询 包含辅助会诊医生
+     */
+    public Map receiveSelectAssist(List<String> statusList) {
+
+        String userId = getRequestToken();
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setConsultationTypeList(consultantTypeList);
+        applyFormBean.setConsultationStatusList(statusList);
+        applyFormBean.setInviteUserId(userId);
+
+        List<ApplyForm> applyFormList = caseConsultantService.selectAssist(applyFormBean);
+        return succeedRequest(applyFormList);
+
+    }
+
+    /**
      * 医生 受邀会诊 已排期
      */
     @GetMapping(value = "receiveDateTimeLocked")
@@ -241,7 +262,7 @@ public class ApplyConsultationController extends BaseController {
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
         statusList.add(applyStatus);
 
-        return receiveSelect(statusList);
+        return receiveSelectAssist(statusList);
     }
 
     /**
@@ -254,7 +275,7 @@ public class ApplyConsultationController extends BaseController {
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
         statusList.add(applyStatus);
 
-        return receiveSelect(statusList);
+        return receiveSelectAssist(statusList);
     }
 
     /**
@@ -266,7 +287,7 @@ public class ApplyConsultationController extends BaseController {
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_REPORT_SUBMITTED);
         statusList.add(applyStatus);
 
-        return receiveSelect(statusList);
+        return receiveSelectAssist(statusList);
     }
 
     /**
@@ -280,7 +301,7 @@ public class ApplyConsultationController extends BaseController {
         statusList.add(applyStatus1);
         statusList.add(applyStatus2);
 
-        return receiveSelect(statusList);
+        return receiveSelectAssist(statusList);
     }
 
     /**

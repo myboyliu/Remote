@@ -247,4 +247,44 @@
       del_flag = #{delFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+    <!--辅助会诊医生相关查询-->
+    <resultMap id="BeanFormResultMap" type="com.sicmed.remote.web.entity.ApplyForm">
+        <id column="afId" jdbcType="VARCHAR" property="id"/>
+        <result column="afCaseRecordId" jdbcType="VARCHAR" property="caseRecordId"/>
+        <result column="afCaseSummary" jdbcType="VARCHAR" property="caseSummary"/>
+        <result column="afApplySummary" jdbcType="VARCHAR" property="applySummary"/>
+        <result column="afInviteSummary" jdbcType="VARCHAR" property="inviteSummary"/>
+        <result column="afConsultantApplyTime" jdbcType="TIMESTAMP" property="consultantApplyTime"/>
+        <result column="afApplyStatus" jdbcType="VARCHAR" property="applyStatus"/>
+        <result column="afApplyType" jdbcType="VARCHAR" property="applyType"/>
+        <result column="afApplyRemark" jdbcType="VARCHAR" property="applyRemark"/>
+        <result column="afApplyUrgent" jdbcType="VARCHAR" property="applyUrgent"/>
+        <result column="afCreateTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="afUpdateTime" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectAssist" parameterType="com.sicmed.remote.web.bean.ApplyFormBean" resultMap="BeanFormResultMap">
+        select af.id afId,af.case_summary afCaseSummary, af.apply_summary afApplySummary, af.invite_summary
+        afInviteSummary,
+        af.consultant_apply_time afConsultantApplyTime,af.apply_status afApplyStatus,af.case_record_id afCaseRecordId,
+        af.apply_type afApplyType, af.apply_remark afApplyRemark,af.apply_urgent afApplyUrgent,
+        af.create_time afCreateTime,af.update_time afUpdateTime
+        from case_consultant cc
+        left join apply_form af on af.id = cc.id and af.del_flag = "0"
+        <where>
+            af.invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
+            AND af.apply_type IN
+            <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            AND af.apply_status IN
+            <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            and cc.consultant_user_list like CONCAT('%',#{inviteUserId},'%')
+        </where>
+        order by af.apply_urgent desc ,af.update_time,af.create_time
+        limit #{beginNo},#{pageSize}
+    </select>
 </mapper>

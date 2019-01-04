@@ -1,5 +1,7 @@
 package com.sicmed.remote.web.service;
 
+import com.sicmed.remote.web.bean.ApplyFormBean;
+import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.CaseConsultant;
 import com.sicmed.remote.web.mapper.CaseConsultantMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,11 @@ public class CaseConsultantService implements BaseService<CaseConsultant> {
 
     @Autowired
     private CaseConsultantMapper caseConsultantMapper;
+
+    // 辅助会诊医生查询
+    public List<ApplyForm> selectAssist(ApplyFormBean applyFormBean) {
+        return caseConsultantMapper.selectAssist(applyFormBean);
+    }
 
     @Override
     public int insertSelective(CaseConsultant caseConsultant) {
