@@ -75,6 +75,7 @@ $(function () {
     $('.switchBox .prev').click(function () {
         if (indexFile <= 0) {
             indexFile = 0;
+            return false;
         } else {
             indexFile--;
         }
@@ -120,6 +121,7 @@ $(function () {
     $('.switchBox .next').click(function () {
         if (indexFile >= fileArr.length - 1) {
             indexFile = fileArr.length - 1;
+            return false;
         } else {
             indexFile++;
         }
