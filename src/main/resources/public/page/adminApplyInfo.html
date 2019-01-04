@@ -108,7 +108,7 @@
                 <span class="bSecond_p">常住址：
                         <p class="address">北京</p>
                     </span>
-                <span class="bThree_p">
+                <span class="bThree_p" style="display: none;">
                         <img src="../images/light.png" alt="">
                         <p>加急</p>
                     </span>
@@ -394,11 +394,9 @@
     <input type="button" value="取消" class="agin">
     <input type="button" value="发布" class="yes">
 </div>
-<div class="succeed" style="display: none;">
-    <p>发布成功</p>
-</div>
-<div class="returned" style="display: none;">
-    <p>退回成功</p>
+
+<div id="alertBox" class="succeed" style="display: none;">
+    <p id="alertText"></p>
 </div>
 
 <div class="operateBox submitBox MDTBox">
@@ -416,24 +414,11 @@
     </div>
 </div>
 <!-- 弹层 -->
-<div class="applyTimeFiled">
-    <p>请选定会诊时间</p>
-</div>
-<div class="inviteDoctorFiled">
-    <p>请先分配主会诊医生</p>
-</div>
-<div class="rejectSuccess">
-    <p>拒收成功</p>
-</div>
-<div class="acceptSuccess">
-    <p>接收成功</p>
-</div>
+
 <div class="change">
     <p>此订单已经发生改变</p>
 </div>
-<div class="pleaseWirte">
-    <p>请填写拒收原因</p>
-</div>
+
 <!-- 弹层部分 背景图加三个弹层 -->
 <div class="background">
     <!-- 拒收弹层 -->
@@ -458,7 +443,27 @@
     </div>
 </div>
 
-
+<!--<div class="succeed" style="display: none;">-->
+<!--<p>发布成功</p>-->
+<!--</div>-->
+<!--<div class="returned" style="display: none;">-->
+<!--<p>退回成功</p>-->
+<!--</div>-->
+<!--<div class="applyTimeFiled">-->
+<!--<p>请选定会诊时间</p>-->
+<!--</div>-->
+<!--<div class="inviteDoctorFiled">-->
+<!--<p>请先分配主会诊医生</p>-->
+<!--</div>-->
+<!--<div class="rejectSuccess">-->
+<!--<p>拒收成功</p>-->
+<!--</div>-->
+<!--<div class="acceptSuccess">-->
+<!--<p>接收成功</p>-->
+<!--</div>-->
+<!--<div class="pleaseWirte">-->
+<!--<p>请填写拒收原因</p>-->
+<!--</div>-->
 </body>
 
 </html>
