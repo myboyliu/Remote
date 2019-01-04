@@ -1,15 +1,18 @@
 let applyRecordNavigationShow = false;
 let consultantFeedbackNavigationShow = false;
-let applyTimeNavigationShow = false;
 let applyRefuseNavigationShow = false;
 let consultantReport = [];
 let fileAllArr = []; //所有图片原始资源
-//   var fileArr = [];
 let scaleNum = 10; // 图片缩放倍数
 let inviteDoctorCount = 0;
 let applyFormId;
 let applyInfo = {};
-
+let isMainDoctor;
+let isInvite;
+let isVideo = false;
+const _$ = layui.jquery;
+let applyTimeList = [];
+let caseContentList = [];
 /**渲染左侧导航栏*/
 function renderLeftNavigation(data) {
     let _html = "";
@@ -51,11 +54,10 @@ function renderLeftNavigation(data) {
             _html += '</ul></li>'
         }
 
-
     })
     _html += '</ul>\
              </li>'
-    if (applyTimeNavigationShow) {
+    if (isVideo) {
         _html += '<li class="oneLevelItem patientInfo">\
                         <p class="oneLevelName">会诊排期</p>\
                     </li>'
@@ -72,37 +74,97 @@ function renderLeftNavigation(data) {
     });
 }
 
-function getApplyInfo(){
+/** 渲染电子病历附件 */
+function renderCaseContentView(data) {
+    $('.sum').html(caseContentList.length);
+    $.each(data, function (index, value) {
+        let childList = value.childList;
+        let l = -1;
+        for (let j = 0, len = childList.length; j < len; j++) {
+            let k = -1;
+            for (let i = 0; i < caseContentList.length; i++) {
+                if (childList[j].id === caseContentList[i].contentTypeId) {
+                    l = i;
+                    if (k === j) {
+                    } else {
+                        let upfileHtml = '<li name="' + childList[j].caseTypeName + '" id="' + childList[j].id + '" class="upfileItem clearfix">\
+                             <div class="upfileContent">\
+                                 <div class="operateLeft">' + value.caseTypeName + '-' + childList[j].caseTypeName + '</div>\
+                                 <ul class="fileContent clearfix">\
+                                 </ul>\
+                             </div>\
+                         </li>'
+                        $('.upfileUl').append(upfileHtml);
+                        k = j;
+                    }
+                    let fileType = caseContentList[i].contentPath.substr(caseContentList[i].contentPath.lastIndexOf('.') + 1, caseContentList[i].contentPath.length);
+                    let fileName = caseContentList[i].contentPath.substr(caseContentList[i].contentPath.lastIndexOf('/') + 1, caseContentList[i].contentPath.length);
+                    fileAllArr.push(fileName);
+                    if (fileType == 'png' || fileType == 'jpg') {
+                        if (caseContentList[i].contentRemark == '') {
+
+                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].sort + '" filePath="' + caseContentList[i].contentPath + '"  class="fileItem">\
+                                           <div style = "background-image: url(&apos;' + baseUrl + "/" + caseContentList[i].contentPath + '&apos;)"></div>\
+                                            <p type="img" desc="' + caseContentList[i].contentRemark + '" class="fileName">' + fileName + '</p>\
+                                        </li>')
+                        } else {
+                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].sort + '" filePath="' + caseContentList[i].contentPath + '" class="fileItem">\
+                                           <div style = "background-image: url(&apos;' + baseUrl + "/" + caseContentList[i].contentPath + '&apos;)"></div>\
+                                            <p type="img" desc="' + caseContentList[i].contentRemark + '" class="fileName active">' + fileName + '</p>\
+                                        </li>')
+                        }
+                    } else if (fileType == 'pdf') {
+                        if (caseContentList[i].contentRemark == '') {
+                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].sort + '" filePath="' + caseContentList[i].contentPath + '"  class="fileItem">\
+                                            <div class="bgSize" style = "background-image: url(../images/pdf_icon.png)"> </div>\
+                                            <p type="pdf" desc="' + caseContentList[i].contentRemark + '" class="fileName">' + fileName + '</p>\
+                                        </li>')
+                        } else {
+                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].sort + '" filePath="' + caseContentList[i].contentPath + '" class="fileItem">\
+                                            <div class="bgSize" style = "background-image: url(../images/pdf_icon.png)"> </div>\
+                                            <p type="pdf" desc="' + caseContentList[i].contentRemark + '" class="fileName active">' + fileName + '</p>\
+                                        </li>')
+                        }
+                    } else if (fileType == 'dcm') {
+                        if (caseContentList[i].contentRemark == '') {
+                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].sort + '" filePath="' + caseContentList[i].contentPath + '"  class="fileItem">\
+                                            <div class="bgSize" style = "background-image: url(../images/dcm_icon.png)"> </div>\
+                                            <p type="dcm" desc="' + caseContentList[i].contentRemark + '" class="fileName">' + fileName + '</p>\
+                                        </li>')
+                        } else {
+                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].sort + '" filePath="' + caseContentList[i].contentPath + '" class="fileItem">\
+                                            <div class="bgSize" style = "background-image: url(../images/dcm_icon.png)"> </div>\
+                                            <p type="dcm" desc="' + caseContentList[i].contentRemark + '" class="fileName active">' + fileName + '</p>\
+                                        </li>')
+                        }
+                    }
+                }
+            }
+            if (k === -1) {
+                data[index].childList.splice(j, 1, 1);
+            }
+        }
+        if (l === -1) {
+            data.splice(index, 1, 1);
+        }
+    })
+    renderLeftNavigation(data);
+}
+
+/** 查询申请详情 */
+function getApplyInfo() {
     applyFormId = sessionStorage.getItem('applyFormId');
     let formData = {"applyFormId": applyFormId};
     ajaxRequest("GET", getApplyInfoUrl, formData, true, "application/json", false, getApplyInfoSuccess, null, null)
+
+    function getApplyInfoSuccess(result) {
+        sessionStorage.setItem('applyInfo', JSON.stringify(result));
+        applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
+    }
 }
-function getApplyInfoSuccess(result) {
-    sessionStorage.setItem('applyInfo', JSON.stringify(result));
-    applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
-}
-$(function () {
 
-    getApplyInfo();
-
-    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
-
-    if (applyInfo.inviteUserId) {
-        inviteDoctorCount = JSON.parse(applyInfo.consultantUserList).length;
-    }
-    let applyNodeList = applyInfo.applyNodeList;
-    let isInvite = userInfo.id === applyInfo.inviteUserId ? true : false;
-    if (applyInfo.applyType === "APPLY_CONSULTATION_VIDEO") {
-        applyTimeNavigationShow = true;
-    }
-    /* 动态创建进度条 */
-    const statusArr = ["已拒收", '待收诊', '已排期', '会诊中', '待反馈', '已完成'];
-    let str = '';
-    for (var i = 1; i < statusArr.length; i++) {
-        str += '<li>' + statusArr[i] + '</li>'
-        $('.progressBar').html(str);
-    }
-    if (isInvite) {
+function rederViewByRole() {
+    if (isMainDoctor) {
         if (applyInfo.applyStatus === "CONSULTATION_APPLY_ACCEDE") {
             //待收诊
             $(".progressBar li:nth-child(1)").addClass("libg");
@@ -114,6 +176,57 @@ $(function () {
             }
         } else if (applyInfo.applyStatus === "CONSULTATION_SLAVE_ACCEDE") {
             //待收诊
+            $(".progressBar li:nth-child(1)").addClass("libg");
+        } else if (applyInfo.applyStatus === "CONSULTATION_DATETIME_LOCKED") {
+            //已排期
+            $(".progressBar li:nth-child(1)").addClass("libg");
+            $(".progressBar li:nth-child(2)").addClass("libg");
+        } else if (applyInfo.applyStatus === "CONSULTATION_BEGIN") {
+            //会诊中
+            $(".progressBar li:nth-child(1)").addClass("libg");
+            $(".progressBar li:nth-child(2)").addClass("libg");
+            $(".progressBar li:nth-child(3)").addClass("libg");
+            $(".compileReport").show();
+            $(".entrance").show();
+        } else if (applyInfo.applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
+            //待反馈
+            $(".progressBar li:nth-child(1)").addClass("libg");
+            $(".progressBar li:nth-child(2)").addClass("libg");
+            $(".progressBar li:nth-child(3)").addClass("libg");
+            $(".progressBar li:nth-child(4)").addClass("libg");
+            $("#applyRecord").show();
+            $("#applyRecordContext").show();
+            applyRecordNavigationShow = true;
+        } else if (applyInfo.applyStatus === "CONSULTATION_END") {
+            //已完成
+            $(".progressBar li:nth-child(1)").addClass("libg");
+            $(".progressBar li:nth-child(2)").addClass("libg");
+            $(".progressBar li:nth-child(3)").addClass("libg");
+            $(".progressBar li:nth-child(4)").addClass("libg");
+            $(".progressBar li:nth-child(5)").addClass("libg");
+            $("#applyRecord").show();
+            $("#applyRecordContext").show();
+            $("#consultantFeedback").show();
+            $("#consultantFeedbackContext").show();
+            applyRecordNavigationShow = true;
+            consultantFeedbackNavigationShow = true;
+        } else if (applyInfo.applyStatus === "CONSULTATION_MASTER_REJECT" || applyInfo.applyStatus === "CONSULTATION_SLAVE_REJECT") {
+            //会诊医政已拒绝
+            applyRefuseNavigationShow = true;
+            $('#refuseReasonBox').show();
+            $('.progressBar').empty();
+            $('.progressBar').html('<li>' + statusArr[0] + '</li>');
+            $(".progressBar li:nth-child(1)").addClass("libg");
+        }
+    } else if (isInvite) {
+        if (applyInfo.applyStatus === "CONSULTATION_APPLY_ACCEDE") {
+            //待收诊
+            $(".progressBar li:nth-child(1)").addClass("libg");
+            if (inviteDoctorCount <= 1) {
+                $(".receive").show();
+            }
+        } else if (applyInfo.applyStatus === "CONSULTATION_SLAVE_ACCEDE") {
+            //排期审核
             $(".progressBar li:nth-child(1)").addClass("libg");
         } else if (applyInfo.applyStatus === "CONSULTATION_DATETIME_LOCKED") {
             //已排期
@@ -204,22 +317,45 @@ $(function () {
             $(".progressBar li:nth-child(1)").addClass("libg");
         }
     }
+}
 
+$(function () {
+
+    getApplyInfo();
+
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+
+    if (applyInfo.inviteUserId) {
+        inviteDoctorCount = JSON.parse(applyInfo.consultantUserList).length;
+    }
+    let applyNodeList = applyInfo.applyNodeList;
+
+    isMainDoctor = userInfo.id === applyInfo.inviteUserId ? true : false;
+
+    isInvite = applyInfo.consultantUserList.indexOf(userInfo.id) ? true : false;
+
+    isVideo = applyInfo.applyType === "APPLY_CONSULTATION_VIDEO" ? true : false;
+    applyTimeList = applyInfo.applyTimeList;
+    caseContentList = applyInfo.caseContentList;
+    /** 动态创建进度条 */
+    const statusArr = ["已拒收", '待收诊', '已排期', '会诊中', '待反馈', '已完成'];
+    let str = '';
+    for (var i = 1; i < statusArr.length; i++) {
+        str += '<li>' + statusArr[i] + '</li>'
+        $('.progressBar').html(str);
+
+    }
     /**网页标题*/
     $('head > title').html(applyInfo.patientSex + '/' + applyInfo.patientAge + '/' + applyInfo.caseDiagnosis + '-远程会诊平台');
     /** 拒收原因 */
     $("#refuseReason").html(applyInfo.refuseRemark);
     /**会诊报告*/
-   if (applyInfo.inviteUserId) {
-        consultantReport = JSON.parse(applyInfo.consultantReport);
-        let goalHtml = '';
-        for (let item of consultantReport) {
-            goalHtml += '<pre class="report">' + item.doctorName + ':<br />' + item.report + '</pre>'
-        }
-        $('.goalObj').html(goalHtml);
+    consultantReport = JSON.parse(applyInfo.consultantReport);
+    let goalHtml = '';
+    for (let item of consultantReport) {
+        goalHtml += '<pre class="report">' + item.doctorName + ':<br />' + item.report + '</pre>'
     }
-
-
+    $('.goalObj').html(goalHtml);
     /**临床反馈*/
     $('.applyFeedBack').html(applyInfo.consultantFeedback);
     /**患者基本信息*/
@@ -231,114 +367,25 @@ $(function () {
     $('.address').html(applyInfo.detailAddress);
     if (applyInfo.applyUrgent == 1) {
         $('.bThree_p').show();
-    } else {
-        $('.bThree_p').hide();
     }
     $('.tentative').html('初步诊断：' + applyInfo.caseDiagnosis);
     $('.telemedicineTarget').html('会/转诊目的：' + applyInfo.applyRemark);
-
-    /**电子病历附件*/
+    /** 查询电子病历附件*/
     ajaxRequest("GET", getAllCaseContentType, null, true, false, true, renderCaseContentView, null, null);
-    let tempArr = applyInfo.caseContentList;
-
-    function renderCaseContentView(data) {
-        $('.sum').html(tempArr.length);
-        /* 电子病历附件 */
-        $.each(data, function (index, value) {
-            let childList = value.childList;
-            let l = -1;
-            for (let j = 0, len = childList.length; j < len; j++) {
-                let k = -1;
-                for (var i = 0; i < tempArr.length; i++) {
-                    if (childList[j].id === tempArr[i].contentTypeId) {
-                        l = i;
-                        if (k === j) {
-                        } else {
-                            var upfileHtml = '<li name="' + childList[j].caseTypeName + '" id="' + childList[j].id + '" class="upfileItem clearfix">\
-                             <div class="upfileContent">\
-                                 <div class="operateLeft">' + value.caseTypeName + '-' + childList[j].caseTypeName + '</div>\
-                                 <ul class="fileContent clearfix">\
-                                 </ul>\
-                             </div>\
-                         </li>'
-                            $('.upfileUl').append(upfileHtml);
-                            k = j;
-                        }
-                        var fileType = tempArr[i].contentPath.substr(tempArr[i].contentPath.lastIndexOf('.') + 1, tempArr[i].contentPath.length);
-                        var fileName = tempArr[i].contentPath.substr(tempArr[i].contentPath.lastIndexOf('/') + 1, tempArr[i].contentPath.length);
-                        fileAllArr.push(fileName);
-                        if (fileType == 'png' || fileType == 'jpg') {
-                            if (tempArr[i].contentRemark == '') {
-
-                                $('.upfileUl').find('#' + tempArr[i].contentTypeId).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].contentPath + '"  class="fileItem">\
-                                           <div style = "background-image: url(&apos;' + baseUrl + "/" + tempArr[i].contentPath + '&apos;)"></div>\
-                                            <p type="img" desc="' + tempArr[i].contentRemark + '" class="fileName">' + fileName + '</p>\
-                                        </li>')
-                            } else {
-                                $('.upfileUl').find('#' + tempArr[i].contentTypeId).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].contentPath + '" class="fileItem">\
-                                           <div style = "background-image: url(&apos;' + baseUrl + "/" + tempArr[i].contentPath + '&apos;)"></div>\
-                                            <p type="img" desc="' + tempArr[i].contentRemark + '" class="fileName active">' + fileName + '</p>\
-                                        </li>')
-                            }
-                        } else if (fileType == 'pdf') {
-                            if (tempArr[i].contentRemark == '') {
-                                $('.upfileUl').find('#' + tempArr[i].contentTypeId).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].contentPath + '"  class="fileItem">\
-                                            <div class="bgSize" style = "background-image: url(../images/pdf_icon.png)"> </div>\
-                                            <p type="pdf" desc="' + tempArr[i].contentRemark + '" class="fileName">' + fileName + '</p>\
-                                        </li>')
-                            } else {
-                                $('.upfileUl').find('#' + tempArr[i].contentTypeId).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].contentPath + '" class="fileItem">\
-                                            <div class="bgSize" style = "background-image: url(../images/pdf_icon.png)"> </div>\
-                                            <p type="pdf" desc="' + tempArr[i].contentRemark + '" class="fileName active">' + fileName + '</p>\
-                                        </li>')
-                            }
-                        } else if (fileType == 'dcm') {
-                            if (tempArr[i].contentRemark == '') {
-                                $('.upfileUl').find('#' + tempArr[i].contentTypeId).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].contentPath + '"  class="fileItem">\
-                                            <div class="bgSize" style = "background-image: url(../images/dcm_icon.png)"> </div>\
-                                            <p type="dcm" desc="' + tempArr[i].contentRemark + '" class="fileName">' + fileName + '</p>\
-                                        </li>')
-                            } else {
-                                $('.upfileUl').find('#' + tempArr[i].contentTypeId).find('.fileContent').append('<li id="' + tempArr[i].id + '" sort="' + tempArr[i].sort + '" filePath="' + tempArr[i].contentPath + '" class="fileItem">\
-                                            <div class="bgSize" style = "background-image: url(../images/dcm_icon.png)"> </div>\
-                                            <p type="dcm" desc="' + tempArr[i].contentRemark + '" class="fileName active">' + fileName + '</p>\
-                                        </li>')
-                            }
-                        }
-                    }
-                }
-                if (k === -1) {
-                    data[index].childList.splice(j, 1, 1);
-                }
-            }
-            if (l === -1) {
-                data.splice(index, 1, 1);
-            }
-        })
-        renderLeftNavigation(data);
-    }
-
     $('.money').html(applyInfo.consultantPrice);
-    //订单编号
-    if (applyInfo.applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
-        $('#applyNumber').hide();
-        $('.layui-timeline').hide();
-    }
+
     //订单编号
     $('.numbers').html(applyInfo.applyNumber);
     //申请时间
-    $('.applyDate').html(applyInfo.consultantApplyTime+":00");
+    $('.applyDate').html(applyInfo.consultantApplyTime + ":00");
     // 发件人信息
     $('.recipientsInfo').html(applyInfo.applySummary);
     // 收件人信息
-    console.log(applyInfo.inviteSummary)
     if (applyInfo.inviteSummary) {
         $('.addresserInfo').html(applyInfo.inviteSummary);
     }
-
-    /* 会诊排期 */
+    /** 会诊排期 */
     let _dateHtml = '';
-    let applyTimeList = applyInfo.applyTimeList;
     for (let i = 0, len = applyTimeList.length; i < len; i++) {
         _dateHtml += ' <p>\
              <span class="startDate">从&nbsp;&nbsp;' + applyTimeList[i].eventStartTime + '</span> 到&nbsp;&nbsp;\
@@ -346,8 +393,30 @@ $(function () {
                         </p>'
     }
     $('.schedule_modules').html(_dateHtml);
+    /** 循环时间轴 */
+    let _html = '';
+    for (let i = 0; i < applyNodeList.length; i++) {
+        _html += '<li class="layui-timeline-item">\
+                                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>\
+                                        <div class="layui-timeline-content layui-text">\
+                                            <h3 class="layui-timeline-title">\
+                                                <span class="fw">' + applyNodeList[i].nodeTime + '</span>\
+                                                <span class = "fw pl30" > ' + applyNodeList[i].nodeName + ' </span>\
+                                            </h3>'
+        if (applyNodeList[i].nodeName == '已结束') {
+            _html += ''
+        } else {
+            _html += '<p>操作人：' + applyNodeList[i].nodeOperator + '</p>\
+                                        </div>\
+                                    </li>'
+        }
+    }
+    $('.layui-timeline').html(_html);
 
-
+    if (applyInfo.applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
+        $('#applyNumber').hide();
+        $('.layui-timeline').hide();
+    }
     //如果是图文会诊
     if (applyInfo.applyType === "APPLY_CONSULTATION_IMAGE_TEXT") {
         $('#applyTime').hide();
@@ -356,118 +425,8 @@ $(function () {
         $('#applyTime').show();
         $('.schedule_modules ').show();
     }
+
     /**------------------------------------------*/
-
-
-    // 医嘱
-    if (applyInfo.orderFormBean) {
-        doctorEnjoin();
-    } else {
-        $(".doctorEnjoinBox").hide();
-    }
-
-    function doctorEnjoin() {
-        var doctorEnjoinJson = JSON.parse(applyInfo.orderFormBean.orders);
-        if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0) {
-            var _html = '<div class="chunkContent"><h2><span>01</span><p class="chunkType">长期医嘱</p><a class="printBtn no-print" href="' + IP + "download/standingOrders?orderId=" + localStorage.getItem("orderId") + '">下载</a></h2>\
-                <div class="oneList">'
-            for (var i = 0; i < doctorEnjoinJson.longTimeArr.length; i++) {
-                var twoLevel = doctorEnjoinJson.longTimeArr[i].drugArr;
-                _html += '<div class="oneListItem">\
-                        <p class="headTop">' + ((i + 1) < 10 ? "0" + (i + 1) : (i + 1)) + '-药物&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;执行时间：' + doctorEnjoinJson.longTimeArr[i].startTime + '&nbsp;&nbsp;&nbsp;&nbsp;结束时间：' + doctorEnjoinJson.longTimeArr[i].endTime + '</p>\
-                        <div class="twoList">'
-                for (var j = 0; j < twoLevel.length; j++) {
-                    if (j == 0) {
-                        _html += '<p class="twoListItem"><b>' + twoLevel[j].name + '</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单次' + twoLevel[j].singleNum + twoLevel[j].unit + '；' + twoLevel[j].frequency + '；' + twoLevel[j].means + '</p>'
-                    } else {
-                        _html += '<p class="twoListItem"><b>' + twoLevel[j].name + '</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单次' + twoLevel[j].singleNum + twoLevel[j].unit + '；</p>'
-                    }
-                }
-                _html += '</div>\
-                    </div>\
-                    <p class="boundary"></p>';
-            }
-            _html += '<p class="remarkBox">备注：' + doctorEnjoinJson.longTimeArea + '</p></div></div>';
-            $(".doctorEnjoinBody").append(_html);
-        }
-        if (doctorEnjoinJson.temporaryDrugArr || doctorEnjoinJson.temporaryTreatArr) {
-            if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0) {
-                var _html = '<div class="chunkContent"><h2><span>02</span><p class="chunkType">临时医嘱</p><a class="printBtn no-print" href="' + IP + "download/statOrder?orderId=" + localStorage.getItem("orderId") + '">下载</a></h2><div class="oneList">'
-            } else {
-                var _html = '<div class="chunkContent"><h2><span>01</span><p class="chunkType">临时医嘱</p><a class="printBtn no-print" href="' + IP + "download/statOrder?orderId=" + localStorage.getItem("orderId") + '">下载</a></h2><div class="oneList">'
-            }
-            if (doctorEnjoinJson.temporaryDrugArr && doctorEnjoinJson.temporaryDrugArr.length > 0) {
-                for (var i = 0; i < doctorEnjoinJson.temporaryDrugArr.length; i++) {
-                    var twoLevel = doctorEnjoinJson.temporaryDrugArr[i].drugArr;
-                    _html += '<div class="oneListItem">\
-                        <p class="headTop">' + ((i + 1) < 10 ? "0" + (i + 1) : (i + 1)) + '-药物&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;下达时间：' + doctorEnjoinJson.temporaryDrugArr[i].arriveTime + '</p>\
-                        <div class="twoList">'
-                    for (var j = 0; j < twoLevel.length; j++) {
-                        if (j == 0) {
-                            _html += '<p class="twoListItem"><b>' + twoLevel[j].name + '</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单次' + twoLevel[j].singleNum + twoLevel[j].unit + '；' + twoLevel[j].means + '</p>'
-                        } else {
-                            _html += '<p class="twoListItem"><b>' + twoLevel[j].name + '</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单次' + twoLevel[j].singleNum + twoLevel[j].unit + '；</p>'
-                        }
-                    }
-                    _html += '</div>\
-                    </div>\
-                    <p class="boundary"></p>';
-                }
-            }
-            if (doctorEnjoinJson.temporaryTreatArr && doctorEnjoinJson.temporaryTreatArr.length > 0) {
-                if (doctorEnjoinJson.temporaryDrugArr) {
-                    var tempNum = doctorEnjoinJson.temporaryDrugArr.length;
-                } else {
-                    var tempNum = 0;
-                }
-                for (var i = 0; i < doctorEnjoinJson.temporaryTreatArr.length; i++) {
-                    _html += '<div class="oneListItem">\
-                    <p class="headTop">' + ((tempNum + i + 1) > 10 ? (tempNum + i + 1) : '0' + (tempNum + i + 1)) + '-诊疗&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;下达时间：' + doctorEnjoinJson.temporaryTreatArr[i].arriveTime + '</p>\
-                    <div class="twoList">\
-                        <p class="twoListItem"><b>' + doctorEnjoinJson.temporaryTreatArr[i].name + '</b></p>\
-                    </div>\
-                </div><p class="boundary"></p>'
-                }
-            }
-            _html += '<p class="remarkBox">备注：' + doctorEnjoinJson.temporaryArea + '</p></div></div>';
-            $(".doctorEnjoinBody").append(_html);
-        }
-        if (doctorEnjoinJson.surgeryArr && doctorEnjoinJson.surgeryArr.length > 0) {
-            if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 || doctorEnjoinJson.temporaryDrugArr && doctorEnjoinJson.temporaryDrugArr.length > 0) {
-                var _html = '<div class="chunkContent">\
-                <h2><span>02</span><p class="chunkType">手术备品</p><a class="printBtn" href="' + IP + "download/specificationsOrder?orderId=" + localStorage.getItem("orderId") + '">下载</a></h2>'
-            }
-            if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 || doctorEnjoinJson.temporaryTreatArr && doctorEnjoinJson.temporaryTreatArr.length > 0) {
-                var _html = '<div class="chunkContent">\
-                    <h2><span>02</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="' + IP + "download/specificationsOrder?orderId=" + localStorage.getItem("orderId") + '">下载</a></h2>'
-            }
-            if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 && doctorEnjoinJson.temporaryDrugArr && doctorEnjoinJson.temporaryDrugArr.length > 0) {
-                var _html = '<div class="chunkContent">\
-                <h2><span>03</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="' + IP + "download/specificationsOrder?orderId=" + localStorage.getItem("orderId") + '">下载</a></h2>'
-            }
-            if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 && doctorEnjoinJson.temporaryTreatArr && doctorEnjoinJson.temporaryTreatArr.length > 0) {
-                var _html = '<div class="chunkContent">\
-                    <h2><span>03</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="' + IP + "download/specificationsOrder?orderId=" + localStorage.getItem("orderId") + '">下载</a></h2>'
-            }
-            if (!doctorEnjoinJson.longTimeArr && !doctorEnjoinJson.temporaryTreatArr && !doctorEnjoinJson.temporaryDrugArr) {
-                var _html = '<div class="chunkContent">\
-                    <h2><span>01</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="' + IP + "download/specificationsOrder?orderId=" + localStorage.getItem("orderId") + '">下载</a></h2>'
-            }
-            _html += '<div class="oneList">\
-                        <div class="oneListItem">\
-                            <div class="twoList">'
-            for (var i = 0; i < doctorEnjoinJson.surgeryArr.length; i++) {
-                _html += '<p class="twoListItem"><b>' + ((i + 1) > 10 ? (i + 1) : '0' + (i + 1)) + "&nbsp;&nbsp;&nbsp;&nbsp;" + doctorEnjoinJson.surgeryArr[i].surgeryName + '&nbsp;&nbsp;&nbsp;&nbsp;' + doctorEnjoinJson.surgeryArr[i].surgerySize + "&nbsp;&nbsp;&nbsp;&nbsp;" + doctorEnjoinJson.surgeryArr[i].surgeryNum + '</b></p>';
-            }
-            _html += '</div>\
-                        </div>\
-                        <p class="boundary"></p>\
-                        <p class="remarkBox">备注：' + doctorEnjoinJson.surgeryArea + '</p>\
-                    </div>\
-                </div>';
-            $(".doctorEnjoinBody").append(_html);
-        }
-    }
 
     /* 左侧导航栏锚点定位 */
     $(window).scroll(function () {
@@ -481,7 +440,8 @@ $(function () {
         $('html, body').animate({
             scrollTop: x - 160,
         }, 300);
-    };
+    }
+
     // 病历信息一级按钮
     $('.oneLevelUl').delegate('.oneLevelItem', 'click', function () {
         $(this).addClass('active').siblings('.oneLevelItem').removeClass('active');
@@ -514,12 +474,11 @@ $(function () {
         return false;
     });
 
-
     // 图片点击查看大图
-    var objParent = null; // 当前点击块的父级
-    var fileArr = []; // 当前点击块的文件数据
-    var indexFile = 0; // 当前点击的索引
-    var ObjArr = []; //  当前点击块的文件对象
+    let objParent = null; // 当前点击块的父级
+    let fileArr = []; // 当前点击块的文件数据
+    let indexFile = 0; // 当前点击的索引
+    let ObjArr = []; //  当前点击块的文件对象
     $('.upfileUl').delegate('.fileItem', 'click', function () {
         var $ = layui.jquery;
         // 弹出层
@@ -624,8 +583,6 @@ $(function () {
         $('.bigImgContainer').find('.bigImg').css('backgroundImage', fileArr[indexFile].src);
         $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
         $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
-
-
     })
     // 下一个
     $('.switchBox .next').click(function () {
@@ -670,8 +627,8 @@ $(function () {
     $('.closeBtnImg').click(function () {
         layer.closeAll();
         $('.bigImgContainer').hide();
-        var _html = '';
-        for (var i = 0; i < fileArr.length; i++) {
+        let _html = '';
+        for (let i = 0; i < fileArr.length; i++) {
             _html += `<li class="fileItem fileNewItem" id="${fileArr[i].id}" filePath="${fileArr[i].filePath}">`;
             if (fileArr[i].type != 'img') {
                 _html += `<div class="bgSize" style='background-image:${fileArr[i].src};'></div>`
@@ -692,10 +649,11 @@ $(function () {
         indexFile = 0; // 当前点击的索引
         ObjArr = []; //  当前点击块的文件对象
     });
+
     // 图片缩放 拖拽
     $('.bigImgBox').on("mousewheel DOMMouseScroll", function (e) {
         if (!$('.bigImgBox .bigImg').hasClass('bgSize')) {
-            var delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) || // chrome & ie
+            let delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) || // chrome & ie
                 (e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1)); // firefox
             if (delta > 0) {
                 // 向上滚
@@ -732,35 +690,8 @@ $(function () {
     $('.bigImgBox').on('mouseleave', function () {
         $('.bigImgBox').unbind('mousemove');
     })
-    // 图片缩放 拖拽 结束
 
 
-    /* 循环时间轴 */
-    let _html = '';
-    for (let i = 0; i < applyNodeList.length; i++) {
-        _html += '<li class="layui-timeline-item">\
-                                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>\
-                                        <div class="layui-timeline-content layui-text">\
-                                            <h3 class="layui-timeline-title">\
-                                                <span class="fw">' + applyNodeList[i].nodeTime + '</span>\
-                                                <span class = "fw pl30" > ' + applyNodeList[i].nodeName + ' </span>\
-                                            </h3>'
-        if (applyNodeList[i].nodeName == '已结束') {
-            _html += ''
-        } else {
-            _html += '<p>操作人：' + applyNodeList[i].nodeOperator + '</p>\
-                                        </div>\
-                                    </li>'
-        }
-    }
-    $('.layui-timeline').html(_html);
-
-
-    /* 返回按钮 */
-    $('.getBack').click(function () {
-        //   返回医生工作台
-        window.location = '../page/morkbench.html'
-    })
     /** 编辑会诊报告 */
     $('.compileReport').click(function () {
         // 判断自己是否为该订单的主会诊人
@@ -795,7 +726,7 @@ $(function () {
     /* 编辑会诊报告提交按钮 */
     $('.refer').click(function () {
         for (let i = 1, len = consultantReport.length; i < len; i++) {
-            if (consultantReport[i].reportStatus === "1") {
+            if (isMainDoctor && consultantReport[i].reportStatus === "1") {
                 // $('#consultantReportIframe').css('display', 'none');
                 layer.open({
                     type: 1,
@@ -823,7 +754,11 @@ $(function () {
         let data = new FormData();
         data.append("report", JSON.stringify(consultantReport));
         data.append("id", applyFormId);
-        ajaxRequest("POST", doctorSendFeedbackReport, data, false, false, true, success, failed, null);
+        if (!isMainDoctor) {
+            ajaxRequest("POST", doctorSendFeedbackReportMoment, data, false, false, true, success, failed, null);
+        } else {
+            ajaxRequest("POST", doctorSendFeedbackReport, data, false, false, true, success, failed, null);
+        }
 
         function success() {
             layer.open({
@@ -913,7 +848,6 @@ $(function () {
 
     })
 
-
     /** 编辑临床反馈 */
     $('.editClinicalFeedback').click(function () {
         $('#consultantFeedbackIframe').css('display', 'block');
@@ -929,7 +863,7 @@ $(function () {
         document.documentElement.style.overflow = "scroll";
     });
 
-    /* 编辑会诊报告提交按钮 /order/feedBack 首诊反馈 */
+    /** 编辑临床反馈提交按钮 /order/feedBack 首诊反馈 */
     $('.feed_SM').click(function () {
         let newConsultantFeedback = $('.feedback_Val').val();
         let data = new FormData();
@@ -937,9 +871,8 @@ $(function () {
         data.append("id", applyFormId);
         ajaxRequest("POST", doctorSendFeedbackReport, data, false, false, true, doctorSendFeedbackReportSuccess, doctorSendFeedbackReportFailed, null);
 
-
     })
-    /* 编辑会诊报告暂存按钮 */
+    /** 编辑临床反馈暂存按钮 */
     $('.feed_TS').click(function () {
         let newConsultantFeedback = $('.feedback_Val').val();
         let data = new FormData();
@@ -947,58 +880,21 @@ $(function () {
         data.append("consultantFeedback", newConsultantFeedback);
         ajaxRequest("POST", doctorSendFeedbackReportMoment, data, false, false, true, doctorSendFeedbackReportMomentSuccess, doctorSendFeedbackReportMomentFailed, null);
     })
-
     function doctorSendFeedbackReportSuccess(result) {
-        var _$ = layui.jquery;
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['300px', '80px'],
-            closeBtn: false,
-            shade: [0.1, '#000000'],
-            shadeClose: false,
-            skin: 'layui-layer-nobg', //没有背景色
-            time: 2000,
-            content: _$('#feedBackSuccessMessage'),
-        });
-        $('.alertText').html('提交成功');
+        $('#alertText').html('提交成功');
+        alertMessage();
         setTimeout(function () {
             window.location = '../page/morkbench.html'
         }, 2000);
         getApplyInfo();
     }
-
     function doctorSendFeedbackReportFailed(result) {
-        console.log(result);
-        var _$ = layui.jquery;
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['300px', '80px'],
-            closeBtn: false,
-            shade: [0.1, '#000000'],
-            shadeClose: false,
-            skin: 'layui-layer-nobg', //没有背景色
-            time: 2000,
-            content: _$('#feedBackSuccessMessage'),
-        });
-        $('.alertText').html('提交失败');
+        $('#alertText').html('提交失败');
+        alertMessage();
     }
-
     function doctorSendFeedbackReportMomentSuccess(result) {
-        var _$ = layui.jquery;
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['300px', '80px'],
-            closeBtn: false,
-            shade: [0.1, '#000000'],
-            shadeClose: false,
-            skin: 'layui-layer-nobg', //没有背景色
-            time: 2000,
-            content: _$('#feedBackSuccessMessage'),
-        });
-        $('.alertText').html('保存成功');
+        $('#alertText').html('保存成功');
+        alertMessage();
         setTimeout(function () {
             $('.background').css('display', 'none');
             $('.rejectionLayer').css('display', 'none');
@@ -1007,25 +903,12 @@ $(function () {
         document.documentElement.style.overflow = "scroll";
         getApplyInfo();
     }
-
     function doctorSendFeedbackReportMomentFailed(result) {
-        console.log(result);
-        var _$ = layui.jquery;
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['300px', '80px'],
-            closeBtn: false,
-            shade: [0.1, '#000000'],
-            shadeClose: false,
-            skin: 'layui-layer-nobg', //没有背景色
-            time: 2000,
-            content: _$('#feedBackSuccessMessage'),
-        });
-        $('.alertText').html('保存失败');
+        $('#alertText').html('保存失败');
+        alertMessage();
     }
 
-    /* 拒收按钮弹层 */
+    /** 拒收 申请 操作 事件 */
     $('.rejection').click(function () {
         if (isInvite) {
             $('#rejectIframe').css('display', 'block');
@@ -1049,7 +932,7 @@ $(function () {
         $(this).hide();
         $('textarea').focus();
     })
-    var viewText = '建议多学科会诊:';
+    let viewText;
     /* 建议多学科会诊按钮点击事件  */
     $('.suggest').click(function () {
         $(this).css({
@@ -1068,7 +951,6 @@ $(function () {
         $('.suggest').removeAttr('style');
         viewText = '其他原因:';
     })
-
     /* 弹层关闭按钮 */
     $('.refuseBtn').click(function () {
         $('.background').css('display', 'none');
@@ -1077,38 +959,16 @@ $(function () {
     // 拒绝确定按钮
     $('.confirm').click(function () {
         if ($('.refuseReason').val() == '') {
-            var _$ = layui.jquery;
-            layer.open({
-                type: 1,
-                title: '',
-                area: ['300px', '75px'],
-                closeBtn: false,
-                shade: [0.7, '#000000'],
-                shadeClose: false,
-                time: 1000,
-                //    zIndex: layer.zIndex,
-                content: _$('.pleasewirte')
-            });
+            $("#alertText").html("请填写拒收原因");
+            alertMessage();
         } else {
             let data = new FormData();
             data.append("id", applyFormId);
             data.append("report", viewText + $('.refuseReason').val());
-            console.log(viewText + $('.refuseReason').val());
             ajaxRequest("POST", doctorReceiveReject, data, false, false, true, doctorReceiveRejectSuccess, null, null)
-
             function doctorReceiveRejectSuccess(result) {
-                var _$ = layui.jquery;
-                layer.open({
-                    type: 1,
-                    title: '',
-                    area: ['300px', '75px'],
-                    closeBtn: false,
-                    shade: [0.7, '#000000'],
-                    shadeClose: false,
-                    zIndex: layer.zIndex,
-                    time: 1000,
-                    content: _$('.returned')
-                });
+                $("#alertText").html("拒收成功");
+                alertMessage();
                 setTimeout(function () {
                     window.location = '../page/morkbench.html'
                 }, 1000);
@@ -1118,17 +978,12 @@ $(function () {
 
     // MDT协调按钮     MDTBtn
     $('.MDTBtn').click(function () {
-        if (doctorInfo.firstDoctor == 1) {
-            window.location = '/yilaiyiwang/particulars/MTD.html';
-        } else {
-            layer.msg('只有主会诊医生才能进行此操作');
-        }
+        window.location = '../page/MTD.html';
     })
 
     //  接收按钮事件 receive
     $('.receive').click(function () {
-        if (isInvite) {
-            var _$ = layui.jquery;
+        if (!isVideo) {
             layer.open({
                 type: 1,
                 title: '',
@@ -1139,88 +994,50 @@ $(function () {
                 content: _$('.submitBox'),
             });
         } else {
-            var _$ = layui.jquery;
-            layer.open({
-                type: 1,
-                content: _$('.selectTimeContainer'),
-                title: '',
-                area: ['1060px', '630px'],
-                closeBtn: 0,
-                skin: 'noBackground',
-            })
-            $('#timeUl > li').removeClass('active');
-            $('#timeUl > li').removeClass('gary');
-            for (var i = 0; i < dateTempList.length; i++) {
-                if (dateStr == dateTempList[i].date) {
-                    for (var j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
-                        $('#timeUl > li').eq(j).addClass('gary');
-                    }
-                }
-            }
+            showDateView(applyTimeList)
         }
     });
 
-    $('.submitBox .noBtn').click(function () {
-        layer.closeAll();
-        $('.submitBox').hide();
-    })
-    $('.submitBox .yesBtn').click(function () {
-        $.ajax({
-            type: 'POST',
-            url: IP + 'order/receiveOrder',
-            dataType: 'json',
-            data: {
-                "type": '0',
-                "orderStateId": data.orderFormBean.statesId,
-                "orderId": data.orderFormBean.id,
-                "orderTypes": data.orderFormBean.orderTypes,
-                "orderType": 0,
-                "sendType": 0,
-                "type1": 2,
-                "doctorId": doctorId,
-            },
-            xhrFields: {
-                withCredentials: true
-            },
-            crossDomain: true,
-            success: function (data) {
-                console.log(data)
-                if (data.status == 200) {
-                    $('.submitBox').hide();
-                    var _$ = layui.jquery;
-                    layer.open({
-                        type: 1,
-                        title: '',
-                        area: ['300px', '75px'],
-                        closeBtn: false,
-                        shade: [0.7, '#000000'],
-                        shadeClose: false,
-                        content: _$('.accept'),
-                        time: 2000,
-                    });
-                    setTimeout(function () {
-                        window.location = '/yilaiyiwang/morkbench/morkbench.html'
-                    }, 2000)
-                } else if (data.status == 250) {
-                    // 未登录操作
-                    window.location = '/yilaiyiwang/login/login.html';
-                } else if (data.status == 555) {
-                    window.location = '/yilaiyiwang/morkbench/morkbench.html'
-                } else if (data.status == 500) {
+    function alertMessage() {
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['300px', '75px'],
+            closeBtn: false,
+            shade: [0.7, '#000000'],
+            shadeClose: false,
+            time: 2000,
+            zIndex: layer.zIndex,
+            content: _$('#alertBox')
+        });
+    }
 
-                    layer.msg('订单状态已发生改变')
-                } else {
-                }
-            },
-            error: function (err) {
-                console.log(err);
-            },
-        })
+    rederViewByRole();
+
+    /** 返回按钮 */
+    $('.getBack').click(function () {
+        window.location = '../page/morkbench.html'
     })
-    // 关闭事件
-    $('.closeBtnTime').click(function () {
-        newDateTempList = [];
-        layer.closeAll();
-        $('.selectTimeContainer').hide();
-    })
+
+    function renderDateRightContent() {
+        let startMinute = 0; // 开始总分钟数
+        let endMinute = 0; // 结束总分钟数
+        let startHour = 0; // 开始小时数
+        let endHour = 0; // 结束小时数
+        let _html = '';
+        for (let i = 0; i < 96; i++) {
+            startMinute = i * 15;
+            endMinute = (i + 1) * 15;
+            startHour = parseInt(startMinute / 60);
+            endHour = parseInt(endMinute / 60);
+            let startM = startMinute %= 60; // 计算后的开始分钟数
+            let endM = endMinute %= 60; // 计算后的开始分钟数
+            if (endHour == 24) {
+                _html += '<li endDate="23:59" index="' + i + '">' + double(startHour) + ':' + double(startM) + '</li>'
+            } else {
+                _html += '<li endDate="' + double(endHour) + ':' + double(endM) + '" index="' + i + '">' + double(startHour) + ':' + double(startM) + '</li>'
+            }
+        }
+        $('.rightContent').html(_html);
+    }
 })
