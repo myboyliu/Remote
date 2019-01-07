@@ -29,7 +29,7 @@ function renderViewByRole(applyStatus) {
             $(".rejection").show();
             $(".modifier3").show();
             $(".modifier5").show();
-            if (inviteDoctorCount > 1) {
+            if (inviteDoctorCount > 2) {
                 $("#MDTBtn").show();
             } else {
                 $("#accept").show();
@@ -41,7 +41,7 @@ function renderViewByRole(applyStatus) {
             $(".rejection").show();
             $(".modifier3").show();
             $(".modifier5").show();
-            if (inviteDoctorCount > 1) {
+            if (inviteDoctorCount > 2) {
                 $("#MDTBtn").show();
             } else {
                 $(".examineBtn").show();
@@ -53,7 +53,7 @@ function renderViewByRole(applyStatus) {
             $(".rejection").show();
             $(".modifier3").show();
             $(".modifier5").show();
-            if (inviteDoctorCount > 1) {
+            if (inviteDoctorCount > 2) {
                 $("#MDTBtn").show();
             } else {
                 $(".accept").show();
