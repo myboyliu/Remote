@@ -744,7 +744,7 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setUpdateUser(userId);
         applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
         applyForm.setInviteSummary(inviteSummary);
-        int i = applyFormService.updateInviteDoctorByPrimaryKeySelective(applyForm);
+        int i = applyFormService.updateByPrimaryKeySelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("修改applyForm失败");
         }
