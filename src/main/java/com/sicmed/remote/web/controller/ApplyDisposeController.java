@@ -783,6 +783,7 @@ public class ApplyDisposeController extends BaseController {
             return badRequestOfArguments("添加失败");
         }
 
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
         return succeedRequest("操作成功");
     }
 
@@ -818,7 +819,7 @@ public class ApplyDisposeController extends BaseController {
         if (l < 1) {
             return badRequestOfArguments("添加失败");
         }
-
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
         return succeedRequest("操作成功");
     }
 }
