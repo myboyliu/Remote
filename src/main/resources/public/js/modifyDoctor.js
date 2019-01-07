@@ -155,13 +155,19 @@ function getDoctorByBranchId(deptId) {
 }
 
 $(function () {
+    /* 动态创建进度条 */
+    let statusArr = ['待收诊', '已排期', '会诊中', '待反馈', '已完成'];
+    let str = '';
+    for (let i = 0; i < statusArr.length; i++) {
+        str += '<li>' + statusArr[i] + '</li>'
+        $('.progressBar').html(str);
+    }
+    $('.progressBar li:first-child').addClass('libg');
 
-    var fileAllArr = []; //所有图片原始资源
+
     var hospitalName = '';
     var hospitalId = '';
     // 选择的医生信息数组
-    var favoriteArr = [];
-    var hospitalPicArr = [];
     var price = 0;
 
 

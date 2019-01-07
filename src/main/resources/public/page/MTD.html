@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="../favicon.ico" rel="shortcut icon"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>专家协调-远程会诊平台</title>
+    <link rel="stylesheet" href="../common/css/reset.css">
+    <link rel="stylesheet/less" href="../common/css/nav.less">
+    <link rel="stylesheet/less" type="text/css" href="../css/MTD.less"/>
+    <link rel="stylesheet/less" href="../common/css/datePlugin.less">
+    <link rel="stylesheet" href="../common/layui/css/layui.css">
+    <script src="../common/js/jquery.js"></script>
+    <script src="../common/layui/layui.all.js"></script>
+    <script src="../common/js/less.js"></script>
+    <script src="../common/js/root.js"></script>
+    <script src="../common/js/url.js" charset="utf-8"></script>
+    <script src="../common/js/datePluginUtils.js"></script>
+    <script src="../common/js/ajaxRequestUtils.js" charset="utf-8"></script>
+    <script src="../js/MTD.js"></script>
+    <!--[if lt IE9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div class="header">
+    <div class="infoArea clearfix">
+        <h1 class="logo">
+            <a href="javascript:;">
+                <img src="../images/ylyw_logo.png"/>
+            </a>
+        </h1>
+        <div class="topInfoArea clearfix">
+            <div class="personal" href="javascript:;">
+                <span class="personalCenter"><span class="name"></span>/<span class="occupationName"></span>/<span
+                        class="deptName"></span>/<span class="hospitalName"></span>/</span>
+                <ul>
+                    <li>
+                        <a href="../page/center.html">个人中心</a>
+                    </li>
+                    <li>
+                        <a class="loginOut" href="javascript:;">退出登录</a>
+                    </li>
+                </ul>
+            </div>
+            <a class="news" href="../page/newInformation.html">新信息</a>
+            <div class="searchBox"><input class="searchInput" type="text" placeholder="请在这里搜索已结束的订单">
+                <img class="searchBtn" src="../images/search.png" alt="">
+            </div>
+
+        </div>
+    </div>
+    <ul class="guide clearfix">
+        <li>
+            <a class="active" href="../page/workbench.html">医政工作台</a>
+        </li>
+        <li>
+            <a href="../page/createCase.html">创建病历</a>
+        </li>
+        <li>
+            <a href="../page/doctorAddress.html">医生通讯录</a>
+        </li>
+        <li>
+            <a href="../page/liveMain.html">三甲早直播</a>
+        </li>
+        <li>
+            <a href="../page/premierCourseMain.html">会员优享课程</a>
+        </li>
+    </ul>
+</div>
+
+<ul class="progressBar clearfix"></ul>
+
+<main>
+    <div class="contentBox">
+        <!-- 选医生 -->
+        <div class="chooseBox clearfix">
+            <div class="leftBox">
+                <ul class="hospitalUl">
+
+                </ul>
+            </div>
+            <div class="rightBox">
+                <div class="tilteBox clearfix">
+                    <p class="doctorBox">选择MDT医生(
+                        <span class="doctorCount">0</span>位)</p>
+                    <p>医院：
+                        <span class="hospitalTel"></span>
+                    </p>
+                </div>
+                <ul class="favoriteUl clearfix">
+
+                </ul>
+                <div class="briefing">
+                    <ul class="doctorUl clearfix">
+
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+<div class="footer marginBottom70">
+    Copyright © 2018 医来医往(北京)科技有限公司
+</div>
+
+<div class="operation clearfix">
+    <div class="handle">
+        <span>诊费:</span>
+        <span>￥</span>
+        <span class="money">-</span>
+        <input type="button" value="返回" class="getBack">
+        <input type="button" value="下一步，选定排期" class="mdt_Btn">
+        <input type="button" value="确认接收" class="mdt_BtnPic">
+    </div>
+</div>
+
+<div class="operateBox promptText">
+    <p>不可跨医院选医生</p>
+</div>
+
+<div class="operateContent submitBox">
+    <p>确定要接诊吗？</p>
+    <div class="btnBox">
+        <a class="noBtn" href="javascript:;">取消</a>
+        <a class="yesBtn" href="javascript:;">确定</a>
+    </div>
+</div>
+<div class="operateContent submitBoxPic">
+    <p>确定要接诊吗？</p>
+    <div class="btnBox">
+        <a class="noBtn" href="javascript:;">取消</a>
+        <a class="yesBtn" href="javascript:;">确定</a>
+    </div>
+</div>
+
+<!-- 视频会诊时间选择 -->
+<div class="selectTimeContainer clearfix">
+    <div class="closeBtnTime clearfix">
+        <span>关闭</span>
+        <img src="../images/close.png" alt="">
+    </div>
+    <div class="selectTimeContent clearfix">
+        <div class="leftContent">
+            <h3>发送视频会诊
+                <span>选择时间</span>
+            </h3>
+            <div class="timeBox" id="timeBox"></div>
+            <p>*选择您可接受的时间并上传，专家会根据您的选择确定最终时间</p>
+            <p>*您选择时段越多，越利于会/转诊的顺利进行</p>
+        </div>
+        <ul class="rightContent clearfix" id="timeUl">
+
+        </ul>
+        <div class="btnBox">
+            <a href="javascript:;" class="yesBtn">确定</a>
+        </div>
+    </div>
+</div>
+
+<div class="operateBox MDTText">
+    <p>非主会诊人不可接收MDT申请</p>
+</div>
+<div class="operateBox noDate">
+    <p>请选择排期时间</p>
+</div>
+
+</body>
+
+</html>

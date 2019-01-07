@@ -101,6 +101,7 @@ const doctorSendFeedbackReport = "/apply/dispose/doctorSendFeedbackReport"; //�
 const doctorReceiveReject = "/apply/dispose/doctor"; //会诊中状态以及会诊中状态之前状态申请 拒收
 /** 主会诊医生 操作接口 */
 const mainDoctorAccede = "/apply/dispose/mainDoctorAccede";
+const allocationDoctorTime = "/apply/dispose/allocationDoctorTime";
 /**首诊医政操作接口*/
 
 const sirSendCheckAccede = "/apply/dispose/sirSendCheckAccede"; //通过会诊申请接口
