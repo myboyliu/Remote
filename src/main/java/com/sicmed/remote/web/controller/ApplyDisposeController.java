@@ -749,27 +749,29 @@ public class ApplyDisposeController extends BaseController {
             return badRequestOfArguments("修改applyForm失败");
         }
 
-        // 确认时间
-        Map<String, String> resultMap = applyTimeJson(startEndTime);
+        if (StringUtils.isNotBlank(startEndTime)) {
+            // 确认时间
+            Map<String, String> resultMap = applyTimeJson(startEndTime);
 
-        ApplyTime applyTime = new ApplyTime();
-        applyTime.setApplyFormId(applyFormId);
-        applyTime.setCreateUser(userId);
-        int j = applyTimeService.delByApplyForm(applyFormId);
-        if (j < 0) {
-            badRequestOfArguments("删除原applyTime失败");
+            ApplyTime applyTime = new ApplyTime();
+            applyTime.setApplyFormId(applyFormId);
+            applyTime.setCreateUser(userId);
+            int j = applyTimeService.delByApplyForm(applyFormId);
+            if (j < 0) {
+                badRequestOfArguments("删除原applyTime失败");
+            }
+
+            ApplyTimeBean applyTimeBean = new ApplyTimeBean();
+            applyTimeBean.setApplyFormId(applyFormId);
+            applyTimeBean.setStartEndTime(resultMap);
+            applyTimeBean.setCreateUser(userId);
+            applyTimeBean.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
+            int k = applyTimeService.insertStartEndTimes(applyTimeBean);
+            if (k < 1) {
+                return badRequestOfArguments("添加新的applyTime失败");
+            }
         }
-
-        ApplyTimeBean applyTimeBean = new ApplyTimeBean();
-        applyTimeBean.setApplyFormId(applyFormId);
-        applyTimeBean.setStartEndTime(resultMap);
-        applyTimeBean.setCreateUser(userId);
-        applyTimeBean.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
-        int k = applyTimeService.insertStartEndTimes(applyTimeBean);
-        if (k < 1) {
-            return badRequestOfArguments("添加新的applyTime失败");
-        }
-
+        
         CaseConsultant caseConsultant = new CaseConsultant();
         caseConsultant.setId(applyForm.getId());
         caseConsultant.setConsultantUserList(consultantUserList);
