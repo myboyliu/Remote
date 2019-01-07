@@ -9,14 +9,12 @@ let deptId = "";
 //转诊时间表
 let referralDateList = [];
 
-
 let fileArr = []; // 当前点击块的文件数据
 let indexFile = 0; // 当前点击的索引
 let ObjArr = []; //  当前点击块文件数组对象
 let selectFileArr = []; // 某一块的图片展示数据
 let uploadFile = [];
 let fileIndex;
-
 
 /** 渲染 病历页面 左侧导航 */
 function renderCaseTypeLeftNavigation(data) {
@@ -267,7 +265,6 @@ function createDraftApplyData(caseId, caseSummary) {
     }
     ajaxRequest("POST", createDraftApplyUrl, buildApplyData(), false, false, true, addDraftSuccess, null, null);
 
-
     if (data.status === 200) {
         const $ = layui.jquery;
         layer.open({
@@ -391,7 +388,7 @@ function createPictureApplyData(caseId, caseSummary) {
 }
 
 /** 创建视频会诊草稿*/
-const dateList = []; // 选择的时间数据
+let dateList = []; // 选择的时间数据
 function createVideoApplyData(caseId, caseSummary) {
     const data = new FormData();
     data.append('caseRecordId', caseId); //病历ID
@@ -555,13 +552,11 @@ $(function () {
         hospitalInfo["branchId"] = $(this).attr('name');
         hospitalInfo["branchName"] = $(this).html();
 
-
         $('.hospitalTel').html($('.hospitalItem.active').attr("hospitaltel"));
         $(this).addClass('active');
         getDoctorByBranchId($(this).attr('name'));
         return false;
     });
-
 
     // 选医生鼠标移入展示详情
     $('.doctorUl').delegate('.doctorChunk', 'mouseover', function (event) {
@@ -642,7 +637,6 @@ $(function () {
         favoriteHtml();
     });
 
-
     function scrollTo(x) {
         $('html, body').animate({
             scrollTop: x - 100,
@@ -678,7 +672,6 @@ $(function () {
         return false;
     });
 
-
     /*  //textarea 标签随着文本的高度实现自适应 */
     const ie = !!window.attachEvent && !window.opera;
     const ie9 = ie && (!!+"\v1");
@@ -712,8 +705,6 @@ $(function () {
             createCase_textGola.style.height = 40 + "px";
         }
     });
-
-
 
 //点击添加 添加病历图片
     $(".upfileUl").delegate('.fileInput', 'change', function () {
@@ -760,11 +751,11 @@ $(function () {
             } else if (/(.pdf)$/gi.test(fileName)) {
                 type = "pdf";
                 url = "../images/pdf_icon.png";
-                renderFileListView(baseUrl+"/"+result, url, type, result);
+                renderFileListView(baseUrl + "/" + result, url, type, result);
             } else if (/(.dcm)$/gi.test(fileName)) {
                 type = "dcm";
                 url = "../images/dcm_icon.png";
-                renderFileListView(baseUrl+"/"+result, url, type, result);
+                renderFileListView(baseUrl + "/" + result, url, type, result);
             }
             // 总张数
             fileIndex++;
@@ -840,7 +831,6 @@ $(function () {
         $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
         $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
 
-
         /* 如果是png/jpg/pdf格式 downlodeFile 隐藏 */
         if (fileArr[indexFile].type === 'dcm') {
             $('.downlodeFile').show();
@@ -869,7 +859,7 @@ $(function () {
             if (fileArr[indexFile].type == 'pdf') {
                 // pdf 相关操作
                 // 1、往 .bigImg 渲染pdf
-                PDFObject.embed(baseUrl+"/" + fileArr[indexFile].name, ".bigImg", {
+                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].name, ".bigImg", {
                     page: "1"
                 });
                 $('.downlodeFile').hide();
@@ -880,7 +870,7 @@ $(function () {
                 // 2、imgIp + fileArr[indexFile].filePath 下载路径
                 // 3、清空 .bigImg 的内容，显示背景
                 $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', baseUrl+"/" + fileArr[indexFile].name);
+                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].name);
                 $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
             }
         } else {
@@ -899,7 +889,6 @@ $(function () {
         $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
         $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
 
-
     })
 // 下一个
     $('.switchBox .next').click(function () {
@@ -912,7 +901,7 @@ $(function () {
         if (fileArr[indexFile].type != 'img') {
             $('.bigImgContainer').find('.bigImg').addClass('bgSize');
             if (fileArr[indexFile].type == 'pdf') {
-                PDFObject.embed(baseUrl+"/" + fileArr[indexFile].name, ".bigImg", {
+                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].name, ".bigImg", {
                     page: "1"
                 });
                 $('.downlodeFile').hide();
@@ -923,7 +912,7 @@ $(function () {
                 // 2、imgIp + fileArr[indexFile].filePath 下载路径
                 // 3、清空 .bigImg 的内容，显示背景
                 $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', baseUrl+"/" + fileArr[indexFile].name);
+                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].name);
                 $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
             }
         } else {
@@ -1016,7 +1005,6 @@ $(function () {
     })
 // 图片缩放 拖拽 结束
 
-
     // 保存草稿
     $('.ServeDrafts').click(function () {
         //前端数据校验
@@ -1040,7 +1028,6 @@ $(function () {
         return false;
 
     });
-
 
 // 图文会诊、
     $('.graphicGroup').click(function () {
@@ -1140,6 +1127,7 @@ $(function () {
                 closeBtn: 0,
                 skin: 'noBackground'
             })
+            dateTempList = [];
             redrawDate();
         }
         let startMinute = 0; // 开始总分钟数
@@ -1303,6 +1291,7 @@ $(function () {
     });
 
     $('.videoContent .yesBtn').click(function () {
+        dateList = [];
         for (let i = 0; i < dateTempList.length; i++) {
             if (dateTempList[i].startIndex <= dateTempList[i].endIndex) {
                 dateList.push({
@@ -1523,19 +1512,16 @@ $(function () {
         $(".referralTimeSelect").hide();
     })
 
-
     /**
      * 表单数据校验
      */
     // 验证中文名字
     $("#username").blur(function () {
-        if ($("#username").val().length === 0) {
-            layer.msg('姓名不能为空');
+        if ($("#username").val().length < 2) {
+            layer.msg('请输入长度为2-16的名字');
         } else if (!RegExpObj.Reg_Name.test($('#username').val())) {
             layer.msg('输入内容格式有误,请修改')
             $('this').css('background', 'red');
-        } else {
-
         }
     });
     // 校验身份证号
