@@ -38,6 +38,7 @@ $(function () {
                 localStorage.setItem('name', responseJson.userName);
                 localStorage.setItem('rolesName', "医生");
                 sessionStorage.setItem('userInfo', JSON.stringify(responseJson));
+                sessionStorage.setItem('token', responseJson.id);
                 layer.close(index);
                 if (responseJson.telephone === "18888888888" || responseJson.telephone === "17777777777") {
                     window.location.href = '/page/administrator.html';

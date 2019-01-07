@@ -27,7 +27,7 @@ function double(num) {
 
 // nav
 $(function () {
-    if (!localStorage.getItem('token')) {
+    if (!sessionStorage.getItem('token')) {
         window.location = "/page/login.html";
     }
     // 0医生  1医政

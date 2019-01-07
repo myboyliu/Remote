@@ -2,6 +2,15 @@ let isVideo = false;// 选择的医生信息数组
 let applyInfo = {};// 选择的医生信息数组
 var fileAllArr = []; //所有图片原始资源
 var scaleNum = 10; // 图片缩放倍数
+
+
+
+let fileArr = []; // 当前点击块的文件数据
+let indexFile = 0; // 当前点击的索引
+let ObjArr = []; //  当前点击块文件数组对象
+let selectFileArr = []; // 某一块的图片展示数据
+let uploadFile = [];
+let fileIndex;
 /** 渲染 病历页面 左侧导航 */
 function renderCaseTypeLeftNavigation(data) {
     let _html = '<li class="oneLevelItem patientInfo active">\
@@ -84,8 +93,8 @@ $(function () {
         $('#phone').val(applyInfo.patientPhone)
         $('#address').val(applyInfo.detailAddress)
         var choiceAge = applyInfo.patientAge;
-        // $('#age').val(applyInfo.patientAge);
-        // $('.choiceAge').val(applyInfo.patientAge);
+        $('#age').val(choiceAge);
+        $('.choiceAge').val("岁");
         $('#high').val(applyInfo.patientHeight);
         $('#weight').val(applyInfo.patientWeight / 1000);
         $('.fileCount').html(applyInfo.caseContentList.length); // 图片总张数
@@ -435,6 +444,8 @@ $(function () {
 
 // 删除文件
     $('.upfileUl').delegate('.delFileBtn', 'click', function () {
+        console.log(fileAllArr);
+        console.log(selectFileArr);
         for (let i = 0; i < fileAllArr.length; i++) {
             if ($(this).siblings(".fileName").html() === fileAllArr[i].value) {
                 fileAllArr.splice(i, 1);
@@ -442,6 +453,7 @@ $(function () {
         }
         for (let i = 0; i < selectFileArr.length; i++) {
             if ($(this).siblings(".fileName").html() === selectFileArr[i].value) {
+                console.log(selectFileArr[i]);
                 selectFileArr.splice(i, 1);
             }
         }
@@ -561,4 +573,222 @@ $(function () {
     })
 
 
+
+
+
+    // 图片点击查看大图
+    $('.upfileUl').delegate('.fileItem', 'click', function () {
+
+        const $ = layui.jquery;
+        // 弹出层
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['1167px', '700px'], skin: "noBackground",
+            closeBtn: false,
+            shade: [0.7, '#000000'],
+            shadeClose: false,
+            scrollbar: false,
+            content: $('.bigImgContainer'),
+        });
+        // 整理一组图片展示数据
+        objParent = $(this).parent('.fileContent');
+        indexFile = $(this).index() - 1;
+        ObjArr = $(this).parent('.fileContent').find('.fileItem');
+        for (let i = 0; i < ObjArr.length; i++) {
+            fileArr.push({
+                'name': ObjArr.eq(i).find('p').html(),
+                'type': ObjArr.eq(i).find('p').attr('type'),
+                'src': ObjArr.eq(i).find('div').css('backgroundImage'),
+                'desc': ObjArr.eq(i).find('p').attr('desc'),
+            });
+        }
+
+        if (fileArr[indexFile].type != 'img') {
+            // pdf dcm
+            $('.bigImgContainer').find('.bigImg').addClass('bgSize');
+            if (fileArr[indexFile].type === 'pdf') {
+                /* 未完成查看PDF */
+                PDFObject.embed($('.fileItem').attr('dataBase'), ".bigImg", {
+                    page: "1"
+                });
+            }
+        }
+        $('.bigImgContainer').find('.bigImg').css('backgroundImage', fileArr[indexFile].src);
+        $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
+        $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
+
+        /* 如果是png/jpg/pdf格式 downlodeFile 隐藏 */
+        if (fileArr[indexFile].type === 'dcm') {
+            $('.downlodeFile').show();
+        } else {
+            $('.downlodeFile').hide();
+
+        }
+
+    });
+
+// 备注保存
+    $('.descText').blur(function () {
+        fileArr[indexFile].desc = $('.descText').val();
+    });
+// 上一个
+    $('.switchBox .prev').click(function () {
+        if (indexFile <= 0) {
+            indexFile = 0;
+            return false;
+        } else {
+            indexFile--;
+        }
+        if (fileArr[indexFile].type != 'img') {
+            // pdf dcm
+            $('.bigImgContainer').find('.bigImg').addClass('bgSize');
+            if (fileArr[indexFile].type == 'pdf') {
+                // pdf 相关操作
+                // 1、往 .bigImg 渲染pdf
+                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].name, ".bigImg", {
+                    page: "1"
+                });
+                $('.downlodeFile').hide();
+
+            } else {
+                // dcm 相关操作
+                // 1、显示下载按钮
+                // 2、imgIp + fileArr[indexFile].filePath 下载路径
+                // 3、清空 .bigImg 的内容，显示背景
+                $('.downlodeFile').show();
+                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].name);
+                $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
+            }
+        } else {
+            // 图片的相关操作
+            $('.downlodeFile').hide();
+            $('.bigImgContainer').find('.bigImg').removeClass('bgSize').html(' ');
+            ;
+        }
+        $('.bigImgContainer').find('.bigImg').css({
+            "top": 0,
+            "left": 0,
+            "transform": "scale(1)",
+        })
+        scaleNum = 10;
+        $('.bigImgContainer').find('.bigImg').css('backgroundImage', fileArr[indexFile].src);
+        $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
+        $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
+
+    })
+// 下一个
+    $('.switchBox .next').click(function () {
+        if (indexFile >= fileArr.length - 1) {
+            indexFile = fileArr.length - 1;
+            return false;
+        } else {
+            indexFile++;
+        }
+        if (fileArr[indexFile].type != 'img') {
+            $('.bigImgContainer').find('.bigImg').addClass('bgSize');
+            if (fileArr[indexFile].type == 'pdf') {
+                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].name, ".bigImg", {
+                    page: "1"
+                });
+                $('.downlodeFile').hide();
+
+            } else {
+                // dcm 相关操作
+                // 1、显示下载按钮
+                // 2、imgIp + fileArr[indexFile].filePath 下载路径
+                // 3、清空 .bigImg 的内容，显示背景
+                $('.downlodeFile').show();
+                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].name);
+                $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
+            }
+        } else {
+            $('.downlodeFile').hide();
+            $('.bigImgContainer').find('.bigImg').removeClass('bgSize').html(' ');
+        }
+        $('.bigImgContainer').find('.bigImg').css({
+            "top": 0,
+            "left": 0,
+            "transform": "scale(1)",
+        })
+        scaleNum = 10;
+        $('.bigImgContainer').find('.bigImg').css('backgroundImage', fileArr[indexFile].src);
+        $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
+        $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
+
+    });
+
+// 关闭
+    $('.closeBtn').click(function () {
+        layer.closeAll();
+        $('.bigImgContainer').hide();
+        let _html = '<li class="fileAdd">\
+            <a class="addfileBtn" href="javascript:;"></a>\
+            <input accept=".png,.jpg,.pdf,.jpeg,.dcm" class="fileInput" type="file" multiple>\
+            <p class="fileName">添加文件</p>\
+        </li>';
+        for (let i = 0; i < fileArr.length; i++) {
+            _html += '<li class="fileItem">'
+            if (fileArr[i].type != 'img') {
+                _html += `<div class="bgSize" style='background-image:${fileArr[i].src};'></div>`
+            } else {
+                _html += `<div style='background-image:${fileArr[i].src};'></div>`
+            }
+            _html += '<img class="delFileBtn" src="../images/delete_file.png"/>';
+            if (fileArr[i].desc === '') {
+                _html += '<p type="' + fileArr[i].type + '" desc="" class="fileName">' + fileArr[i].name + '</p>';
+            } else {
+                _html += '<p type="' + fileArr[i].type + '" desc="' + fileArr[i].desc + '" class="fileName active">' + fileArr[i].name + '</p>';
+            }
+            _html += '</li>'
+        }
+        objParent.html(_html);
+        selectFileArr = [];
+        objParent = null; // 当前点击块的父级
+        fileArr = []; // 当前点击块的文件数据
+        indexFile = 0; // 当前点击的索引
+        ObjArr = []; //  当前点击块的文件对象
+    });
+
+// 图片缩放 拖拽
+    $('.bigImgBox').on("mousewheel DOMMouseScroll", function (e) {
+        if (!$('.bigImgBox .bigImg').hasClass('bgSize')) {
+            const delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) || // chrome & ie
+                (e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1)); // firefox
+            if (delta > 0) {
+                // 向上滚
+                if (scaleNum <= 50) {
+                    scaleNum += 2
+                }
+            } else if (delta < 0) {
+                // 向下滚
+                if (scaleNum > 4) {
+                    scaleNum -= 2
+                }
+            }
+            $('.bigImg').css('transform', 'scale(' + scaleNum / 10 + ')')
+        }
+    });
+    $('.bigImgBox').on('mousedown', function (e) {
+        if (!$('.bigImgBox .bigImg').hasClass('bgSize')) {
+            const x = e.clientX - parseInt($('.bigImg').css('left'));
+            const y = e.clientY - parseInt($('.bigImg').css('top'));
+            $('.bigImgBox').on('mousemove', function (e) {
+                const newX = e.clientX;
+                const newY = e.clientY;
+                console.log(newY - y)
+                $('.bigImg').css({
+                    'top': newY - y + 'px',
+                    'left': newX - x + 'px',
+                });
+            })
+        }
+    })
+    $('.bigImgBox').on('mouseup', function (e) {
+        $('.bigImgBox').unbind('mousemove');
+    })
+    $('.bigImgBox').on('mouseleave', function () {
+        $('.bigImgBox').unbind('mousemove');
+    })
+// 图片缩放 拖拽 结束
 })
