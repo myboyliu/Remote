@@ -29,15 +29,15 @@ function renderDateRightContent() {
 }
 
 function redrawDate(dateTempList) {
-    var markJson = {};
-    for (var i = 0; i < dateTempList.length; i++) {
+    console.log(dateTempList);
+    let markJson = {};
+    for (let i = 0; i < dateTempList.length; i++) {
         markJson[dateTempList[i].date] = ''
     }
-    console.log(markJson)
     // 渲染日历控件
     $('#timeBox').html('');
     layui.use('laydate', function () {
-        var laydate = layui.laydate;
+        let laydate = layui.laydate;
         //执行一个laydate实例
         laydate.render({
             elem: '#timeBox',
@@ -53,11 +53,11 @@ function redrawDate(dateTempList) {
                 for (let i = 0; i < dateTempList.length; i++) {
                     if (dateStr == dateTempList[i].date) {
                         if (dateTempList[i].startIndex <= dateTempList[i].endIndex) {
-                            for (var j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
+                            for (let j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
                                 $('#timeUl > li').eq(j).addClass('active');
                             }
                         } else {
-                            for (var j = dateTempList[i].endIndex; j <= dateTempList[i].startIndex; j++) {
+                            for (let j = dateTempList[i].endIndex; j <= dateTempList[i].startIndex; j++) {
                                 $('#timeUl > li').eq(j).addClass('active');
                             }
                         }
@@ -84,7 +84,7 @@ function redrawDate(dateTempList) {
 }
 
 function showDateView(applyTimeList) {
-    var _$ = layui.jquery;
+    let _$ = layui.jquery;
     layer.open({
         type: 1,
         content: _$('.selectTimeContainer'),
@@ -94,16 +94,16 @@ function showDateView(applyTimeList) {
         skin: 'noBackground',
     });
     dateTempList = [];
-    for (var i = 0; i < applyTimeList.length; i++) {
-        var date = applyTimeList[i].eventStartTime.split(' ')[0];
-        var startDate = applyTimeList[i].eventStartTime.split(' ')[1];
-        var hours = startDate.split(':')[0];
-        var minute = startDate.split(':')[1];
-        var startIndex = (hours * 60 + minute * 1) / 15;
-        var endDate = applyTimeList[i].eventEndTime.split(' ')[1];
-        var endHour = endDate.split(':')[0];
-        var endMinute = endDate.split(':')[1];
-        var endIndex = Math.ceil((endHour * 60 + endMinute * 1) / 15);
+    for (let i = 0; i < applyTimeList.length; i++) {
+        let date = applyTimeList[i].eventStartTime.split(' ')[0];
+        let startDate = applyTimeList[i].eventStartTime.split(' ')[1];
+        let hours = startDate.split(':')[0];
+        let minute = startDate.split(':')[1];
+        let startIndex = (hours * 60 + minute * 1) / 15;
+        let endDate = applyTimeList[i].eventEndTime.split(' ')[1];
+        let endHour = endDate.split(':')[0];
+        let endMinute = endDate.split(':')[1];
+        let endIndex = Math.ceil((endHour * 60 + endMinute * 1) / 15);
         dateTempList.push({
             "date": date,
             "startIndex": startIndex,
@@ -115,35 +115,6 @@ function showDateView(applyTimeList) {
 }
 
 $(function () {
-    // 分钟选择事件、
-    // $('#timeUl').delegate('li', 'click', function() {
-    //
-    //     if (flag) {
-    //         $(this).addClass('active').siblings('li').removeClass('active');
-    //         flag = false;
-    //         startIndex = $(this).attr('index');
-    //     } else {
-    //         $(this).addClass('active');
-    //         flag = true;
-    //         endIndex = $(this).attr('index');
-    //         if (startIndex <= endIndex) {
-    //             for (let i = startIndex; i < endIndex; i++) {
-    //                 $('#timeUl > li').eq(i).addClass('active');
-    //             }
-    //         } else {
-    //             for (let i = endIndex; i < startIndex; i++) {
-    //                 $('#timeUl > li').eq(i).addClass('active');
-    //             }
-    //         }
-    //         dateTempList = [];
-    //         dateTempList.push({
-    //             "date": dateStr,
-    //             "startIndex": startIndex,
-    //             "endIndex": endIndex,
-    //         });
-    //         redrawDate(dateTempList);
-    //     }
-    // });
     // 分钟选择事件、
     $('#timeUl').delegate('li', 'click', function () {
         if (flag) {
@@ -163,13 +134,26 @@ $(function () {
                     $('#timeUl > li').eq(i).addClass('active');
                 }
             }
-            console.log(isInvite);
             if (isMainDoctor) {
-                newDateTimeList.push({
-                    "date": dateStr,
-                    "startIndex": startIndex,
-                    "endIndex": endIndex,
-                });
+                if (newDateTimeList.length == 0) {
+                    newDateTimeList.push({
+                        "date": dateStr,
+                        "startIndex": startIndex,
+                        "endIndex": endIndex,
+                    });
+                } else {
+                    for (let i = 0; i < newDateTimeList.length; i++) {
+                        if (newDateTimeList[i].date == dateStr) {
+                            newDateTimeList.splice(i, 1);
+                        }
+                    }
+                    newDateTimeList.push({
+                        "date": dateStr,
+                        "startIndex": startIndex,
+                        "endIndex": endIndex,
+                    });
+                }
+                console.log(newDateTimeList);
                 dateTempList = newDateTimeList;
             } else if (isInvite) {
                 dateTempList = [];
@@ -203,7 +187,7 @@ $(function () {
     });
 // 清空当页数据
     $('.selectTimeContent').find('.clearBtn').click(function () {
-        for (var i = 0; i < dateTempList.length; i++) {
+        for (let i = 0; i < dateTempList.length; i++) {
             if (dateTempList[i].date == dateStr) {
                 dateTempList.splice(i, 1);
             }
@@ -223,7 +207,7 @@ $(function () {
         layer.closeAll();
         $('.selectTimeContainer').hide();
         let dateList = []; // 选择的时间数据
-        for (var i = 0; i < dateTempList.length; i++) {
+        for (let i = 0; i < dateTempList.length; i++) {
             if (dateTempList[i].startIndex <= dateTempList[i].endIndex) {
                 dateList.push({
                     'startTime': dateTempList[i].date + ' ' + $('#timeUl > li').eq(dateTempList[i].startIndex).html() + ':00',
