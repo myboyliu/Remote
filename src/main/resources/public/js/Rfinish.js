@@ -102,7 +102,7 @@ function renderCaseContentView(data) {
                     let fileType = caseContentList[i].contentPath.substr(caseContentList[i].contentPath.lastIndexOf('.') + 1, caseContentList[i].contentPath.length);
                     let fileName = caseContentList[i].contentPath;
                     fileAllArr.push(fileName);
-                    if (fileType == 'png' || fileType == 'jpg') {
+                    if (fileType == 'png' || fileType == 'jpg' || fileType == 'jpeg') {
                         if (caseContentList[i].contentRemark == '') {
 
                             $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].orderWeight + '" filePath="' + caseContentList[i].contentPath + '"  class="fileItem">\
@@ -167,6 +167,10 @@ function getApplyInfo() {
 
 /** 根据不同角色渲染 页面内容*/
 function renderViewByRole() {
+    console.log(inviteDoctorCount);
+    console.log(isInvite);
+    console.log(isMainDoctor);
+
     /** 动态创建进度条 */
     const statusArr = ["已拒收", '待收诊', '已排期', '会诊中', '待反馈', '已完成'];
     let str = '';
@@ -280,6 +284,7 @@ function updateApplyTime(dateList) {
         data.append("startEndTime", JSON.stringify(dateList));
         ajaxRequest("POST", mainDoctorAccede, data, false, false, true, sirUpdateDateSuccess, null, null)
     }
+
     function sirUpdateDateSuccess(result) {
         $("#alertText").html("接收成功");
         alertMessage();
@@ -319,13 +324,10 @@ $(function () {
 
     isMainDoctor = userInfo.id === applyInfo.inviteUserId ? true : false;
 
-    if(applyInfo.consultantUserList){
-
-        isInvite = applyInfo.consultantUserList.indexOf(userInfo.id) > 0 ? true : false;
-
-    }
+    isInvite = userInfo.branchId === applyInfo.inviteBranchId ? true : false;
 
     isVideo = applyInfo.applyType === "APPLY_CONSULTATION_VIDEO" ? true : false;
+
     applyTimeList = applyInfo.applyTimeList;
     caseContentList = applyInfo.caseContentList;
     applyStatus = applyInfo.applyStatus;
@@ -334,7 +336,7 @@ $(function () {
     /** 拒收原因 */
     $("#refuseReason").html(applyInfo.refuseRemark);
     /**会诊报告*/
-    if(applyInfo.consultantReport){
+    if (applyInfo.consultantReport) {
         consultantReport = JSON.parse(applyInfo.consultantReport);
     }
     let goalHtml = '';

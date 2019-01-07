@@ -190,7 +190,7 @@ function renderCaseContentView(data) {
                     let fileType = caseContentList[i].contentPath.substr(caseContentList[i].contentPath.lastIndexOf('.') + 1, caseContentList[i].contentPath.length);
                     let fileName = caseContentList[i].contentPath.substr(caseContentList[i].contentPath.lastIndexOf('/') + 1, caseContentList[i].contentPath.length);
                     fileAllArr.push(fileName);
-                    if (fileType == 'png' || fileType == 'jpg') {
+                    if (fileType == 'png' || fileType == 'jpg'||fileType == 'jpeg') {
                         if (caseContentList[i].contentRemark == '') {
                             $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].sort + '" filePath="' + caseContentList[i].contentPath + '"  class="fileItem">\
                                            <div style = "background-image: url(&apos;' + baseUrl + "/" + caseContentList[i].contentPath + '&apos;)"></div>\
