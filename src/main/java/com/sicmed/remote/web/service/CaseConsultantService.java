@@ -20,6 +20,18 @@ public class CaseConsultantService implements BaseService<CaseConsultant> {
         return caseConsultantMapper.selectAssist(applyFormBean);
     }
 
+    // 查询每种状态的数目
+    public Integer selectCount(String userId, String hospitalId, List<String> consultantTypeList, List<String> applyStatusList) {
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setConsultationStatusList(applyStatusList);
+        applyFormBean.setInviteUserId(userId);
+        applyFormBean.setInviteHospitalId(hospitalId);
+        applyFormBean.setConsultationTypeList(consultantTypeList);
+
+        return caseConsultantMapper.selectCount(applyFormBean);
+    }
+
     @Override
     public int insertSelective(CaseConsultant caseConsultant) {
         return caseConsultantMapper.insertSelective(caseConsultant);
