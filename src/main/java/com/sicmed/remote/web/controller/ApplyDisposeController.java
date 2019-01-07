@@ -9,6 +9,7 @@ import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.YoonaLtUtils.OrderNumUtils;
+import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
 import com.sicmed.remote.web.bean.ApplyTimeBean;
 import com.sicmed.remote.web.bean.ConsultantReportBean;
 import com.sicmed.remote.web.bean.ConsultationTimeBean;
@@ -114,22 +115,14 @@ public class ApplyDisposeController extends BaseController {
     }
 
     /**
-     * 医政 工作台 发出会诊 修改日期 选择多个时间
+     * applyTime修改多条时间,解析Json数据
      */
-    @PostMapping(value = "sirSendUpdateDate")
-    public Map sirSendUpdateDate(String applyFormId, String startEndTime) {
+    public Map applyTimeJson(String startEndTime) {
 
-        if (StringUtils.isBlank(applyFormId) || StringUtils.isBlank(startEndTime)) {
-            return badRequestOfArguments("applyFormId or startEndTime is null");
+        if (StringUtils.isBlank(startEndTime)) {
+            return badRequestOfArguments("startEndTime is null");
         }
 
-        // 删除原时间
-        int j = applyTimeService.delByApplyForm(applyFormId);
-        if (j < 0) {
-            return badRequestOfArguments("删除原applyTime失败");
-        }
-
-        //解析传入json
         Map<String, String> resultMap = new LinkedHashMap<>();
         List<ConsultationTimeBean> consultationTimeBeanList;
         try {
@@ -143,6 +136,28 @@ public class ApplyDisposeController extends BaseController {
                 resultMap.put(consultationTimeBean.getStartTime(), consultationTimeBean.getEndTime());
             }
         }
+
+        return resultMap;
+    }
+
+    /**
+     * 医政 工作台 发出会诊 修改日期 选择多个时间
+     */
+    @PostMapping(value = "sirSendUpdateDate")
+    public Map sirSendUpdateDate(String applyFormId, String startEndTime) {
+
+        if (StringUtils.isBlank(applyFormId)) {
+            return badRequestOfArguments("applyFormId  is null");
+        }
+
+        // 删除原时间
+        int j = applyTimeService.delByApplyForm(applyFormId);
+        if (j < 0) {
+            return badRequestOfArguments("删除原applyTime失败");
+        }
+
+        //解析传入json
+        Map<String, String> resultMap = applyTimeJson(startEndTime);
 
         // 添加申请时间
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_APPLY_CREATE_SUCCESS);
@@ -684,19 +699,7 @@ public class ApplyDisposeController extends BaseController {
         }
 
         //解析传入json
-        Map<String, String> resultMap = new LinkedHashMap<>();
-        List<ConsultationTimeBean> consultationTimeBeanList;
-        try {
-            consultationTimeBeanList = JSON.parseObject(startEndTime, new TypeReference<List<ConsultationTimeBean>>() {
-            }, Feature.OrderedField);
-        } catch (Exception e) {
-            return badRequestOfArguments("startEndTime 格式有误");
-        }
-        if (consultationTimeBeanList != null) {
-            for (ConsultationTimeBean consultationTimeBean : consultationTimeBeanList) {
-                resultMap.put(consultationTimeBean.getStartTime(), consultationTimeBean.getEndTime());
-            }
-        }
+        Map<String, String> resultMap = applyTimeJson(startEndTime);
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE);
         String userId = getRequestToken();
@@ -724,5 +727,61 @@ public class ApplyDisposeController extends BaseController {
         }
 
         return succeedRequest(applyTimeBean);
+    }
+
+    /**
+     * 主会诊医生MDT协调
+     */
+    @PostMapping(value = "allocationDoctorTime")
+    public Map allocationDoctorTime(String applyFormId, String startEndTime, String consultantUserList, BigDecimal consultantPrice,
+                                    String consultantReport) {
+
+        String userId = getRequestToken();
+
+        // 更新applyForm状态
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setId(applyFormId);
+        applyForm.setUpdateUser(userId);
+        applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
+        int i = applyFormService.updateInviteDoctorByPrimaryKeySelective(applyForm);
+        if (i < 1) {
+            return badRequestOfArguments("修改applyForm失败");
+        }
+
+        // 确认时间
+        Map<String, String> resultMap = applyTimeJson(startEndTime);
+
+        ApplyTime applyTime = new ApplyTime();
+        applyTime.setApplyFormId(applyFormId);
+        applyTime.setCreateUser(userId);
+        int j = applyTimeService.delByApplyForm(applyFormId);
+        if (j < 0) {
+            badRequestOfArguments("删除原applyTime失败");
+        }
+
+        ApplyTimeBean applyTimeBean = new ApplyTimeBean();
+        applyTimeBean.setApplyFormId(applyFormId);
+        applyTimeBean.setStartEndTime(resultMap);
+        applyTimeBean.setCreateUser(userId);
+        applyTimeBean.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
+        int k = applyTimeService.insertStartEndTimes(applyTimeBean);
+        if (k < 1) {
+            return badRequestOfArguments("添加新的applyTime失败");
+        }
+
+        CaseConsultant caseConsultant = new CaseConsultant();
+        caseConsultant.setId(applyForm.getId());
+        caseConsultant.setConsultantUserList(consultantUserList);
+        caseConsultant.setConsultantPrice(consultantPrice);
+        caseConsultant.setInviteUserId(applyForm.getInviteUserId());
+        caseConsultant.setConsultantReport(consultantReport);
+        caseConsultant.setUpdateUser(userId);
+
+        int l = caseConsultantService.updateInviteDoctorByPrimaryKeySelective(caseConsultant);
+        if (l < 1) {
+            return badRequestOfArguments("添加失败");
+        }
+
+        return succeedRequest("操作成功");
     }
 }
