@@ -289,26 +289,4 @@
         order by af.apply_urgent desc ,af.update_time,af.create_time
         limit #{beginNo},#{pageSize}
     </select>
-
-    <!--// 受邀会诊数目查询-->
-    <select id="selectCount" parameterType="com.sicmed.remote.web.bean.ApplyFormBean" resultType="java.lang.Integer">
-        select count (af.id)
-        from case_consultant cc
-        left join apply_form af on af.id = cc.id and af.del_flag = "0"
-        <where>
-            <if test="inviteHospitalId != null">
-                af.invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR},
-            </if>
-            AND af.apply_type IN
-            <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-            AND af.apply_status IN
-            <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-            and (cc.invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
-            or cc.consultant_user_list like CONCAT('%',#{inviteUserId},'%'))
-        </where>
-    </select>
 </mapper>
