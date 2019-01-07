@@ -1,7 +1,6 @@
 package com.sicmed.remote.web.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.ApplyNodeConstant;
@@ -9,7 +8,6 @@ import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.YoonaLtUtils.OrderNumUtils;
-import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
 import com.sicmed.remote.web.bean.ApplyTimeBean;
 import com.sicmed.remote.web.bean.ConsultantReportBean;
 import com.sicmed.remote.web.bean.ConsultationTimeBean;
@@ -17,7 +15,6 @@ import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.ApplyTime;
 import com.sicmed.remote.web.entity.CaseConsultant;
-import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.service.ApplyFormService;
 import com.sicmed.remote.web.service.ApplyNodeService;
 import com.sicmed.remote.web.service.ApplyTimeService;
@@ -26,15 +23,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -465,24 +459,6 @@ public class ApplyDisposeController extends BaseController {
     }
 
     /**
-     * 医生 受邀会诊 代收诊 MDT协调
-     */
-    @PostMapping(value = "doctorReceiveAccede")
-    public Map doctorReceiveAccede(String id, String consultantUserList) {
-
-        CaseConsultant caseConsultant = new CaseConsultant();
-        caseConsultant.setConsultantUserList(consultantUserList);
-        caseConsultant.setId(id);
-        caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
-
-        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE);
-        String msg1 = "受邀胡子很医生拒收,form修改失败";
-        String msg2 = "受邀胡子很医生拒收,time修改失败";
-
-        return updateStatus(id, null, applyStatus, msg1, msg2, null);
-    }
-
-    /**
      * 医生 发出会诊 带反馈 编辑临床反馈 暂存 /医生 受邀会诊 会诊中 编辑会诊报告 暂存
      */
     @PostMapping(value = "doctorSendFeedbackReportMoment")
@@ -680,6 +656,7 @@ public class ApplyDisposeController extends BaseController {
         if (k < 1) {
             return badRequestOfArguments("更新CaseConsultant失败");
         }
+        applyNodeService.insertByStatus(id, ApplyNodeConstant.已接诊.toString());
         return succeedRequest("已接收");
     }
 
