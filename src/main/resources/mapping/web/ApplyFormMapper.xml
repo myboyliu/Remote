@@ -73,6 +73,56 @@
         limit #{beginNo},#{pageSize}
     </select>
 
+    <!--转诊 排期审核 数目查询-->
+    <select id="inquirySlaveMasterAccedeCount" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
+            resultType="java.lang.Integer">
+        select count (*)
+        from apply_form
+        <where>
+            del_flag = "0"
+            <if test="consultationTypeList != null">
+                AND apply_type IN
+                <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="consultationStatusList != null">
+                AND apply_status IN
+                <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="inviteUserId != null">
+                AND invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <!--转诊 待审核 数目查询-->
+    <select id="inquiryCreateSuccessCount" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
+            resultType="java.lang.Integer">
+        select count (*)
+        from apply_form
+        <where>
+            del_flag = "0"
+            <if test="consultationTypeList != null">
+                AND apply_type IN
+                <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="consultationStatusList != null">
+                AND apply_status IN
+                <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="applyUserId != null">
+                AND apply_user_id = #{applyUserId,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
     <!--转诊医生排期审核查询-->
     <select id="selectApplyInquiryDate" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
             resultMap="BaseResultMap">
@@ -545,6 +595,69 @@
 
         </where>
         order by apply_urgent desc ,update_time,create_time
+        limit #{beginNo},#{pageSize}
+    </select>
+
+    <!--// 发出会诊 数目查询-->
+    <select id="sendSelectCount" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
+            resultType="java.lang.Integer">
+        select count (*)
+        from apply_form
+        <where>
+            del_flag = "0"
+            <if test="applyUserId != null">
+                AND apply_user_id = #{applyUserId,jdbcType=VARCHAR}
+            </if>
+            <if test="applyHospitalId != null">
+                AND apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
+            </if>
+            <if test="consultationTypeList != null">
+                AND apply_type IN
+                <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="consultationStatusList != null">
+                AND apply_status IN
+                <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    <!--转诊 数目查询-->
+    <select id="inquiryCountSelect" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
+            resultType="java.lang.Integer">
+        select count (*)
+        from apply_form
+        <where>
+            del_flag = "0"
+            <if test="consultationTypeList != null">
+                AND apply_type IN
+                <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="consultationStatusList != null">
+                AND apply_status IN
+                <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="applyUserId != null">
+                AND (apply_user_id = #{applyUserId,jdbcType=VARCHAR}
+            </if>
+            <if test="inviteUserId != null">
+                or invite_user_id = #{inviteUserId,jdbcType=VARCHAR})
+            </if>
+            <if test="applyHospitalId != null">
+                AND (apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
+            </if>
+            <if test="inviteHospitalId != null">
+                or invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR})
+            </if>
+        </where>
+        order by apply_urgent desc,update_time,create_time
         limit #{beginNo},#{pageSize}
     </select>
 

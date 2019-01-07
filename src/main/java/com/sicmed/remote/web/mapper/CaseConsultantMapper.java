@@ -22,4 +22,7 @@ public interface CaseConsultantMapper {
     int updateInviteDoctorByPrimaryKeySelective(CaseConsultant caseConsultant);
 
     List<ApplyForm> selectAssist(ApplyFormBean applyFormBean);
+
+    Integer selectCount(ApplyFormBean applyFormBean);
+
 }

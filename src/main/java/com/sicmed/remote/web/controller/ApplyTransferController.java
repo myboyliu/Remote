@@ -329,4 +329,39 @@ public class ApplyTransferController extends BaseController {
 
         return sirInquirySelect(applyFormBean, consultationStatusList, msg);
     }
+
+    // 转诊 角色双方 数目查询
+    @GetMapping(value = "inquiryCount")
+    public Map inquiryCount(List<String> statusList) {
+
+        String userId = getRequestToken();
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        String hospitalId = userDetail.getHospitalId();
+
+        int i = applyFormService.inquiryCountSelect(userId, hospitalId, consultationTypeListInquiry, statusList);
+
+        return succeedRequest(i);
+    }
+
+    // 转诊 排期审核 数目查询
+    @GetMapping(value = "inquirySlaveMasterAccedeCount")
+    public Map inquirySlaveMasterAccedeCount(List<String> statusList) {
+
+        String userId = getRequestToken();
+
+        int i = applyFormService.inquirySlaveMasterAccedeCount(userId, consultationTypeListInquiry, statusList);
+
+        return succeedRequest(i);
+    }
+    // 转诊 待审核  查询
+    @GetMapping(value = "inquiryCreateSuccessCount")
+    public Map inquiryCreateSuccessCount(List<String> statusList) {
+
+        String userId = getRequestToken();
+
+        int i = applyFormService.inquiryCreateSuccessCount(userId, consultationTypeListInquiry, statusList);
+
+        return succeedRequest(i);
+    }
+
 }

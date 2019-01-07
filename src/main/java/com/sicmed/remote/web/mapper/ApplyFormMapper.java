@@ -35,4 +35,12 @@ public interface ApplyFormMapper {
     int softDel(String id);
 
     int updateInviteDoctorByPrimaryKeySelective(ApplyForm applyForm);
+
+    Integer sendSelectCount(ApplyFormBean applyFormBean);
+
+    Integer inquiryCountSelect(ApplyFormBean applyFormBean);
+
+    Integer inquirySlaveMasterAccedeCount(ApplyFormBean applyFormBean);
+
+    Integer inquiryCreateSuccessCount(ApplyFormBean applyFormBean);
 }

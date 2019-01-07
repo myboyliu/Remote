@@ -41,6 +41,54 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         return applyFormMapper.softDel(id);
     }
 
+    // 发出会诊 数目查询
+    public Integer sendSelectCount(String userId, String hospitalId, List<String> consultantTypeList, List<String> statusList) {
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setApplyUserId(userId);
+        applyFormBean.setApplyHospitalId(hospitalId);
+        applyFormBean.setConsultationStatusList(statusList);
+        applyFormBean.setConsultationTypeList(consultantTypeList);
+
+        return applyFormMapper.sendSelectCount(applyFormBean);
+    }
+
+    // 转诊 双方角色 数目查询
+    public Integer inquiryCountSelect(String userId, String hospitalId, List<String> consultantTypeList, List<String> statusList) {
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setConsultationTypeList(consultantTypeList);
+        applyFormBean.setConsultationStatusList(statusList);
+        applyFormBean.setInviteHospitalId(hospitalId);
+        applyFormBean.setApplyHospitalId(hospitalId);
+        applyFormBean.setApplyUserId(userId);
+        applyFormBean.setInviteUserId(userId);
+
+        return applyFormMapper.inquiryCountSelect(applyFormBean);
+    }
+
+    // 转诊 排期审核 数目查询
+    public Integer inquirySlaveMasterAccedeCount(String userId, List<String> consultantTypeList, List<String> statusList) {
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setConsultationTypeList(consultantTypeList);
+        applyFormBean.setConsultationStatusList(statusList);
+        applyFormBean.setInviteUserId(userId);
+
+        return applyFormMapper.inquirySlaveMasterAccedeCount(applyFormBean);
+    }
+
+    // 转诊 待审核 查询
+    public Integer inquiryCreateSuccessCount(String userId, List<String> consultantTypeList, List<String> statusList) {
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setConsultationTypeList(consultantTypeList);
+        applyFormBean.setConsultationStatusList(statusList);
+        applyFormBean.setApplyUserId(userId);
+
+        return applyFormMapper.inquiryCreateSuccessCount(applyFormBean);
+    }
+
     @Override
     public int insertSelective(ApplyForm applyForm) {
         return applyFormMapper.insertSelective(applyForm);

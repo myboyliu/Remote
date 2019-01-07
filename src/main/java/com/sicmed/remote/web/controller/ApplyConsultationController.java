@@ -169,7 +169,6 @@ public class ApplyConsultationController extends BaseController {
         return sendSelect(statusList, msg);
     }
 
-
     /**
      * 医生 受邀会诊 主会诊医生查询
      */
@@ -559,5 +558,32 @@ public class ApplyConsultationController extends BaseController {
         String msg = "无已结束";
 
         return sirReceiveSelect(statusList, msg);
+    }
+
+    // 发出会诊 数目查询
+    @GetMapping(value = "sendSelectCount")
+    public Map sendSelectCount(List<String> statusList) {
+
+        String userId = getRequestToken();
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        String hospitalId = userDetail.getHospitalId();
+
+        int i = applyFormService.sendSelectCount(userId, hospitalId, consultantTypeList, statusList);
+
+        return succeedRequest(i);
+    }
+
+    // 受邀会诊 数目查询
+    @GetMapping(value = "receiveSelectCount")
+    public Map receiveSelectCount(List<String> statusList) {
+
+        String userId = getRequestToken();
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        String hospitalId = userDetail.getHospitalId();
+
+        int i = caseConsultantService.selectCount(userId, hospitalId, consultantTypeList,statusList);
+
+        return succeedRequest(i);
+
     }
 }
