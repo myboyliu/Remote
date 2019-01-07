@@ -25,6 +25,10 @@ public class ApplyFormBean extends ApplyForm implements Serializable {
     List<ApplyNode> applyNodeList;
 
 
+    private String patientName;
+    private String patientCard;
+    private String patientPhone;
+
     private String patientSex;
     private Integer patientAge;
     private Integer patientHeight;

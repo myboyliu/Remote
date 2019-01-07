@@ -209,6 +209,9 @@
         <result column="crcaseDiagnosis" jdbcType="VARCHAR" property="caseDiagnosis"/>
 
         <result column="cpdetailAddress" jdbcType="VARCHAR" property="detailAddress"/>
+        <result column="cppatientName" jdbcType="VARCHAR" property="patientName"/>
+        <result column="cppatientCard" jdbcType="VARCHAR" property="patientCard"/>
+        <result column="cppatientPhone" jdbcType="VARCHAR" property="patientPhone"/>
 
         <result column="cctconsultantStartTime" jdbcType="VARCHAR" property="consultantStartTime"/>
         <result column="cctconsultantEndTime" jdbcType="TIMESTAMP" property="consultantEndTime"/>
@@ -248,6 +251,9 @@
         cr.patient_age crpatientAge,cr.patient_sex crpatientSex,cr.patient_height crpatientHeight,
         cr.patient_weight crpatientWeight,cr.case_diagnosis crcaseDiagnosis,
         cp.detail_address cpdetailAddress,
+        cp.patient_name cppatientName,
+        cp.patient_card cppatientCard,
+        cp.patient_phone cppatientPhone,
         cc.content_type_id cccontentTypeId,cc.content_path cccontentPath,cc.order_weight ccorderWeight,
         cc.content_remark cccontentRemark,cc.id ccid,
         cct.consultant_start_time cctconsultantStartTime,cct.consultant_end_time  cctconsultantEndTime,
