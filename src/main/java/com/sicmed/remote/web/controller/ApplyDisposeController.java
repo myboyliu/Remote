@@ -635,7 +635,7 @@ public class ApplyDisposeController extends BaseController {
                 return badRequestOfArguments("更新applyTime失败");
             }
         }
-        
+
         // 更新caseConsultant相关
         ConsultantReportBean consultantReportBean = new ConsultantReportBean();
         consultantReportBean.setDoctorName(currentUserBean.getUserName());
@@ -668,4 +668,61 @@ public class ApplyDisposeController extends BaseController {
         return succeedRequest("已接收");
     }
 
+    /**
+     * 医生 受邀会诊 待接收 主会诊医生确定时间
+     */
+    @PostMapping(value = "mainDoctorAccede")
+    public Map mainDoctorAccede(String applyFormId, String startEndTime) {
+        if (StringUtils.isBlank(applyFormId) || StringUtils.isBlank(startEndTime)) {
+            return badRequestOfArguments("applyFormId or startEndTime is null");
+        }
+
+        // 删除原时间
+        int j = applyTimeService.delByApplyForm(applyFormId);
+        if (j < 0) {
+            return badRequestOfArguments("删除原applyTime失败");
+        }
+
+        //解析传入json
+        Map<String, String> resultMap = new LinkedHashMap<>();
+        List<ConsultationTimeBean> consultationTimeBeanList;
+        try {
+            consultationTimeBeanList = JSON.parseObject(startEndTime, new TypeReference<List<ConsultationTimeBean>>() {
+            }, Feature.OrderedField);
+        } catch (Exception e) {
+            return badRequestOfArguments("startEndTime 格式有误");
+        }
+        if (consultationTimeBeanList != null) {
+            for (ConsultationTimeBean consultationTimeBean : consultationTimeBeanList) {
+                resultMap.put(consultationTimeBean.getStartTime(), consultationTimeBean.getEndTime());
+            }
+        }
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE);
+        String userId = getRequestToken();
+
+        // 修改applyForm状态
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setId(applyFormId);
+        applyForm.setApplyStatus(applyStatus);
+        applyForm.setUpdateUser(userId);
+        int k = applyFormService.updateByPrimaryKeySelective(applyForm);
+        if (k < 1) {
+            return badRequestOfArguments("修改applyForm失败");
+        }
+
+        // 添加新的时间
+        ApplyTimeBean applyTimeBean = new ApplyTimeBean();
+        applyTimeBean.setApplyFormId(applyFormId);
+        applyTimeBean.setStartEndTime(resultMap);
+        applyTimeBean.setCreateUser(userId);
+        applyTimeBean.setApplyStatus(applyStatus);
+
+        int i = applyTimeService.insertStartEndTimes(applyTimeBean);
+        if (i < 1) {
+            return badRequestOfArguments("添加申请时间失败");
+        }
+
+        return succeedRequest(applyTimeBean);
+    }
 }
