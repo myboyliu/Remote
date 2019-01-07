@@ -29,6 +29,12 @@ function renderDoctorNavigation(data) {
                 }
                 _html += '</ul>\
                     </li>'
+
+                hospitalInfo["id"] = data[i].id;
+                hospitalInfo["hospitalName"] = data[i].hospitalName;
+                hospitalInfo["hospitalPhone"] = data[i].hospitalPhone;
+                hospitalInfo["hospitalImgPrice"] = data[i].consultationPicturePrice;
+                hospitalInfo["hospitalVideoPrice"] = data[i].consultationVideoPrice;
             }
         } else {
             _html += '<li hospitalId="' + data[i].id + '" imgPric="' + data[i].consultationPicturePrice + '" videoPric="' + data[i].consultationVideoPrice + '" hospitalTel="' + data[i].hospitalPhone + '" class="hospitalItem">\
@@ -48,6 +54,12 @@ function renderDoctorNavigation(data) {
             }
             _html += '</ul>\
                     </li>'
+
+            hospitalInfo["id"] = data[i].id;
+            hospitalInfo["hospitalName"] = data[i].hospitalName;
+            hospitalInfo["hospitalPhone"] = data[i].hospitalPhone;
+            hospitalInfo["hospitalImgPrice"] = data[i].consultationPicturePrice;
+            hospitalInfo["hospitalVideoPrice"] = data[i].consultationVideoPrice;
         }
     }
 
@@ -66,11 +78,7 @@ function renderDoctorNavigation(data) {
     $('.hospitalTel').html(data[0].hospitalPhone);
     // favoriteHtml();
 
-    hospitalInfo["id"] = data[0].id;
-    hospitalInfo["hospitalName"] = data[0].hospitalName;
-    hospitalInfo["hospitalPhone"] = data[0].hospitalPhone;
-    hospitalInfo["hospitalImgPrice"] = data[0].consultationPicturePrice;
-    hospitalInfo["hospitalVideoPrice"] = data[0].consultationVideoPrice;
+
     hospitalInfo["branchId"] = $('.hospitalUl').find('.deptItem').eq(0).attr('name');
     hospitalInfo["branchName"] = $('.hospitalUl').find('.deptItem').eq(0).html();
     // 获取默认科室的医生
@@ -155,15 +163,6 @@ function getDoctorByBranchId(deptId) {
 }
 
 $(function () {
-    /* 动态创建进度条 */
-    let statusArr = ['待收诊', '已排期', '会诊中', '待反馈', '已完成'];
-    let str = '';
-    for (let i = 0; i < statusArr.length; i++) {
-        str += '<li>' + statusArr[i] + '</li>'
-        $('.progressBar').html(str);
-    }
-    $('.progressBar li:first-child').addClass('libg');
-
 
     var hospitalName = '';
     var hospitalId = '';
