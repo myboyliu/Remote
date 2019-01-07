@@ -14,6 +14,9 @@ let applyStatus;
 let applyTimeList = [];
 let caseContentList = [];
 const _$ = layui.jquery;
+
+let newDateTimeList = [];
+
 /**渲染左侧导航栏*/
 function renderLeftNavigation(data) {
     let _html = "";
@@ -164,7 +167,8 @@ function getApplyInfo() {
     }
 }
 
-function rederViewByRole() {
+/** 根据不同角色渲染 页面内容*/
+function renderViewByRole() {
     /** 动态创建进度条 */
     const statusArr = ["已拒收", '待收诊', '已排期', '会诊中', '待反馈', '已完成'];
     let str = '';
@@ -176,14 +180,14 @@ function rederViewByRole() {
     if (isInvite) {
         if (applyStatus === "CONSULTATION_APPLY_ACCEDE") {
             //待收诊
-            if(isMainDoctor){
+            if (isMainDoctor) {
                 $(".rejection").show();
                 if (inviteDoctorCount > 1) {
                     $(".MDTBtn").show();
                 } else {
                     $(".receive").show();
                 }
-            }else if (inviteDoctorCount <= 1) {
+            } else if (inviteDoctorCount <= 1) {
                 $(".receive").show();
             }
         } else if (applyStatus === "CONSULTATION_SLAVE_ACCEDE") {
@@ -267,6 +271,41 @@ function rederViewByRole() {
             //待收诊
         }
     }
+}
+
+/**主会诊医生 修改 会诊排期*/
+function updateApplyTime(dateList) {
+    console.log(dateList);
+    if (isMainDoctor) {
+        let data = new FormData();
+        data.append("applyFormId", applyFormId);
+        data.append("startEndTime", JSON.stringify(dateList));
+        ajaxRequest("POST", mainDoctorAccede, data, false, false, true, sirUpdateDateSuccess, null, null)
+    }
+    function sirUpdateDateSuccess(result) {
+        $("#alertText").html("接收成功");
+        alertMessage();
+        setTimeout(function () {
+            window.location = '../page/morkbench.html'
+        }, 2000);
+        return false;
+    }
+
+}
+
+/** 操作 弹窗提示 */
+function alertMessage() {
+    layer.open({
+        type: 1,
+        title: '',
+        area: ['300px', '75px'],
+        closeBtn: false,
+        shade: [0.7, '#000000'],
+        shadeClose: false,
+        time: 2000,
+        zIndex: layer.zIndex,
+        content: _$('#alertBox')
+    });
 }
 
 $(function () {
@@ -605,6 +644,7 @@ $(function () {
         data.append("consultantFeedback", newConsultantFeedback);
         ajaxRequest("POST", doctorSendFeedbackReportMoment, data, false, false, true, doctorSendFeedbackReportMomentSuccess, doctorSendFeedbackReportMomentFailed, null);
     })
+
     function doctorSendFeedbackReportSuccess(result) {
         $('#alertText').html('提交成功');
         alertMessage();
@@ -613,10 +653,12 @@ $(function () {
         }, 2000);
         getApplyInfo();
     }
+
     function doctorSendFeedbackReportFailed(result) {
         $('#alertText').html('提交失败');
         alertMessage();
     }
+
     function doctorSendFeedbackReportMomentSuccess(result) {
         $('#alertText').html('保存成功');
         alertMessage();
@@ -628,6 +670,7 @@ $(function () {
         document.documentElement.style.overflow = "scroll";
         getApplyInfo();
     }
+
     function doctorSendFeedbackReportMomentFailed(result) {
         $('#alertText').html('保存失败');
         alertMessage();
@@ -691,6 +734,7 @@ $(function () {
             data.append("id", applyFormId);
             data.append("report", viewText + $('.refuseReason').val());
             ajaxRequest("POST", doctorReceiveReject, data, false, false, true, doctorReceiveRejectSuccess, null, null)
+
             function doctorReceiveRejectSuccess(result) {
                 $("#alertText").html("拒收成功");
                 alertMessage();
@@ -723,21 +767,8 @@ $(function () {
         }
     });
 
-    function alertMessage() {
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['300px', '75px'],
-            closeBtn: false,
-            shade: [0.7, '#000000'],
-            shadeClose: false,
-            time: 2000,
-            zIndex: layer.zIndex,
-            content: _$('#alertBox')
-        });
-    }
 
-    rederViewByRole();
+    renderViewByRole();
 
     /** 返回按钮 */
     $('.getBack').click(function () {

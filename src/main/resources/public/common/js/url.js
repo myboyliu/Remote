@@ -99,7 +99,8 @@ const sirReceiveEnd = "/apply/consultation/sirReceiveEnd";                      
 const doctorSendFeedbackReportMoment = "/apply/dispose/doctorSendFeedbackReportMoment"; //医生 发出会诊 带反馈 编辑临床反馈 暂存 /医生 受邀会诊 会诊中 编辑会诊报告 暂存
 const doctorSendFeedbackReport = "/apply/dispose/doctorSendFeedbackReport"; //医生 发出会诊 带反馈 编辑临床反馈 暂存 /医生 受邀会诊 会诊中 编辑会诊报告 提交
 const doctorReceiveReject = "/apply/dispose/doctor"; //会诊中状态以及会诊中状态之前状态申请 拒收
-
+/** 主会诊医生 操作接口 */
+const mainDoctorAccede = "/apply/dispose/mainDoctorAccede";
 /**首诊医政操作接口*/
 
 const sirSendCheckAccede = "/apply/dispose/sirSendCheckAccede"; //通过会诊申请接口

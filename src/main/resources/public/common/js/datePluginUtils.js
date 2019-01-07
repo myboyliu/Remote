@@ -5,12 +5,13 @@ let flag = true;
 let dateTempList = []; // 收集的时间段
 let startIndex = 0;
 let endIndex = 0;
+
 function renderDateRightContent() {
-   let startMinute = 0; // 开始总分钟数
-   let endMinute = 0; // 结束总分钟数
-   let startHour = 0; // 开始小时数
-   let endHour = 0; // 结束小时数
-   let _html = '';
+    let startMinute = 0; // 开始总分钟数
+    let endMinute = 0; // 结束总分钟数
+    let startHour = 0; // 开始小时数
+    let endHour = 0; // 结束小时数
+    let _html = '';
     for (let i = 0; i < 96; i++) {
         startMinute = i * 15;
         endMinute = (i + 1) * 15;
@@ -163,14 +164,21 @@ $(function () {
                 }
             }
             console.log(isInvite);
-            if(isInvite){
+            if (isMainDoctor) {
+                newDateTimeList.push({
+                    "date": dateStr,
+                    "startIndex": startIndex,
+                    "endIndex": endIndex,
+                });
+                dateTempList = newDateTimeList;
+            } else if (isInvite) {
                 dateTempList = [];
                 dateTempList.push({
                     "date": dateStr,
                     "startIndex": startIndex,
                     "endIndex": endIndex,
                 });
-            }else{
+            } else {
                 if (dateTempList.length == 0) {
                     dateTempList.push({
                         "date": dateStr,
