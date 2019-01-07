@@ -171,7 +171,9 @@
             consultant_user_list = #{consultantUserList,jdbcType=VARCHAR},
             consultant_report = #{consultantReport,jdbcType=VARCHAR},
             consultant_price = #{consultantPrice,jdbcType=DECIMAL},
-            hospital_price = #{hospitalPrice,jdbcType=DECIMAL},
+            <if test="hospitalPrice != null">
+                hospital_price = #{hospitalPrice,jdbcType=DECIMAL},
+            </if>
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>

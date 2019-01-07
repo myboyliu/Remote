@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -10,6 +11,7 @@ import java.util.Date;
  * @version 1.0
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CaseConsultant extends BaseEntity {
     private String id;
 
