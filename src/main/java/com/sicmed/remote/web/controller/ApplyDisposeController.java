@@ -702,7 +702,7 @@ public class ApplyDisposeController extends BaseController {
         if (i < 1) {
             return badRequestOfArguments("添加申请时间失败");
         }
-
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
         return succeedRequest(applyTimeBean);
     }
 
