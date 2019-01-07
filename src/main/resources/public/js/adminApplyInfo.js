@@ -5,6 +5,7 @@ let inviteDoctorCount;
 let applyTypeStr;
 let caseContentList = [];//病历附件列表
 let consultantUserList = [];
+let consultantReport = [];
 let applyStatus; //申请状态
 let applyTimeList;
 let applyNodeList;
@@ -28,7 +29,7 @@ function renderViewByRole(applyStatus) {
             $(".rejection").show();
             $(".modifier3").show();
             $(".modifier5").show();
-            if (inviteDoctorCount > 2) {
+            if (inviteDoctorCount > 1) {
                 $("#MDTBtn").show();
             } else {
                 $("#accept").show();
@@ -40,7 +41,7 @@ function renderViewByRole(applyStatus) {
             $(".rejection").show();
             $(".modifier3").show();
             $(".modifier5").show();
-            if (inviteDoctorCount > 2) {
+            if (inviteDoctorCount > 1) {
                 $("#MDTBtn").show();
             } else {
                 $(".examineBtn").show();
@@ -52,7 +53,7 @@ function renderViewByRole(applyStatus) {
             $(".rejection").show();
             $(".modifier3").show();
             $(".modifier5").show();
-            if (inviteDoctorCount > 2) {
+            if (inviteDoctorCount > 1) {
                 $("#MDTBtn").show();
             } else {
                 $(".accept").show();
@@ -337,7 +338,9 @@ $(function () {
 
     renderApplyTimeView(applyTimeList);
     /**会诊报告*/
-    consultantReport = JSON.parse(applyInfo.consultantReport);
+    if(applyInfo.consultantReport){
+        consultantReport = JSON.parse(applyInfo.consultantReport);
+    }
     let recordHtml = '';
     for (let item of consultantReport) {
         recordHtml += '<pre class="report">' + item.doctorName + ':<br />' + item.report + '</pre>'
