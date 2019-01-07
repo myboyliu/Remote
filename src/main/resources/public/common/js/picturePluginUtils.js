@@ -7,9 +7,12 @@ var fileAllArr = []; //所有图片原始资源
 //   var fileArr = [];
 var scaleNum = 10; // 图片缩放倍数
 $(function () {
-
-
     $('.upfileUl').delegate('.fileItem', 'click', function () {
+        // objParent = null;
+        // fileArr = []
+        // indexFile = 0;
+        // ObjArr = [];
+        // fileAllArr = [];
         var $ = layui.jquery;
         // 弹出层
         layer.open({
@@ -46,7 +49,7 @@ $(function () {
             // pdf dcm
             $('.bigImgContainer').find('.bigImg').addClass('bgSize');
             if (fileArr[indexFile].type == 'pdf') {
-                PDFObject.embed(baseUrl+"/" + fileArr[indexFile].filePath, ".bigImg", {
+                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].filePath, ".bigImg", {
                     page: "1"
                 });
                 $('.downlodeFile').hide();
@@ -57,7 +60,7 @@ $(function () {
                 // 2、imgIp + fileArr[indexFile].filePath 下载路径
                 // 3、清空 .bigImg 的内容，显示背景
                 $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', baseUrl+"/" + fileArr[indexFile].filePath);
+                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].filePath);
                 $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
             }
         } else {
@@ -85,7 +88,7 @@ $(function () {
             if (fileArr[indexFile].type == 'pdf') {
                 // pdf 相关操作
                 // 1、往 .bigImg 渲染pdf
-                PDFObject.embed(baseUrl+"/" + fileArr[indexFile].filePath, ".bigImg", {
+                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].filePath, ".bigImg", {
                     page: "1"
                 });
                 $('.downlodeFile').hide();
@@ -96,7 +99,7 @@ $(function () {
                 // 2、imgIp + fileArr[indexFile].filePath 下载路径
                 // 3、清空 .bigImg 的内容，显示背景
                 $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', baseUrl+"/" + fileArr[indexFile].filePath);
+                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].filePath);
                 $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
             }
         } else {
@@ -115,7 +118,6 @@ $(function () {
         $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
         $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
 
-
     })
 // 下一个
     $('.switchBox .next').click(function () {
@@ -128,7 +130,7 @@ $(function () {
         if (fileArr[indexFile].type != 'img') {
             $('.bigImgContainer').find('.bigImg').addClass('bgSize');
             if (fileArr[indexFile].type == 'pdf') {
-                PDFObject.embed(baseUrl+"/" + fileArr[indexFile].filePath, ".bigImg", {
+                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].filePath, ".bigImg", {
                     page: "1"
                 });
                 $('.downlodeFile').hide();
@@ -139,7 +141,7 @@ $(function () {
                 // 2、imgIp + fileArr[indexFile].filePath 下载路径
                 // 3、清空 .bigImg 的内容，显示背景
                 $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', baseUrl+"/" + fileArr[indexFile].filePath);
+                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].filePath);
                 $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
             }
         } else {

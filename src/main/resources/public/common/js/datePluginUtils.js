@@ -30,7 +30,6 @@ function renderDateRightContent() {
 }
 
 function redrawDate(dateTempList) {
-    console.log(dateTempList);
     let markJson = {};
     for (let i = 0; i < dateTempList.length; i++) {
         markJson[dateTempList[i].date] = ''
@@ -194,7 +193,7 @@ $(function () {
             }
         }
         $('#timeUl > li').removeClass('active');
-        redrawDate();
+        redrawDate(dateTempList);
     })
 // 关闭事件
     $('.closeBtnTime').click(function () {
