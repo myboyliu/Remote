@@ -5,6 +5,7 @@ let flag = true;
 let dateTempList = []; // 收集的时间段
 let startIndex = 0;
 let endIndex = 0;
+let dateList = []; // 选择的时间数据
 
 function renderDateRightContent() {
     let startMinute = 0; // 开始总分钟数
@@ -206,7 +207,7 @@ $(function () {
     $('.yesBtn').click(function () {
         layer.closeAll();
         $('.selectTimeContainer').hide();
-        let dateList = []; // 选择的时间数据
+        dateList = [];
         for (let i = 0; i < dateTempList.length; i++) {
             if (dateTempList[i].startIndex <= dateTempList[i].endIndex) {
                 dateList.push({

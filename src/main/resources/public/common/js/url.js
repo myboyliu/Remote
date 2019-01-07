@@ -102,6 +102,7 @@ const doctorReceiveReject = "/apply/dispose/doctor"; //会诊中状态以及会�
 /** 主会诊医生 操作接口 */
 const mainDoctorAccede = "/apply/dispose/mainDoctorAccede";
 const allocationDoctorTime = "/apply/dispose/allocationDoctorTime";
+const allocationDoctorTimePicture = "/apply/dispose/allocationDoctorTimePicture";
 /**首诊医政操作接口*/
 
 const sirSendCheckAccede = "/apply/dispose/sirSendCheckAccede"; //通过会诊申请接口

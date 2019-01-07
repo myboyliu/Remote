@@ -145,6 +145,7 @@ function getDoctorByBranchId(deptId) {
 
 /**主会诊医生 修改 会诊排期*/
 function updateApplyTime(dateList) {
+    console.log(dateList);
     if (newDateTimeList.length > 0) {
         let _$ = layui.jquery;
         layer.open({
@@ -192,9 +193,9 @@ function updateApplyTime(dateList) {
 }
 
 function sub() {
-    console.log(inviteDoctorArray);
+    let price;
     let data = new FormData();
-    data.append("id", applyInfo.id); // 费用
+    data.append("applyFormId", applyInfo.id);
     if (inviteDoctorArray.length > 0) {
         let doctorList = [];
         let consultantReport = [];
@@ -237,7 +238,7 @@ function sub() {
         data.append("inviteSummary", inviteSummary);
         data.append("consultantReport", JSON.stringify(consultantReport));
         data.append('consultantUserList', JSON.stringify(doctorList));
-        data.append("consultantPrice", price); // 费用
+        data.append("consultantPrice", price);
     } else {
         data.append('inviteHospitalId', hospitalInfo.id);
         data.append('inviteBranchId', hospitalInfo.branchId);
@@ -245,19 +246,21 @@ function sub() {
 
         if (isVideo) {
             price = Number(hospitalInfo.hospitalVideoPrice)
-            data.append('hospitalPrice', hospitalInfo.hospitalVideoPrice); // 医院图文基本价格
+            data.append('hospitalPrice', hospitalInfo.hospitalVideoPrice);
         } else {
             price = Number(hospitalInfo.hospitalImgPrice)
-            data.append('hospitalPrice', hospitalInfo.hospitalImgPrice); // 医院图文基本价格
+            data.append('hospitalPrice', hospitalInfo.hospitalImgPrice);
         }
-        data.append("consultantPrice", price); // 费用
-
+        data.append("consultantPrice", price);
+    }
+    if (isVideo){
+        data.append("startEndTime", JSON.stringify(dateList));
+        ajaxRequest("POST", allocationDoctorTime, data, false, false, true, allocationDoctorTimeSuccess, null, null);
+    } else{
+        ajaxRequest("POST", allocationDoctorTimePicture, data, false, false, true, allocationDoctorTimeSuccess, null, null);
     }
 
-    return false;
-    ajaxRequest("POST", allocationDoctorTime, data, false, false, true, sirUpdateDoctorSuccess, null, null);
-
-    function sirUpdateDoctorSuccess(result) {
+    function allocationDoctorTimeSuccess(result) {
         console.log(result);
         // 成功操作
         layer.closeAll();
@@ -268,7 +271,7 @@ function sub() {
 }
 
 $(function () {
-    /* 动态创建进度条 */
+    /** 动态创建进度条 */
     let statusArr = ['待收诊', '已排期', '会诊中', '待反馈', '已完成'];
     let str = '';
     for (let i = 0; i < statusArr.length; i++) {
@@ -428,57 +431,6 @@ $(function () {
         inviteDoctorArray.splice($(this).parent('li').index(), 1);
         renderAlreadyExistDoctor(inviteDoctorArray);
     })
-    // // 选择医生事件--添加
-    // $('.doctorUl').delegate('.doctorChunk', 'click', function (event) {
-    //     if ($(this).hasClass('noDocter')) {
-    //         // 点的不选医生
-    //         favoriteArr = [];
-    //         favoriteHtml();
-    //     } else if (favoriteArr.length > 0 && $(this).find('.hospital').attr('name') != favoriteArr[0].hospitalId) {
-    //         let _$ = layui.jquery;
-    //         layer.open({
-    //             type: 1,
-    //             title: '',
-    //             area: ['300px', '80px'],
-    //             closeBtn: false,
-    //             shade: [0.1, '#000000'],
-    //             shadeClose: false,
-    //             time: 2000,
-    //             content: _$('.promptText'),
-    //         });
-    //         setTimeout(function () {
-    //             $('.promptText').hide();
-    //         }, 2000)
-    //     } else {
-    //         // 点的某一个医生
-    //         let flag = true;
-    //         for (let i = 0; i < favoriteArr.length; i++) {
-    //             if (favoriteArr[i].id == $(this).attr('name')) {
-    //                 flag = false
-    //             }
-    //         }
-    //         if (flag) {
-    //             favoriteArr.push({
-    //                 id: $(this).attr('name'), // 医生id
-    //                 hospitalName: $(this).find('.hospital').html(), // 医院名字
-    //                 hospitalId: $(this).find('.hospital').attr('name'), // 医院id
-    //                 deptName: $(this).attr('deptName'), // 科室名字
-    //                 deptId: $(this).attr('deptId'), // 科室id
-    //                 name: $(this).find('.username').html(), // 医生名字
-    //                 medicalFees: $(this).find('.pric').attr('medicalFees'), // 图文价格
-    //                 medicalFeesVideo: $(this).find('.pric').attr('medicalFeesVideo'), // 视频价格
-    //                 occupationName: $(this).find('.occupation').html(), // 职称名字
-    //                 occupationId: $(this).find('.occupation').attr('name'), // 职称id
-    //             });
-    //         }
-    //         favoriteHtml();
-    //     }
-    // });
-    // // 选择医生事件--删除
-    // $('.favoriteUl').delegate('.delDocBtn', 'click', function () {
-    //     favoriteArr.splice($(this).parent('li').index(), 1);
-    //     favoriteHtml();
-    // })
 
     $(window).scroll(function () {
         $('.oneLevelUl').css({
@@ -519,382 +471,21 @@ $(function () {
         });
 
     })
+    // 下一步修改排期按钮
+    $('.mdt_Btn').click(function () {
+        showDateView(applyTimeList);
+    })
     // 确认接收取消按钮
     $('.submitBoxPic').find('.noBtn').click(function () {
         layer.closeAll();
         $('.selectTimeContainer').hide();
         $('.promptText,.submitBox').hide();
     })
-
-    // 下一步修改排期按钮
-    $('.mdt_Btn').click(function () {
-        showDateView(applyTimeList);
-        // 视频
-        // let $ = layui.jquery;
-        // layer.open({
-        //     type: 1,
-        //     title: '',
-        //     area: ['1060px', '680px'],
-        //     closeBtn: 0,
-        //     skin: 'noBackground',
-        //     content: $('.selectTimeContainer'),
-        // })
-        // let startMinute = 0; // 开始总分钟数
-        // let endMinute = 0; // 结束总分钟数
-        // let startHour = 0; // 开始小时数
-        // let endHour = 0; // 结束小时数
-        // let _html = '';
-        // for (let i = 0; i < 96; i++) {
-        //     startMinute = i * 15;
-        //     endMinute = (i + 1) * 15;
-        //     startHour = parseInt(startMinute / 60);
-        //     endHour = parseInt(endMinute / 60);
-        //     let startM = startMinute %= 60; // 计算后的开始分钟数
-        //     let endM = endMinute %= 60; // 计算后的开始分钟数
-        //     if (endHour == 24) {
-        //         _html += '<li endDate="23:59" index="' + i + '">' + double(startHour) + ':' + double(startM) + '</li>'
-        //     } else {
-        //         _html += '<li endDate="' + double(endHour) + ':' + double(endM) + '" index="' + i + '">' + double(startHour) + ':' + double(startM) + '</li>'
-        //     }
-        // }
-        // $('.rightContent').html(_html)
-        // for (let i = 0; i < dateTempList.length; i++) {
-        //     if (dateStr == dateTempList[i].date) {
-        //         for (let j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
-        //             $('#timeUl > li').eq(j).addClass('grey');
-        //         }
-        //     }
-        // }
-        // if (data.orderFormBean.orderBeginDate) {
-        //     let date = data.orderFormBean.orderBeginDate.split(' ')[0];
-        //     let startDate = data.orderFormBean.orderBeginDate.split(' ')[1];
-        //     let hours = startDate.split(':')[0];
-        //     let minute = startDate.split(':')[1];
-        //     let startIndex = (hours * 60 + minute * 1) / 15;
-        //     let endDate = data.orderFormBean.orderEndDate.split(' ')[1];
-        //     let endHour = endDate.split(':')[0];
-        //     let endMinute = endDate.split(':')[1];
-        //     let endIndex = Math.ceil((endHour * 60 + endMinute * 1) / 15);
-        //     newDateTempList.push({
-        //         "date": date,
-        //         "startIndex": startIndex,
-        //         "endIndex": endIndex - 1,
-        //     });
-        //     for (let i = 0; i < newDateTempList.length; i++) {
-        //         if (dateStr == newDateTempList[i].date) {
-        //             for (let j = newDateTempList[i].startIndex; j <= newDateTempList[i].endIndex; j++) {
-        //                 $('#timeUl > li').eq(j).addClass('active');
-        //             }
-        //         }
-        //     }
-        // }
-    })
-    // let newDateTempList = [];
-    // let dateTempList = []; // 收集的时间段
-    // for (let i = 0; i < data.orderDateList.length; i++) {
-    //     let date = data.orderDateList[i].startDate.split(' ')[0];
-    //     let startDate = data.orderDateList[i].startDate.split(' ')[1];
-    //     let hours = startDate.split(':')[0];
-    //     let minute = startDate.split(':')[1];
-    //     let startIndex = (hours * 60 + minute * 1) / 15;
-    //     let endDate = data.orderDateList[i].endDate.split(' ')[1];
-    //     let endHour = endDate.split(':')[0];
-    //     let endMinute = endDate.split(':')[1];
-    //     let endIndex = Math.ceil((endHour * 60 + endMinute * 1) / 15);
-    //     dateTempList.push({
-    //         "date": date,
-    //         "startIndex": startIndex,
-    //         "endIndex": endIndex - 1,
-    //     })
-    // }
-    // let markJson = {};
-    // for (let i = 0; i < dateTempList.length; i++) {
-    //     markJson[dateTempList[i].date] = '';
-    // }
-    // let myDate = new Date();
-    // let flag = true;
-    // let startIndex = 0;
-    // let endIndex = 0;
-    // let dateStr = myDate.getFullYear() + '-' + double(myDate.getMonth() + 1) + '-' + double(myDate.getDate());
-    // if (data.orderFormBean.orderBeginDate) {
-    //     dateStr = data.orderFormBean.orderBeginDate.split(' ')[0];
-    // }
-    // // 渲染日历控件
-    // layui.use('laydate', function() {
-    //     let laydate = layui.laydate;
-    //     //执行一个laydate实例
-    //     laydate.render({
-    //         elem: '#timeBox',
-    //         position: 'static',
-    //         showBottom: false,
-    //         value: dateStr,
-    //         mark: markJson,
-    //         min: 0,
-    //         change: function(value, date) { //监听日期被切换
-    //             $('#timeUl > li').removeClass('grey');
-    //             $('#timeUl > li').removeClass('active');
-    //             flag = true;
-    //             dateStr = value;
-    //             for (let i = 0; i < dateTempList.length; i++) {
-    //                 if (dateStr == dateTempList[i].date) {
-    //                     if (dateTempList[i].startIndex <= dateTempList[i].endIndex) {
-    //                         for (let j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
-    //                             $('#timeUl > li').eq(j).addClass('grey');
-    //                         }
-    //                     } else {
-    //                         for (let j = dateTempList[i].endIndex; j <= dateTempList[i].startIndex; j++) {
-    //                             $('#timeUl > li').eq(j).addClass('grey');
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //             for (let i = 0; i < newDateTempList.length; i++) {
-    //                 if (dateStr == newDateTempList[i].date) {
-    //                     if (newDateTempList[i].startIndex <= newDateTempList[i].endIndex) {
-    //                         for (let j = newDateTempList[i].startIndex; j <= newDateTempList[i].endIndex; j++) {
-    //                             $('#timeUl > li').eq(j).addClass('active');
-    //                         }
-    //                     } else {
-    //                         for (let j = newDateTempList[i].endIndex; j <= newDateTempList[i].startIndex; j++) {
-    //                             $('#timeUl > li').eq(j).addClass('active');
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     });
-    // });
-    // // 分钟选择事件、
-    // $('#timeUl').delegate('li', 'click', function() {
-    //     if (flag) {
-    //         $(this).addClass('active').siblings('li').removeClass('active');
-    //         flag = false;
-    //         startIndex = $(this).attr('index');
-    //     } else {
-    //         $(this).addClass('active');
-    //         flag = true;
-    //         endIndex = $(this).attr('index');
-    //         if (startIndex <= endIndex) {
-    //             for (let i = startIndex; i < endIndex; i++) {
-    //                 $('#timeUl > li').eq(i).addClass('active');
-    //             }
-    //         } else {
-    //             for (let i = endIndex; i < startIndex; i++) {
-    //                 $('#timeUl > li').eq(i).addClass('active');
-    //             }
-    //         }
-    //         newDateTempList = [];
-    //         newDateTempList.push({
-    //             "date": dateStr,
-    //             "startIndex": startIndex,
-    //             "endIndex": endIndex,
-    //         });
-    //     }
-    // });
-    // // 关闭事件
-    // $('.closeBtnTime').click(function() {
-    //     newDateTempList = [];
-    //     layer.closeAll();
-    //     $('.selectTimeContainer').hide();
-    // })
-    //
-    // $('.selectTimeContainer').find('.yesBtn').click(function() {
-    //     if (newDateTempList.length > 0) {
-    //         let _$ = layui.jquery;
-    //         layer.open({
-    //             type: 1,
-    //             title: '',
-    //             area: ['500px', '200px'],
-    //             closeBtn: false,
-    //             shade: [0.1, '#000000'],
-    //             shadeClose: false,
-    //             content: _$('.submitBox'),
-    //         });
-    //     } else {
-    //         let _$ = layui.jquery;
-    //         layer.open({
-    //             type: 1,
-    //             title: '',
-    //             area: ['300px', '80px'],
-    //             closeBtn: false,
-    //             shade: [0.1, '#000000'],
-    //             shadeClose: false,
-    //             time: 1000,
-    //             content: _$('.noDate'),
-    //         });
-    //         setTimeout(function() {
-    //             $('.noDate').hide()
-    //         }, 1000)
-    //     }
-    // })
-    // $('.submitBox').find('.noBtn').click(function() {
-    //     layer.closeAll();
-    //     $('.selectTimeContainer').hide();
-    //     $('.promptText,.submitBox').hide();
-    // })
-    // $('.submitBox').find('.yesBtn').click(function() {
-    //     let startTime = '';
-    //     let endTime = '';
-    //     if (newDateTempList[0].startIndex <= newDateTempList[0].endIndex) {
-    //         startTime = newDateTempList[0].date + ' ' + $('#timeUl > li').eq(newDateTempList[0].startIndex).html() + ':00';
-    //         endTime = newDateTempList[0].date + ' ' + $('#timeUl>li').eq(newDateTempList[0].endIndex).attr('enddate') + ':00'
-    //     } else {
-    //         startTime = newDateTempList[0].date + ' ' + $('#timeUl > li').eq(newDateTempList[0].endIndex).html() + ':00';
-    //         endTime = newDateTempList[0].date + ' ' + $('#timeUl > li').eq(newDateTempList[0].startIndex).attr('enddate') + ':00';
-    //     }
-    //     let doctorList = [];
-    //     let price = Number(data.orderFormBean.basePrice);
-    //     for (let i = 0; i < favoriteArr.length; i++) {
-    //
-    //         if (data.orderFormBean.orderTypes == 0) {
-    //             // 图文
-    //             doctorList.push({
-    //                 "doctorId": favoriteArr[i].id,
-    //                 "money": favoriteArr[i].medicalFees,
-    //             });
-    //             price += Number(favoriteArr[i].medicalFees);
-    //         } else {
-    //             // 视频
-    //             doctorList.push({
-    //                 "doctorId": favoriteArr[i].id,
-    //                 "money": favoriteArr[i].medicalFeesVideo,
-    //             });
-    //             price += Number(favoriteArr[i].medicalFeesVideo);
-    //         }
-    //     }
-    //     let doctorId = favoriteArr[0].id;
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: IP + 'order/mdt',
-    //         dataType: 'json',
-    //         data: {
-    //             "orderId": data.orderFormBean.id,
-    //             "startDate": startTime,
-    //             "endDate": endTime,
-    //             "orderStateId": data.orderFormBean.statesId,
-    //             "doctorList": JSON.stringify(doctorList),
-    //             "doctorId": doctorId,
-    //             "totalPrice": price,
-    //         },
-    //         xhrFields: {
-    //             withCredentials: true
-    //         },
-    //         crossDomain: true,
-    //         success: function(data) {
-    //             console.log(data)
-    //             if (data.status == 200) {
-    //                 // 成功操作
-    //                 layer.closeAll();
-    //                 $('.selectTimeContainer').hide();
-    //                 window.location = '/yilaiyiwang/morkbench/morkbench.html';
-    //             } else if (data.status == 250) {
-    //                 // 未登录操作
-    //                 window.location = '/yilaiyiwang/login/login.html';
-    //             } else if (data.status == 500) {
-    //                 layer.closeAll();
-    //                 let _$ = layui.jquery;
-    //                 layer.open({
-    //                     type: 1,
-    //                     title: '',
-    //                     area: ['300px', '80px'],
-    //                     closeBtn: false,
-    //                     shade: [0.1, '#000000'],
-    //                     shadeClose: false,
-    //                     time: 2000,
-    //                     content: _$('.MDTText'),
-    //                 });
-    //                 setTimeout(function() {
-    //                     $('.MDTText').hide();
-    //                     $('.operateContent').hide();
-    //                     layer.closeAll();
-    //
-    //                 }, 2000)
-    //             } else {
-    //                 // 其他操作
-    //             }
-    //         },
-    //         error: function(err) {
-    //             console.log(err);
-    //         },
-    //     })
-    // })
-    // //  确认接收确定按钮
-    // $('.submitBoxPic').find('.yesBtn').click(function() {
-    //
-    //     let doctorList = [];
-    //     let price = Number(data.orderFormBean.basePrice);
-    //     for (let i = 0; i < favoriteArr.length; i++) {
-    //         if (data.orderFormBean.orderTypes == 0) {
-    //             // 图文
-    //             doctorList.push({
-    //                 "doctorId": favoriteArr[i].id,
-    //                 "money": favoriteArr[i].medicalFees,
-    //             });
-    //             price += Number(favoriteArr[i].medicalFees);
-    //         } else {
-    //             // 视频
-    //             doctorList.push({
-    //                 "doctorId": favoriteArr[i].id,
-    //                 "money": favoriteArr[i].medicalFeesVideo,
-    //             });
-    //             price += Number(favoriteArr[i].medicalFeesVideo);
-    //         }
-    //     }
-    //     let doctorId = favoriteArr[0].id;
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: IP + 'order/mdtPic',
-    //         dataType: 'json',
-    //         data: {
-    //             "orderId": data.orderFormBean.id,
-    //             "orderStateId": data.orderFormBean.statesId,
-    //             "doctorList": JSON.stringify(doctorList),
-    //             "doctorId": doctorId,
-    //             "totalPrice": price,
-    //         },
-    //         xhrFields: {
-    //             withCredentials: true
-    //         },
-    //         crossDomain: true,
-    //         success: function(data) {
-    //             console.log(data)
-    //             if (data.status == 200) {
-    //                 // 成功操作
-    //                 layer.closeAll();
-    //                 $('.selectTimeContainer').hide();
-    //                 window.location = '/yilaiyiwang/morkbench/morkbench.html';
-    //             } else if (data.status == 250) {
-    //                 // 未登录操作
-    //                 window.location = '/yilaiyiwang/login/login.html';
-    //             } else if (data.status == 500) {
-    //                 let _$ = layui.jquery;
-    //                 layer.open({
-    //                     type: 1,
-    //                     title: '',
-    //                     area: ['300px', '80px'],
-    //                     closeBtn: false,
-    //                     shade: [0.1, '#000000'],
-    //                     shadeClose: false,
-    //                     time: 2000,
-    //                     content: _$('.MDTText'),
-    //                 });
-    //                 setTimeout(function() {
-    //                     $('.MDTText').hide();
-    //                     layer.closeAll();
-    //                     $('.operateContent').hide();
-    //                 }, 2000)
-    //             } else {
-    //                 // 其他操作
-    //             }
-    //         },
-    //         error: function(err) {
-    //             console.log(err);
-    //         },
-    //     })
-    // })
-    $('.submitBox').find('.yesBtn').click(function () {
-
+    // 图文确认接收确定按钮
+    $('.submitBoxPic').find('.yesBtn').click(function () {
         sub();
-
+    })
+    $('.submitBox').find('.yesBtn').click(function () {
+        sub();
     })
 })

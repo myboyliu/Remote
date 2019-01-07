@@ -8,6 +8,7 @@ let consultantUserList = [];
 let applyStatus; //申请状态
 let applyTimeList;
 let applyNodeList;
+let isMainDoctor = false;
 const _$ = layui.jquery;
 
 /** 根据 不同角色 渲染 基础页面 元素 */
@@ -24,27 +25,38 @@ function renderViewByRole(applyStatus) {
             //待收诊
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".modifier2").show();
+            $(".rejection").show();
             $(".modifier3").show();
             $(".modifier5").show();
-            $(".rejection").show();
             if (inviteDoctorCount > 2) {
                 $("#MDTBtn").show();
             } else {
-                $(".accept").show();
+                $("#accept").show();
             }
         } else if (applyStatus === "CONSULTATION_SLAVE_ACCEDE" || applyStatus === "CONSULTATION_MASTER_ACCEDE") {
             //排期审核
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".modifier2").show();
             $(".rejection").show();
+            $(".modifier3").show();
+            $(".modifier5").show();
+            if (inviteDoctorCount > 2) {
+                $("#MDTBtn").show();
+            } else {
+                $(".examineBtn").show();
+            }
         } else if (applyStatus === "CONSULTATION_SLAVE_REJECT") {
             //专家协调
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".modifier2").show();
+            $(".rejection").show();
             $(".modifier3").show();
             $(".modifier5").show();
-            $(".rejection").show();
-            $("#toBeMDT").show();
+            if (inviteDoctorCount > 2) {
+                $("#MDTBtn").show();
+            } else {
+                $(".accept").show();
+            }
         } else if (applyStatus === "CONSULTATION_DATETIME_LOCKED") {
             //已排期
             $(".progressBar li:nth-child(1)").addClass("libg");
