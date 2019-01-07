@@ -2,13 +2,11 @@ let applyRecordNavigationShow = false;
 let consultantFeedbackNavigationShow = false;
 let applyRefuseNavigationShow = false;
 let consultantReport = [];
-// let fileAllArr = []; //所有图片原始资源
-// let scaleNum = 10; // 图片缩放倍数
 let inviteDoctorCount = 0;
 let applyFormId;
 let applyInfo = {};
 let isMainDoctor;
-let isInvite;
+let isInvite = false;
 let isVideo = false;
 let applyStatus;
 let applyTimeList = [];
@@ -321,7 +319,11 @@ $(function () {
 
     isMainDoctor = userInfo.id === applyInfo.inviteUserId ? true : false;
 
-    isInvite = applyInfo.consultantUserList.indexOf(userInfo.id) > 0 ? true : false;
+    if(applyInfo.consultantUserList){
+
+        isInvite = applyInfo.consultantUserList.indexOf(userInfo.id) > 0 ? true : false;
+
+    }
 
     isVideo = applyInfo.applyType === "APPLY_CONSULTATION_VIDEO" ? true : false;
     applyTimeList = applyInfo.applyTimeList;
@@ -332,7 +334,9 @@ $(function () {
     /** 拒收原因 */
     $("#refuseReason").html(applyInfo.refuseRemark);
     /**会诊报告*/
-    consultantReport = JSON.parse(applyInfo.consultantReport);
+    if(applyInfo.consultantReport){
+        consultantReport = JSON.parse(applyInfo.consultantReport);
+    }
     let goalHtml = '';
     for (let item of consultantReport) {
         goalHtml += '<pre class="report">' + item.doctorName + ':<br />' + item.report + '</pre>'
@@ -458,19 +462,11 @@ $(function () {
 
     /** 编辑会诊报告 */
     $('.compileReport').click(function () {
-        // 判断自己是否为该订单的主会诊人
-        // 是 去到带医嘱的报告页面
-        // 否 本页编辑会诊报告
-        // for(var i = 0;i < applyInfo.orderDoctorsList.length;i++){
-        // if(applyInfo.orderDoctorsList[i].firstDoctor == 1 && applyInfo.orderDoctorsList[i].id == localStorage.getItem("userId")){
-        //     window.location = "/yilaiyiwang/doctorEnjoin/doctorEnjoin.html";
-        // } else {
         for (const item of consultantReport) {
             if (item.doctorId === userInfo.id) {
                 $('.hold').addClass('disabled');
                 $('.refer').addClass('disabled');
                 $('#textarea').val(item.report);
-                // $('#textarea').attr('disabled', 'disabled');
             }
         }
         /* 点击编辑会诊报告 如果有暂存内容 显示在textare标签里 */
@@ -766,7 +762,6 @@ $(function () {
             showDateView(applyTimeList)
         }
     });
-
 
     renderViewByRole();
 
