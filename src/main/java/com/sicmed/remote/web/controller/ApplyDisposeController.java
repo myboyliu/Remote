@@ -733,7 +733,7 @@ public class ApplyDisposeController extends BaseController {
      * 主会诊医生MDT协调
      */
     @PostMapping(value = "allocationDoctorTime")
-    public Map allocationDoctorTime(String applyFormId, String startEndTime, String consultantUserList, BigDecimal consultantPrice,
+    public Map allocationDoctorTime(String applyFormId, String inviteSummary, String startEndTime, String consultantUserList, BigDecimal consultantPrice,
                                     String consultantReport) {
 
         String userId = getRequestToken();
@@ -743,6 +743,7 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setId(applyFormId);
         applyForm.setUpdateUser(userId);
         applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
+        applyForm.setInviteSummary(inviteSummary);
         int i = applyFormService.updateInviteDoctorByPrimaryKeySelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("修改applyForm失败");
