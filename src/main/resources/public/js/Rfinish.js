@@ -2,17 +2,18 @@ let applyRecordNavigationShow = false;
 let consultantFeedbackNavigationShow = false;
 let applyRefuseNavigationShow = false;
 let consultantReport = [];
-let fileAllArr = []; //所有图片原始资源
-let scaleNum = 10; // 图片缩放倍数
+// let fileAllArr = []; //所有图片原始资源
+// let scaleNum = 10; // 图片缩放倍数
 let inviteDoctorCount = 0;
 let applyFormId;
 let applyInfo = {};
 let isMainDoctor;
 let isInvite;
 let isVideo = false;
-const _$ = layui.jquery;
+let applyStatus;
 let applyTimeList = [];
 let caseContentList = [];
+const _$ = layui.jquery;
 /**渲染左侧导航栏*/
 function renderLeftNavigation(data) {
     let _html = "";
@@ -98,41 +99,41 @@ function renderCaseContentView(data) {
                         k = j;
                     }
                     let fileType = caseContentList[i].contentPath.substr(caseContentList[i].contentPath.lastIndexOf('.') + 1, caseContentList[i].contentPath.length);
-                    let fileName = caseContentList[i].contentPath.substr(caseContentList[i].contentPath.lastIndexOf('/') + 1, caseContentList[i].contentPath.length);
+                    let fileName = caseContentList[i].contentPath;
                     fileAllArr.push(fileName);
                     if (fileType == 'png' || fileType == 'jpg') {
                         if (caseContentList[i].contentRemark == '') {
 
-                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].sort + '" filePath="' + caseContentList[i].contentPath + '"  class="fileItem">\
+                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].orderWeight + '" filePath="' + caseContentList[i].contentPath + '"  class="fileItem">\
                                            <div style = "background-image: url(&apos;' + baseUrl + "/" + caseContentList[i].contentPath + '&apos;)"></div>\
                                             <p type="img" desc="' + caseContentList[i].contentRemark + '" class="fileName">' + fileName + '</p>\
                                         </li>')
                         } else {
-                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].sort + '" filePath="' + caseContentList[i].contentPath + '" class="fileItem">\
+                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].orderWeight + '" filePath="' + caseContentList[i].contentPath + '" class="fileItem">\
                                            <div style = "background-image: url(&apos;' + baseUrl + "/" + caseContentList[i].contentPath + '&apos;)"></div>\
                                             <p type="img" desc="' + caseContentList[i].contentRemark + '" class="fileName active">' + fileName + '</p>\
                                         </li>')
                         }
                     } else if (fileType == 'pdf') {
                         if (caseContentList[i].contentRemark == '') {
-                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].sort + '" filePath="' + caseContentList[i].contentPath + '"  class="fileItem">\
+                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].orderWeight + '" filePath="' + caseContentList[i].contentPath + '"  class="fileItem">\
                                             <div class="bgSize" style = "background-image: url(../images/pdf_icon.png)"> </div>\
                                             <p type="pdf" desc="' + caseContentList[i].contentRemark + '" class="fileName">' + fileName + '</p>\
                                         </li>')
                         } else {
-                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].sort + '" filePath="' + caseContentList[i].contentPath + '" class="fileItem">\
+                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].orderWeight + '" filePath="' + caseContentList[i].contentPath + '" class="fileItem">\
                                             <div class="bgSize" style = "background-image: url(../images/pdf_icon.png)"> </div>\
                                             <p type="pdf" desc="' + caseContentList[i].contentRemark + '" class="fileName active">' + fileName + '</p>\
                                         </li>')
                         }
                     } else if (fileType == 'dcm') {
                         if (caseContentList[i].contentRemark == '') {
-                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].sort + '" filePath="' + caseContentList[i].contentPath + '"  class="fileItem">\
+                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].orderWeight + '" filePath="' + caseContentList[i].contentPath + '"  class="fileItem">\
                                             <div class="bgSize" style = "background-image: url(../images/dcm_icon.png)"> </div>\
                                             <p type="dcm" desc="' + caseContentList[i].contentRemark + '" class="fileName">' + fileName + '</p>\
                                         </li>')
                         } else {
-                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].sort + '" filePath="' + caseContentList[i].contentPath + '" class="fileItem">\
+                            $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].orderWeight + '" filePath="' + caseContentList[i].contentPath + '" class="fileItem">\
                                             <div class="bgSize" style = "background-image: url(../images/dcm_icon.png)"> </div>\
                                             <p type="dcm" desc="' + caseContentList[i].contentRemark + '" class="fileName active">' + fileName + '</p>\
                                         </li>')
@@ -164,42 +165,48 @@ function getApplyInfo() {
 }
 
 function rederViewByRole() {
-    if (isMainDoctor) {
-        if (applyInfo.applyStatus === "CONSULTATION_APPLY_ACCEDE") {
+    /** 动态创建进度条 */
+    const statusArr = ["已拒收", '待收诊', '已排期', '会诊中', '待反馈', '已完成'];
+    let str = '';
+    for (var i = 1; i < statusArr.length; i++) {
+        str += '<li>' + statusArr[i] + '</li>'
+        $('.progressBar').html(str);
+    }
+    $(".progressBar li:nth-child(1)").addClass("libg");
+    if (isInvite) {
+        if (applyStatus === "CONSULTATION_APPLY_ACCEDE") {
             //待收诊
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".rejection").show();
-            if (inviteDoctorCount > 1) {
-                $(".MDTBtn").show();
-            } else {
+            if(isMainDoctor){
+                $(".rejection").show();
+                if (inviteDoctorCount > 1) {
+                    $(".MDTBtn").show();
+                } else {
+                    $(".receive").show();
+                }
+            }else if (inviteDoctorCount <= 1) {
                 $(".receive").show();
             }
-        } else if (applyInfo.applyStatus === "CONSULTATION_SLAVE_ACCEDE") {
+        } else if (applyStatus === "CONSULTATION_SLAVE_ACCEDE") {
             //待收诊
-            $(".progressBar li:nth-child(1)").addClass("libg");
-        } else if (applyInfo.applyStatus === "CONSULTATION_DATETIME_LOCKED") {
+        } else if (applyStatus === "CONSULTATION_DATETIME_LOCKED") {
             //已排期
-            $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
-        } else if (applyInfo.applyStatus === "CONSULTATION_BEGIN") {
+        } else if (applyStatus === "CONSULTATION_BEGIN") {
             //会诊中
-            $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".compileReport").show();
             $(".entrance").show();
-        } else if (applyInfo.applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
+        } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
             //待反馈
-            $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".progressBar li:nth-child(4)").addClass("libg");
             $("#applyRecord").show();
             $("#applyRecordContext").show();
             applyRecordNavigationShow = true;
-        } else if (applyInfo.applyStatus === "CONSULTATION_END") {
+        } else if (applyStatus === "CONSULTATION_END") {
             //已完成
-            $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".progressBar li:nth-child(4)").addClass("libg");
@@ -210,58 +217,7 @@ function rederViewByRole() {
             $("#consultantFeedbackContext").show();
             applyRecordNavigationShow = true;
             consultantFeedbackNavigationShow = true;
-        } else if (applyInfo.applyStatus === "CONSULTATION_MASTER_REJECT" || applyInfo.applyStatus === "CONSULTATION_SLAVE_REJECT") {
-            //会诊医政已拒绝
-            applyRefuseNavigationShow = true;
-            $('#refuseReasonBox').show();
-            $('.progressBar').empty();
-            $('.progressBar').html('<li>' + statusArr[0] + '</li>');
-            $(".progressBar li:nth-child(1)").addClass("libg");
-        }
-    } else if (isInvite) {
-        if (applyInfo.applyStatus === "CONSULTATION_APPLY_ACCEDE") {
-            //待收诊
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            if (inviteDoctorCount <= 1) {
-                $(".receive").show();
-            }
-        } else if (applyInfo.applyStatus === "CONSULTATION_SLAVE_ACCEDE") {
-            //排期审核
-            $(".progressBar li:nth-child(1)").addClass("libg");
-        } else if (applyInfo.applyStatus === "CONSULTATION_DATETIME_LOCKED") {
-            //已排期
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".progressBar li:nth-child(2)").addClass("libg");
-        } else if (applyInfo.applyStatus === "CONSULTATION_BEGIN") {
-            //会诊中
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".progressBar li:nth-child(2)").addClass("libg");
-            $(".progressBar li:nth-child(3)").addClass("libg");
-            $(".compileReport").show();
-            $(".entrance").show();
-        } else if (applyInfo.applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
-            //待反馈
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".progressBar li:nth-child(2)").addClass("libg");
-            $(".progressBar li:nth-child(3)").addClass("libg");
-            $(".progressBar li:nth-child(4)").addClass("libg");
-            $("#applyRecord").show();
-            $("#applyRecordContext").show();
-            applyRecordNavigationShow = true;
-        } else if (applyInfo.applyStatus === "CONSULTATION_END") {
-            //已完成
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".progressBar li:nth-child(2)").addClass("libg");
-            $(".progressBar li:nth-child(3)").addClass("libg");
-            $(".progressBar li:nth-child(4)").addClass("libg");
-            $(".progressBar li:nth-child(5)").addClass("libg");
-            $("#applyRecord").show();
-            $("#applyRecordContext").show();
-            $("#consultantFeedback").show();
-            $("#consultantFeedbackContext").show();
-            applyRecordNavigationShow = true;
-            consultantFeedbackNavigationShow = true;
-        } else if (applyInfo.applyStatus === "CONSULTATION_MASTER_REJECT" || applyInfo.applyStatus === "CONSULTATION_SLAVE_REJECT") {
+        } else if (applyStatus === "CONSULTATION_MASTER_REJECT" || applyInfo.applyStatus === "CONSULTATION_SLAVE_REJECT") {
             //会诊医政已拒绝
             applyRefuseNavigationShow = true;
             $('#refuseReasonBox').show();
@@ -270,28 +226,24 @@ function rederViewByRole() {
             $(".progressBar li:nth-child(1)").addClass("libg");
         }
     } else {
-        if (applyInfo.applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
+        if (applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
             //创建成功
             $(".progressBar").hide()
-        } else if (applyInfo.applyStatus === "CONSULTATION_MASTER_REJECT") {
+        } else if (applyStatus === "CONSULTATION_MASTER_REJECT") {
             //会诊医政已拒绝
             applyRefuseNavigationShow = true;
             $('#refuseReasonBox').show();
             $('.progressBar').empty();
             $('.progressBar').html('<li>' + statusArr[0] + '</li>');
-            $(".progressBar li:nth-child(1)").addClass("libg");
-        } else if (applyInfo.applyStatus === "CONSULTATION_DATETIME_LOCKED") {
+        } else if (applyStatus === "CONSULTATION_DATETIME_LOCKED") {
             //已排期
-            $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
-        } else if (applyInfo.applyStatus === "CONSULTATION_BEGIN") {
+        } else if (applyStatus === "CONSULTATION_BEGIN") {
             //会诊中
-            $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
-        } else if (applyInfo.applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
+        } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
             //待反馈
-            $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".progressBar li:nth-child(4)").addClass("libg");
@@ -299,9 +251,8 @@ function rederViewByRole() {
             $("#applyRecord").show();
             $("#applyRecordContext").show();
             applyRecordNavigationShow = true;
-        } else if (applyInfo.applyStatus === "CONSULTATION_END") {
+        } else if (applyStatus === "CONSULTATION_END") {
             //已完成
-            $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".progressBar li:nth-child(4)").addClass("libg");
@@ -314,7 +265,6 @@ function rederViewByRole() {
             consultantFeedbackNavigationShow = true;
         } else {
             //待收诊
-            $(".progressBar li:nth-child(1)").addClass("libg");
         }
     }
 }
@@ -332,19 +282,12 @@ $(function () {
 
     isMainDoctor = userInfo.id === applyInfo.inviteUserId ? true : false;
 
-    isInvite = applyInfo.consultantUserList.indexOf(userInfo.id) ? true : false;
+    isInvite = applyInfo.consultantUserList.indexOf(userInfo.id) > 0 ? true : false;
 
     isVideo = applyInfo.applyType === "APPLY_CONSULTATION_VIDEO" ? true : false;
     applyTimeList = applyInfo.applyTimeList;
     caseContentList = applyInfo.caseContentList;
-    /** 动态创建进度条 */
-    const statusArr = ["已拒收", '待收诊', '已排期', '会诊中', '待反馈', '已完成'];
-    let str = '';
-    for (var i = 1; i < statusArr.length; i++) {
-        str += '<li>' + statusArr[i] + '</li>'
-        $('.progressBar').html(str);
-
-    }
+    applyStatus = applyInfo.applyStatus;
     /**网页标题*/
     $('head > title').html(applyInfo.patientSex + '/' + applyInfo.patientAge + '/' + applyInfo.caseDiagnosis + '-远程会诊平台');
     /** 拒收原因 */
@@ -473,224 +416,6 @@ $(function () {
         scrollTo($('#' + $(this).attr('name')).offset().top);
         return false;
     });
-
-    // 图片点击查看大图
-    let objParent = null; // 当前点击块的父级
-    let fileArr = []; // 当前点击块的文件数据
-    let indexFile = 0; // 当前点击的索引
-    let ObjArr = []; //  当前点击块的文件对象
-    $('.upfileUl').delegate('.fileItem', 'click', function () {
-        var $ = layui.jquery;
-        // 弹出层
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['1167px', '700px'], skin: "noBackground",
-            closeBtn: false,
-            shade: [0.7, '#000000'],
-            shadeClose: false,
-            scrollbar: false,
-            content: $('.bigImgContainer'),
-        });
-        // 整理一组图片展示数据
-
-        objParent = $(this).parent('.fileContent');
-        indexFile = $(this).index();
-        ObjArr = $(this).parent('.fileContent').find('.fileItem');
-        for (var i = 0; i < ObjArr.length; i++) {
-            fileArr.push({
-                'id': ObjArr.eq(i).attr('id'),
-                'name': ObjArr.eq(i).find('p').html(),
-                'type': ObjArr.eq(i).find('p').attr('type'),
-                'src': ObjArr.eq(i).find('div').css('backgroundImage'),
-                'desc': ObjArr.eq(i).find('p').attr('desc'),
-                'filePath': ObjArr.eq(i).attr('filepath'),
-            });
-        }
-        $('.bigImgContainer').find('.bigImg').css({
-            "top": 0,
-            "left": 0,
-            "transform": "scale(1)",
-        })
-        if (fileArr[indexFile].type != 'img') {
-            // pdf dcm
-            $('.bigImgContainer').find('.bigImg').addClass('bgSize');
-            if (fileArr[indexFile].type == 'pdf') {
-                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].filePath, ".bigImg", {
-                    page: "1"
-                });
-                $('.downlodeFile').hide();
-
-            } else {
-                // dcm 相关操作
-                // 1、显示下载按钮
-                // 2、imgIp + fileArr[indexFile].filePath 下载路径
-                // 3、清空 .bigImg 的内容，显示背景
-                $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].filePath);
-                $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
-            }
-        } else {
-            $('.downlodeFile').hide();
-            $('.bigImgContainer').find('.bigImg').removeClass('bgSize').html('');
-
-        }
-        $('.bigImgContainer').find('.bigImg').css('backgroundImage', fileArr[indexFile].src);
-        $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
-        $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
-
-    });
-
-    // 上一个
-    $('.switchBox .prev').click(function () {
-        if (indexFile <= 0) {
-            indexFile = 0;
-        } else {
-            indexFile--;
-        }
-        if (fileArr[indexFile].type != 'img') {
-            // pdf dcm
-            $('.bigImgContainer').find('.bigImg').addClass('bgSize');
-            if (fileArr[indexFile].type == 'pdf') {
-                // pdf 相关操作
-                // 1、往 .bigImg 渲染pdf
-                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].filePath, ".bigImg", {
-                    page: "1"
-                });
-                $('.downlodeFile').hide();
-
-            } else {
-                // dcm 相关操作
-                // 1、显示下载按钮
-                // 2、imgIp + fileArr[indexFile].filePath 下载路径
-                // 3、清空 .bigImg 的内容，显示背景
-                $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].filePath);
-                $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
-            }
-        } else {
-            // 图片的相关操作
-            $('.downlodeFile').hide();
-            $('.bigImgContainer').find('.bigImg').removeClass('bgSize').html(' ');
-            ;
-        }
-        $('.bigImgContainer').find('.bigImg').css({
-            "top": 0,
-            "left": 0,
-            "transform": "scale(1)",
-        })
-        scaleNum = 10;
-        $('.bigImgContainer').find('.bigImg').css('backgroundImage', fileArr[indexFile].src);
-        $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
-        $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
-    })
-    // 下一个
-    $('.switchBox .next').click(function () {
-        if (indexFile >= fileArr.length - 1) {
-            indexFile = fileArr.length - 1;
-        } else {
-            indexFile++;
-        }
-        if (fileArr[indexFile].type != 'img') {
-            $('.bigImgContainer').find('.bigImg').addClass('bgSize');
-            if (fileArr[indexFile].type == 'pdf') {
-                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].filePath, ".bigImg", {
-                    page: "1"
-                });
-                $('.downlodeFile').hide();
-
-            } else {
-                // dcm 相关操作
-                // 1、显示下载按钮
-                // 2、imgIp + fileArr[indexFile].filePath 下载路径
-                // 3、清空 .bigImg 的内容，显示背景
-                $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].filePath);
-                $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
-            }
-        } else {
-            $('.downlodeFile').hide();
-            $('.bigImgContainer').find('.bigImg').removeClass('bgSize').html(' ');
-        }
-        $('.bigImgContainer').find('.bigImg').css({
-            "top": 0,
-            "left": 0,
-            "transform": "scale(1)",
-        })
-        scaleNum = 10;
-        $('.bigImgContainer').find('.bigImg').css('backgroundImage', fileArr[indexFile].src);
-        $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
-        $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
-
-    });
-    // 关闭
-    $('.closeBtnImg').click(function () {
-        layer.closeAll();
-        $('.bigImgContainer').hide();
-        let _html = '';
-        for (let i = 0; i < fileArr.length; i++) {
-            _html += `<li class="fileItem fileNewItem" id="${fileArr[i].id}" filePath="${fileArr[i].filePath}">`;
-            if (fileArr[i].type != 'img') {
-                _html += `<div class="bgSize" style='background-image:${fileArr[i].src};'></div>`
-            } else {
-                _html += `<div style='background-image:${fileArr[i].src};'></div>`
-            }
-            if (fileArr[i].desc == '') {
-                _html += '<p type="' + fileArr[i].type + '" desc="" class="fileName">' + fileArr[i].name + '</p>';
-            } else {
-                _html += '<p type="' + fileArr[i].type + '" desc="' + fileArr[i].desc + '" class="fileName active">' + fileArr[i].name + '</p>';
-            }
-            _html += '</li>'
-        }
-        objParent.html(_html);
-        selectFileArr = [];
-        objParent = null; // 当前点击块的父级
-        fileArr = []; // 当前点击块的文件数据
-        indexFile = 0; // 当前点击的索引
-        ObjArr = []; //  当前点击块的文件对象
-    });
-
-    // 图片缩放 拖拽
-    $('.bigImgBox').on("mousewheel DOMMouseScroll", function (e) {
-        if (!$('.bigImgBox .bigImg').hasClass('bgSize')) {
-            let delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) || // chrome & ie
-                (e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1)); // firefox
-            if (delta > 0) {
-                // 向上滚
-                if (scaleNum <= 50) {
-                    scaleNum += 2
-                }
-            } else if (delta < 0) {
-                // 向下滚
-                if (scaleNum > 4) {
-                    scaleNum -= 2
-                }
-            }
-            $('.bigImg').css('transform', 'scale(' + scaleNum / 10 + ')')
-        }
-    });
-    $('.bigImgBox').on('mousedown', function (e) {
-        if (!$('.bigImgBox .bigImg').hasClass('bgSize')) {
-            var x = e.clientX - parseInt($('.bigImg').css('left'));
-            var y = e.clientY - parseInt($('.bigImg').css('top'));
-            $('.bigImgBox').on('mousemove', function (e) {
-                var newX = e.clientX;
-                var newY = e.clientY;
-                console.log(newY - y)
-                $('.bigImg').css({
-                    'top': newY - y + 'px',
-                    'left': newX - x + 'px',
-                });
-            })
-        }
-    })
-    $('.bigImgBox').on('mouseup', function (e) {
-        $('.bigImgBox').unbind('mousemove');
-    })
-    $('.bigImgBox').on('mouseleave', function () {
-        $('.bigImgBox').unbind('mousemove');
-    })
-
 
     /** 编辑会诊报告 */
     $('.compileReport').click(function () {
@@ -1018,26 +743,4 @@ $(function () {
     $('.getBack').click(function () {
         window.location = '../page/morkbench.html'
     })
-
-    function renderDateRightContent() {
-        let startMinute = 0; // 开始总分钟数
-        let endMinute = 0; // 结束总分钟数
-        let startHour = 0; // 开始小时数
-        let endHour = 0; // 结束小时数
-        let _html = '';
-        for (let i = 0; i < 96; i++) {
-            startMinute = i * 15;
-            endMinute = (i + 1) * 15;
-            startHour = parseInt(startMinute / 60);
-            endHour = parseInt(endMinute / 60);
-            let startM = startMinute %= 60; // 计算后的开始分钟数
-            let endM = endMinute %= 60; // 计算后的开始分钟数
-            if (endHour == 24) {
-                _html += '<li endDate="23:59" index="' + i + '">' + double(startHour) + ':' + double(startM) + '</li>'
-            } else {
-                _html += '<li endDate="' + double(endHour) + ':' + double(endM) + '" index="' + i + '">' + double(startHour) + ':' + double(startM) + '</li>'
-            }
-        }
-        $('.rightContent').html(_html);
-    }
 })
