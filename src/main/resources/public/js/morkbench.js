@@ -265,7 +265,8 @@ function getApplyList(inviteStatus, pageNoParam, pageSizeParam) {
     }
 }
 
-function showPageList(status,feedBackFunction){
+/** 分页查询列表数据 */
+function showPageList(status, feedBackFunction) {
     layui.use('laypage', function () {
         const laypage = layui.laypage;
         //执行一个laypage实例
@@ -281,16 +282,18 @@ function showPageList(status,feedBackFunction){
     });
 }
 
-
+/** 查询申请列表 总记录数*/
 function getApplyCount() {
     ajaxRequest("GET", sendSelectAllCountDoctor, null, false, false, false, sendSelectAllCountDoctorSuccess, null, null);
+
     function sendSelectAllCountDoctorSuccess(result) {
         countObject = result;
         currentApplyCount();
     }
 }
+
+/** 渲染申请导航列表记录数*/
 function currentApplyCount() {
-    console.log(countObject)
     let applyAcceptCount = 0
     applyAcceptCount += Number(countObject.consultationApplyAccede);
     applyAcceptCount += Number(countObject.consultationDoctorLocked);
@@ -303,6 +306,8 @@ function currentApplyCount() {
     $("#APPLY_REJECT").html(Number(countObject.consultationMasterReject))
     $("#APPLY_DONE").html(Number(countObject.consultationEn))
 }
+
+/** 查询受邀列表 总记录数*/
 function getInviteCount() {
     ajaxRequest("GET", receiveSelectAllCountDoctor, null, false, false, false, receiveSelectAllCountDoctorSuccess, null, null);
     function receiveSelectAllCountDoctorSuccess(result) {
@@ -310,14 +315,15 @@ function getInviteCount() {
         currentInviteCount();
     }
 }
+
+/** 渲染受邀导航列表记录数*/
 function currentInviteCount() {
-    console.log(countObject)
     $("#INVITE_ACCEPT").html(Number(countObject.consultationApplyAccede))
     $("#INVITE_REVIEW").html(Number(countObject.consultationSlaveAccede))
     $("#INVITE_DATETIME").html(Number(countObject.consultationDatetimeLocked))
     $("#INVITE_ONGOING").html(Number(countObject.consultationBegin))
     $("#INVITE_FEEDBACK").html(Number(countObject.consultationReportSubmitted))
-    $("#INVITE_REJECT").html(Number(countObject.consultationMasterReject)+Number(countObject.consultationSlaveReject))
+    $("#INVITE_REJECT").html(Number(countObject.consultationMasterReject) + Number(countObject.consultationSlaveReject))
     $("#INVITE_DONE").html(Number(countObject.consultationEn))
 }
 
@@ -399,7 +405,7 @@ $(function () {
     getInviteCount();
     pageCount = $("#INVITE_ACCEPT").html();
 
-    showPageList("INVITE_ACCEPT",getInvitedList);
+    showPageList("INVITE_ACCEPT", getInvitedList);
     // 列表的切换
     $('.leftNav').click(function () {
         let _index = $(this).index();
@@ -417,7 +423,7 @@ $(function () {
             $(this).find(".leftUL li").eq(0).addClass("ulAct");
             let inviteStatus = $(this).find(".leftUL li").eq(0).attr('name');
             pageCount = $("#INVITE_ACCEPT").html();
-            showPageList("INVITE_ACCEPT",getInvitedList);
+            showPageList("INVITE_ACCEPT", getInvitedList);
         } else if (_index == 1) {
             getApplyCount();
             $('.drafts_table').css("display", 'none');
@@ -429,7 +435,7 @@ $(function () {
             $(this).find('.leftUL li').eq(0).addClass("ulAct");
             let applyStatus = $(this).find('.leftUL li').eq(0).attr('name');
             pageCount = $("#APPLY_REVIEW").html();
-            showPageList(applyStatus,getApplyList);
+            showPageList(applyStatus, getApplyList);
         } else if (_index == 2) {
             // 医生转诊列表
             $('.drafts_table').css("display", 'none');
@@ -471,7 +477,7 @@ $(function () {
         $(this).addClass("ulAct");
         let inviteStatus = $(this).attr('name');
         pageCount = $(this).children("div:eq(0)").html();
-        showPageList(inviteStatus,getInvitedList);
+        showPageList(inviteStatus, getInvitedList);
         return false;
     });
 
@@ -483,7 +489,7 @@ $(function () {
         $(this).addClass("ulAct");
         let applyStatus = $(this).attr('name');
         pageCount = $(this).children("div:eq(0)").html();
-        showPageList(applyStatus,getApplyList);
+        showPageList(applyStatus, getApplyList);
 
         return false;
     });

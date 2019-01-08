@@ -1,6 +1,7 @@
 const count = 0; // 列表总条数
 let applyFormId = ''; // 订单id
 let countNum = 50;
+let countObject = {};
 let markJson = {}; // 日期标记
 const myDate = new Date();
 let dateStr = myDate.getFullYear() + '-' + double(myDate.getMonth() + 1) + '-' + double(myDate.getDate());
@@ -140,7 +141,6 @@ function redrawDate() {
 }
 
 function renderApplyListView(data) {
-    console.log(data)
     const myDate = new Date();
     const year = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
     const month = double(myDate.getMonth() + 1); //获取当前月份(0-11,0代表1月)
@@ -342,6 +342,71 @@ function getReferralList(applyFormId, pageNo, pageSize) {
     //     },
     // })
 }
+
+/** 分页查询列表数据 */
+function showPageList(status, feedBackFunction) {
+    layui.use('laypage', function () {
+        const laypage = layui.laypage;
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'listBox',
+            count: pageCount,
+            limit: pageSize,
+            theme: '#f6c567',
+            jump: function (obj, first) {
+                feedBackFunction(status, obj.curr, pageSize);
+            }
+        });
+    });
+}
+
+/** 查询申请列表 总记录数*/
+function getApplyCount() {
+    ajaxRequest("GET", sendSelectAllCountSir, null, false, false, false, sendSelectAllCountDoctorSuccess, null, null);
+
+    function sendSelectAllCountDoctorSuccess(result) {
+        countObject = result;
+        console.log(countObject);
+        currentApplyCount();
+    }
+}
+
+/** 渲染发出导航列表记录数*/
+function currentApplyCount() {
+    let applyAcceptCount = 0
+    applyAcceptCount += Number(countObject.consultationApplyAccede);
+    applyAcceptCount += Number(countObject.consultationDoctorLocked);
+    applyAcceptCount += Number(countObject.consultationSlaveReject);
+    $("#APPLY_REVIEW").html(Number(countObject.consultationApplyCreateSuccess))
+    $("#APPLY_ACCEPT").html(applyAcceptCount)
+    $("#APPLY_DATETIME").html(Number(countObject.consultationDatetimeLocked))
+    $("#APPLY_ONGOING").html(Number(countObject.consultationBegin))
+    $("#APPLY_FEEDBACK").html(Number(countObject.consultationReportSubmitted))
+    $("#APPLY_REJECT").html(Number(countObject.consultationMasterReject))
+    $("#APPLY_DONE").html(Number(countObject.consultationEn))
+}
+
+/** 查询受邀列表 总记录数*/
+function getInviteCount() {
+    ajaxRequest("GET", receiveSelectAllCountSir, null, false, false, false, receiveSelectAllCountDoctorSuccess, null, null);
+    function receiveSelectAllCountDoctorSuccess(result) {
+        countObject = result;
+        console.log(countObject);
+        currentInviteCount();
+    }
+}
+
+/** 渲染受邀导航列表记录数*/
+function currentInviteCount() {
+    $("#INVITE_ACCEPT").html(Number(countObject.consultationApplyAccede))
+    $("#INVITE_REVIEW").html(Number(countObject.consultationSlaveAccede))
+    $("#INVITE_DATETIME").html(Number(countObject.consultationDatetimeLocked))
+    $("#INVITE_ONGOING").html(Number(countObject.consultationBegin))
+    $("#INVITE_FEEDBACK").html(Number(countObject.consultationReportSubmitted))
+    $("#INVITE_REJECT").html(Number(countObject.consultationMasterReject) + Number(countObject.consultationSlaveReject))
+    $("#INVITE_DONE").html(Number(countObject.consultationEn))
+}
+
 // 获取草稿箱数据
 function getDrafts(pageNo, pageSize) {
 
@@ -371,14 +436,17 @@ function selectOrderById(orderId, type, readFlag) {
 // });
 
 $(function () {
+    getInviteCount()
+    pageCount = $("#INVITE_ACCEPT").html();
 
-
+    showPageList("INVITE_ACCEPT", getInvitedList);
     // 列表的切换
     $('.leftNav').click(function () {
         let _index = $(this).index();
         $(this).addClass('active').siblings('div').removeClass('active');
         if (_index == 0) {
             isInvite = true;
+            getInviteCount()
             // 受邀列表
             $('.drafts_table').css("display", 'none');
             $('.referralTable').css("display", 'none');
@@ -388,20 +456,11 @@ $(function () {
             $(".ulAct").removeClass("ulAct");
             $(this).find(".leftUL li").eq(0).addClass("ulAct");
             let inviteStatus = $(this).find(".leftUL li").eq(0).attr('name');
-            layui.use('laypage', function () {
-                const laypage = layui.laypage;
-                //执行一个laypage实例
-                laypage.render({
-                    elem: 'listBox',
-                    count: countNum,
-                    limit: pageSize,
-                    theme: '#f6c567',
-                    jump: function (obj, first) {
-                        getInvitedList(inviteStatus, obj.curr, pageSize);
-                    }
-                });
-            });
+            pageCount = $("#INVITE_ACCEPT").html();
+            showPageList(inviteStatus,getInvitedList);
+
         } else if (_index == 1) {
+            getApplyCount()
             isInvite = false;
             $('.drafts_table').css("display", 'none');
             $('.referralTable').css("display", 'none');
@@ -412,19 +471,9 @@ $(function () {
             $(this).find('.leftUL li').eq(0).addClass("ulAct");
 
             let applyStatus = $(this).find('.leftUL li').eq(0).attr('name');
-            layui.use('laypage', function () {
-                const laypage = layui.laypage;
-                //执行一个laypage实例
-                laypage.render({
-                    elem: 'listBox',
-                    count: countNum,
-                    limit: pageSize,
-                    theme: '#f6c567',
-                    jump: function (obj, first) {
-                        getApplyList(applyStatus, obj.curr, pageSize);
-                    }
-                });
-            });
+            pageCount = $("#APPLY_REVIEW").html();
+            showPageList(applyStatus,getApplyList);
+
         } else if (_index == 2) {
             // 转诊列表
             $('.drafts_table').css("display", 'none');
@@ -459,19 +508,8 @@ $(function () {
         $(".ulAct").removeClass("ulAct");
         $(this).addClass("ulAct");
         let inviteStatus = $(this).attr('name');
-        layui.use('laypage', function () {
-            const laypage = layui.laypage;
-            //执行一个laypage实例
-            laypage.render({
-                elem: 'listBox',
-                count: countNum,
-                limit: pageSize,
-                theme: '#f6c567',
-                jump: function (obj, first) {
-                    getInvitedList(inviteStatus, obj.curr, pageSize);
-                }
-            });
-        });
+        pageCount = $(this).children("div:eq(0)").html();
+        showPageList(inviteStatus,getInvitedList);
         return false;
     });
 
@@ -481,21 +519,9 @@ $(function () {
         $('.originator').css('width', '160px');
         $(".ulAct").removeClass("ulAct");
         $(this).addClass("ulAct");
-
         let applyStatus = $(this).attr('name');
-        layui.use('laypage', function () {
-            const laypage = layui.laypage;
-            //执行一个laypage实例
-            laypage.render({
-                elem: 'listBox',
-                count: countNum,
-                limit: pageSize,
-                theme: '#f6c567',
-                jump: function (obj, first) {
-                    getApplyList(applyStatus, obj.curr, pageSize);
-                }
-            });
-        });
+        pageCount = $(this).children("div:eq(0)").html();
+        showPageList(applyStatus,getApplyList);
         return false;
     });
     // 转诊ul切换 transferTreatment/doctorFindList
@@ -504,10 +530,7 @@ $(function () {
         $('.originator').css('width', '160px');
         $(".ulAct").removeClass("ulAct");
         $(this).addClass("ulAct");
-        // $(this).children("div").removeClass("unRead");
-        // if ($("#leftUL").children().find(".unRead").length == 0) {
-        //     $("#leftTitle").next("div").removeClass("unRead");
-        // }
+
         applyFormId = $(this).attr('name');
 
         layui.use('laypage', function () {
@@ -557,7 +580,6 @@ $(function () {
     doctorScheduling(dateStr + ' 00:00:00', dateStr + ' 23:59:00')
     // 渲染日历控件
     redrawDate();
-
 
     /*日历点击显示隐藏 */
     $("#calender").animate({
