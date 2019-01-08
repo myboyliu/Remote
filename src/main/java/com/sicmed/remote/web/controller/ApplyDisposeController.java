@@ -594,7 +594,7 @@ public class ApplyDisposeController extends BaseController {
      * 医生 受邀会诊 待收诊 接收 原接收人非本人
      */
     @PostMapping(value = "doctorAcceptOther")
-    public Map doctorAcceptOther(String id, String type) {
+    public Map doctorAcceptOther(String id, String type, String startEndTime) {
 
         if (StringUtils.isBlank(id)) {
             return badRequestOfArguments("传入id为空");
@@ -609,6 +609,9 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setInviteUserId(userId);
         applyForm.setInviteSummary(inviteSummary);
         applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
+        if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(type)) {
+            applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_BEGIN.toString());
+        }
         applyForm.setUpdateUser(userId);
         int i = applyFormService.updateByPrimaryKeySelective(applyForm);
         if (i < 1) {
@@ -617,14 +620,26 @@ public class ApplyDisposeController extends BaseController {
 
         // 视频会诊,更新applyTime相关
         if (ApplyType.APPLY_CONSULTATION_VIDEO.toString().equals(type)) {
-            ApplyTime applyTime = new ApplyTime();
-            applyTime.setApplyFormId(id);
-            applyTime.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
-            applyTime.setUpdateUser(userId);
-            int j = applyTimeService.updateByForm(applyTime);
-            if (j < 1) {
-                return badRequestOfArguments("更新applyTime失败");
+            // 删除原时间
+            int j = applyTimeService.delByApplyForm(id);
+            if (j < 0) {
+                return badRequestOfArguments("删除原applyTime失败");
             }
+
+            //解析传入json
+            Map<String, String> resultMap = applyTimeJson(startEndTime);
+
+            // 添加新的时间
+            ApplyTimeBean applyTimeBean = new ApplyTimeBean();
+            applyTimeBean.setApplyFormId(id);
+            applyTimeBean.setStartEndTime(resultMap);
+            applyTimeBean.setCreateUser(userId);
+            applyTimeBean.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
+            int m = applyTimeService.insertStartEndTimes(applyTimeBean);
+            if (m < 1) {
+                return badRequestOfArguments("添加申请时间失败");
+            }
+
         }
 
         // 更新caseConsultant相关
