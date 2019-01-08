@@ -1,6 +1,7 @@
 package com.sicmed.remote.web.mapper;
 
 import com.sicmed.remote.web.bean.ApplyFormBean;
+import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 
 import java.util.List;
@@ -43,4 +44,6 @@ public interface ApplyFormMapper {
     Integer inquirySlaveMasterAccedeCount(ApplyFormBean applyFormBean);
 
     Integer inquiryCreateSuccessCount(ApplyFormBean applyFormBean);
+
+    ConsultationStatusBean sendSelectAllCount(ApplyFormBean applyFormBean);
 }

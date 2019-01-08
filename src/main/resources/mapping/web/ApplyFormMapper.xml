@@ -581,6 +581,58 @@
             </if>
         </where>
     </select>
+
+
+    <!--发出会诊 总数目查询-->
+    <resultMap id="ConsultationStatusBeanResultMap" type="com.sicmed.remote.web.bean.ConsultationStatusBean">
+        <result column="cacs" jdbcType="VARCHAR" property="consultationApplyCreateSuccess"/>
+        <result column="caa" jdbcType="VARCHAR" property="consultationApplyAccede"/>
+        <result column="car" jdbcType="VARCHAR" property="consultationApplyReject"/>
+        <result column="csa" jdbcType="VARCHAR" property="consultationSlaveAccede"/>
+        <result column="csr" jdbcType="VARCHAR" property="consultationSlaveReject"/>
+        <result column="cma" jdbcType="VARCHAR" property="consultationMasterAccede"/>
+        <result column="cmr" jdbcType="VARCHAR" property="consultationMasterReject"/>
+        <result column="cdrl" jdbcType="VARCHAR" property="consultationDoctorLocked"/>
+        <result column="cdel" jdbcType="VARCHAR" property="consultationDatetimeLocked"/>
+        <result column="cb" jdbcType="VARCHAR" property="consultationBegin"/>
+        <result column="crs" jdbcType="VARCHAR" property="consultationReportSubmitted"/>
+        <result column="cfs" jdbcType="VARCHAR" property="consultationFeedbackSubmitted"/>
+        <result column="ce" jdbcType="VARCHAR" property="consultationEn"/>
+    </resultMap>
+    <select id="sendSelectAllCount" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
+            resultMap="ConsultationStatusBeanResultMap">
+        select
+        count(apply_status="CONSULTATION_APPLY_CREATE_SUCCESS") cacs,
+        count(apply_status="CONSULTATION_APPLY_ACCEDE") caa,
+        count(apply_status="CONSULTATION_APPLY_REJECT") car,
+        count(apply_status="CONSULTATION_SLAVE_ACCEDE") csa,
+        count(apply_status="CONSULTATION_SLAVE_REJECT") csr,
+        count(apply_status="CONSULTATION_MASTER_ACCEDE") cma,
+        count(apply_status="CONSULTATION_MASTER_REJECT") cmr,
+        count(apply_status="CONSULTATION_DOCTOR_LOCKED") cdrl,
+        count(apply_status="CONSULTATION_DATETIME_LOCKED") cdel,
+        count(apply_status="CONSULTATION_BEGIN") cb,
+        count(apply_status="CONSULTATION_REPORT_SUBMITTED") crs,
+        count(apply_status="CONSULTATION_FEEDBACK_SUBMITTED") cfs,
+        count(apply_status="CONSULTATION_END") ce
+        from apply_form
+        <where>
+            del_flag = "0"
+            <if test="applyUserId != null">
+                AND apply_user_id = #{applyUserId,jdbcType=VARCHAR}
+            </if>
+            <if test="applyHospitalId != null">
+                AND apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
+            </if>
+            <if test="consultationTypeList != null">
+                AND apply_type IN
+                <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
     <!--转诊 数目查询-->
     <select id="inquiryCountSelect" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
             resultType="java.lang.Integer">
@@ -614,7 +666,6 @@
             </if>
         </where>
         order by apply_urgent desc,update_time,create_time
-        limit #{beginNo},#{pageSize}
     </select>
 
     <!--转诊 待审核 数目查询-->

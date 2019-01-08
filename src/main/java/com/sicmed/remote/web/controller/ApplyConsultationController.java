@@ -6,6 +6,7 @@ import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.web.bean.ApplyFormBean;
+import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.service.ApplyFormService;
@@ -186,6 +187,8 @@ public class ApplyConsultationController extends BaseController {
         applyFormBean.setConsultationTypeList(consultantTypeList);
         applyFormBean.setConsultationStatusList(statusList);
         applyFormBean.setInviteUserId(userId);
+        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
+        applyFormBean.setPageSize(getPageEntity().getPageSize());
         if (statusList.size() == 1 && String.valueOf(ConsultationStatus.CONSULTATION_APPLY_ACCEDE).equals(statusList.get(0))) {
             applyFormBean.setInviteBranchId(userDetail.getBranchId());
             applyFormBean.setInviteUserId(null);
@@ -601,5 +604,16 @@ public class ApplyConsultationController extends BaseController {
 
         return succeedRequest(i);
 
+    }
+
+    // 发出会诊 总项数目全部查询
+    @GetMapping(value = "sendSelectAllCount")
+    public Map sendSelectAllCount(String hospitalId) {
+
+        String userId = getRequestToken();
+
+        ConsultationStatusBean consultationStatusBean = applyFormService.sendSelectAllCount(userId, hospitalId, consultantTypeList);
+
+        return succeedRequest(consultationStatusBean);
     }
 }

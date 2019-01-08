@@ -1,6 +1,7 @@
 package com.sicmed.remote.web.service;
 
 import com.sicmed.remote.web.bean.ApplyFormBean;
+import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.mapper.ApplyFormMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +81,7 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         return applyFormMapper.inquirySlaveMasterAccedeCount(applyFormBean);
     }
 
-    // 转诊 待审核 查询
+    // 转诊 待审核 数目查询
     public Integer inquiryCreateSuccessCount(String userId, String hospitalId, List<String> consultantTypeList, List<String> statusList) {
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
@@ -90,6 +91,17 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         applyFormBean.setApplyHospitalId(hospitalId);
 
         return applyFormMapper.inquiryCreateSuccessCount(applyFormBean);
+    }
+
+    // 发出会诊 总数目查询
+    public ConsultationStatusBean sendSelectAllCount(String userId, String hospitalId, List<String> consultantTypeList) {
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setApplyUserId(userId);
+        applyFormBean.setApplyHospitalId(hospitalId);
+        applyFormBean.setConsultationTypeList(consultantTypeList);
+
+        return applyFormMapper.sendSelectAllCount(applyFormBean);
     }
 
     @Override
