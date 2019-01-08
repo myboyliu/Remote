@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.controller;
 
+import com.sicmed.remote.web.entity.PageEntity;
 import com.sicmed.remote.web.service.ProcedureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -29,7 +30,7 @@ public abstract class BaseController {
 
     @Autowired
     public RedisTemplate redisTemplate;
-    
+
     @Autowired
     public StringRedisTemplate stringRedisTemplate;
 
@@ -47,6 +48,16 @@ public abstract class BaseController {
         HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
         String str = request.getHeader("token");
         return str;
+    }
+
+    /**
+     * 获取分页 参数
+     *
+     * @return
+     */
+    public PageEntity getPageEntity() {
+        PageEntity pageEntity = new PageEntity();
+        return pageEntity;
     }
 
     /**
