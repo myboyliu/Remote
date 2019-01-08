@@ -1,3 +1,7 @@
+let pageNo = 1;
+let pageSize = 10;
+let pageCount = 10;
+
 /**
  *
  * @param type
@@ -20,7 +24,9 @@ function ajaxRequest(type, url, data, processData, contentType, async, successCa
         data: data,
         async: async,
         headers: {
-            token: localStorage.getItem("token")
+            token: localStorage.getItem("token"),
+            pageNo: pageNo,
+            pageSize: pageSize
         },
         success: function (data) {
             if (data.code == 20000) {
@@ -35,4 +41,10 @@ function ajaxRequest(type, url, data, processData, contentType, async, successCa
             errorCallBack();
         }
     });
+}
+
+function setPageCount(result) {
+    console.log(result);
+    pageCount = result;
+
 }

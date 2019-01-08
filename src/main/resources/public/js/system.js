@@ -683,8 +683,8 @@ $(function () {
     // 重置密码确定按钮
     $('.replacementYesBtn').click(function () {
         var data = new FormData();
-        data.append("userId", $('#userName').attr('userId'));
-        ajaxRequest("POST", "", data, false, false, true, resetSuccess, resetFailed, null);
+        data.append("id", $('#userName').attr('userId'));
+        ajaxRequest("POST", adminChangePassWord, data, false, false, true, resetSuccess, resetFailed, null);
 
         function resetSuccess() {
             var _$ = layui.jquery;

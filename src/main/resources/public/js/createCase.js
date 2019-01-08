@@ -388,7 +388,8 @@ function createPictureApplyData(caseId, caseSummary) {
 }
 
 /** 创建视频会诊草稿*/
-let dateList = []; // 选择的时间数据
+let dateList = [];
+
 function createVideoApplyData(caseId, caseSummary) {
     const data = new FormData();
     data.append('caseRecordId', caseId); //病历ID
@@ -440,6 +441,7 @@ function createVideoApplyData(caseId, caseSummary) {
 
 }
 
+/** 请求失败回调函数*/
 function requestField(result) {
     console.log(result);
 }

@@ -1,4 +1,4 @@
-let isInvite;
+let isInvite = false;
 let isApply = false;
 let applyFormId;
 let inviteDoctorCount;
@@ -21,7 +21,7 @@ function renderViewByRole(applyStatus) {
         str += '<li>' + statusArr[i] + '</li>';
         $('.progressBar').html(str);
     }
-    if (isInvite && !isApply) {
+    if (isInvite) {
         if (applyStatus === "CONSULTATION_APPLY_ACCEDE") {
             //待收诊
             $(".progressBar li:nth-child(1)").addClass("libg");
@@ -56,7 +56,7 @@ function renderViewByRole(applyStatus) {
             if (inviteDoctorCount > 2) {
                 $("#MDTBtn").show();
             } else {
-                $(".accept").show();
+                $("#accept").show();
             }
         } else if (applyStatus === "CONSULTATION_DATETIME_LOCKED") {
             //已排期
@@ -190,7 +190,7 @@ function renderCaseContentView(data) {
                     let fileType = caseContentList[i].contentPath.substr(caseContentList[i].contentPath.lastIndexOf('.') + 1, caseContentList[i].contentPath.length);
                     let fileName = caseContentList[i].contentPath.substr(caseContentList[i].contentPath.lastIndexOf('/') + 1, caseContentList[i].contentPath.length);
                     fileAllArr.push(fileName);
-                    if (fileType == 'png' || fileType == 'jpg'||fileType == 'jpeg') {
+                    if (fileType == 'png' || fileType == 'jpg' || fileType == 'jpeg') {
                         if (caseContentList[i].contentRemark == '') {
                             $('.upfileUl').find('#' + caseContentList[i].contentTypeId).find('.fileContent').append('<li id="' + caseContentList[i].id + '" sort="' + caseContentList[i].sort + '" filePath="' + caseContentList[i].contentPath + '"  class="fileItem">\
                                            <div style = "background-image: url(&apos;' + baseUrl + "/" + caseContentList[i].contentPath + '&apos;)"></div>\
@@ -271,6 +271,7 @@ function updateApplyTime(dateList) {
 function getApplyInfo() {
     /** 获取缓存 订单ID*/
     applyFormId = sessionStorage.getItem('applyFormId');
+    isInvite = eval(sessionStorage.getItem('isInvite'));
     let formData = {"applyFormId": applyFormId};
     ajaxRequest("GET", getApplyInfoUrl, formData, true, "application/json", false, getApplyInfoSuccess, null, null);
 
@@ -288,7 +289,8 @@ $(function () {
     /** 当前申请 详细信息 */
     let applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
 
-    isInvite = userInfo.hospitalId === applyInfo.inviteHospitalId ? true : false;
+    // isInvite = userInfo.hospitalId === applyInfo.inviteHospitalId ? true : false;
+    // isApply = userInfo.hospitalId === applyInfo.applyHospitalId ? true : false;
     applyNodeList = applyInfo.applyNodeList;
     applyFormId = applyInfo.id;
     applyTypeStr = applyInfo.applyType;
@@ -296,12 +298,8 @@ $(function () {
     applyStatus = applyInfo.applyStatus;
     inviteDoctorCount = applyInfo.inviteSummary.split(";").length;
     applyTimeList = applyInfo.applyTimeList;
-    if (userInfo.hospitalId === applyInfo.applyHospitalId && applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
-        isApply = true;
-    }
-    if (applyInfo.inviteUserId) {
-        consultantUserList = JSON.parse(applyInfo.consultantUserList);
-    }
+
+
     /**网页标题*/
     $('head > title').html(applyInfo.patientSex + '/' + applyInfo.patientAge + '/' + applyInfo.caseDiagnosis + '-远程会诊平台');
     /** 拒收原因 */
@@ -338,7 +336,7 @@ $(function () {
 
     renderApplyTimeView(applyTimeList);
     /**会诊报告*/
-    if(applyInfo.consultantReport){
+    if (applyInfo.consultantReport) {
         consultantReport = JSON.parse(applyInfo.consultantReport);
     }
     let recordHtml = '';
