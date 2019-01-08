@@ -33,12 +33,9 @@ public class FileController extends BaseController {
         while (file.getSize() > max_file_size) {
             return badRequestOfArguments("文件过大");
         }
-        String contentType = fileName.substring(fileName.lastIndexOf("."));
-
-        String randomFileName = RandomStringUtils.randomAlphanumeric(16) + contentType;
         try {
-            uploadFile(file.getBytes(), location, randomFileName);
-            return succeedRequest(randomFileName);
+            uploadFile(file.getBytes(), location, fileName);
+            return succeedRequest(fileName);
         } catch (Exception e) {
             return badRequestOfArguments("文件上传失败");
         }
