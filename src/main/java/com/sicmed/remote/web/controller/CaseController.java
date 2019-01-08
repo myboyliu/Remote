@@ -207,9 +207,10 @@ public class CaseController extends BaseController {
     }
 
     // 删除病例中的图片
-    @DeleteMapping(value = "softDelPicture")
+    @GetMapping(value = "softDelPicture")
     public Map softDelPicture(String id) {
 
+        log.debug(id);
         if (StringUtils.isBlank(id)) {
             return badRequestOfArguments("传入id为空");
         }
