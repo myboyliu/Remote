@@ -1,5 +1,8 @@
 package com.sicmed.remote.web.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.web.bean.ApplyFormBean;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -562,11 +566,13 @@ public class ApplyConsultationController extends BaseController {
 
     // 发出会诊 数目查询
     @GetMapping(value = "sendSelectCount")
-    public Map sendSelectCount(List<String> statusList) {
+    public Map sendSelectCount(String list, String hospitalId) {
+
+        List<String> statusList;
+        statusList = JSON.parseObject(list, new TypeReference<LinkedList>() {
+        }, Feature.OrderedField);
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
-        String hospitalId = userDetail.getHospitalId();
 
         int i = applyFormService.sendSelectCount(userId, hospitalId, consultantTypeList, statusList);
 
@@ -575,13 +581,15 @@ public class ApplyConsultationController extends BaseController {
 
     // 受邀会诊 数目查询
     @GetMapping(value = "receiveSelectCount")
-    public Map receiveSelectCount(List<String> statusList) {
+    public Map receiveSelectCount(String list, String hospitalId) {
+
+        List<String> statusList;
+        statusList = JSON.parseObject(list, new TypeReference<LinkedList>() {
+        }, Feature.OrderedField);
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
-        String hospitalId = userDetail.getHospitalId();
 
-        int i = caseConsultantService.selectCount(userId, hospitalId, consultantTypeList,statusList);
+        int i = caseConsultantService.selectCount(userId, hospitalId, consultantTypeList, statusList);
 
         return succeedRequest(i);
 

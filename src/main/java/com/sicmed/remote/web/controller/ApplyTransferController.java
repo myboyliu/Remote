@@ -1,5 +1,8 @@
 package com.sicmed.remote.web.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.bean.ApplyFormBean;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -332,11 +336,13 @@ public class ApplyTransferController extends BaseController {
 
     // 转诊 角色双方 数目查询
     @GetMapping(value = "inquiryCount")
-    public Map inquiryCount(List<String> statusList) {
+    public Map inquiryCount(String list, String hospitalId) {
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
-        String hospitalId = userDetail.getHospitalId();
+
+        List<String> statusList;
+        statusList = JSON.parseObject(list, new TypeReference<LinkedList>() {
+        }, Feature.OrderedField);
 
         int i = applyFormService.inquiryCountSelect(userId, hospitalId, consultationTypeListInquiry, statusList);
 
@@ -345,7 +351,11 @@ public class ApplyTransferController extends BaseController {
 
     // 转诊 排期审核 数目查询
     @GetMapping(value = "inquirySlaveMasterAccedeCount")
-    public Map inquirySlaveMasterAccedeCount(List<String> statusList) {
+    public Map inquirySlaveMasterAccedeCount(String list) {
+
+        List<String> statusList;
+        statusList = JSON.parseObject(list, new TypeReference<LinkedList>() {
+        }, Feature.OrderedField);
 
         String userId = getRequestToken();
 
@@ -353,9 +363,14 @@ public class ApplyTransferController extends BaseController {
 
         return succeedRequest(i);
     }
+
     // 转诊 待审核  查询
     @GetMapping(value = "inquiryCreateSuccessCount")
-    public Map inquiryCreateSuccessCount(List<String> statusList) {
+    public Map inquiryCreateSuccessCount(String list) {
+
+        List<String> statusList;
+        statusList = JSON.parseObject(list, new TypeReference<LinkedList>() {
+        }, Feature.OrderedField);
 
         String userId = getRequestToken();
 

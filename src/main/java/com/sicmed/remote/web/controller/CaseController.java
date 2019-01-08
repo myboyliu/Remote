@@ -210,7 +210,6 @@ public class CaseController extends BaseController {
     @GetMapping(value = "softDelPicture")
     public Map softDelPicture(String id) {
 
-        log.debug(id);
         if (StringUtils.isBlank(id)) {
             return badRequestOfArguments("传入id为空");
         }
