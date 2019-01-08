@@ -458,12 +458,15 @@ public class UserController extends BaseController {
      * 医政修改医生密码
      */
     @PostMapping(value = "adminChangePassWord")
-    public Map changePassWord(UserAccount userAccount) {
+    public Map changePassWord(String id) {
 
         String userId = getRequestToken();
+        UserAccount userAccount = new UserAccount();
 
         String salt = RandomStringUtils.randomAlphanumeric(32);
-        String encryptionPassWord = DigestUtils.md5DigestAsHex((userAccount.getUserPassword() + salt).getBytes());
+        String newPsd = "yc123456";
+        String encryptionPassWord = DigestUtils.md5DigestAsHex((newPsd + salt).getBytes());
+        userAccount.setId(id);
         userAccount.setUpdateUser(userId);
         userAccount.setSalt(salt);
         userAccount.setUserPassword(encryptionPassWord);
