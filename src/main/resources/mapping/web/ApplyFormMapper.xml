@@ -639,6 +639,9 @@
             <if test="applyUserId != null">
                 AND apply_user_id = #{applyUserId,jdbcType=VARCHAR}
             </if>
+            <if test="applyHospitalId != null">
+                AND apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
+            </if>
         </where>
     </select>
 
@@ -663,6 +666,9 @@
             </if>
             <if test="inviteUserId != null">
                 AND invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
+            </if>
+            <if test="inviteHospitalId != null">
+                AND invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR}
             </if>
         </where>
     </select>

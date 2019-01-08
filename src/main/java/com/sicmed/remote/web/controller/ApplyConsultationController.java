@@ -583,6 +583,7 @@ public class ApplyConsultationController extends BaseController {
     @GetMapping(value = "receiveSelectCount")
     public Map receiveSelectCount(String list, String hospitalId) {
 
+
         List<String> statusList;
         statusList = JSON.parseObject(list, new TypeReference<LinkedList>() {
         }, Feature.OrderedField);

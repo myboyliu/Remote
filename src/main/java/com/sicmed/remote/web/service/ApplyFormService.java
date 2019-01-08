@@ -6,6 +6,7 @@ import com.sicmed.remote.web.mapper.ApplyFormMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -68,23 +69,25 @@ public class ApplyFormService implements BaseService<ApplyForm> {
     }
 
     // 转诊 排期审核 数目查询
-    public Integer inquirySlaveMasterAccedeCount(String userId, List<String> consultantTypeList, List<String> statusList) {
+    public Integer inquirySlaveMasterAccedeCount(String userId, String hospitalId, List<String> consultantTypeList, List<String> statusList) {
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setConsultationTypeList(consultantTypeList);
         applyFormBean.setConsultationStatusList(statusList);
         applyFormBean.setInviteUserId(userId);
+        applyFormBean.setInviteHospitalId(hospitalId);
 
         return applyFormMapper.inquirySlaveMasterAccedeCount(applyFormBean);
     }
 
     // 转诊 待审核 查询
-    public Integer inquiryCreateSuccessCount(String userId, List<String> consultantTypeList, List<String> statusList) {
+    public Integer inquiryCreateSuccessCount(String userId, String hospitalId, List<String> consultantTypeList, List<String> statusList) {
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setConsultationTypeList(consultantTypeList);
         applyFormBean.setConsultationStatusList(statusList);
         applyFormBean.setApplyUserId(userId);
+        applyFormBean.setApplyHospitalId(hospitalId);
 
         return applyFormMapper.inquiryCreateSuccessCount(applyFormBean);
     }

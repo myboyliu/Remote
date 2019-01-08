@@ -351,7 +351,7 @@ public class ApplyTransferController extends BaseController {
 
     // 转诊 排期审核 数目查询
     @GetMapping(value = "inquirySlaveMasterAccedeCount")
-    public Map inquirySlaveMasterAccedeCount(String list) {
+    public Map inquirySlaveMasterAccedeCount(String list,String hospitalId) {
 
         List<String> statusList;
         statusList = JSON.parseObject(list, new TypeReference<LinkedList>() {
@@ -359,14 +359,14 @@ public class ApplyTransferController extends BaseController {
 
         String userId = getRequestToken();
 
-        int i = applyFormService.inquirySlaveMasterAccedeCount(userId, consultationTypeListInquiry, statusList);
+        int i = applyFormService.inquirySlaveMasterAccedeCount(userId, hospitalId,consultationTypeListInquiry, statusList);
 
         return succeedRequest(i);
     }
 
     // 转诊 待审核  查询
     @GetMapping(value = "inquiryCreateSuccessCount")
-    public Map inquiryCreateSuccessCount(String list) {
+    public Map inquiryCreateSuccessCount(String list, String hospitalId) {
 
         List<String> statusList;
         statusList = JSON.parseObject(list, new TypeReference<LinkedList>() {
@@ -374,7 +374,7 @@ public class ApplyTransferController extends BaseController {
 
         String userId = getRequestToken();
 
-        int i = applyFormService.inquiryCreateSuccessCount(userId, consultationTypeListInquiry, statusList);
+        int i = applyFormService.inquiryCreateSuccessCount(userId, hospitalId, consultationTypeListInquiry, statusList);
 
         return succeedRequest(i);
     }
