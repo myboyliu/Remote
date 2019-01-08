@@ -242,13 +242,13 @@ public class ApplyDisposeController extends BaseController {
      * 医政 受邀会诊 待收诊 接收
      */
     @PostMapping(value = "sirReceiveMasterAccede")
-    public Map sirConsultationMasterAccede(String id, String applyType) {
+    public Map sirConsultationMasterAccede(String id) {
 
+        String applyType = applyFormService.getByPrimaryKey(id).getApplyType();
+        // 视频会诊状态变为会诊时间已选定
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
-
         // 图文会诊接收后立刻变为会诊中
-        String resultType = String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT);
-        if (resultType.equals(applyType)) {
+        if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyType)) {
             applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
         }
 
@@ -276,13 +276,13 @@ public class ApplyDisposeController extends BaseController {
      * 医政 受邀会诊 砖家协调 确认协调
      */
     @PostMapping(value = "sirReceiveHarmonizeAccede")
-    public Map sirReceiveHarmonizeAccede(String id, String applyType) {
+    public Map sirReceiveHarmonizeAccede(String id) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
 
+        String applyType = applyFormService.getByPrimaryKey(id).getApplyType();
         // 图文会诊砖家协调后立刻变为会诊中
-        String resultType = String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT);
-        if (resultType.equals(applyType)) {
+        if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyType)) {
             applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
         }
 
@@ -594,12 +594,13 @@ public class ApplyDisposeController extends BaseController {
      * 医生 受邀会诊 待收诊 接收 原接收人非本人
      */
     @PostMapping(value = "doctorAcceptOther")
-    public Map doctorAcceptOther(String id, String type, String startEndTime) {
+    public Map doctorAcceptOther(String id, String startEndTime) {
 
         if (StringUtils.isBlank(id)) {
             return badRequestOfArguments("传入id为空");
         }
 
+        String type = applyFormService.getByPrimaryKey(id).getApplyType();
         // 更新applyForm相关
         String userId = getRequestToken();
         CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
@@ -676,7 +677,7 @@ public class ApplyDisposeController extends BaseController {
     }
 
     /**
-     * 医生 受邀会诊 待接收 主会诊医生确定时间
+     * 医生 受邀会诊 待接收(视频会诊) 主会诊医生接收
      */
     @PostMapping(value = "mainDoctorAccede")
     public Map mainDoctorAccede(String applyFormId, String startEndTime) {
@@ -719,6 +720,33 @@ public class ApplyDisposeController extends BaseController {
         }
         applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
         return succeedRequest(applyTimeBean);
+    }
+
+    /**
+     * 医生 受邀会诊 待接收(图文会诊) 主会诊医生接收
+     */
+    @PostMapping(value = "mainDoctorAccedePicture")
+    public Map mainDoctorAccedePicture(String applyFormId, String startEndTime) {
+        if (StringUtils.isBlank(applyFormId) || StringUtils.isBlank(startEndTime)) {
+            return badRequestOfArguments("applyFormId or startEndTime is null");
+        }
+
+
+        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
+        String userId = getRequestToken();
+
+        // 修改applyForm状态
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setId(applyFormId);
+        applyForm.setApplyStatus(applyStatus);
+        applyForm.setUpdateUser(userId);
+        int k = applyFormService.updateByPrimaryKeySelective(applyForm);
+        if (k < 1) {
+            return badRequestOfArguments("修改applyForm失败");
+        }
+
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
+        return succeedRequest("成功");
     }
 
     /**

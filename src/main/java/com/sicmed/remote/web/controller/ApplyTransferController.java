@@ -51,6 +51,8 @@ public class ApplyTransferController extends BaseController {
         applyFormBean.setConsultationStatusList(consultationStatusList);
         applyFormBean.setApplyUserId(userId);
         applyFormBean.setInviteUserId(userId);
+        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
+        applyFormBean.setPageSize(getPageEntity().getPageSize());
         List<ApplyForm> applyFormList = applyFormService.selectApplyInquiry(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
             return succeedRequest(applyFormList);
@@ -143,7 +145,8 @@ public class ApplyTransferController extends BaseController {
         applyFormBean.setConsultationTypeList(consultationTypeListInquiry);
         applyFormBean.setConsultationStatusList(consultationStatusList);
         applyFormBean.setInviteUserId(userId);
-
+        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
+        applyFormBean.setPageSize(getPageEntity().getPageSize());
         List<ApplyForm> applyFormList = applyFormService.selectApplyInquiryDate(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
             return succeedRequest(applyFormList);
@@ -167,7 +170,8 @@ public class ApplyTransferController extends BaseController {
         applyFormBean.setApplyUserId(userId);
         applyFormBean.setConsultationTypeList(consultationTypeListInquiry);
         applyFormBean.setConsultationStatusList(consultationStatusList);
-
+        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
+        applyFormBean.setPageSize(getPageEntity().getPageSize());
         List<ApplyForm> applyFormList = applyFormService.getByApplyFormBean(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
             return succeedRequest(applyFormList);
@@ -182,6 +186,8 @@ public class ApplyTransferController extends BaseController {
 
         applyFormBean.setConsultationStatusList(consultationStatusList);
         applyFormBean.setConsultationTypeList(consultationTypeListInquiry);
+        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
+        applyFormBean.setPageSize(getPageEntity().getPageSize());
 
         List<ApplyForm> applyFormList = applyFormService.sirSelectInquiry(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
@@ -351,7 +357,7 @@ public class ApplyTransferController extends BaseController {
 
     // 转诊 排期审核 数目查询
     @GetMapping(value = "inquirySlaveMasterAccedeCount")
-    public Map inquirySlaveMasterAccedeCount(String list,String hospitalId) {
+    public Map inquirySlaveMasterAccedeCount(String list, String hospitalId) {
 
         List<String> statusList;
         statusList = JSON.parseObject(list, new TypeReference<LinkedList>() {
@@ -359,7 +365,7 @@ public class ApplyTransferController extends BaseController {
 
         String userId = getRequestToken();
 
-        int i = applyFormService.inquirySlaveMasterAccedeCount(userId, hospitalId,consultationTypeListInquiry, statusList);
+        int i = applyFormService.inquirySlaveMasterAccedeCount(userId, hospitalId, consultationTypeListInquiry, statusList);
 
         return succeedRequest(i);
     }

@@ -61,7 +61,8 @@ public class ApplyConsultationController extends BaseController {
         applyFormBean.setApplyUserId(userId);
         applyFormBean.setConsultationStatusList(statusList);
         applyFormBean.setConsultationTypeList(consultantTypeList);
-
+        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
+        applyFormBean.setPageSize(getPageEntity().getPageSize());
         List<ApplyForm> applyFormList = applyFormService.getByApplyFormBean(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
             return badRequestOfArguments(msg);
@@ -249,6 +250,8 @@ public class ApplyConsultationController extends BaseController {
         applyFormBean.setConsultationTypeList(consultantTypeList);
         applyFormBean.setConsultationStatusList(statusList);
         applyFormBean.setInviteUserId(userId);
+        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
+        applyFormBean.setPageSize(getPageEntity().getPageSize());
 
         List<ApplyForm> applyFormList = caseConsultantService.selectAssist(applyFormBean);
         return succeedRequest(applyFormList);
@@ -319,6 +322,8 @@ public class ApplyConsultationController extends BaseController {
         applyFormBean.setApplyHospitalId(userDetail.getHospitalId());
         applyFormBean.setConsultationStatusList(statusList);
         applyFormBean.setConsultationTypeList(consultantTypeList);
+        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
+        applyFormBean.setPageSize(getPageEntity().getPageSize());
 
         List<ApplyForm> applyFormList = applyFormService.sirGetByApplyFormBean(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
@@ -443,6 +448,8 @@ public class ApplyConsultationController extends BaseController {
         applyFormBean.setConsultationTypeList(consultantTypeList);
         applyFormBean.setConsultationStatusList(statusList);
         applyFormBean.setInviteHospitalId(userDetail.getHospitalId());
+        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
+        applyFormBean.setPageSize(getPageEntity().getPageSize());
 
         List<ApplyForm> applyFormList = applyFormService.sirGetByApplyFormBean(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
