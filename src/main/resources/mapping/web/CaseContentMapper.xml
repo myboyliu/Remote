@@ -55,7 +55,7 @@
 
     <!--selectRecordId查询-->
     <select id="selectRecordId" parameterType="java.lang.String">
-        select count(*) from case_content where record_id = #{recordId}
+        select count(*) from case_content where record_id = #{recordId} and del_flag = "0"
     </select>
 
     <insert id="insert" parameterType="com.sicmed.remote.web.entity.CaseContent">
@@ -212,6 +212,14 @@
       delete_user = #{deleteUser,jdbcType=VARCHAR},
       del_flag = #{delFlag,jdbcType=VARCHAR},
       content_remark = #{contentRemark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+    <!--删除病例中的图片-->
+    <update id="softDeleteById" parameterType="java.lang.String">
+    update case_content
+    set
+      del_flag = "1"
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

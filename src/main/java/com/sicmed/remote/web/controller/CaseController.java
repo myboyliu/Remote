@@ -17,9 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -206,5 +204,20 @@ public class CaseController extends BaseController {
             return badRequestOfInsert("更新CaseContent失败");
         }
         return succeedRequest(caseContentBean);
+    }
+
+    // 删除病例中的图片
+    @DeleteMapping(value = "softDelPicture")
+    public Map softDelPicture(String id) {
+
+        if (StringUtils.isBlank(id)) {
+            return badRequestOfArguments("传入id为空");
+        }
+
+        int i = caseContentService.softDeleteById(id);
+        if (i < 0) {
+            return badRequestOfArguments("删除失败");
+        }
+        return succeedRequest("删除成功");
     }
 }

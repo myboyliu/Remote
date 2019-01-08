@@ -51,6 +51,11 @@ public class CaseContentService implements BaseService<CaseContent> {
         return caseContentMapper.deleteByCaseRecordId(caseRecordId);
     }
 
+    // id删除病例中的图片
+    public int softDeleteById(String id) {
+        return caseContentMapper.softDeleteById(id);
+    }
+
     public int selectRecordId(String recordId) {
         return caseContentMapper.selectRecordId(recordId);
     }

@@ -22,4 +22,7 @@ public interface CaseContentMapper {
     int deleteByCaseRecordId(String caseRecordId);
 
     int selectRecordId(String recordId);
+
+    int softDeleteById(String id);
+
 }
