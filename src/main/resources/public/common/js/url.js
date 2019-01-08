@@ -2,9 +2,7 @@
  * 统一接口管理JS
  * @type {string}
  */
-// const baseUrl = "http://192.168.0.222"; //服务地址
-
-const baseUrl = "http://192.168.0.228"; //服务地址
+const baseUrl = "http://192.168.0.222"; //服务地址
 
 const getAllHospital = "/hospital/select"; //查询所有医院类别
 
@@ -64,6 +62,9 @@ const createPictureApplyUrl = "/apply/picture"; //创建图文会诊接口
 const createVideoApplyUrl = "/apply/video"; //创建视频会诊接口
 
 const getApplyInfoUrl = "/apply/detailById"                  // 查询会诊详情信息
+/** 医政 管理页面 接口*/
+const adminChangePassWord = "/user/adminChangePassWord";
+
 /** 医生查询受邀的申请列表查询 接口 */
 const getInviteAcceptUrl = "/apply/consultation/receiveApplyAccede"               // 查询受邀列表 待收诊   列表
 const getInviteReviewUrl = "/apply/consultation/receiveSlaveDoctor"             // 查询受邀列表 排期审核 列表
@@ -110,7 +111,7 @@ const allocationDoctorTimePicture = "/apply/dispose/allocationDoctorTimePicture"
 const sirSendCheckAccede = "/apply/dispose/sirSendCheckAccede"; //通过会诊申请接口
 const sirSendCheckReject = "/apply/dispose/sirSendCheckReject"; //回退会诊申请接口
 const sirSendUpdateDate = "/apply/dispose/sirSendUpdateDate"; //修改排期
-
+const softDelPicture = "/case/softDelPicture"; //修改排期
 
 /** 会诊医政操作接口*/
 
@@ -120,7 +121,6 @@ const sirReceiveHarmonizeAccede = "/apply/dispose/sirReceiveHarmonizeAccede"; //
 const sirReceiveMasterReject = "/apply/dispose/sirReceiveMasterReject"; //会诊中状态以及会诊中状态之前状态申请 拒收
 const sirUpdateDate = "/apply/dispose/sirUpdateDate"; //选择排期
 const sirUpdateDoctor = "/apply/dispose/sirUpdateDoctor"; //选择医生
-
 
 /** 转诊类别 医生查询 接口*/
 const inquiryCreateSuccess = "/apply/transfer/inquiryCreateSuccess";         //待审核
@@ -137,3 +137,48 @@ const sirInquiryCheckDate = "/apply/transfer/sirInquiryCheckDate";         //排
 const sirInquiryDate = "/apply/transfer/sirInquiryDate";         //已排期
 const sirInquiryReject = "/apply/transfer/sirInquiryReject";         //已拒收
 const sirInquiryEnd = "/apply/transfer/sirInquiryEnd";         //已结束
+
+/** 首诊医生 分页数量查询 */
+const sendSelectCount = "/apply/consultation/sendSelectCount";
+
+const receiveSelectCountJSON = {
+    待收诊: ["CONSULTATION_APPLY_ACCEDE"],
+    排期审核: ["CONSULTATION_SLAVE_ACCEDE", "CONSULTATION_DOCTOR_LOCKED"],
+    已排期: ["CONSULTATION_DATETIME_LOCKED"],
+    会诊中: ["CONSULTATION_BEGIN"],
+    待反馈: ["CONSULTATION_REPORT_SUBMITTED"],
+    已拒收: ["CONSULTATION_SLAVE_REJECT", "CONSULTATION_MASTER_REJECT"],
+    已结束: ["CONSULTATION_END", "CONSULTATION_FEEDBACK_SUBMITTED"]
+}
+// 受邀会诊 医生 receiveSelectCount
+
+// 发出会诊 医生
+sendSelectCountJSON = {
+    待审核: "['CONSULTATION_APPLY_CREATE_SUCCESS']",
+    待收诊: "['CONSULTATION_APPLY_ACCEDE', 'CONSULTATION_SLAVE_REJECT', 'CONSULTATION_DOCTOR_LOCKED', 'CONSULTATION_MASTER_ACCEDE']",
+    已排期: "['CONSULTATION_DATETIME_LOCKED']",
+    会诊中: "['CONSULTATION_BEGIN']",
+    待反馈: "['CONSULTATION_REPORT_SUBMITTED']",
+    已结束: "['CONSULTATION_END', 'CONSULTATION_FEEDBACK_SUBMITTED']",
+    已拒收: "['CONSULTATION_MASTER_REJECT']"
+}
+
+// 转诊 医生 inquiryCount
+inquiryCount = {
+    待收诊: ["INQUIRY_APPLY_ACCEDE"],
+    已排期: ["INQUIRY_DATETIME_LOCKED", "INQUIRY_SENDER_CONFIRM"],
+    已拒收: ["INQUIRY_SLAVE_REJECT", "INQUIRY_SLAVE_REJECT"],
+    已结束: ["INQUIRY_END", "INQUIRY_SENDER_CANCEL"]
+}
+// 转诊 排期审核 医生 inquirySlaveMasterAccedeCount
+// {
+//     "排期审核"
+// :
+//     ["INQUIRY_SLAVE_ACCEDE", "INQUIRY_MASTER_ACCEDE"]
+// }
+// // 转诊 待审核 医生 inquiryCreateSuccessCount
+// {
+//     "待审核"
+// :
+//     ["INQUIRY_APPLY_CREATE_SUCCESS"]
+// }
