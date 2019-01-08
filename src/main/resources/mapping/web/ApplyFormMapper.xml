@@ -602,19 +602,19 @@
     <select id="sendSelectAllCount" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
             resultMap="ConsultationStatusBeanResultMap">
         select
-        count(apply_status="CONSULTATION_APPLY_CREATE_SUCCESS") cacs,
-        count(apply_status="CONSULTATION_APPLY_ACCEDE") caa,
-        count(apply_status="CONSULTATION_APPLY_REJECT") car,
-        count(apply_status="CONSULTATION_SLAVE_ACCEDE") csa,
-        count(apply_status="CONSULTATION_SLAVE_REJECT") csr,
-        count(apply_status="CONSULTATION_MASTER_ACCEDE") cma,
-        count(apply_status="CONSULTATION_MASTER_REJECT") cmr,
-        count(apply_status="CONSULTATION_DOCTOR_LOCKED") cdrl,
-        count(apply_status="CONSULTATION_DATETIME_LOCKED") cdel,
-        count(apply_status="CONSULTATION_BEGIN") cb,
-        count(apply_status="CONSULTATION_REPORT_SUBMITTED") crs,
-        count(apply_status="CONSULTATION_FEEDBACK_SUBMITTED") cfs,
-        count(apply_status="CONSULTATION_END") ce
+        count(apply_status="CONSULTATION_APPLY_CREATE_SUCCESS" or NULL) cacs,
+        count(apply_status="CONSULTATION_APPLY_ACCEDE" or NULL) caa,
+        count(apply_status="CONSULTATION_APPLY_REJECT" or NULL) car,
+        count(apply_status="CONSULTATION_SLAVE_ACCEDE" or NULL) csa,
+        count(apply_status="CONSULTATION_SLAVE_REJECT" or NULL) csr,
+        count(apply_status="CONSULTATION_MASTER_ACCEDE" or NULL) cma,
+        count(apply_status="CONSULTATION_MASTER_REJECT" or NULL) cmr,
+        count(apply_status="CONSULTATION_DOCTOR_LOCKED" or NULL) cdrl,
+        count(apply_status="CONSULTATION_DATETIME_LOCKED" or NULL) cdel,
+        count(apply_status="CONSULTATION_BEGIN" or NULL) cb,
+        count(apply_status="CONSULTATION_REPORT_SUBMITTED" or NULL) crs,
+        count(apply_status="CONSULTATION_FEEDBACK_SUBMITTED" or NULL) cfs,
+        count(apply_status="CONSULTATION_END" or NULL) ce
         from apply_form
         <where>
             del_flag = "0"
@@ -629,6 +629,47 @@
                 <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
                     #{item,jdbcType=VARCHAR}
                 </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!--转诊 其他总数查询-->
+    <select id="inquiryAllCountDoctor" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
+            resultMap="ConsultationStatusBeanResultMap">
+        select
+        count(apply_status="CONSULTATION_APPLY_CREATE_SUCCESS" or NULL) cacs,
+        count(apply_status="CONSULTATION_APPLY_ACCEDE" or NULL) caa,
+        count(apply_status="CONSULTATION_APPLY_REJECT" or NULL) car,
+        count(apply_status="CONSULTATION_SLAVE_ACCEDE" or NULL) csa,
+        count(apply_status="CONSULTATION_SLAVE_REJECT" or NULL) csr,
+        count(apply_status="CONSULTATION_MASTER_ACCEDE" or NULL) cma,
+        count(apply_status="CONSULTATION_MASTER_REJECT" or NULL) cmr,
+        count(apply_status="CONSULTATION_DOCTOR_LOCKED" or NULL) cdrl,
+        count(apply_status="CONSULTATION_DATETIME_LOCKED" or NULL) cdel,
+        count(apply_status="CONSULTATION_BEGIN" or NULL) cb,
+        count(apply_status="CONSULTATION_REPORT_SUBMITTED" or NULL) crs,
+        count(apply_status="CONSULTATION_FEEDBACK_SUBMITTED" or NULL) cfs,
+        count(apply_status="CONSULTATION_END" or NULL) ce
+        from apply_form
+        <where>
+            del_flag = "0"
+            <if test="consultationTypeList != null">
+                AND apply_type IN
+                <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="applyUserId != null">
+                AND (apply_user_id = #{applyUserId,jdbcType=VARCHAR}
+            </if>
+            <if test="inviteUserId != null">
+                or invite_user_id = #{inviteUserId,jdbcType=VARCHAR})
+            </if>
+            <if test="applyHospitalId != null">
+                AND (apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
+            </if>
+            <if test="inviteHospitalId != null">
+                or invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR})
             </if>
         </where>
     </select>
@@ -665,7 +706,41 @@
                 or invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR})
             </if>
         </where>
-        order by apply_urgent desc,update_time,create_time
+    </select>
+
+    <!--转诊 待审核 总数目查询,hospitalId为空时,查询对象医生;不为空时,医政-->
+    <select id="inquiryCreateSuccessAllCount" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
+            resultMap="ConsultationStatusBeanResultMap">
+        select
+        count(apply_status="CONSULTATION_APPLY_CREATE_SUCCESS" or NULL) cacs,
+        count(apply_status="CONSULTATION_APPLY_ACCEDE" or NULL) caa,
+        count(apply_status="CONSULTATION_APPLY_REJECT" or NULL) car,
+        count(apply_status="CONSULTATION_SLAVE_ACCEDE" or NULL) csa,
+        count(apply_status="CONSULTATION_SLAVE_REJECT" or NULL) csr,
+        count(apply_status="CONSULTATION_MASTER_ACCEDE" or NULL) cma,
+        count(apply_status="CONSULTATION_MASTER_REJECT" or NULL) cmr,
+        count(apply_status="CONSULTATION_DOCTOR_LOCKED" or NULL) cdrl,
+        count(apply_status="CONSULTATION_DATETIME_LOCKED" or NULL) cdel,
+        count(apply_status="CONSULTATION_BEGIN" or NULL) cb,
+        count(apply_status="CONSULTATION_REPORT_SUBMITTED" or NULL) crs,
+        count(apply_status="CONSULTATION_FEEDBACK_SUBMITTED" or NULL) cfs,
+        count(apply_status="CONSULTATION_END" or NULL) ce
+        from apply_form
+        <where>
+            del_flag = "0"
+            <if test="consultationTypeList != null">
+                AND apply_type IN
+                <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="applyUserId != null">
+                AND apply_user_id = #{applyUserId,jdbcType=VARCHAR}
+            </if>
+            <if test="applyHospitalId != null">
+                AND apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
+            </if>
+        </where>
     </select>
 
     <!--转诊 待审核 数目查询-->
@@ -696,6 +771,40 @@
         </where>
     </select>
 
+    <!--转诊 排期审核 总数目查询,hospitalId为空时,查询对象医生;不为空时,医政-->
+    <select id="inquirySMAdAllCount" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
+            resultMap="ConsultationStatusBeanResultMap">
+        select
+        count(apply_status="CONSULTATION_APPLY_CREATE_SUCCESS" or NULL) cacs,
+        count(apply_status="CONSULTATION_APPLY_ACCEDE" or NULL) caa,
+        count(apply_status="CONSULTATION_APPLY_REJECT" or NULL) car,
+        count(apply_status="CONSULTATION_SLAVE_ACCEDE" or NULL) csa,
+        count(apply_status="CONSULTATION_SLAVE_REJECT" or NULL) csr,
+        count(apply_status="CONSULTATION_MASTER_ACCEDE" or NULL) cma,
+        count(apply_status="CONSULTATION_MASTER_REJECT" or NULL) cmr,
+        count(apply_status="CONSULTATION_DOCTOR_LOCKED" or NULL) cdrl,
+        count(apply_status="CONSULTATION_DATETIME_LOCKED" or NULL) cdel,
+        count(apply_status="CONSULTATION_BEGIN" or NULL) cb,
+        count(apply_status="CONSULTATION_REPORT_SUBMITTED" or NULL) crs,
+        count(apply_status="CONSULTATION_FEEDBACK_SUBMITTED" or NULL) cfs,
+        count(apply_status="CONSULTATION_END" or NULL) ce
+        from apply_form
+        <where>
+            del_flag = "0"
+            <if test="consultationTypeList != null">
+                AND apply_type IN
+                <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="inviteUserId != null">
+                AND invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
+            </if>
+            <if test="inviteHospitalId != null">
+                AND invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
     <!--转诊 排期审核 数目查询-->
     <select id="inquirySlaveMasterAccedeCount" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
             resultType="java.lang.Integer">

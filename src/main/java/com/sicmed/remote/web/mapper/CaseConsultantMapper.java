@@ -1,6 +1,7 @@
 package com.sicmed.remote.web.mapper;
 
 import com.sicmed.remote.web.bean.ApplyFormBean;
+import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.CaseConsultant;
 
@@ -24,5 +25,7 @@ public interface CaseConsultantMapper {
     List<ApplyForm> selectAssist(ApplyFormBean applyFormBean);
 
     Integer selectCount(ApplyFormBean applyFormBean);
+
+    ConsultationStatusBean receiveSelectAllCount(ApplyFormBean applyFormBean);
 
 }

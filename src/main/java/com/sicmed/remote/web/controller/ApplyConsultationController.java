@@ -30,7 +30,9 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@RequestMapping(value = "apply/consultation")
+@RequestMapping(value = "" +
+        "" +
+        "apply/consultation")
 public class ApplyConsultationController extends BaseController {
 
 
@@ -606,14 +608,58 @@ public class ApplyConsultationController extends BaseController {
 
     }
 
-    // 发出会诊 总项数目全部查询
-    @GetMapping(value = "sendSelectAllCount")
-    public Map sendSelectAllCount(String hospitalId) {
+    /**
+     * 发出会诊 医生 总项数目全部查询
+     */
+    @GetMapping(value = "sendSelectAllCountDoctor")
+    public Map sendSelectAllCountDoctor() {
 
         String userId = getRequestToken();
 
-        ConsultationStatusBean consultationStatusBean = applyFormService.sendSelectAllCount(userId, hospitalId, consultantTypeList);
+        ConsultationStatusBean consultationStatusBean = applyFormService.sendSelectAllCount(userId, null, consultantTypeList);
 
         return succeedRequest(consultationStatusBean);
     }
+
+    /**
+     * 发出会诊 医政 总项数目全部查询
+     */
+    @GetMapping(value = "sendSelectAllCountSir")
+    public Map sendSelectAllCountSir() {
+
+        String userId = getRequestToken();
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+
+        ConsultationStatusBean consultationStatusBean = applyFormService.sendSelectAllCount(userId, userDetail.getHospitalId(), consultantTypeList);
+
+        return succeedRequest(consultationStatusBean);
+    }
+
+    /**
+     * 受邀会诊 医生 所有数目查询
+     */
+    @GetMapping(value = "receiveSelectAllCountDoctor")
+    public Map receiveSelectAllCountDoctor() {
+
+        String userId = getRequestToken();
+
+        ConsultationStatusBean consultationStatusBean = caseConsultantService.receiveSelectAllCount(userId, null, consultantTypeList);
+
+        return succeedRequest(consultationStatusBean);
+    }
+
+    /**
+     * 受邀会诊 医政 所有数目查询
+     */
+    @GetMapping(value = "receiveSelectAllCountSir")
+    public Map receiveSelectAllCountSir() {
+
+        String userId = getRequestToken();
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+
+        ConsultationStatusBean consultationStatusBean = caseConsultantService.receiveSelectAllCount(userId, userDetail.getHospitalId(), consultantTypeList);
+
+        return succeedRequest(consultationStatusBean);
+    }
+
 }

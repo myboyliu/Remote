@@ -1,6 +1,7 @@
 package com.sicmed.remote.web.service;
 
 import com.sicmed.remote.web.bean.ApplyFormBean;
+import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.CaseConsultant;
 import com.sicmed.remote.web.mapper.CaseConsultantMapper;
@@ -32,6 +33,16 @@ public class CaseConsultantService implements BaseService<CaseConsultant> {
         return caseConsultantMapper.selectCount(applyFormBean);
     }
 
+    // 受邀会诊 医生 所有数目查询
+    public ConsultationStatusBean receiveSelectAllCount(String userId, String hospitalId, List<String> consultantTypeList) {
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setInviteUserId(userId);
+        applyFormBean.setInviteHospitalId(hospitalId);
+        applyFormBean.setConsultationTypeList(consultantTypeList);
+
+        return caseConsultantMapper.receiveSelectAllCount(applyFormBean);
+    }
     @Override
     public int insertSelective(CaseConsultant caseConsultant) {
         return caseConsultantMapper.insertSelective(caseConsultant);

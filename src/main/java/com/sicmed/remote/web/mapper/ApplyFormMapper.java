@@ -46,4 +46,10 @@ public interface ApplyFormMapper {
     Integer inquiryCreateSuccessCount(ApplyFormBean applyFormBean);
 
     ConsultationStatusBean sendSelectAllCount(ApplyFormBean applyFormBean);
+
+    ConsultationStatusBean inquiryAllCount(ApplyFormBean applyFormBean);
+
+    ConsultationStatusBean inquiryCreateSuccessAllCount(ApplyFormBean applyFormBean);
+
+    ConsultationStatusBean inquirySMAdAllCount(ApplyFormBean applyFormBean);
 }
