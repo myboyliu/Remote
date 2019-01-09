@@ -44,6 +44,8 @@ public class ApplyForm extends BaseEntity {
     @Size(min = 32, max = 32, message = "inviteHospitalId 长度不合规")
     private String inviteHospitalId;
 
+    @NotBlank(message = "inviteBranchId is null")
+    @Size(max = 32, min = 32, message = "inviteBranchId 长度不合规")
     private String inviteBranchId;
 
     //    @NotBlank(message = "applyBranchId is null")

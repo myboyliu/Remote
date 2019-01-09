@@ -61,7 +61,7 @@ public class CaseController extends BaseController {
     @PostMapping(value = "insertNewCase")
     public Map insertNewCase(@Validated CasePatient casePatient, BindingResult casePatientBr,
                              @Validated CaseRecord caseRecord, BindingResult caseRecordBr,
-                             @Size(max = 5) String weightPathTypeId,@NotBlank String aa) {
+                             String weightPathTypeId) {
 
         if (casePatientBr.hasErrors()) {
             return fieldErrorsBuilder(casePatientBr);
