@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -674,17 +675,21 @@ public class ApplyDisposeController extends BaseController {
         consultantReportBean.setDoctorId(userId);
         consultantReportBean.setReport("");
         consultantReportBean.setReportStatus("1");
-        String jsonReport = JSON.toJSONString(consultantReportBean);
+        List<ConsultantReportBean> consultantReportBeanList = new LinkedList<>();
+        consultantReportBeanList.add(consultantReportBean);
+        String jsonReport = JSON.toJSONString(consultantReportBeanList);
 
-        Map<String, String> userList = new LinkedHashMap<>();
-        userList.put("doctorName", inviteSummary);
-        userList.put("doctorId", userId);
-        if (currentUserBean.getConsultationPicturePrice().equals(type)) {
-            userList.put("price", currentUserBean.getConsultationPicturePrice());
+        Map<String, String> userMap = new LinkedHashMap<>();
+        userMap.put("doctorName", inviteSummary);
+        userMap.put("doctorId", userId);
+        if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(type)) {
+            userMap.put("price", currentUserBean.getConsultationPicturePrice());
         }
-        if (currentUserBean.getConsultationVideoPrice().equals(type)) {
-            userList.put("price", currentUserBean.getConsultationVideoPrice());
+        if (ApplyType.APPLY_CONSULTATION_VIDEO.toString().equals(type)) {
+            userMap.put("price", currentUserBean.getConsultationVideoPrice());
         }
+        List<Map> userList = new LinkedList<>();
+        userList.add(userMap);
         String jsonUser = JSON.toJSONString(userList);
 
         CaseConsultant caseConsultant = new CaseConsultant();
