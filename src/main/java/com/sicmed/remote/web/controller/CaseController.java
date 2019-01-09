@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -176,6 +177,7 @@ public class CaseController extends BaseController {
     /**
      * 修改CaseContent
      */
+    @Transactional
     @PostMapping(value = "updateCaseContent")
     public Map updateCaseContent(String weightPathTypeId, String recordId) {
 

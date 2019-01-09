@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,6 +57,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 工作台 重新分配医生
      */
+    @Transactional
     @PostMapping(value = "sirUpdateDoctor")
     public Map sirUpdateDoctor(ApplyForm applyForm, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport) {
 
@@ -86,6 +88,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 工作台 受邀会诊 修改日期 选择一条时间
      */
+    @Transactional
     @PostMapping(value = "sirUpdateDate")
     public Map sirUpdateDate(ApplyTime applyTime) {
         if (applyTime == null) {
@@ -137,6 +140,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 工作台 发出会诊 修改日期 选择多个时间
      */
+    @Transactional
     @PostMapping(value = "sirSendUpdateDate")
     public Map sirSendUpdateDate(String applyFormId, String startEndTime) {
 
@@ -227,6 +231,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 受邀会诊 拒收
      */
+    @Transactional
     @PostMapping(value = "sirReceiveMasterReject")
     public Map sirConsultationMasterReject(String id, String report) {
 
@@ -241,6 +246,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 受邀会诊 待收诊 接收
      */
+    @Transactional
     @PostMapping(value = "sirReceiveMasterAccede")
     public Map sirConsultationMasterAccede(String id) {
 
@@ -261,6 +267,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 受邀会诊  排期审核 接收
      */
+    @Transactional
     @PostMapping(value = "sirReceiveDateCheckAccede")
     public Map sirDateCheckAccede(String id) {
 
@@ -275,6 +282,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 受邀会诊 砖家协调 确认协调
      */
+    @Transactional
     @PostMapping(value = "sirReceiveHarmonizeAccede")
     public Map sirReceiveHarmonizeAccede(String id) {
 
@@ -295,6 +303,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 发出会诊 待审核 通过
      */
+    @Transactional
     @PostMapping(value = "sirSendCheckAccede")
     public Map sirSendCheckAccede(String id) {
 
@@ -309,6 +318,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 发出会诊 待审核 退回
      */
+    @Transactional
     @PostMapping(value = "sirSendCheckReject")
     public Map sirSendCheckReject(String id) {
 
@@ -342,6 +352,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 转诊 待审核 审核通过
      */
+    @Transactional
     @PostMapping(value = "sirTransferCheckAccede")
     public Map sirTransferCheckAccede(String id) {
 
@@ -355,6 +366,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 转诊 待审核 拒绝
      */
+    @Transactional
     @PostMapping(value = "sirTransferCheckReject")
     public Map sirTransferCheckReject(String id, String report) {
 
@@ -368,6 +380,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 转诊 代收诊 同意
      */
+    @Transactional
     @PostMapping(value = "sirTransferMasterAccede")
     public Map sirTransferMasterAccede(String id) {
 
@@ -381,6 +394,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 转诊 代收诊 拒绝
      */
+    @Transactional
     @PostMapping(value = "sirTransferMasterReject")
     public Map sirTransferMasterReject(String id, String report) {
 
@@ -394,6 +408,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 转诊 排期审核 同意
      */
+    @Transactional
     @PostMapping(value = "sirTransferDateCheckAccede")
     public Map sirTransferDateCheckAccede(String id) {
 
@@ -408,6 +423,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 转诊 排期审核 拒绝
      */
+    @Transactional
     @PostMapping(value = "sirTransferDateCheckReject")
     public Map sirTransferDateCheckReject(String id, String report) {
 
@@ -422,6 +438,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 转诊 已排期 同意
      */
+    @Transactional
     @PostMapping(value = "sirTransferDateAccede")
     public Map sirTransferDateAccede(String id) {
 
@@ -435,6 +452,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 转诊 已排期 取消
      */
+    @Transactional
     @PostMapping(value = "sirTransferDateReject")
     public Map sirTransferDateReject(String id, String report) {
 
@@ -448,6 +466,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医生 受邀会诊 代收诊 拒收
      */
+    @Transactional
     @PostMapping(value = "doctor")
     public Map doctorReceiveReject(String id, String report) {
 
@@ -461,6 +480,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医生 发出会诊 带反馈 编辑临床反馈 暂存 /医生 受邀会诊 会诊中 编辑会诊报告 暂存
      */
+    @Transactional
     @PostMapping(value = "doctorSendFeedbackReportMoment")
     public Map doctorSendFeedbackReportMoment(String id, String consultantFeedback, String report) {
 
@@ -486,6 +506,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医生 发出会诊 待反馈 编辑临床反馈 提交 /医生 受邀会诊 会诊中 编辑会诊报告 提交
      */
+    @Transactional
     @PostMapping(value = "doctorSendFeedbackReport")
     public Map doctorSendFeedbackReport(String id, String consultantFeedback, String report) {
 
@@ -553,6 +574,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医生 转诊 已排期 同意
      */
+    @Transactional
     @PostMapping(value = "doctorTransferDateAccede")
     public Map doctorTransferDateAccede(String id) {
 
@@ -566,6 +588,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医生 转诊 已排期 取消
      */
+    @Transactional
     @PostMapping(value = "doctorTransferDateReject")
     public Map doctorTransferDateReject(String id, String report) {
 
@@ -579,6 +602,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医生 草稿箱 删除
      */
+    @Transactional
     @GetMapping(value = "DraftDel")
     public Map draftDel(String id) {
 
@@ -593,20 +617,21 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医生 受邀会诊 待收诊 接收 原接收人非本人
      */
+    @Transactional
     @PostMapping(value = "doctorAcceptOther")
-    public Map doctorAcceptOther(String id, String startEndTime) {
+    public Map doctorAcceptOther(String applyFormId, String startEndTime) {
 
-        if (StringUtils.isBlank(id)) {
+        if (StringUtils.isBlank(applyFormId)) {
             return badRequestOfArguments("传入id为空");
         }
 
-        String type = applyFormService.getByPrimaryKey(id).getApplyType();
+        String type = applyFormService.getByPrimaryKey(applyFormId).getApplyType();
         // 更新applyForm相关
         String userId = getRequestToken();
         CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
         String inviteSummary = "<" + currentUserBean.getUserName() + "/" + currentUserBean.getTitleName() + "/" + currentUserBean.getBranchName() + "/" + currentUserBean.getHospitalName() + ">";
         ApplyForm applyForm = new ApplyForm();
-        applyForm.setId(id);
+        applyForm.setId(applyFormId);
         applyForm.setInviteUserId(userId);
         applyForm.setInviteSummary(inviteSummary);
         applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
@@ -622,7 +647,7 @@ public class ApplyDisposeController extends BaseController {
         // 视频会诊,更新applyTime相关
         if (ApplyType.APPLY_CONSULTATION_VIDEO.toString().equals(type)) {
             // 删除原时间
-            int j = applyTimeService.delByApplyForm(id);
+            int j = applyTimeService.delByApplyForm(applyFormId);
             if (j < 0) {
                 return badRequestOfArguments("删除原applyTime失败");
             }
@@ -632,7 +657,7 @@ public class ApplyDisposeController extends BaseController {
 
             // 添加新的时间
             ApplyTimeBean applyTimeBean = new ApplyTimeBean();
-            applyTimeBean.setApplyFormId(id);
+            applyTimeBean.setApplyFormId(applyFormId);
             applyTimeBean.setStartEndTime(resultMap);
             applyTimeBean.setCreateUser(userId);
             applyTimeBean.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
@@ -663,7 +688,7 @@ public class ApplyDisposeController extends BaseController {
         String jsonUser = JSON.toJSONString(userList);
 
         CaseConsultant caseConsultant = new CaseConsultant();
-        caseConsultant.setId(id);
+        caseConsultant.setId(applyFormId);
         caseConsultant.setInviteUserId(userId);
         caseConsultant.setConsultantUserList(jsonUser);
         caseConsultant.setConsultantReport(jsonReport);
@@ -672,13 +697,14 @@ public class ApplyDisposeController extends BaseController {
         if (k < 1) {
             return badRequestOfArguments("更新CaseConsultant失败");
         }
-        applyNodeService.insertByStatus(id, ApplyNodeConstant.已接诊.toString());
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
         return succeedRequest("已接收");
     }
 
     /**
      * 医生 受邀会诊 待接收(视频会诊) 主会诊医生接收
      */
+    @Transactional
     @PostMapping(value = "mainDoctorAccede")
     public Map mainDoctorAccede(String applyFormId, String startEndTime) {
         if (StringUtils.isBlank(applyFormId) || StringUtils.isBlank(startEndTime)) {
@@ -725,6 +751,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医生 受邀会诊 待接收(图文会诊) 主会诊医生接收
      */
+    @Transactional
     @PostMapping(value = "mainDoctorAccedePicture")
     public Map mainDoctorAccedePicture(String applyFormId, String startEndTime) {
         if (StringUtils.isBlank(applyFormId) || StringUtils.isBlank(startEndTime)) {
@@ -752,6 +779,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 主会诊医生MDT协调 视频会诊
      */
+    @Transactional
     @PostMapping(value = "allocationDoctorTime")
     public Map allocationDoctorTime(String applyFormId, String inviteSummary, String startEndTime, String consultantUserList, BigDecimal consultantPrice,
                                     String consultantReport) {
@@ -810,6 +838,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 主会诊医生MDT协调 图文会诊
      */
+    @Transactional
     @PostMapping(value = "allocationDoctorTimePicture")
     public Map allocationDoctorTimePicture(String applyFormId, String inviteSummary, String consultantUserList, BigDecimal consultantPrice,
                                            String consultantReport) {

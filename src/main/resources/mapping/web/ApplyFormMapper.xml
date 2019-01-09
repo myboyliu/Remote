@@ -548,7 +548,6 @@
                     #{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
-
         </where>
         order by apply_urgent desc ,update_time,create_time
         limit #{beginNo},#{pageSize}

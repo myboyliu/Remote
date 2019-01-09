@@ -15,6 +15,7 @@ import com.sicmed.remote.web.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -154,6 +155,7 @@ public class ApplyController extends BaseController {
      *
      * @param applyForm
      */
+    @Transactional
     @PostMapping(value = "transfer")
     public Map transferTreatment(@Validated ApplyForm applyForm, BindingResult applyFormBr, String startEndTime) {
 
@@ -231,8 +233,9 @@ public class ApplyController extends BaseController {
      * @param applyForm
      * @param applyFormBr
      */
+    @Transactional
     @PostMapping(value = "video")
-    public Map videoConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String startEndTime, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice,String consultantReport) {
+    public Map videoConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String startEndTime, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport) {
 
         if (applyFormBr.hasErrors()) {
             return fieldErrorsBuilder(applyFormBr);
@@ -306,8 +309,9 @@ public class ApplyController extends BaseController {
      * @param applyForm
      * @param applyFormBr
      */
+    @Transactional
     @PostMapping(value = "picture")
-    public Map pictureConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice,String consultantReport) {
+    public Map pictureConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport) {
 
         if (applyFormBr.hasErrors()) {
             return fieldErrorsBuilder(applyFormBr);
