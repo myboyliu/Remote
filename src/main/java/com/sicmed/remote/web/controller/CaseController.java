@@ -22,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import sun.nio.cs.ext.MacArabic;
+import sun.rmi.runtime.NewThreadAction;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -179,61 +180,66 @@ public class CaseController extends BaseController {
     }
 
     /**
-     * 修改CaseContent
+     * 首诊医政修改病历信息
      */
     @Transactional
-    @PostMapping(value = "updateCaseContent")
-    public Map updateCaseContent(CasePatient casePatient, CaseRecord caseRecord, String weightPathTypeId, String recordId, String remark, String summary, String applyFormId) {
+    @PostMapping(value = "sirUpdateCase")
+    public Map sirUpdateCase(CasePatient casePatient, String casePatientId,
+                                 CaseRecord caseRecord, String caseRecordId,
+                                 String weightPathTypeId,
+                                 String remark, String summary, String applyUrgent, String applyFormId) {
 
         String userId = getRequestToken();
 
         // 修改 CasePatient
-        if (StringUtils.isNotBlank(casePatient.getId())) {
-            casePatient.setUpdateUser(userId);
-            int i = casePatientService.updateByPrimaryKeySelective(casePatient);
-            if (i < 1) {
-                return badRequestOfArguments("修改casePatient失败");
-            }
+        casePatient.setId(casePatientId);
+        casePatient.setUpdateUser(userId);
+        int i = casePatientService.updateByPrimaryKeySelective(casePatient);
+        if (i < 1) {
+            return badRequestOfArguments("修改casePatient失败");
         }
         // 修改 CaseRecord
-        if (StringUtils.isNotBlank(caseRecord.getId())) {
-            caseRecord.setUpdateUser(userId);
-            int i = caseRecordService.updateByPrimaryKeySelective(caseRecord);
-            if (i < 1) {
-                return badRequestOfArguments("修改caseRecord失败");
-            }
+        caseRecord.setId(caseRecordId);
+        caseRecord.setUpdateUser(userId);
+        int j = caseRecordService.updateByPrimaryKeySelective(caseRecord);
+        if (j < 1) {
+            return badRequestOfArguments("修改caseRecord失败");
         }
         // 修改 CaseContent
-        if (StringUtils.isNotBlank(recordId) && StringUtils.isNotBlank(weightPathTypeId)) {
-            int j = caseContentService.selectRecordId(recordId);
-            if (j > 0) {
-                int i = caseContentService.deleteByCaseRecordId(recordId);
-                if (i < 1) {
-                    return badRequestOfArguments("recordId有误");
-                }
-            }
-
-            // 文件路径 与 病例文件id map解析
-            List<CaseContent> resultList;
-            try {
-                resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList>() {
-                }, Feature.OrderedField);
-            } catch (Exception e) {
-                return badRequestOfArguments("pathWeightTypeId 填写错误");
-            }
-
-            CaseContentBean caseContentBean = new CaseContentBean();
-            caseContentBean.setRecordId(recordId);
-            caseContentBean.setUpdateUser(userId);
-            caseContentBean.setWeightPathTypeId(resultList);
-            int l = caseContentService.insertByMap(caseContentBean);
-            if (l < 0) {
-                return badRequestOfInsert("更新CaseContent失败");
+        int k = caseContentService.selectRecordId(caseRecordId);
+        if (k > 0) {
+            int l = caseContentService.deleteByCaseRecordId(caseRecordId);
+            if (l < 1) {
+                return badRequestOfArguments("recordId有误");
             }
         }
-        if ((StringUtils.isNotBlank(remark) || StringUtils.isNotBlank(summary)) && StringUtils.isNotBlank(recordId)) {
-            ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
 
+        // 文件路径 与 病例文件id map解析
+        List<CaseContent> resultList;
+        try {
+            resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList>() {
+            }, Feature.OrderedField);
+        } catch (Exception e) {
+            return badRequestOfArguments("pathWeightTypeId 填写错误");
+        }
+
+        CaseContentBean caseContentBean = new CaseContentBean();
+        caseContentBean.setRecordId(caseRecordId);
+        caseContentBean.setUpdateUser(userId);
+        caseContentBean.setWeightPathTypeId(resultList);
+        int l = caseContentService.insertByMap(caseContentBean);
+        if (l < 0) {
+            return badRequestOfInsert("更新CaseContent失败");
+        }
+        // 修改applyForm
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setId(applyFormId);
+        applyForm.setApplySummary(summary);
+        applyForm.setRefuseRemark(remark);
+        applyForm.setApplyUrgent(applyUrgent);
+        int a = applyFormService.updateByPrimaryKeySelective(applyForm);
+        if (a < 1) {
+            return badRequestOfArguments("修改applyForm失败");
         }
         return succeedRequest("ok");
     }
