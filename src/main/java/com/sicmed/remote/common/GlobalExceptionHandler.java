@@ -5,13 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author MaxCoder
- *
  * @version 1.0
  */
 @Slf4j
@@ -23,8 +24,8 @@ public class GlobalExceptionHandler {
     public Map<String, Object> allExceptionHandler(Exception exception) {
 
         Map<String, Object> resultMap = new LinkedHashMap<>();
-        if (exception instanceof ConstraintViolationException){
-
+        if (exception instanceof ConstraintViolationException) {
+            get(((ConstraintViolationException) exception).getConstraintViolations());
             log.error("我报错了：{}", ((ConstraintViolationException) exception).getConstraintViolations());
             log.error("我报错了：{}", exception.getMessage());
             log.error("我报错了：{}", exception.getStackTrace());
@@ -42,5 +43,15 @@ public class GlobalExceptionHandler {
         return resultMap;
     }
 
+    private Object get(Set<ConstraintViolation<?>> message) {
+        Map<String, Object> fieldErrorsMap = new LinkedHashMap<>();
+        for (ConstraintViolation<?> constraintViolation : message) {
+            String path = constraintViolation.getPropertyPath().toString();
+            String errorMessage = constraintViolation.getMessage();
+            fieldErrorsMap.put(path, errorMessage);
+        }
+        return fieldErrorsMap;
+
+    }
 
 }
