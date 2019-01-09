@@ -689,7 +689,7 @@ public class ApplyDisposeController extends BaseController {
             userMap.put("price", currentUserBean.getConsultationPicturePrice());
         }
         if (ApplyType.APPLY_CONSULTATION_VIDEO.toString().equals(type)) {
-            doctorPrice = currentUserBean.getConsultationPicturePrice();
+            doctorPrice = currentUserBean.getConsultationVideoPrice();
             userMap.put("price", currentUserBean.getConsultationVideoPrice());
         }
         List<Map> userList = new LinkedList<>();
