@@ -444,6 +444,7 @@ function createVideoApplyData(caseId, caseSummary) {
 /** 请求失败回调函数*/
 function requestField(result) {
     console.log(result);
+    layer.msg(data.result);
 }
 
 /** 渲染 病例图片列表 */

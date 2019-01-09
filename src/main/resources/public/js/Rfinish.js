@@ -203,7 +203,7 @@ function renderViewByRole() {
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".compileReport").show();
-            if (isVideo){
+            if (isVideo) {
                 $(".entrance").show();
             }
         } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
@@ -286,7 +286,7 @@ function updateApplyTime(dateList) {
     data.append("startEndTime", JSON.stringify(dateList));
     if (isMainDoctor) {
         ajaxRequest("POST", mainDoctorAccede, data, false, false, true, sirUpdateDateSuccess, null, null)
-    }else if(isBranchDoctor){
+    } else if (isBranchDoctor) {
         ajaxRequest("POST", doctorAcceptOther, data, false, false, true, sirUpdateDateSuccess, null, null)
     }
 
@@ -471,10 +471,15 @@ $(function () {
 
     /** 编辑会诊报告 */
     $('.compileReport').click(function () {
-        for (const item of consultantReport) {
+        for (let item of consultantReport) {
             if (item.doctorId === userInfo.id) {
-                $('.hold').addClass('disabled');
-                $('.refer').addClass('disabled');
+                if (item.reportStatus === "0") {
+                    $('.hold').attr('disabled',true);
+                    $('.refer').attr('disabled',true);
+                    $('.hold').addClass('disabled');
+                    $('.refer').addClass('disabled');
+                    $('#textarea').attr('disabled', 'disabled');
+                }
                 $('#textarea').val(item.report);
             }
         }
