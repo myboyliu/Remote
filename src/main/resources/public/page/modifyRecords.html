@@ -102,12 +102,12 @@
                     <div class="clearfix">
                         <div class="fl">
                             <p>姓名</p>
-                            <input type="text" name="" id="username" class="w140 " placeholder="请输入姓名">
+                            <input minlength="1" maxlength="16" type="text" name="" id="username" class="w140 " placeholder="请输入姓名">
                         </div>
 
                         <div class="fl">
                             <p>身份证号</p>
-                            <input type="text" name="" id="idCard" class="w200" placeholder="请输入身份证号">
+                            <input minlength="16" maxlength="18" type="text" name="" id="idCard" class="w200" placeholder="请输入身份证号">
                         </div>
 
                         <div class="fl">
@@ -122,7 +122,7 @@
                                 <i class="age_ico"></i>
                             </div>
                             </p>
-                            <input type="text" name="" id="age" class="w140" placeholder="请输入年龄">
+                            <input maxlength="2" type="text" name="" id="age" class="w140" placeholder="请输入年龄">
                         </div>
                         <div class="fl">
                             <p>性别</p>
@@ -143,32 +143,32 @@
                     <div style="width: 810px;" class="clearfix">
                         <div class="fl">
                             <p>身高/cm</p>
-                            <input type="text" name="" id="high" class="w140 " placeholder="请输入身高">
+                            <input maxlength="3" type="text" name="" id="high" class="w140 " placeholder="请输入身高">
                         </div>
 
                         <div class="fl">
                             <p>体重/kg</p>
-                            <input type="text" name="" id="weight" class="w200" placeholder="请输入体重">
+                            <input maxlength="3" type="text" name="" id="weight" class="w200" placeholder="请输入体重">
                         </div>
                         <div class="fl">
                             <p>电话号码</p>
-                            <input type="text" name="" id="phone" class="w140 " placeholder="请输入电话号码">
+                            <input maxlength="11" type="text" name="" id="phone" class="w140 " placeholder="请输入电话号码">
                         </div>
 
                         <div class="fl">
                             <p>常住城市</p>
-                            <input type="text" name="" id="address" class="w200" placeholder="请输入常住城市">
+                            <input maxlength="255" type="text" name="" id="address" class="w200" placeholder="请输入常住城市">
                         </div>
                     </div>
                 </div>
                 <p class="mg20">初步诊断
                     <span class="choose">请简要记录疾病名称等</span>
                 </p>
-                <textarea id="createCase_textDiagnose" class="text-adaption" rows="1"></textarea>
+                <textarea maxlength="2550" id="createCase_textDiagnose" class="text-adaption" rows="1"></textarea>
                 <p class="mg20">会/转诊目的
                     <span class="choose">将您想对接诊医生说的话写在这里...</span>
                 </p>
-                <textarea id="createCase_textGola" class="text-adaption" rows="1"></textarea>
+                <textarea maxlength="2550" id="createCase_textGola" class="text-adaption" rows="1"></textarea>
 
                 <!--电子病历附件 -->
                 <div class="hosp clearfix" id="positonimg">

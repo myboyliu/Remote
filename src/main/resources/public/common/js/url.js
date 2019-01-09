@@ -2,7 +2,7 @@
  * 统一接口管理JS
  * @type {string}
  */
-const baseUrl = "http://192.168.0.222"; //服务地址
+const baseUrl = "http://127.0.0.1"; //服务地址
 
 const getAllHospital = "/hospital/select"; //查询所有医院类别
 
@@ -113,7 +113,8 @@ const doctorAcceptOther = "/apply/dispose/doctorAcceptOther";
 const sirSendCheckAccede = "/apply/dispose/sirSendCheckAccede"; //通过会诊申请接口
 const sirSendCheckReject = "/apply/dispose/sirSendCheckReject"; //回退会诊申请接口
 const sirSendUpdateDate = "/apply/dispose/sirSendUpdateDate"; //修改排期
-const softDelPicture = "/case/softDelPicture"; //修改排期
+const softDelPicture = "/case/softDelPicture"; //删除图片
+const sirUpdateCase = "/case/sirUpdateCase"; //修改病例
 
 /** 会诊医政操作接口*/
 

@@ -10,7 +10,8 @@ let selectFileArr = []; // 某一块的图片展示数据
 let uploadFile = [];
 let fileIndex;
 let objParent = null; // 当前点击块的父级
-let caseId = "";
+let caseId;
+let casePatientId ;
 
 /** 渲染 病历页面 左侧导航 */
 function renderCaseTypeLeftNavigation(data) {
@@ -184,11 +185,13 @@ function buildCaseData() {
     let caseDiagnosis = $('#createCase_textDiagnose').val();
     let caseSummary = "***/" + patientSex + "/" + patientAge + "/" + caseDiagnosis;
     //病历信息
+    data.append("caseRecordId", caseId);
+    data.append("casePatientId", casePatientId);
+    data.append("applyFormId", applyFormId);
     data.append("patientName", $('#username').val());
     data.append("patientCard", $('#idCard').val());
     data.append("patientPhone", $('#phone').val());
     data.append("detailAddress", $('#address').val());
-    data.append("caseId", caseId);
     data.append("patientAge", $('#age').val());
     data.append("patientSex", patientSex);
     data.append("patientHeight", $('#high').val());
@@ -201,15 +204,17 @@ function buildCaseData() {
     data.append('applyRemark', $('#createCase_textGola').val()); //会诊目的
     /** 修改病历信息 */
     console.log(JSON.stringify(caseContentArray));
-    return false;
-    ajaxRequest("POST", createCaseUrl, data, false, false, true, updateCaseSuccess, failedParam, null);
+    ajaxRequest("POST", sirUpdateCase, data, false, false, true, updateCaseSuccess, failedParam, null);
     /** 修改申请信息 */
     function failedParam(data) {
+        console.log(data);
+        return false;
         layer.closeAll();
         layer.msg(data.result);
     }
 
     function updateCaseSuccess(result) {
+        console.log(result);
         window.location = '../page/adminApplyInfo.html';
     }
 
@@ -225,6 +230,8 @@ $(function () {
             isVideo = true;
         }
         caseId = applyInfo.caseRecordId;
+        applyFormId = applyInfo.id;
+        casePatientId = applyInfo.patientId;
         $('#username').val(applyInfo.patientName)
         $('#idCard').val(applyInfo.patientCard)
         $('#phone').val(applyInfo.patientPhone)
@@ -342,8 +349,8 @@ $(function () {
             fileAllArr.splice(fileAllArr.splice(fileAllArr.indexOf(fileName), 1));
             $('.fileCount').html(Number($('.fileCount').html()) - 1);
         }
-
         $(this).parent('.fileItem').remove();
+        return false;
     });
     // 备注保存
     $('.descText').blur(function () {
