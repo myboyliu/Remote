@@ -630,7 +630,7 @@ public class ApplyConsultationController extends BaseController {
         String userId = getRequestToken();
         UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
 
-        ConsultationStatusBean consultationStatusBean = applyFormService.sendSelectAllCount(userId, userDetail.getHospitalId(), consultantTypeList);
+        ConsultationStatusBean consultationStatusBean = applyFormService.sendSelectAllCount(null, userDetail.getHospitalId(), consultantTypeList);
 
         return succeedRequest(consultationStatusBean);
     }
@@ -657,7 +657,7 @@ public class ApplyConsultationController extends BaseController {
         String userId = getRequestToken();
         UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
 
-        ConsultationStatusBean consultationStatusBean = caseConsultantService.receiveSelectAllCount(userId, userDetail.getHospitalId(), consultantTypeList);
+        ConsultationStatusBean consultationStatusBean = caseConsultantService.receiveSelectAllCount(null, userDetail.getHospitalId(), consultantTypeList);
 
         return succeedRequest(consultationStatusBean);
     }
