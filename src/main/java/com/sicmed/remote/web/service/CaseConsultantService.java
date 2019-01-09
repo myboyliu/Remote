@@ -43,6 +43,16 @@ public class CaseConsultantService implements BaseService<CaseConsultant> {
 
         return caseConsultantMapper.receiveSelectAllCount(applyFormBean);
     }
+
+    // 受邀会诊 医政 所有数目查询
+    public ConsultationStatusBean receiveSelectAllCountSir(String hospitalId, List<String> consultantTypeList) {
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setInviteHospitalId(hospitalId);
+        applyFormBean.setConsultationTypeList(consultantTypeList);
+
+        return caseConsultantMapper.receiveSelectAllCountSir(applyFormBean);
+    }
     @Override
     public int insertSelective(CaseConsultant caseConsultant) {
         return caseConsultantMapper.insertSelective(caseConsultant);

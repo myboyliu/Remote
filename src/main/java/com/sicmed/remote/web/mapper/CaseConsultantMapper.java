@@ -28,4 +28,6 @@ public interface CaseConsultantMapper {
 
     ConsultationStatusBean receiveSelectAllCount(ApplyFormBean applyFormBean);
 
+    ConsultationStatusBean receiveSelectAllCountSir(ApplyFormBean applyFormBean);
+
 }
