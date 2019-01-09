@@ -9,6 +9,7 @@ import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.CaseContent;
 import com.sicmed.remote.web.entity.CasePatient;
 import com.sicmed.remote.web.entity.CaseRecord;
+import com.sicmed.remote.web.service.ApplyFormService;
 import com.sicmed.remote.web.service.CaseContentService;
 import com.sicmed.remote.web.service.CasePatientService;
 import com.sicmed.remote.web.service.CaseRecordService;
@@ -49,6 +50,9 @@ public class CaseController extends BaseController {
 
     @Autowired
     private CaseContentService caseContentService;
+
+    @Autowired
+    private ApplyFormService applyFormService;
 
     /**
      * 创建病例
@@ -179,39 +183,59 @@ public class CaseController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "updateCaseContent")
-    public Map updateCaseContent(String weightPathTypeId, String recordId) {
-
-        if (StringUtils.isBlank(recordId) || StringUtils.isBlank(weightPathTypeId)) {
-            return badRequestOfArguments("weightPathTypeId 或 caseRecordId 为空");
-        }
-
-        int j = caseContentService.selectRecordId(recordId);
-        if (j > 0) {
-            int i = caseContentService.deleteByCaseRecordId(recordId);
-            if (i < 1) {
-                return badRequestOfArguments("recordId有误");
-            }
-        }
-
-        // 文件路径 与 病例文件id map解析
-        List<CaseContent> resultList;
-        try {
-            resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList>() {
-            }, Feature.OrderedField);
-        } catch (Exception e) {
-            return badRequestOfArguments("pathWeightTypeId 填写错误");
-        }
+    public Map updateCaseContent(CasePatient casePatient, CaseRecord caseRecord, String weightPathTypeId, String recordId, String remark, String summary, String applyFormId) {
 
         String userId = getRequestToken();
-        CaseContentBean caseContentBean = new CaseContentBean();
-        caseContentBean.setRecordId(recordId);
-        caseContentBean.setUpdateUser(userId);
-        caseContentBean.setWeightPathTypeId(resultList);
-        int l = caseContentService.insertByMap(caseContentBean);
-        if (l < 0) {
-            return badRequestOfInsert("更新CaseContent失败");
+
+        // 修改 CasePatient
+        if (StringUtils.isNotBlank(casePatient.getId())) {
+            casePatient.setUpdateUser(userId);
+            int i = casePatientService.updateByPrimaryKeySelective(casePatient);
+            if (i < 1) {
+                return badRequestOfArguments("修改casePatient失败");
+            }
         }
-        return succeedRequest(caseContentBean);
+        // 修改 CaseRecord
+        if (StringUtils.isNotBlank(caseRecord.getId())) {
+            caseRecord.setUpdateUser(userId);
+            int i = caseRecordService.updateByPrimaryKeySelective(caseRecord);
+            if (i < 1) {
+                return badRequestOfArguments("修改caseRecord失败");
+            }
+        }
+        // 修改 CaseContent
+        if (StringUtils.isNotBlank(recordId) && StringUtils.isNotBlank(weightPathTypeId)) {
+            int j = caseContentService.selectRecordId(recordId);
+            if (j > 0) {
+                int i = caseContentService.deleteByCaseRecordId(recordId);
+                if (i < 1) {
+                    return badRequestOfArguments("recordId有误");
+                }
+            }
+
+            // 文件路径 与 病例文件id map解析
+            List<CaseContent> resultList;
+            try {
+                resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList>() {
+                }, Feature.OrderedField);
+            } catch (Exception e) {
+                return badRequestOfArguments("pathWeightTypeId 填写错误");
+            }
+
+            CaseContentBean caseContentBean = new CaseContentBean();
+            caseContentBean.setRecordId(recordId);
+            caseContentBean.setUpdateUser(userId);
+            caseContentBean.setWeightPathTypeId(resultList);
+            int l = caseContentService.insertByMap(caseContentBean);
+            if (l < 0) {
+                return badRequestOfInsert("更新CaseContent失败");
+            }
+        }
+        if ((StringUtils.isNotBlank(remark) || StringUtils.isNotBlank(summary)) && StringUtils.isNotBlank(recordId)) {
+            ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
+
+        }
+        return succeedRequest("ok");
     }
 
     // 删除病例中的图片
