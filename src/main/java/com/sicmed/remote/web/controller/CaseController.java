@@ -185,67 +185,48 @@ public class CaseController extends BaseController {
     @Transactional
     @PostMapping(value = "sirUpdateCase")
     public Map sirUpdateCase(CasePatient casePatient, String casePatientId,
-                                 CaseRecord caseRecord, String caseRecordId,
-                                 String weightPathTypeId,
-                                 String remark, String summary, String applyUrgent, String applyFormId) {
+                             CaseRecord caseRecord, String caseRecordId,
+                             String weightPathTypeId,
+                             String applyRemark, String caseSummary, String applyUrgent, String applyFormId) {
 
         String userId = getRequestToken();
 
         // 修改 CasePatient
         casePatient.setId(casePatientId);
         casePatient.setUpdateUser(userId);
-        int i = casePatientService.updateByPrimaryKeySelective(casePatient);
-        if (i < 1) {
-            return badRequestOfArguments("修改casePatient失败");
-        }
+        casePatientService.updateByPrimaryKeySelective(casePatient);
+
         // 修改 CaseRecord
         caseRecord.setId(caseRecordId);
         caseRecord.setUpdateUser(userId);
-        int j = caseRecordService.updateByPrimaryKeySelective(caseRecord);
-        if (j < 1) {
-            return badRequestOfArguments("修改caseRecord失败");
-        }
-        // 修改 CaseContent
-        int k = caseContentService.selectRecordId(caseRecordId);
-        if (k > 0) {
-            int l = caseContentService.deleteByCaseRecordId(caseRecordId);
-            if (l < 1) {
-                return badRequestOfArguments("recordId有误");
-            }
-        }
+        caseRecordService.updateByPrimaryKeySelective(caseRecord);
 
-        // 文件路径 与 病例文件id map解析
-        List<CaseContent> resultList;
-        try {
-            resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList>() {
-            }, Feature.OrderedField);
-        } catch (Exception e) {
-            return badRequestOfArguments("pathWeightTypeId 填写错误");
-        }
+        // 删除旧的病例附件
+        caseContentService.deleteByCaseRecordId(caseRecordId);
 
+        // 添加修改后的病例附件
+        List<CaseContent> resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList<CaseContent>>() {}, Feature.OrderedField);
         CaseContentBean caseContentBean = new CaseContentBean();
+        caseContentBean.setCasePatient(casePatient);
+        caseContentBean.setCaseRecord(caseRecord);
         caseContentBean.setRecordId(caseRecordId);
         caseContentBean.setUpdateUser(userId);
         caseContentBean.setWeightPathTypeId(resultList);
-        int l = caseContentService.insertByMap(caseContentBean);
-        if (l < 0) {
-            return badRequestOfInsert("更新CaseContent失败");
-        }
+        caseContentService.insertContentByMap(caseContentBean);
+
         // 修改applyForm
         ApplyForm applyForm = new ApplyForm();
         applyForm.setId(applyFormId);
-        applyForm.setApplySummary(summary);
-        applyForm.setRefuseRemark(remark);
+        applyForm.setCaseSummary(caseSummary);
+        applyForm.setApplyRemark(applyRemark);
         applyForm.setApplyUrgent(applyUrgent);
-        int a = applyFormService.updateByPrimaryKeySelective(applyForm);
-        if (a < 1) {
-            return badRequestOfArguments("修改applyForm失败");
-        }
+        applyFormService.updateByPrimaryKeySelective(applyForm);
+
         return succeedRequest("ok");
     }
 
     // 删除病例中的图片
-    @GetMapping(value = "softDelPicture")
+    @PostMapping(value = "softDelPicture")
     public Map softDelPicture(String id) {
 
         if (StringUtils.isBlank(id)) {
