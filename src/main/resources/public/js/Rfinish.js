@@ -203,7 +203,9 @@ function renderViewByRole() {
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".compileReport").show();
-            $(".entrance").show();
+            if (isVideo){
+                $(".entrance").show();
+            }
         } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
             //待反馈
             $(".progressBar li:nth-child(2)").addClass("libg");

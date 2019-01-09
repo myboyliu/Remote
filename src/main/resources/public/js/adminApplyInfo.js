@@ -68,7 +68,9 @@ function renderViewByRole(applyStatus) {
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".modifier2").show();
             $(".rejection").show();
-            $("#enter_room").show();
+            if (isVideo){
+                $("#enter_room").show();
+            }
         } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
             //待反馈
             $(".progressBar li:nth-child(1)").addClass("libg");
@@ -123,6 +125,7 @@ function renderViewByRole(applyStatus) {
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
+
         } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
             //待反馈
             $(".progressBar li:nth-child(1)").addClass("libg");
@@ -322,6 +325,7 @@ $(function () {
         $('#applyNumber').hide();
         $('.layui-timeline').hide();
     }
+    isVideo = applyInfo.applyType === "APPLY_CONSULTATION_VIDEO" ? true : false;
     //订单编号
     $('.numbers').html(applyInfo.applyNumber);
     //申请时间
