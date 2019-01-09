@@ -640,8 +640,9 @@ public class ApplyConsultationController extends BaseController {
     public Map receiveSelectAllCountDoctor() {
 
         String userId = getRequestToken();
+        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
 
-        ConsultationStatusBean consultationStatusBean = caseConsultantService.receiveSelectAllCount(userId, null, consultantTypeList);
+        ConsultationStatusBean consultationStatusBean = caseConsultantService.receiveSelectAllCount(userId, userDetail.getBranchId(),null, consultantTypeList);
 
         return succeedRequest(consultationStatusBean);
     }

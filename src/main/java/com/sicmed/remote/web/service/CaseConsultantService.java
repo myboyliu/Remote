@@ -34,10 +34,11 @@ public class CaseConsultantService implements BaseService<CaseConsultant> {
     }
 
     // 受邀会诊 医生 所有数目查询
-    public ConsultationStatusBean receiveSelectAllCount(String userId, String hospitalId, List<String> consultantTypeList) {
+    public ConsultationStatusBean receiveSelectAllCount(String userId, String branchId,String hospitalId, List<String> consultantTypeList) {
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setInviteUserId(userId);
+        applyFormBean.setInviteBranchId(branchId);
         applyFormBean.setInviteHospitalId(hospitalId);
         applyFormBean.setConsultationTypeList(consultantTypeList);
 

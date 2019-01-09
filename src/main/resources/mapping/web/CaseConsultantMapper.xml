@@ -332,7 +332,14 @@
             resultMap="ConsultationStatusBeanResultMap">
         select
         count(af.apply_status="CONSULTATION_APPLY_CREATE_SUCCESS" or NULL) cacs,
-        count(af.apply_status="CONSULTATION_APPLY_ACCEDE" or NULL) caa,
+
+        (select count(*) from apply_form appf where appf.del_flag = "0" and
+        appf.apply_status="CONSULTATION_APPLY_ACCEDE" and appf.apply_type in
+        <foreach
+                collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        and appf.invite_branch_id = #{inviteBranchId}) caa,
         count(af.apply_status="CONSULTATION_APPLY_REJECT" or NULL) car,
         count(af.apply_status="CONSULTATION_SLAVE_ACCEDE" or NULL) csa,
         count(af.apply_status="CONSULTATION_SLAVE_REJECT" or NULL) csr,
