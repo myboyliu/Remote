@@ -53,11 +53,8 @@ function renderViewByRole(applyStatus) {
             $(".rejection").show();
             $(".modifier3").show();
             $(".modifier5").show();
-            if (inviteDoctorCount > 2) {
-                $("#MDTBtn").show();
-            } else {
-                $("#accept").show();
-            }
+            $("#toBeMDT").show();
+
         } else if (applyStatus === "CONSULTATION_DATETIME_LOCKED") {
             //已排期
             $(".progressBar li:nth-child(1)").addClass("libg");
@@ -71,6 +68,7 @@ function renderViewByRole(applyStatus) {
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".modifier2").show();
             $(".rejection").show();
+            $("#enter_room").show();
         } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
             //待反馈
             $(".progressBar li:nth-child(1)").addClass("libg");
@@ -107,7 +105,6 @@ function renderViewByRole(applyStatus) {
             $(".modifier1").show();
             $(".modifier3").show();
             $(".modifier5").show();
-
             $(".modifier22").show();
         } else if (applyStatus === "CONSULTATION_MASTER_REJECT") {
             //会诊医政已拒绝
@@ -261,7 +258,8 @@ function updateApplyTime(dateList) {
 
         function getApplyInfoSuccess(result) {
             sessionStorage.setItem('applyInfo', JSON.stringify(result));
-            renderApplyTimeView(result.applyTimeList);
+            applyTimeList = result.applyTimeList;
+            renderApplyTimeView(applyTimeList);
         }
     }
 
@@ -298,7 +296,6 @@ $(function () {
     applyStatus = applyInfo.applyStatus;
     inviteDoctorCount = applyInfo.inviteSummary.split(";").length;
     applyTimeList = applyInfo.applyTimeList;
-
 
     /**网页标题*/
     $('head > title').html(applyInfo.patientSex + '/' + applyInfo.patientAge + '/' + applyInfo.caseDiagnosis + '-远程会诊平台');
@@ -350,16 +347,17 @@ $(function () {
     if (applyInfo.applyType === "APPLY_CONSULTATION_IMAGE_TEXT") {
         $('.schedule').hide();
         $('.schedule_modules ').hide();
-        $('.entrance').hide();
     } else {
         $('.schedule').show();
         $('.schedule_modules ').show();
-        $('.entrance').show();
     }
 
     /** 诊费 */
     let consultantPrice = applyInfo.consultantPrice;
     let hospitalPrice = applyInfo.hospitalPrice;
+    if (applyInfo.consultantUserList) {
+        consultantUserList = JSON.parse(applyInfo.consultantUserList);
+    }
     let _fees = '';
     for (let i = 0; i < consultantUserList.length; i++) {
         _fees += '<tr><td>' + consultantUserList[i].doctorName + '</td>';
