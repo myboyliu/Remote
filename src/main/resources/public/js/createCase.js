@@ -123,7 +123,7 @@ function renderDoctorList(data) {
                         <div class="Firstdiamond"></div>\
                         <div class="message">\
                             <span class="mess_l">不选医生</span><span>远程中心</span>\
-                            <p class="p1" hospitalVideoPic="' + hospitalInfo.hospitalVideoPrice + '" hospitalImgPic="' + hospitalInfo.hospitalImgPrice + '" deptId="' + deptId + '" name="' + hospitalInfo.id + '">' + hospitalInfo.hospitalName + '</p>\
+                            <p class="p1" hospitalVideoPic="' + hospitalInfo.hospitalVideoPrice + '" hospitalImgPic="' + hospitalInfo.hospitalImgPrice + '" deptId="' + hospitalInfo.branchId + '" name="' + hospitalInfo.id + '">' + hospitalInfo.hospitalName + '</p>\
                             <p class="p4">选择此项,申请将发送至对方医院远程中心,由医务人员为您调度医生资源,诊费会在选定医生后确定。<br />请将您的备注信息填至【会/转诊目的】 </p>\
                         </div>\
                     </li>';
@@ -387,7 +387,7 @@ function createPictureApplyData(caseId, caseSummary) {
     }
 }
 
-/** 创建视频会诊草稿*/
+/** 创建视频会诊*/
 let dateList = [];
 
 function createVideoApplyData(caseId, caseSummary) {
@@ -454,6 +454,50 @@ function renderFileListView(baseUrl, url, type, fileName) {
                                         <div style='background-image:url(${url});'></div>\
                                         <img class="delFileBtn" src="../images/delete_file.png"/><p type="${type}" desc="" class="fileName">${fileName}</p></li>`
     );
+}
+
+/** 校验病历是否完整 */
+function checkCaseInfo() {
+    if ($('#username').val() === '' || $('#idCard').val() === '' || $('#phone').val() === '' || $('#address').val() === '' || $('#age').val() + $('.choiceAge').val() === '' || $('#high').val() === '' || $('#weight').val() === '' || $('.sex > a.active').html() === '' || $('#createCase_textDiagnose').val() === '' || $('#createCase_textGola').val() === '' || fileAllArr.length <= '0') {
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['300px', '80px'],
+            closeBtn: false,
+            shade: [0.1, '#000000'],
+            shadeClose: false,
+            time: 2000,
+            content: $('.incomplete'),
+        });
+        setTimeout(function () {
+            //  layer.closeAll();
+            $('.incomplete').hide();
+        }, 2000);
+        return true;
+    }
+    return false;
+}
+
+/** 校验病历是否正确 */
+function checkCase() {
+    if (!RegExpObj.Reg_Name.test($('#username').val()) || !RegExpObj.Reg_IDCardNo.test($('#idCard').val()) || !RegExpObj.Reg_age.test($('#age').val()) || !RegExpObj.Reg_hight.test($('#high').val()) || !RegExpObj.Reg_weight.test($('#weight').val()) || !RegExpObj.Reg_mobilePhone.test($('#phone').val()) || !RegExpObj.Reg_address.test($('#address').val()) || $('#createCase_textDiagnose').val() === '' || $('#createCase_textGola').val() === '') {
+        var _$ = layui.jquery;
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['300px', '80px'],
+            closeBtn: false,
+            shade: [0.1, '#000000'],
+            shadeClose: false,
+            time: 2000,
+            content: _$('.modifier'),
+        });
+        setTimeout(function () {
+            $('.modifier').hide();
+        }, 2000);
+        return true;
+    }
+    return false;
 }
 
 $(function () {
@@ -586,11 +630,12 @@ $(function () {
     $('.doctorUl').delegate('.doctorChunk', 'click', function (event) {
         if ($(this).hasClass('noDoctor')) {
             hospitalInfo["id"] = $(this).find('.p1').attr('name');
-            hospitalInfo["branchId"] = $(this).find('.p1').attr('deptid');
+            hospitalInfo["branchId"] = $(this).find('.p1').attr('deptId');
             hospitalInfo["hospitalImgPrice"] = $(this).find('.p1').attr('hospitalImgPic');
             hospitalInfo["hospitalName"] = $(this).find('.p1').html();
             hospitalInfo["hospitalVideoPrice"] = $(this).find('.p1').attr('hospitalVideoPic');
             inviteDoctorArray = [];
+            console.log(hospitalInfo);
             favoriteHtml();
         } else if (inviteDoctorArray.length > 0 && $(this).find('.hospital').attr('name') != inviteDoctorArray[0].hospitalId) {
             const _$ = layui.jquery;
@@ -1034,37 +1079,15 @@ $(function () {
 // 图文会诊、
     $('.graphicGroup').click(function () {
         /* 判断信息是否填写完整 */
-        if ($('#username').val() === '' || $('#idCard').val() === '' || $('#phone').val() === '' || $('#address').val() === '' || $('#age').val() + $('.choiceAge').val() === '' || $('#high').val() === '' || $('#weight').val() === '' || $('.sex > a.active').html() === '' || $('#createCase_textDiagnose').val() === '' || $('#createCase_textGola').val() === '' || fileAllArr.length <= '0') {
-            var _$ = layui.jquery;
-            layer.open({
-                type: 1,
-                title: '',
-                area: ['300px', '80px'],
-                closeBtn: false,
-                shade: [0.1, '#000000'],
-                shadeClose: false,
-                time: 2000,
-                content: _$('.incomplete'),
-            });
-            setTimeout(function () {
-                $('.incomplete').hide();
-            }, 2000);
-        } else if (!RegExpObj.Reg_Name.test($('#username').val()) || !RegExpObj.Reg_IDCardNo.test($('#idCard').val()) || !RegExpObj.Reg_age.test($('#age').val()) || !RegExpObj.Reg_hight.test($('#high').val()) || !RegExpObj.Reg_hight.test($('#weight').val()) || !RegExpObj.Reg_mobilePhone.test($('#phone').val()) || !RegExpObj.Reg_address.test($('#address').val()) || $('#createCase_textDiagnose').val() === '' || $('#createCase_textGola').val() === '') {
-            var _$ = layui.jquery;
-            layer.open({
-                type: 1,
-                title: '',
-                area: ['300px', '80px'],
-                closeBtn: false,
-                shade: [0.1, '#000000'],
-                shadeClose: false,
-                time: 2000,
-                content: _$('.modifier'),
-            });
-            setTimeout(function () {
-                $('.modifier').hide();
-            }, 2000);
-        } else if (!hospitalInfo.id && inviteDoctorArray.length <= 0) {
+        let isIncomplete = checkCaseInfo();
+        if (isIncomplete) {
+            return false;
+        }
+        let isIncorrect = checkCase();
+        if (isIncorrect) {
+            return false;
+        }
+        if (!hospitalInfo.id && inviteDoctorArray.length <= 0) {
             layer.msg('请选择医生或医院');
         } else {
             var _$ = layui.jquery;
@@ -1086,39 +1109,18 @@ $(function () {
             $('.imgContent .submitText').html('您的病历将发送到' + hospitalName + '，请确认');
         }
     });
+
 // 视频会诊
     $('.videoBtn').click(function () {
-        if ($('#username').val() === '' || $('#idCard').val() === '' || $('#phone').val() === '' || $('#address').val() === '' || $('#age').val() + $('.choiceAge').val() === '' || $('#high').val() === '' || $('#weight').val() === '' || $('.sex > a.active').html() === '' || $('#createCase_textDiagnose').val() === '' || $('#createCase_textGola').val() === '' || fileAllArr.length <= '0') {
-            layer.open({
-                type: 1,
-                title: '',
-                area: ['300px', '80px'],
-                closeBtn: false,
-                shade: [0.1, '#000000'],
-                shadeClose: false,
-                time: 2000,
-                content: $('.incomplete'),
-            });
-            setTimeout(function () {
-                //  layer.closeAll();
-                $('.incomplete').hide();
-            }, 2000);
-        } else if (!RegExpObj.Reg_Name.test($('#username').val()) || !RegExpObj.Reg_IDCardNo.test($('#idCard').val()) || !RegExpObj.Reg_age.test($('#age').val()) || !RegExpObj.Reg_hight.test($('#high').val()) || !RegExpObj.Reg_hight.test($('#weight').val()) || !RegExpObj.Reg_isPhone.test($('#phone').val()) || !RegExpObj.Reg_address.test($('#address').val()) || $('#createCase_textDiagnose').val() === '' || $('#createCase_textGola').val() === '') {
-            const _$ = layui.jquery;
-            layer.open({
-                type: 1,
-                title: '',
-                area: ['300px', '80px'],
-                closeBtn: false,
-                shade: [0.1, '#000000'],
-                shadeClose: false,
-                time: 2000,
-                content: _$('.modifier'),
-            });
-            setTimeout(function () {
-                $('.modifier').hide();
-            }, 2000);
-        } else if (!hospitalInfo.id && inviteDoctorArray.length <= 0) {
+        let isIncomplete = checkCaseInfo();
+        if (isIncomplete) {
+            return false;
+        }
+        let isIncorrect = checkCase();
+        if (isIncorrect) {
+            return false;
+        }
+        if (!hospitalInfo.id && inviteDoctorArray.length <= 0) {
             layer.msg('请选择医生或医院');
         } else {
             layer.open({
@@ -1410,38 +1412,16 @@ $(function () {
 // 底部转诊按钮事件
     $(".referralBtn").click(function () {
         /* 判断信息是否填写完整 */
-        if ($('#username').val() === '' || $('#idCard').val() === '' || $('#phone').val() === '' || $('#address').val() === '' || $('#age').val() + $('.choiceAge').val() === '' || $('#high').val() === '' || $('#weight').val() === '' || $('.sex > a.active').html() === '' || $('#createCase_textDiagnose').val() === '' || $('#createCase_textGola').val() === '' || fileAllArr.length <= '0') {
-            var _$ = layui.jquery;
-            layer.open({
-                type: 1,
-                title: '',
-                area: ['300px', '80px'],
-                closeBtn: false,
-                shade: [0.1, '#000000'],
-                shadeClose: false,
-                time: 2000,
-                content: _$('.incomplete'),
-            });
-            setTimeout(function () {
-                $('.incomplete').hide();
-            }, 2000);
-        } else if (!RegExpObj.Reg_Name.test($('#username').val()) || !RegExpObj.Reg_IDCardNo.test($('#idCard').val()) || !RegExpObj.Reg_age.test($('#age').val()) || !RegExpObj.Reg_hight.test($('#high').val()) || !RegExpObj.Reg_hight.test($('#weight').val()) || !RegExpObj.Reg_mobilePhone.test($('#phone').val()) || !RegExpObj.Reg_address.test($('#address').val()) || $('#createCase_textDiagnose').val() === '' || $('#createCase_textGola').val() === '') {
-            var _$ = layui.jquery;
-            layer.open({
-                type: 1,
-                title: '',
-                area: ['300px', '80px'],
-                closeBtn: false,
-                shade: [0.1, '#000000'],
-                shadeClose: false,
-                time: 2000,
-                content: _$('.modifier'),
-            });
-            setTimeout(function () {
-                $('.modifier').hide();
-            }, 2000);
-
-        } else if (!hospitalInfo.id && inviteDoctorArray.length <= 0) {
+        let isIncomplete = checkCaseInfo();
+        if (isIncomplete) {
+            return false;
+        }
+        //判断病历信息是否正确
+        let isIncorrect = checkCase();
+        if (isIncorrect) {
+            return false;
+        }
+        if (!hospitalInfo.id && inviteDoctorArray.length <= 0) {
             layer.msg('请选择医生或医院');
         } else if (hospitalInfo.id && hospitalInfo.id === localStorage.getItem("hospitalId")) {
             layer.msg('转诊不能选择本院');
@@ -1550,24 +1530,17 @@ $(function () {
     $('#age').blur(function () {
         if (!RegExpObj.Reg_age.test($('#age').val())) {
             layer.msg('输入内容格式有误，请修改')
-        } else if ($('#age').val().length === 0) {
-            layer.msg('年龄不能为空');
         }
     });
     $('#high').blur(function () {
         if (!RegExpObj.Reg_hight.test($('#high').val())) {
             layer.msg('输入内容格式有误，请修改')
-
-        } else if ($('#high').val().length === 0) {
-            layer.msg('身高不能为空');
+            // layer.msg('请输入10-300的数字来描述身高')
         }
     });
     $('#weight').blur(function () {
-        if (!RegExpObj.Reg_hight.test($('#weight').val())) {
-
-            layer.msg('输入内容格式有误，请修改')
-        } else if ($('#weight').val().length === 0) {
-            layer.msg('体重不能为空');
+        if (!RegExpObj.Reg_weight.test($('#weight').val())) {
+            layer.msg('体重值不在正常范围(1-300kg)内')
         }
     });
     // 验证电话号码
@@ -1578,9 +1551,7 @@ $(function () {
     });
     // 验证常住城市
     $('#address').blur(function () {
-        if ($('#address').val().length === 0) {
-            layer.msg('城市不能为空');
-        } else if (!RegExpObj.Reg_address.test($('#address').val())) {
+        if (!RegExpObj.Reg_address.test($('#address').val())) {
             layer.msg('输入内容格式有误，请修改')
         }
     });
