@@ -152,6 +152,7 @@
         <result column="atyrefuseRemark" jdbcType="VARCHAR" property="refuseRemark"/>
         <result column="ayfapplyUrgent" jdbcType="VARCHAR" property="applyUrgent"/>
 
+        <result column="cpId" jdbcType="INTEGER" property="patientId"/>
         <result column="crpatientAge" jdbcType="INTEGER" property="patientAge"/>
         <result column="crpatientSex" jdbcType="CHAR" property="patientSex"/>
         <result column="crpatientHeight" jdbcType="INTEGER" property="patientHeight"/>
@@ -200,6 +201,7 @@
         ayt.event_start_time ayteventStartTime,ayt.event_end_time ayteventEndTime,
         cr.patient_age crpatientAge,cr.patient_sex crpatientSex,cr.patient_height crpatientHeight,
         cr.patient_weight crpatientWeight,cr.case_diagnosis crcaseDiagnosis,
+        cp.id cpId,
         cp.detail_address cpdetailAddress,
         cp.patient_name cppatientName,
         cp.patient_card cppatientCard,
