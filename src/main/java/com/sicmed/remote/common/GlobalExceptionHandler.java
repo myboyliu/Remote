@@ -25,13 +25,9 @@ public class GlobalExceptionHandler {
 
         Map<String, Object> resultMap = new LinkedHashMap<>();
         if (exception instanceof ConstraintViolationException) {
-            get(((ConstraintViolationException) exception).getConstraintViolations());
-            log.error("我报错了：{}", ((ConstraintViolationException) exception).getConstraintViolations());
-            log.error("我报错了：{}", exception.getMessage());
-            log.error("我报错了：{}", exception.getStackTrace());
             resultMap.put("code", "40000");
             resultMap.put("msg", "Request_Bad_Of_Arguments");
-            resultMap.put("result", exception);
+            resultMap.put("result",  get(((ConstraintViolationException) exception).getConstraintViolations()));
             return resultMap;
         }
         exception.printStackTrace();
@@ -48,7 +44,7 @@ public class GlobalExceptionHandler {
         for (ConstraintViolation<?> constraintViolation : message) {
             String path = constraintViolation.getPropertyPath().toString();
             String errorMessage = constraintViolation.getMessage();
-            fieldErrorsMap.put(path, errorMessage);
+            fieldErrorsMap.put(path.substring(path.indexOf(".")+1), errorMessage);
         }
         return fieldErrorsMap;
 

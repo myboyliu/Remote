@@ -14,11 +14,16 @@ import com.sicmed.remote.web.service.CasePatientService;
 import com.sicmed.remote.web.service.CaseRecordService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import sun.nio.cs.ext.MacArabic;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +36,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
+@Validated
 @RequestMapping(value = "case")
 public class CaseController extends BaseController {
 
@@ -55,7 +61,7 @@ public class CaseController extends BaseController {
     @PostMapping(value = "insertNewCase")
     public Map insertNewCase(@Validated CasePatient casePatient, BindingResult casePatientBr,
                              @Validated CaseRecord caseRecord, BindingResult caseRecordBr,
-                             String weightPathTypeId) {
+                             @Size(max = 5) String weightPathTypeId,@NotBlank String aa) {
 
         if (casePatientBr.hasErrors()) {
             return fieldErrorsBuilder(casePatientBr);

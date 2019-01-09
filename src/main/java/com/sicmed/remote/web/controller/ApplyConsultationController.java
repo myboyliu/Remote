@@ -30,9 +30,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@RequestMapping(value = "" +
-        "" +
-        "apply/consultation")
+@RequestMapping(value = "apply/consultation")
 public class ApplyConsultationController extends BaseController {
 
 
