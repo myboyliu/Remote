@@ -21,6 +21,7 @@ import com.sicmed.remote.web.service.ApplyTimeService;
 import com.sicmed.remote.web.service.CaseConsultantService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.omg.CORBA.INTERNAL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
@@ -680,24 +681,32 @@ public class ApplyDisposeController extends BaseController {
         String jsonReport = JSON.toJSONString(consultantReportBeanList);
 
         Map<String, String> userMap = new LinkedHashMap<>();
+        String doctorPrice = null;
         userMap.put("doctorName", inviteSummary);
         userMap.put("doctorId", userId);
         if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(type)) {
+            doctorPrice = currentUserBean.getConsultationPicturePrice();
             userMap.put("price", currentUserBean.getConsultationPicturePrice());
         }
         if (ApplyType.APPLY_CONSULTATION_VIDEO.toString().equals(type)) {
+            doctorPrice = currentUserBean.getConsultationPicturePrice();
             userMap.put("price", currentUserBean.getConsultationVideoPrice());
         }
         List<Map> userList = new LinkedList<>();
         userList.add(userMap);
         String jsonUser = JSON.toJSONString(userList);
 
-        CaseConsultant caseConsultant = new CaseConsultant();
+        CaseConsultant caseConsultant = caseConsultantService.getByPrimaryKey(applyFormId);
+        BigDecimal hospitalPrice = caseConsultant.getHospitalPrice();
+        BigDecimal resultDoctorPrice = new BigDecimal(doctorPrice);
+        BigDecimal consultantPrice = hospitalPrice.add(resultDoctorPrice);
+
         caseConsultant.setId(applyFormId);
         caseConsultant.setInviteUserId(userId);
         caseConsultant.setConsultantUserList(jsonUser);
         caseConsultant.setConsultantReport(jsonReport);
         caseConsultant.setUpdateUser(userId);
+        caseConsultant.setConsultantPrice(consultantPrice);
         int k = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
         if (k < 1) {
             return badRequestOfArguments("更新CaseConsultant失败");
