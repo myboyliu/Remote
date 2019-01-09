@@ -46,7 +46,11 @@ public class CaseContentService implements BaseService<CaseContent> {
 
         return caseContentMapper.insertByMap(caseContentBean);
     }
+    // 创建病例
+    public int insertContentByMap(CaseContentBean caseContentBean) {
 
+        return caseContentMapper.insertByMap(caseContentBean);
+    }
     public int deleteByCaseRecordId(String caseRecordId) {
         return caseContentMapper.deleteByCaseRecordId(caseRecordId);
     }
