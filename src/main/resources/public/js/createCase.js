@@ -732,7 +732,7 @@ $(function () {
         if (ie9) node.onkeyup = fun;
     };
     /* 初步诊断随诊文本增加高度自适应 */
-    const createCase_textDiagnose = document.getElementById("createCase_textDiagnose");
+    let createCase_textDiagnose = document.getElementById("createCase_textDiagnose");
     inputhandler(createCase_textDiagnose, function () {
         if (!ie) createCase_textDiagnose.style.height = 40 + "px";
         const height = createCase_textDiagnose.scrollHeight;
@@ -743,7 +743,7 @@ $(function () {
         }
     });
     /*会/转诊目的文本增加高度自适应 */
-    const createCase_textGola = document.getElementById("createCase_textGola");
+    let createCase_textGola = document.getElementById("createCase_textGola");
     inputhandler(createCase_textGola, function () {
         if (!ie) createCase_textGola.style.height = 40 + "px";
         const height = createCase_textGola.scrollHeight;
@@ -794,16 +794,16 @@ $(function () {
                 reader.readAsDataURL(uploadFile[fileIndex]);
                 reader.onload = function (e) {
                     url = e.target.result;
-                    renderFileListView(result, url, type, result);
+                    renderFileListView(baseUrl + "/" +result, url, type, result);
                 }
             } else if (/(.pdf)$/gi.test(fileName)) {
                 type = "pdf";
                 url = "../images/pdf_icon.png";
-                renderFileListView(baseUrl + "/" + result, url, type, result);
+                renderFileListView(baseUrl + "/" +result, url, type, result);
             } else if (/(.dcm)$/gi.test(fileName)) {
                 type = "dcm";
                 url = "../images/dcm_icon.png";
-                renderFileListView(baseUrl + "/" + result, url, type, result);
+                renderFileListView(baseUrl + "/" +result, url, type, result);
             }
             // 总张数
             fileIndex++;
@@ -839,8 +839,8 @@ $(function () {
 
 // 图片点击查看大图
     $('.upfileUl').delegate('.fileItem', 'click', function () {
-
-        const $ = layui.jquery;
+        fileArr = [];
+        let _$ = layui.jquery;
         // 弹出层
         layer.open({
             type: 1,
@@ -850,42 +850,53 @@ $(function () {
             shade: [0.7, '#000000'],
             shadeClose: false,
             scrollbar: false,
-            content: $('.bigImgContainer'),
+            content: _$('.bigImgContainer'),
         });
         // 整理一组图片展示数据
         objParent = $(this).parent('.fileContent');
         indexFile = $(this).index() - 1;
         ObjArr = $(this).parent('.fileContent').find('.fileItem');
-        for (let i = 0; i < ObjArr.length; i++) {
+
+        for (var i = 0; i < ObjArr.length; i++) {
             fileArr.push({
+                'id': ObjArr.eq(i).attr('id'),
                 'name': ObjArr.eq(i).find('p').html(),
                 'type': ObjArr.eq(i).find('p').attr('type'),
                 'src': ObjArr.eq(i).find('div').css('backgroundImage'),
                 'desc': ObjArr.eq(i).find('p').attr('desc'),
             });
         }
-
+        $('.bigImgContainer').find('.bigImg').css({
+            "top": 0,
+            "left": 0,
+            "transform": "scale(1)",
+        })
         if (fileArr[indexFile].type != 'img') {
             // pdf dcm
             $('.bigImgContainer').find('.bigImg').addClass('bgSize');
-            if (fileArr[indexFile].type === 'pdf') {
-                /* 未完成查看PDF */
-                PDFObject.embed($('.fileItem').attr('dataBase'), ".bigImg", {
+            if (fileArr[indexFile].type == 'pdf') {
+                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].name, ".bigImg", {
                     page: "1"
                 });
+                $('.downlodeFile').hide();
+
+            } else {
+                // dcm 相关操作
+                // 1、显示下载按钮
+                // 2、imgIp + fileArr[indexFile].filePath 下载路径
+                // 3、清空 .bigImg 的内容，显示背景
+                $('.downlodeFile').show();
+                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].filePath);
+                $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
             }
+        } else {
+            $('.downlodeFile').hide();
+            $('.bigImgContainer').find('.bigImg').removeClass('bgSize').html('');
+
         }
         $('.bigImgContainer').find('.bigImg').css('backgroundImage', fileArr[indexFile].src);
         $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
         $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
-
-        /* 如果是png/jpg/pdf格式 downlodeFile 隐藏 */
-        if (fileArr[indexFile].type === 'dcm') {
-            $('.downlodeFile').show();
-        } else {
-            $('.downlodeFile').hide();
-
-        }
 
     });
 
