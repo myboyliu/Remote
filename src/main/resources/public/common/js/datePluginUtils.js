@@ -134,7 +134,7 @@ $(function () {
                     $('#timeUl > li').eq(i).addClass('active');
                 }
             }
-            if (isMainDoctor) {
+            if (isMainDoctor || isBranchDoctor) {
                 if (newDateTimeList.length == 0) {
                     newDateTimeList.push({
                         "date": dateStr,
@@ -185,7 +185,7 @@ $(function () {
             redrawDate(dateTempList);
         }
     });
-// 清空当页数据
+    // 清空当页数据
     $('.selectTimeContent').find('.clearBtn').click(function () {
         for (let i = 0; i < dateTempList.length; i++) {
             if (dateTempList[i].date == dateStr) {
@@ -195,7 +195,7 @@ $(function () {
         $('#timeUl > li').removeClass('active');
         redrawDate(dateTempList);
     })
-// 关闭事件
+    // 关闭事件
     $('.closeBtnTime').click(function () {
         dateTempList = [];
         $('#timeUl > li').removeClass('active');

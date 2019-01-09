@@ -6,6 +6,7 @@ let inviteDoctorCount = 0;
 let applyFormId;
 let applyInfo = {};
 let isMainDoctor;
+let isBranchDoctor = false;
 let isInvite = false;
 let isVideo = false;
 let applyStatus;
@@ -278,11 +279,13 @@ function renderViewByRole() {
 /**主会诊医生 修改 会诊排期*/
 function updateApplyTime(dateList) {
     console.log(dateList);
+    let data = new FormData();
+    data.append("applyFormId", applyFormId);
+    data.append("startEndTime", JSON.stringify(dateList));
     if (isMainDoctor) {
-        let data = new FormData();
-        data.append("applyFormId", applyFormId);
-        data.append("startEndTime", JSON.stringify(dateList));
         ajaxRequest("POST", mainDoctorAccede, data, false, false, true, sirUpdateDateSuccess, null, null)
+    }else if(isBranchDoctor){
+        ajaxRequest("POST", doctorAcceptOther, data, false, false, true, sirUpdateDateSuccess, null, null)
     }
 
     function sirUpdateDateSuccess(result) {
@@ -323,6 +326,8 @@ $(function () {
     let applyNodeList = applyInfo.applyNodeList;
 
     isMainDoctor = userInfo.id === applyInfo.inviteUserId ? true : false;
+
+    isBranchDoctor = userInfo.branchId === applyInfo.inviteBranchId ? true : false;
 
     isInvite = userInfo.branchId === applyInfo.inviteBranchId ? true : false;
 
