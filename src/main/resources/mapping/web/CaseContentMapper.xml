@@ -54,7 +54,7 @@
     </update>
 
     <!--selectRecordId查询-->
-    <select id="selectRecordId" parameterType="java.lang.String">
+    <select id="selectRecordId" parameterType="java.lang.String" resultType="java.lang.Integer">
         select count(*) from case_content where record_id = #{recordId} and del_flag = "0"
     </select>
 
