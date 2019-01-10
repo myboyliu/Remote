@@ -9,6 +9,7 @@ let consultantReport = [];
 let applyStatus; //申请状态
 let applyTimeList;
 let applyNodeList;
+let isBranchDoctor = false;
 let isMainDoctor = false;
 const _$ = layui.jquery;
 
@@ -87,6 +88,7 @@ function renderViewByRole(applyStatus) {
             $(".progressBar li:nth-child(4)").addClass("libg");
             $(".progressBar li:nth-child(5)").addClass("libg");
             $("#applyRecord").show();
+            $("#consultantFeedback").show();
             applyRecordNavigationShow = true;
             consultantFeedbackNavigationShow = true;
         } else if (applyStatus === "CONSULTATION_MASTER_REJECT") {
@@ -142,6 +144,7 @@ function renderViewByRole(applyStatus) {
             $(".progressBar li:nth-child(4)").addClass("libg");
             $(".progressBar li:nth-child(5)").addClass("libg");
             $("#applyRecord").show();
+            $("#consultantFeedback").show();
             applyRecordNavigationShow = true;
             consultantFeedbackNavigationShow = true;
         } else {
