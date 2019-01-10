@@ -2,7 +2,7 @@
  * 统一接口管理JS
  * @type {string}
  */
-const baseUrl = "http://127.0.0.1"; //服务地址
+const baseUrl = "http://192.168.0.222"; //服务地址
 
 const getAllHospital = "/hospital/select"; //查询所有医院类别
 
@@ -126,65 +126,24 @@ const sirUpdateDate = "/apply/dispose/sirUpdateDate"; //选择排期
 const sirUpdateDoctor = "/apply/dispose/sirUpdateDoctor"; //选择医生
 
 /** 转诊类别 医生查询 接口*/
-const inquiryCreateSuccess = "/apply/transfer/inquiryCreateSuccess";         //待审核
-const inquiryApplyAccede = "/apply/transfer/inquiryApplyAccede";         //待收诊
-const inquirySlaveMasterAccede = "/apply/transfer/inquirySlaveMasterAccede";         //排期审核
-const inquiryDate = "/apply/transfer/inquiryDate";         //已排期
-const inquirySlaveMasterReject = "/apply/transfer/inquirySlaveMasterReject";         //已拒收
-const inquiryEnd = "/apply/transfer/inquiryEnd";         //已结束
+const inquiryCreateSuccess = "/apply/transfer/inquiryCreateSuccess";            //待审核
+const inquiryApplyAccede = "/apply/transfer/inquiryApplyAccede";                //待收诊
+const inquirySlaveMasterAccede = "/apply/transfer/inquirySlaveMasterAccede";    //排期审核
+const inquiryDate = "/apply/transfer/inquiryDate";                              //已排期
+const inquirySlaveMasterReject = "/apply/transfer/inquirySlaveMasterReject";    //已拒收
+const inquiryEnd = "/apply/transfer/inquiryEnd";                                //已结束
 
 /** 转诊类别 医政查询 接口*/
-const sirInquiryCheck = "/apply/transfer/sirInquiryCheck";         //待审核
-const sirInquiryAccept = "/apply/transfer/sirInquiryAccept";         //待接收
-const sirInquiryCheckDate = "/apply/transfer/sirInquiryCheckDate";         //排期审核
-const sirInquiryDate = "/apply/transfer/sirInquiryDate";         //已排期
-const sirInquiryReject = "/apply/transfer/sirInquiryReject";         //已拒收
-const sirInquiryEnd = "/apply/transfer/sirInquiryEnd";         //已结束
+const sirInquiryCheck = "/apply/transfer/sirInquiryCheck";                      //待审核
+const sirInquiryAccept = "/apply/transfer/sirInquiryAccept";                    //待接收
+const sirInquiryCheckDate = "/apply/transfer/sirInquiryCheckDate";              //排期审核
+const sirInquiryDate = "/apply/transfer/sirInquiryDate";                        //已排期
+const sirInquiryReject = "/apply/transfer/sirInquiryReject";                    //已拒收
+const sirInquiryEnd = "/apply/transfer/sirInquiryEnd";                          //已结束
 
-/** 首诊医生 分页数量查询 */
+/** 分页数量查询接口 */
 const sendSelectAllCountDoctor = "/apply/consultation/sendSelectAllCountDoctor";        //首诊医生发出列表
 const receiveSelectAllCountDoctor = "/apply/consultation/receiveSelectAllCountDoctor";  //会诊医生接受列表
-const sendSelectAllCountSir = "/apply/consultation/sendSelectAllCountSir";                 //首诊医政发出列表
+const sendSelectAllCountSir = "/apply/consultation/sendSelectAllCountSir";              //首诊医政发出列表
 const receiveSelectAllCountSir = "/apply/consultation/receiveSelectAllCountSir";        //会诊医政接受列表
 
-const receiveSelectCountJSON = {
-    待收诊: ["CONSULTATION_APPLY_ACCEDE"],
-    排期审核: ["CONSULTATION_SLAVE_ACCEDE", "CONSULTATION_DOCTOR_LOCKED"],
-    已排期: ["CONSULTATION_DATETIME_LOCKED"],
-    会诊中: ["CONSULTATION_BEGIN"],
-    待反馈: ["CONSULTATION_REPORT_SUBMITTED"],
-    已拒收: ["CONSULTATION_SLAVE_REJECT", "CONSULTATION_MASTER_REJECT"],
-    已结束: ["CONSULTATION_END", "CONSULTATION_FEEDBACK_SUBMITTED"]
-}
-// 受邀会诊 医生 receiveSelectCount
-
-// 发出会诊 医生
-sendSelectCountJSON = {
-    待审核: "['CONSULTATION_APPLY_CREATE_SUCCESS']",
-    待收诊: "['CONSULTATION_APPLY_ACCEDE', 'CONSULTATION_SLAVE_REJECT', 'CONSULTATION_DOCTOR_LOCKED', 'CONSULTATION_MASTER_ACCEDE']",
-    已排期: "['CONSULTATION_DATETIME_LOCKED']",
-    会诊中: "['CONSULTATION_BEGIN']",
-    待反馈: "['CONSULTATION_REPORT_SUBMITTED']",
-    已结束: "['CONSULTATION_END', 'CONSULTATION_FEEDBACK_SUBMITTED']",
-    已拒收: "['CONSULTATION_MASTER_REJECT']"
-}
-
-// 转诊 医生 inquiryCount
-inquiryCount = {
-    待收诊: ["INQUIRY_APPLY_ACCEDE"],
-    已排期: ["INQUIRY_DATETIME_LOCKED", "INQUIRY_SENDER_CONFIRM"],
-    已拒收: ["INQUIRY_SLAVE_REJECT", "INQUIRY_SLAVE_REJECT"],
-    已结束: ["INQUIRY_END", "INQUIRY_SENDER_CANCEL"]
-}
-// 转诊 排期审核 医生 inquirySlaveMasterAccedeCount
-// {
-//     "排期审核"
-// :
-//     ["INQUIRY_SLAVE_ACCEDE", "INQUIRY_MASTER_ACCEDE"]
-// }
-// // 转诊 待审核 医生 inquiryCreateSuccessCount
-// {
-//     "待审核"
-// :
-//     ["INQUIRY_APPLY_CREATE_SUCCESS"]
-// }
