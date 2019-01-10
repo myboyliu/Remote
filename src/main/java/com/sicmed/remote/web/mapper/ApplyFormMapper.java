@@ -49,6 +49,10 @@ public interface ApplyFormMapper {
 
     ConsultationStatusBean inquiryAllCount(ApplyFormBean applyFormBean);
 
+    ConsultationStatusBean inquiryAllCountDoctor(ApplyFormBean applyFormBean);
+
+    ConsultationStatusBean inquiryAllCountSir(ApplyFormBean applyFormBean);
+
     ConsultationStatusBean inquiryCreateSuccessAllCount(ApplyFormBean applyFormBean);
 
     ConsultationStatusBean inquirySMAdAllCount(ApplyFormBean applyFormBean);

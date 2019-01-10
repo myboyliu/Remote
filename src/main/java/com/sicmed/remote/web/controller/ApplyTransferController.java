@@ -10,11 +10,14 @@ import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.service.ApplyFormService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +29,7 @@ import java.util.Map;
  * @description 转诊相关查询
  * @date 2018/12/26
  */
+@Slf4j
 @RestController
 @RequestMapping(value = "apply/transfer")
 public class ApplyTransferController extends BaseController {
@@ -46,6 +50,9 @@ public class ApplyTransferController extends BaseController {
     public Map inquirySelect(List<String> consultationStatusList, String msg) {
 
         String userId = getRequestToken();
+        if (StringUtils.isBlank(userId)) {
+            return badRequestOfArguments("无法获取登录用户Id");
+        }
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setConsultationTypeList(consultationTypeListInquiry);
@@ -184,6 +191,10 @@ public class ApplyTransferController extends BaseController {
      * 医政 转诊 查询
      */
     public Map sirInquirySelect(ApplyFormBean applyFormBean, List<String> consultationStatusList, String msg) {
+
+        if (StringUtils.isBlank(applyFormBean.getApplyHospitalId()) && StringUtils.isBlank(applyFormBean.getInviteHospitalId())) {
+            return badRequestOfArguments("传入hospitalId为空");
+        }
 
         applyFormBean.setConsultationStatusList(consultationStatusList);
         applyFormBean.setConsultationTypeList(consultationTypeListInquiry);
@@ -394,8 +405,11 @@ public class ApplyTransferController extends BaseController {
     public Map inquiryAllCountDoctor() {
 
         String userId = getRequestToken();
+        if (StringUtils.isBlank(userId)) {
+            return badRequestOfArguments("获取登录用户I的失败");
+        }
 
-        ConsultationStatusBean consultationStatusBean = applyFormService.inquiryAllCount(userId, null, consultationTypeListInquiry);
+        ConsultationStatusBean consultationStatusBean = applyFormService.inquiryAllCountDoctor(userId, consultationTypeListInquiry);
 
         return succeedRequest(consultationStatusBean);
     }
@@ -408,8 +422,12 @@ public class ApplyTransferController extends BaseController {
 
         String userId = getRequestToken();
         UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        String hospitalId = userDetail.getHospitalId();
+        if (StringUtils.isBlank(hospitalId)) {
+            return badRequestOfArguments("获取登录用户医院Id失败");
+        }
 
-        ConsultationStatusBean consultationStatusBean = applyFormService.inquiryAllCount(userId, userDetail.getHospitalId(), consultationTypeListInquiry);
+        ConsultationStatusBean consultationStatusBean = applyFormService.inquiryAllCountSir(userDetail.getHospitalId(), consultationTypeListInquiry);
 
         return succeedRequest(consultationStatusBean);
     }

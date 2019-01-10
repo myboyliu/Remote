@@ -4,12 +4,14 @@ import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.mapper.ApplyFormMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
 
+@Slf4j
 @Service
 public class ApplyFormService implements BaseService<ApplyForm> {
 
@@ -69,19 +71,26 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         return applyFormMapper.inquiryCountSelect(applyFormBean);
     }
 
-    // 转诊 其他 总数目查询.hospitalId为null时,查询角色魏医生;反之为医政
-    public ConsultationStatusBean inquiryAllCount(String userId, String hospitalId, List<String> consultantTypeList) {
+    // 转诊 医生 其他 总数目查询
+    public ConsultationStatusBean inquiryAllCountDoctor(String userId,List<String> consultantTypeList) {
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setConsultationTypeList(consultantTypeList);
+        applyFormBean.setApplyUserId(userId);
+        applyFormBean.setInviteUserId(userId);
+
+        return applyFormMapper.inquiryAllCountDoctor(applyFormBean);
+    }
+    // 转诊 医证 其他 总数目查询
+    public ConsultationStatusBean inquiryAllCountSir(String hospitalId, List<String> consultantTypeList) {
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setConsultationTypeList(consultantTypeList);
         applyFormBean.setInviteHospitalId(hospitalId);
         applyFormBean.setApplyHospitalId(hospitalId);
-        applyFormBean.setApplyUserId(userId);
-        applyFormBean.setInviteUserId(userId);
 
-        return applyFormMapper.inquiryAllCount(applyFormBean);
+        return applyFormMapper.inquiryAllCountSir(applyFormBean);
     }
-
     // 转诊 排期审核 总数目查询,hospitalId为空时,查询对象医生;不为空时,医政
     public ConsultationStatusBean inquirySMAdAllCount(String userId, String hospitalId, List<String> consultantTypeList) {
 
@@ -92,6 +101,7 @@ public class ApplyFormService implements BaseService<ApplyForm> {
 
         return applyFormMapper.inquirySMAdAllCount(applyFormBean);
     }
+
     // 转诊 排期审核 数目查询
     public Integer inquirySlaveMasterAccedeCount(String userId, String hospitalId, List<String> consultantTypeList, List<String> statusList) {
 
@@ -114,6 +124,7 @@ public class ApplyFormService implements BaseService<ApplyForm> {
 
         return applyFormMapper.inquiryCreateSuccessAllCount(applyFormBean);
     }
+
     // 转诊 待审核 数目查询
     public Integer inquiryCreateSuccessCount(String userId, String hospitalId, List<String> consultantTypeList, List<String> statusList) {
 

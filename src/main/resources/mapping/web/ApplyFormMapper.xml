@@ -62,12 +62,8 @@
                     #{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
-            <if test="applyUserId != null">
-                AND (apply_user_id = #{applyUserId,jdbcType=VARCHAR}
-            </if>
-            <if test="inviteUserId != null">
-                or invite_user_id = #{inviteUserId,jdbcType=VARCHAR})
-            </if>
+            AND (apply_user_id = #{applyUserId,jdbcType=VARCHAR}
+            or invite_user_id = #{inviteUserId,jdbcType=VARCHAR})
         </where>
         order by apply_urgent desc,update_time,create_time
         limit #{beginNo},#{pageSize}
@@ -120,12 +116,8 @@
                     #{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
-            <if test="applyHospitalId != null">
-                AND (apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
-            </if>
-            <if test="inviteHospitalId != null">
-                or invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR})
-            </if>
+            AND (apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
+            or invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR})
         </where>
         order by apply_urgent desc,update_time,create_time
         limit #{beginNo},#{pageSize}
@@ -634,7 +626,7 @@
         </where>
     </select>
 
-    <!--转诊 其他总数查询-->
+    <!--转诊 医生 其他总数查询-->
     <select id="inquiryAllCountDoctor" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
             resultMap="ConsultationStatusBeanResultMap">
         select
@@ -660,21 +652,41 @@
                     #{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
-            <if test="applyUserId != null">
-                AND (apply_user_id = #{applyUserId,jdbcType=VARCHAR}
-            </if>
-            <if test="inviteUserId != null">
-                or invite_user_id = #{inviteUserId,jdbcType=VARCHAR})
-            </if>
-            <if test="applyHospitalId != null">
-                AND (apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
-            </if>
-            <if test="inviteHospitalId != null">
-                or invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR})
-            </if>
+            AND (apply_user_id = #{applyUserId,jdbcType=VARCHAR}
+            or invite_user_id = #{inviteUserId,jdbcType=VARCHAR})
         </where>
     </select>
 
+    <!--转诊 医证 其他总数查询-->
+    <select id="inquiryAllCountSir" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
+            resultMap="ConsultationStatusBeanResultMap">
+        select
+        count(apply_status="CONSULTATION_APPLY_CREATE_SUCCESS" or NULL) cacs,
+        count(apply_status="CONSULTATION_APPLY_ACCEDE" or NULL) caa,
+        count(apply_status="CONSULTATION_APPLY_REJECT" or NULL) car,
+        count(apply_status="CONSULTATION_SLAVE_ACCEDE" or NULL) csa,
+        count(apply_status="CONSULTATION_SLAVE_REJECT" or NULL) csr,
+        count(apply_status="CONSULTATION_MASTER_ACCEDE" or NULL) cma,
+        count(apply_status="CONSULTATION_MASTER_REJECT" or NULL) cmr,
+        count(apply_status="CONSULTATION_DOCTOR_LOCKED" or NULL) cdrl,
+        count(apply_status="CONSULTATION_DATETIME_LOCKED" or NULL) cdel,
+        count(apply_status="CONSULTATION_BEGIN" or NULL) cb,
+        count(apply_status="CONSULTATION_REPORT_SUBMITTED" or NULL) crs,
+        count(apply_status="CONSULTATION_FEEDBACK_SUBMITTED" or NULL) cfs,
+        count(apply_status="CONSULTATION_END" or NULL) ce
+        from apply_form
+        <where>
+            del_flag = "0"
+            <if test="consultationTypeList != null">
+                AND apply_type IN
+                <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            AND (apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
+            or invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR})
+        </where>
+    </select>
     <!--转诊 数目查询-->
     <select id="inquiryCountSelect" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
             resultType="java.lang.Integer">

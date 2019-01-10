@@ -169,6 +169,7 @@ public class ApplyController extends BaseController {
         // 添加 转诊 申请表
         String applyType = String.valueOf(ApplyType.APPLY_REFERRAL);
         String applyStatues = String.valueOf(InquiryStatus.INQUIRY_APPLY_CREATE_SUCCESS);
+        applyForm.setCreateUser(userId);
         applyForm.setApplyBranchId(currentUserBean.getBranchId());
         applyForm.setApplyHospitalId(currentUserBean.getHospitalId());
         applyForm.setApplyType(applyType);
