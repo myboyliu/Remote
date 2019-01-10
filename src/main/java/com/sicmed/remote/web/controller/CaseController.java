@@ -212,6 +212,7 @@ public class CaseController extends BaseController {
         caseContentBean.setRecordId(caseRecordId);
         caseContentBean.setUpdateUser(userId);
         caseContentBean.setWeightPathTypeId(resultList);
+        caseContentBean.setUpdateUser(userId);
         caseContentService.insertContentByMap(caseContentBean);
 
         // 修改applyForm
@@ -220,6 +221,7 @@ public class CaseController extends BaseController {
         applyForm.setCaseSummary(caseSummary);
         applyForm.setApplyRemark(applyRemark);
         applyForm.setApplyUrgent(applyUrgent);
+        applyForm.setUpdateUser(userId);
         applyFormService.updateByPrimaryKeySelective(applyForm);
 
         return succeedRequest("ok");

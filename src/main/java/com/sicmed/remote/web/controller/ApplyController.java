@@ -176,6 +176,7 @@ public class ApplyController extends BaseController {
         applyForm.setApplyUserId(userId);
         applyForm.setApplyStatus(applyStatues);
         applyForm.setApplySummary(applySummary);
+        applyForm.setCreateUser(userId);
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("转诊记录保存失败");
@@ -219,6 +220,7 @@ public class ApplyController extends BaseController {
         caseConsultant.setId(applyForm.getId());
         caseConsultant.setApplyUserId(applyForm.getApplyUserId());
         caseConsultant.setInviteUserId(applyForm.getInviteUserId());
+        caseConsultant.setCreateUser(userId);
         int k = caseConsultantService.insertSelective(caseConsultant);
         if (k < 1) {
             return badRequestOfArguments("添加失败");
@@ -254,6 +256,7 @@ public class ApplyController extends BaseController {
         applyForm.setApplyType(applyType);
         applyForm.setApplyStatus(applyStatues);
         applyForm.setApplySummary(getApplySummary(userId));
+        applyForm.setCreateUser(userId);
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("视频会诊记录保存失败");
@@ -289,6 +292,7 @@ public class ApplyController extends BaseController {
 
         CaseConsultant caseConsultant = new CaseConsultant();
         caseConsultant.setId(applyForm.getId());
+        caseConsultant.setCreateUser(userId);
         caseConsultant.setConsultantUserList(consultantUserList);
         caseConsultant.setConsultantPrice(consultantPrice);
         caseConsultant.setHospitalPrice(hospitalPrice);
@@ -330,6 +334,7 @@ public class ApplyController extends BaseController {
         applyForm.setApplyType(applyType);
         String applyStatues = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_CREATE_SUCCESS);
         applyForm.setApplyStatus(applyStatues);
+        applyForm.setCreateUser(userId);
 
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
@@ -344,6 +349,7 @@ public class ApplyController extends BaseController {
         caseConsultant.setInviteUserId(applyForm.getInviteUserId());
         caseConsultant.setApplyUserId(userId);
         caseConsultant.setConsultantReport(consultantReport);
+        caseConsultant.setCreateUser(userId);
 
         int j = caseConsultantService.insertSelective(caseConsultant);
         if (j < 1) {
