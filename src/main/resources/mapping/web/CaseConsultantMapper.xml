@@ -286,7 +286,7 @@
             and (cc.invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
             or cc.consultant_user_list like CONCAT('%',#{inviteUserId},'%'))
         </where>
-        order by af.apply_urgent desc ,af.update_time,af.create_time
+        order by af.apply_urgent desc ,consultant_apply_time,af.update_time,af.create_time
         limit #{beginNo},#{pageSize}
     </select>
 
