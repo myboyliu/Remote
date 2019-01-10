@@ -732,10 +732,12 @@ main {
     .sendBack, .MDTBtn {
       width: 160px;
     }
+
     .entrance {
       width: 200px;
       background-color: #f6c567;
     }
+
     .audit, .accept, .toBeMDT {
       width: 160px;
       background-color: #f6c567;
@@ -749,11 +751,25 @@ main {
       width: 200px;
       background-color: #f6c567;
     }
-    .examineBtn{
+
+    .examineBtn {
       width: 200px;
     }
+
     .entrance {
       width: 200px;
+    }
+
+    //转诊按钮样式
+    .sendBackReferral, .cancelReferral, .refuseReferral {
+      width: 200px;
+      display: none;
+    }
+
+    .throughReferral, .agreeReferral, .receiveReferral {
+      width: 200px;
+      background-color: #f6c567;
+      display: none;
     }
   }
 }
@@ -1195,84 +1211,196 @@ main {
 }
 
 /* ***********弹层*************** */
-.rejectionLayer {
-  margin: 160px auto;
-  width: 1060px;
-  height: 480px;
-  background-color: #f4f4f4;
-  position: relative;
-  border-radius: 10px;
+#refuseBackConsultationBox {
+
+  .rejectionLayer {
+    margin: 160px auto;
+    width: 1060px;
+    height: 480px;
+    background-color: #f4f4f4;
+    position: relative;
+    border-radius: 10px;
+  }
+
+  .re_layer {
+    display: none;
+  }
+
+  .confirm {
+    width: 200px;
+    height: 40px;
+    background-color: #516dcf;
+    border: 1px solid #3249c2;
+    margin-left: 430px;
+    margin-top: 30px;
+    border-radius: 10px;
+    color: #fff;
+    letter-spacing: 3px;
+    cursor: pointer;
+  }
+
+  .ip {
+    width: 200px;
+    height: 40px;
+    border: 1px solid #516dcf;
+    text-align: center;
+    font-size: 14px;
+    background-color: #fff;
+    border-radius: 10px;
+    color: #1937bc;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .ip:hover {
+    background-color: #516dcf;
+    color: #fff;
+  }
+
+  .rejectionLayer .suggest {
+    margin-left: 80px;
+    margin-right: 10px;
+  }
+
+  .layui-layer-setwin .layui-layer-close2 {
+    background: none;
+  }
+
+  .rejectionLayer_top {
+    height: 60px;
+    display: inline-block;
+    margin-top: 30px;
+    margin-left: 30px;
+  }
+
+  .rejectionLayer_top span {
+    font-size: 18px;
+    font-weight: bold;
+    padding-top: 42px;
+  }
+
+  .font {
+    display: inline-block;
+    position: absolute;
+    top: 28px;
+    left: 20px;
+    color: #999999;
+  }
+
+  .rejectionLayer_buttom {
+    width: 1040px;
+    height: 300px;
+    margin: 0 auto;
+    position: relative;
+    border-radius: 10px;
+  }
 }
 
-.re_layer {
+#refuseBackReferralBox {
+  /* ***********弹层*************** */
   display: none;
-}
 
-.confirm {
-  width: 200px;
-  height: 40px;
-  background-color: #516dcf;
-  border: 1px solid #3249c2;
-  margin-left: 430px;
-  margin-top: 30px;
-  border-radius: 10px;
-  color: #fff;
-  letter-spacing: 3px;
-  cursor: pointer;
-}
+  .rejectionLayer {
+    width: 1060px;
+    height: 480px;
+    background-color: #f4f4f4;
+    position: relative;
+    // border-radius: 10px;
+  }
 
-.ip {
-  width: 200px;
-  height: 40px;
-  border: 1px solid #516dcf;
-  text-align: center;
-  font-size: 14px;
-  background-color: #fff;
-  border-radius: 10px;
-  color: #1937bc;
-  cursor: pointer;
-  font-weight: bold;
-}
+  .re_layer {
+    // display: none;
+  }
 
-.ip:hover {
-  background-color: #516dcf;
-  color: #fff;
-}
+  .confirm {
+    width: 200px;
+    height: 40px;
+    background-color: #516dcf;
+    border: 1px solid #3249c2;
+    margin-left: 430px;
+    margin-top: 30px;
+    border-radius: 10px;
+    color: #fff;
+    letter-spacing: 3px;
+    cursor: pointer;
+  }
 
-.rejectionLayer .suggest {
-  margin-left: 80px;
-  margin-right: 10px;
-}
+  .ip {
+    width: 200px;
+    height: 40px;
+    border: 1px solid #516dcf;
+    text-align: center;
+    font-size: 14px;
+    background-color: #fff;
+    border-radius: 10px;
+    color: #1937bc;
+    cursor: pointer;
+    font-weight: bold;
+  }
 
-.layui-layer-setwin .layui-layer-close2 {
-  background: none;
-}
+  .ip:hover {
+    background-color: #516dcf;
+    color: #fff;
+  }
 
-.rejectionLayer_top {
-  height: 60px;
-  display: inline-block;
-  margin-top: 30px;
-  margin-left: 30px;
-}
+  .rejectionLayer .suggest {
+    margin-left: 80px;
+    margin-right: 10px;
+  }
 
-.rejectionLayer_top span {
-  font-size: 18px;
-  font-weight: bold;
-  padding-top: 42px;
-}
+  .layui-layer-setwin .layui-layer-close2 {
+    background: none;
+  }
 
-.font {
-  display: inline-block;
-  position: absolute;
-  top: 28px;
-  left: 20px;
-  color: #999999;
-}
+  .rejectionLayer_top {
+    height: 60px;
+    display: inline-block;
+    margin-top: 30px;
+    margin-left: 30px;
+  }
 
-.rejectionLayer_buttom {
-  width: 1040px;
-  height: 300px;
-  margin: 0 auto;
-  position: relative;
-  border-radius: 10px;
+  .rejectionLayer_top span {
+    font-size: 18px;
+    font-weight: bold;
+    padding-top: 42px;
+  }
+
+  .font {
+    display: inline-block;
+    position: absolute;
+    top: 28px;
+    left: 20px;
+    color: #999999;
+  }
+
+  .rejectionLayer_buttom {
+    width: 1040px;
+    height: 300px;
+    margin: 0 auto;
+    position: relative;
+    border-radius: 10px;
+  }
+
+
+  .rejectionLayer_buttom textarea {
+    width: 1036px;
+    height: 300px;
+    border-radius: 10px;
+    resize: none;
+    padding-top: 30px;
+    padding-left: 20px;
+  }
+
+  .closeBtn {
+    width: auto;
+    height: 40px;
+    line-height: 40px;
+    position: absolute;
+    top: -50px;
+    // right: -56px;
+    font-size: 18px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 400;
+  }
 }

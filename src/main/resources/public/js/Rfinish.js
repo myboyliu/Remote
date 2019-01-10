@@ -1,20 +1,25 @@
 let applyRecordNavigationShow = false;
 let consultantFeedbackNavigationShow = false;
 let applyRefuseNavigationShow = false;
+let isBranchDoctor = false;
+let isInvite = false;
+let isVideo = false;
+let isReferral = false;
+let isConsultation = true;
 let consultantReport = [];
 let inviteDoctorCount = 0;
 let applyFormId;
 let applyInfo = {};
 let isMainDoctor;
-let isBranchDoctor = false;
-let isInvite = false;
-let isVideo = false;
 let applyStatus;
 let applyTimeList = [];
 let caseContentList = [];
+let userInfo = {};
 const _$ = layui.jquery;
 
 let newDateTimeList = [];
+const statusArr = ["已拒收", '待收诊', '已排期', '会诊中', '待反馈', '已完成'];
+const referralStatusArr = ["已拒收", '待收诊', '已排期', '已完成'];
 
 /**渲染左侧导航栏*/
 function renderLeftNavigation(data) {
@@ -60,7 +65,7 @@ function renderLeftNavigation(data) {
     })
     _html += '</ul>\
              </li>'
-    if (isVideo) {
+    if (isVideo || isReferral) {
         _html += '<li class="oneLevelItem patientInfo">\
                         <p class="oneLevelName">会诊排期</p>\
                     </li>'
@@ -163,24 +168,26 @@ function getApplyInfo() {
     function getApplyInfoSuccess(result) {
         sessionStorage.setItem('applyInfo', JSON.stringify(result));
         applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
+        userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+        isReferral = applyInfo.applyType === "APPLY_REFERRAL" ? true : false;
+        isConsultation = applyInfo.applyType === "APPLY_REFERRAL" ? false : true;
+        isMainDoctor = userInfo.id === applyInfo.inviteUserId ? true : false;
+        isBranchDoctor = userInfo.branchId === applyInfo.inviteBranchId ? true : false;
+        isInvite = userInfo.branchId === applyInfo.inviteBranchId ? true : false;
+        isVideo = applyInfo.applyType === "APPLY_CONSULTATION_VIDEO" ? true : false;
     }
 }
 
 /** 根据不同角色渲染 页面内容*/
 function renderViewByRole() {
-    console.log(inviteDoctorCount);
-    console.log(isInvite);
-    console.log(isMainDoctor);
-
     /** 动态创建进度条 */
-    const statusArr = ["已拒收", '待收诊', '已排期', '会诊中', '待反馈', '已完成'];
     let str = '';
     for (var i = 1; i < statusArr.length; i++) {
         str += '<li>' + statusArr[i] + '</li>'
         $('.progressBar').html(str);
     }
-    $(".progressBar li:nth-child(1)").addClass("libg");
-    if (isInvite) {
+    if (isInvite && isConsultation) {
+        $(".progressBar li:nth-child(1)").addClass("libg");
         if (applyStatus === "CONSULTATION_APPLY_ACCEDE") {
             //待收诊
             if (isMainDoctor) {
@@ -234,7 +241,8 @@ function renderViewByRole() {
             $('.progressBar').html('<li>' + statusArr[0] + '</li>');
             $(".progressBar li:nth-child(1)").addClass("libg");
         }
-    } else {
+    } else if (isConsultation) {
+        $(".progressBar li:nth-child(1)").addClass("libg");
         if (applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
             //创建成功
             $(".progressBar").hide()
@@ -274,6 +282,40 @@ function renderViewByRole() {
             consultantFeedbackNavigationShow = true;
         } else {
             //待收诊
+        }
+    } else {
+        $('.progressBar').empty();
+        let referralStatus = '';
+        for (var i = 1; i < referralStatusArr.length; i++) {
+            referralStatus += '<li style="width: 400px;">' + referralStatusArr[i] + '</li>'
+            $('.progressBar').html(referralStatus);
+        }
+        $(".progressBar li:nth-child(1)").addClass("libg");
+        if (applyStatus === "INQUIRY_APPLY_CREATE_SUCCESS") {
+            //待审核
+            $('.progressBar').hide();
+            $('#applyTime').hide();
+            $('#applyNumber').hide();
+            $('.layui-timeline').hide();
+        } else if (applyStatus === "INQUIRY_APPLY_ACCEDE") {
+            //待收诊
+            $("#rejectionReferral").show();
+            $("#receiveReferral").show();
+        } else if (applyStatus === "INQUIRY_SLAVE_ACCEDE") {
+            //排期审核
+
+        } else if (applyStatus === "INQUIRY_DATETIME_LOCKED") {
+            //已排期
+            $("#cancelReferral").show();
+            $("#agreeReferral").show();
+        } else if (applyStatus === "INQUIRY_MASTER_REJECT" || applyStatus === "INQUIRY_APPLY_REJECT" || applyStatus === "INQUIRY_SLAVE_REJECT") {
+            //已拒收
+            $('.progressBar').empty();
+            referralStatus = '<li class="libg" style="width: 100%">' + '已拒收' + '</li>'
+            $('.progressBar').html(referralStatus);
+        } else if (applyStatus === "INQUIRY_END") {
+            //已结束
+
         }
     }
 }
@@ -320,20 +362,10 @@ $(function () {
 
     getApplyInfo();
 
-    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
-
-    if (applyInfo.inviteUserId) {
+    if (applyInfo.inviteUserId && isConsultation) {
         inviteDoctorCount = JSON.parse(applyInfo.consultantUserList).length;
     }
     let applyNodeList = applyInfo.applyNodeList;
-
-    isMainDoctor = userInfo.id === applyInfo.inviteUserId ? true : false;
-
-    isBranchDoctor = userInfo.branchId === applyInfo.inviteBranchId ? true : false;
-
-    isInvite = userInfo.branchId === applyInfo.inviteBranchId ? true : false;
-
-    isVideo = applyInfo.applyType === "APPLY_CONSULTATION_VIDEO" ? true : false;
 
     applyTimeList = applyInfo.applyTimeList;
     caseContentList = applyInfo.caseContentList;
@@ -343,7 +375,7 @@ $(function () {
     /** 拒收原因 */
     $("#refuseReason").html(applyInfo.refuseRemark);
     /**会诊报告*/
-    if (applyInfo.consultantReport) {
+    if (applyInfo.consultantReport && isConsultation) {
         consultantReport = JSON.parse(applyInfo.consultantReport);
     }
     let goalHtml = '';
@@ -367,8 +399,10 @@ $(function () {
     $('.telemedicineTarget').html('会/转诊目的：' + applyInfo.applyRemark);
     /** 查询电子病历附件*/
     ajaxRequest("GET", getAllCaseContentType, null, true, false, true, renderCaseContentView, null, null);
-    $('.money').html(applyInfo.consultantPrice);
-
+    if (isConsultation) {
+        $("#consultationPrice").show();
+        $('.money').html(applyInfo.consultantPrice);
+    }
     //订单编号
     $('.numbers').html(applyInfo.applyNumber);
     //申请时间
@@ -414,10 +448,10 @@ $(function () {
     }
     //如果是图文会诊
     if (applyInfo.applyType === "APPLY_CONSULTATION_IMAGE_TEXT") {
-        $('#applyTime').hide();
+        $('#applyTimeListView').hide();
         $('.schedule_modules ').hide();
     } else {
-        $('#applyTime').show();
+        $('#applyTimeListView').show();
         $('.schedule_modules ').show();
     }
 
@@ -474,8 +508,8 @@ $(function () {
         for (let item of consultantReport) {
             if (item.doctorId === userInfo.id) {
                 if (item.reportStatus === "0") {
-                    $('.hold').attr('disabled',true);
-                    $('.refer').attr('disabled',true);
+                    $('.hold').attr('disabled', true);
+                    $('.refer').attr('disabled', true);
                     $('.hold').addClass('disabled');
                     $('.refer').addClass('disabled');
                     $('#textarea').attr('disabled', 'disabled');

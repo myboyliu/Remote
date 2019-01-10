@@ -23,6 +23,8 @@
     <script src="../common/js/datePluginUtils.js"></script>
     <script src="../common/js/picturePluginUtils.js"></script>
     <script src="../js/adminApplyInfo.js"></script>
+    <script src="../js/adminReferralApplyInfo.js"></script>
+    <script src="../js/adminConsultationApplyInfo.js"></script>
     <!-- [if lt IE9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif] -->
@@ -32,7 +34,7 @@
 <div class="header">
     <div class="infoArea clearfix">
         <h1 class="logo">
-            <a href="javascript:;">
+            <a href="javascript:">
                 <img src="../images/ylyw_logo.png"/>
             </a>
         </h1>
@@ -45,7 +47,7 @@
                         <a href="../page/center.html">个人中心</a>
                     </li>
                     <li>
-                        <a class="loginOut" href="javascript:;">退出登录</a>
+                        <a class="loginOut" href="javascript:">退出登录</a>
                     </li>
                 </ul>
             </div>
@@ -169,7 +171,7 @@
                 <span class="fw">会诊排期</span>
                 <div class="wire wire5"></div>
                 <div class="modifier5" style="display: none;">
-                    <a class="schedulingBtn" href="javascript:;">
+                    <a class="schedulingBtn" href="javascript:">
                         <span>修改排期</span>
                     </a>
                     <i class="chooseBtn" id="cutSch"></i>
@@ -220,7 +222,7 @@
 
 
             <!-- 诊费模块 -->
-            <div class="hosp  fees clearfix">
+            <div id="consultationPriceView" class="hosp  fees clearfix">
                 <img src="../images/cost.png" alt="诊费">
                 <span class="fw">诊费</span>
                 <div class="wire wire4"></div>
@@ -275,7 +277,7 @@
                         <span>订单编号：</span>
                         <span class="numbers"></span>
                     </h4>
-                    <h4>
+                    <h4 id="applyTime">
                         <span>申请时间：</span>
                         <span class="applyDate"></span>
                     </h4>
@@ -320,6 +322,15 @@
         <input id="toBeMDT" type="button" value="确认协调" class="toBeMDT MDTBtn" style="display: none;">
         <input id="accept" type="button" value="审核通过" class="examineBtn accept" style="display: none;">
         <input id="enter_room" type="button" value="进入视频会诊室" class="entrance" style="display: none;">
+
+        <!-- 转诊按钮 -->
+        <input id="sendBackReferral" type="button" value="退回" class="sendBackReferral">
+        <input id="throughBackReferral" type="button" value="通过" class="throughReferral">
+        <input id="cancelBackReferral" type="button" value="取消转诊" class="cancelReferral">
+        <input id="agreeBackReferral" type="button" value="同意" class="agreeReferral">
+        <input id="refuseBackReferral" type="button" value="拒绝" class="refuseReferral">
+        <input id="receiveBackReferral" type="button" value="接收" class="receiveReferral">
+
     </div>
 </div>
 <div class="footer marginBottom70">
@@ -344,10 +355,10 @@
 
         </ul>
         <div class="clearBox">
-            <a class="clearBtn" href="javascript:;">清空本页</a>
+            <a class="clearBtn" href="javascript:">清空本页</a>
         </div>
         <div class="btnBox">
-            <a href="javascript:;" class="yesBtn">确定</a>
+            <a href="javascript:" class="yesBtn">确定</a>
         </div>
     </div>
 </div>
@@ -364,7 +375,7 @@
             <!-- 点击下载dcm文件块 -->
             <div class="downlodeFile">
                 <img src="../images/download.png" alt="点击下载文件">
-                <a href="javascript:;">点击下载文件</a>
+                <a href="javascript:">点击下载文件</a>
             </div>
         </div>
         <div class="fileDescBox">
@@ -372,11 +383,11 @@
             <textarea class="descText" readonly="readonly" name="name" rows="" cols=""></textarea>
         </div>
         <div class="switchBox clearfix">
-            <a class="prev" href="javascript:;">上一个文件</a>
-            <a class="next" href="javascript:;">下一个文件</a>
+            <a class="prev" href="javascript:">上一个文件</a>
+            <a class="next" href="javascript:">下一个文件</a>
         </div>
     </div>
-    <a class="closeBtnImg" href="javascript:;">关闭</a>
+    <a class="closeBtnImg" href="javascript:">关闭</a>
 </div>
 <!-- 确定退回此订单弹层 -->
 <div class="invite inviteObj">
@@ -397,15 +408,15 @@
 <div class="operateBox submitBox MDTBox">
     <p>确认已协调专家并接收吗？</p>
     <div class="btnBox">
-        <a class="noBtn" href="javascript:;">我再想想</a>
-        <a class="acceptBtn" href="javascript:;">是的，接收</a>
+        <a class="noBtn" href="javascript:">我再想想</a>
+        <a class="acceptBtn" href="javascript:">是的，接收</a>
     </div>
 </div>
 <div class="operateBox submitBox Receive">
     <p>确定要接诊吗？</p>
     <div class="btnBox">
-        <a class="noBtn" href="javascript:;">取消</a>
-        <a class="acceptBtn" href="javascript:;">确定</a>
+        <a class="noBtn" href="javascript:">取消</a>
+        <a class="acceptBtn" href="javascript:">确定</a>
     </div>
 </div>
 <!-- 弹层 -->
@@ -415,7 +426,7 @@
 </div>
 
 <!-- 弹层部分 背景图加三个弹层 -->
-<div class="background">
+<div id="refuseBackConsultationBox" class="background">
     <!-- 拒收弹层 -->
     <div class="rejectionLayer re_layer">
         <div class="rejectionLayer_top">
@@ -439,27 +450,64 @@
     </div>
 </div>
 
-<!--<div class="succeed" style="display: none;">-->
-<!--<p>发布成功</p>-->
+<!-- 转诊 弹窗 -->
+<!--<div class="promptMsg">-->
+    <!--<p>退回成功</p>-->
 <!--</div>-->
-<!--<div class="returned" style="display: none;">-->
-<!--<p>退回成功</p>-->
-<!--</div>-->
-<!--<div class="applyTimeFiled">-->
-<!--<p>请选定会诊时间</p>-->
-<!--</div>-->
-<!--<div class="inviteDoctorFiled">-->
-<!--<p>请先分配主会诊医生</p>-->
-<!--</div>-->
-<!--<div class="rejectSuccess">-->
-<!--<p>拒收成功</p>-->
-<!--</div>-->
-<!--<div class="acceptSuccess">-->
-<!--<p>接收成功</p>-->
-<!--</div>-->
-<!--<div class="pleaseWirte">-->
-<!--<p>请填写拒收原因</p>-->
-<!--</div>-->
+
+
+
+<div id="sendBackReferralBox" class="operateBox sendBackBox">
+    <p>确定要退回该转诊？</p>
+    <div class="btnBox">
+        <a class="noBtn" href="javascript:">我再想想</a>
+        <a id="sendBackReferralBoxYesBtn" class="yesBtn" href="javascript:">是的，退回</a>
+    </div>
+</div>
+<div id="throughBackReferralBox" class="operateBox submitBox">
+    <p>确定要通过该转诊？</p>
+    <div class="btnBox">
+        <a class="noBtn" href="javascript:">我再想想</a>
+        <a id="throughBackReferralBoxYesBtn" class="yesBtn" href="javascript:">确认通过</a>
+    </div>
+</div>
+<div id="receiveBackReferralBox" class="operateBox receiveBox">
+    <p>确定要接收该转诊？</p>
+    <div class="btnBox">
+        <a class="noBtn" href="javascript:">我再想想</a>
+        <a id="receiveBackReferralBoxYesBtn" class="yesBtn" href="javascript:">确认接收</a>
+    </div>
+</div>
+<div id="cancelBackReferralBox" class="operateBox cancelBox">
+    <p>确定要取消该转诊？</p>
+    <div class="btnBox">
+        <a class="noBtn" href="javascript:">我再想想</a>
+        <a id="cancelBackReferralBoxYesBtn" class="yesBtn" href="javascript:">确认取消</a>
+    </div>
+</div>
+<div id="agreeBackReferralBox" class="operateBox agreeBox">
+    <p>确定要同意该转诊？</p>
+    <div class="btnBox">
+        <a class="noBtn" href="javascript:">我再想想</a>
+        <a id="agreeBackReferralBoxYesBtn" class="yesBtn" href="javascript:">确认</a>
+    </div>
+</div>
+<div id="refuseBackReferralBox" class="rejectBox">
+    <div class="rejectionLayer re_layer">
+        <div class="rejectionLayer_top">
+            <span>填写拒收原因</span>
+            <input style="background: rgb(81, 109, 207); color: rgb(255, 255, 255);" type="button" value="病床已满"
+                   class="suggest ip">
+            <input type="button" value="其它原因" class="otherCause ip">
+        </div>
+        <div class="rejectionLayer_buttom">
+            <textarea name="" class="refuseReason rejectBoxArea"
+                      placeholder="请尽量多的填写对医务人员和发件医生有参考价值的建议及原因..."></textarea>
+        </div>
+        <input type="button" value="确定" class="confirm">
+        <div class="noBtn closeBtn clearfix refuseBtn"><img src="../images/close.png" alt=""><span>关闭</span></div>
+    </div>
+</div>
 </body>
 
 </html>

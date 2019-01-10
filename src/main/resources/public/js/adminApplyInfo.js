@@ -11,18 +11,25 @@ let applyTimeList;
 let applyNodeList;
 let isBranchDoctor = false;
 let isMainDoctor = false;
+let applyInfo = {};
+let userInfo = {};
 const _$ = layui.jquery;
+
+let isReferral = false;
+let isConsultation = false; //true: 会诊订单 false: 不是会诊订单
+const statusArr = ["已拒收", '待收诊', '已排期', '会诊中', '待反馈', '已完成'];
+const referralStatusArr = ["已拒收", '待收诊', '已排期', '已完成'];
 
 /** 根据 不同角色 渲染 基础页面 元素 */
 function renderViewByRole(applyStatus) {
     /** 动态创建进度条 */
-    const statusArr = ["已拒收", '待收诊', '已排期', '会诊中', '待反馈', '已完成'];
-    let str = '';
-    for (let i = 1; i < statusArr.length; i++) {
-        str += '<li>' + statusArr[i] + '</li>';
-        $('.progressBar').html(str);
-    }
-    if (isInvite) {
+
+    if (isInvite && isConsultation) {
+        let str = '';
+        for (let i = 1; i < statusArr.length; i++) {
+            str += '<li>' + statusArr[i] + '</li>';
+            $('.progressBar').html(str);
+        }
         if (applyStatus === "CONSULTATION_APPLY_ACCEDE") {
             //待收诊
             $(".progressBar li:nth-child(1)").addClass("libg");
@@ -69,7 +76,7 @@ function renderViewByRole(applyStatus) {
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".modifier2").show();
             $(".rejection").show();
-            if (isVideo){
+            if (isVideo) {
                 $("#enter_room").show();
             }
         } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
@@ -100,7 +107,12 @@ function renderViewByRole(applyStatus) {
             $(".progressBar li:nth-child(1)").addClass("libg");
         }
 
-    } else {
+    } else if (isConsultation) {
+        let str = '';
+        for (let i = 1; i < statusArr.length; i++) {
+            str += '<li>' + statusArr[i] + '</li>';
+            $('.progressBar').html(str);
+        }
         if (applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
             //创建成功
             $(".progressBar").hide();
@@ -151,6 +163,55 @@ function renderViewByRole(applyStatus) {
             //待收诊
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".modifier2").show();
+        }
+    } else {
+        $('.progressBar').empty();
+        let referralStatus = '';
+        for (var i = 1; i < referralStatusArr.length; i++) {
+            referralStatus += '<li style="width: 400px;">' + referralStatusArr[i] + '</li>'
+            $('.progressBar').html(referralStatus);
+        }
+        $(".progressBar li:nth-child(1)").addClass("libg");
+        if (applyStatus === "INQUIRY_APPLY_CREATE_SUCCESS") {
+            //待审核
+            $(".modifier1").show();
+            $(".modifier2").show();
+            $(".modifier3").show();
+            $(".modifier5").show();
+            $('.progressBar').hide();
+
+            $('#applyTime').hide();
+            $('#applyNumber').hide();
+            $('.layui-timeline').hide();
+            $("#sendBackReferral").show();
+            $("#throughBackReferral").show();
+            $("#cancelBackReferral").show();
+            $("#agreeBackReferral").show();
+            $("#refuseBackReferral").show();
+            $("#receiveBackReferral").show();
+
+
+
+
+        } else if (applyStatus === "INQUIRY_APPLY_ACCEDE") {
+            //待收诊
+            $("#rejectionReferral").show();
+            $("#receiveReferral").show();
+        } else if (applyStatus === "INQUIRY_SLAVE_ACCEDE") {
+            //排期审核
+
+        } else if (applyStatus === "INQUIRY_DATETIME_LOCKED") {
+            //已排期
+            $("#cancelReferral").show();
+            $("#agreeReferral").show();
+        } else if (applyStatus === "INQUIRY_MASTER_REJECT" || applyStatus === "INQUIRY_APPLY_REJECT" || applyStatus === "INQUIRY_SLAVE_REJECT") {
+            //已拒收
+            $('.progressBar').empty();
+            referralStatus = '<li class="libg" style="width: 100%">' + '已拒收' + '</li>'
+            $('.progressBar').html(referralStatus);
+        } else if (applyStatus === "INQUIRY_END") {
+            //已结束
+
         }
     }
 }
@@ -281,18 +342,22 @@ function getApplyInfo() {
 
     function getApplyInfoSuccess(result) {
         sessionStorage.setItem('applyInfo', JSON.stringify(result));
+        /** 当前登陆人 信息*/
+        userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+
+        /** 当前申请 详细信息 */
+        applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
+        isReferral = applyInfo.applyType === "APPLY_REFERRAL" ? true : false;
+        isConsultation = applyInfo.applyType === "APPLY_REFERRAL" ? false : true;
     }
 }
 
 $(function () {
     getApplyInfo();
 
-    /** 当前登陆人 信息*/
-    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
-
-    /** 当前申请 详细信息 */
-    let applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
-
+    if (isReferral){
+        $("#consultationPriceView").hide();
+    }
     // isInvite = userInfo.hospitalId === applyInfo.inviteHospitalId ? true : false;
     // isApply = userInfo.hospitalId === applyInfo.applyHospitalId ? true : false;
     applyNodeList = applyInfo.applyNodeList;
@@ -431,215 +496,10 @@ $(function () {
         showDateView(applyTimeList);
     });
 
-    /**  退回按钮弹出层 */
-    $('.sendBack').click(function () {
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['500px', '200px'],
-            closeBtn: false,
-            shade: [0.7, '#000000'],
-            shadeClose: false,
-            content: _$('.inviteObj')
-        });
-    });
-    // 弹出层取消按钮
-    $(".inviteObj").find('.agin').click(function () {
-        layer.closeAll();
-        $('.inviteObj').hide();
-    });
-    // 弹出层是的按钮
-    $(".inviteObj").find('.yes').click(function () {
-        let data = new FormData();
-        data.append("id", applyFormId);
-        ajaxRequest("POST", sirSendCheckReject, data, false, false, true, sirSendCheckRejectSuccess, null, null);
-
-        function sirSendCheckRejectSuccess(result) {
-            layer.closeAll();
-            $(".inviteObj").hide();
-            $("#alertText").html("退回成功");
-            alertMessage();
-            setTimeout(function () {
-                $('.returned').hide();
-                window.location = '../page/administrator.html';
-            }, 2500)
-        }
-    });
 
     /** 返回按钮 */
     $('.getBack').click(function () {
         window.location = '../page/administrator.html'
     });
-    /** 审核发布按钮接口 */
-    $('.audit').click(function () {
-        // 弹出层
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['500px', '200px'],
-            closeBtn: false,
-            shade: [0.7, '#000000'],
-            shadeClose: false,
-            content: _$('.auditObj')
-        });
-
-    });
-
-    $(".auditObj").find(".agin").click(function () {
-        layer.closeAll();
-        $('.auditObj').hide();
-    });
-    $(".auditObj").find(".yes").click(function () {
-        let data = new FormData();
-        data.append("id", applyFormId);
-        ajaxRequest("POST", sirSendCheckAccede, data, false, false, true, sirSendCheckAccedeSuccess, null, null);
-
-        function sirSendCheckAccedeSuccess(result) {
-            $("#alertText").html("发布成功");
-            alertMessage();
-            $('.succeed').hide();
-            window.location = "../page/administrator.html";
-        }
-    });
-    /**MDT协调按钮*/
-    $('.MDTBtn').click(function () {
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['500px', '200px'],
-            closeBtn: false,
-            shade: [0.1, '#000000'],
-            shadeClose: false,
-            content: _$('.MDTBox'),
-        });
-    });
-    /** 会诊医政接收按钮*/
-    $('.accept').click(function () {
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['500px', '200px'],
-            closeBtn: false,
-            shade: [0.1, '#000000'],
-            shadeClose: false,
-            content: _$('.Receive'),
-        });
-    });
-
-    $('.submitBox .noBtn').click(function () {
-        layer.closeAll();
-        $('.submitBox').hide();
-    });
-
-    $('.submitBox .acceptBtn').click(function () {
-        if (!applyInfo.inviteUserId) {
-            layer.closeAll();
-            $('.submitBox').hide();
-            $("#alertText").html("请先分配主会诊医生");
-            alertMessage();
-        } else if ($('.schedule_modules >p').length !== 1 && applyInfo.applyType !== "APPLY_CONSULTATION_IMAGE_TEXT") {
-            layer.closeAll();
-            $('.submitBox').hide();
-            $("#alertText").html("请选定会诊时间");
-            alertMessage();
-        } else {
-            let data = new FormData();
-            data.append("id", applyFormId);
-            ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, sirReceiveMasterAccedeSuccess, null, null)
-
-            //接收 成功回调
-            function sirReceiveMasterAccedeSuccess() {
-                $('.submitBox').hide();
-                $("#alertText").html("接收成功");
-                alertMessage();
-                setTimeout(function () {
-                    window.location = '../page/administrator.html'
-                }, 2000)
-            }
-
-            return false;
-        }
-    });
-    /** 拒收按钮事件 */
-    $('.rejection').click(function () {
-        $('.background').css('display', 'block');
-        $('.re_layer').css('display', 'block');
-        /* 开启弹层禁止屏幕滚动 */
-        document.documentElement.style.overflow = "hidden";
-    });
-    $('textarea').focus(function () {
-        //  $('.font').css('display','none');
-        $('.font').hide();
-    }).blur(function () {
-        if ($(this).val() == "") {
-            $('.font').show();
-        } else {
-            $('.font').hide();
-        }
-    });
-    $('.font').click(function () {
-        $(this).hide();
-        $('textarea').focus();
-    });
-    let viewText;
-    /* 建议多学科会诊按钮点击事件  */
-    $('.suggest').click(function () {
-        $(this).css({
-            'background': '#516dcf',
-            'color': '#fff'
-        });
-        $('.otherCause').removeAttr('style');
-        viewText = '建议多学科会诊:';
-    });
-    /* 其他原因按钮点击事件  */
-    $('.otherCause').click(function () {
-        $(this).css({
-            'background': '#516dcf',
-            'color': '#fff'
-        });
-        $('.suggest').removeAttr('style');
-        viewText = '其他原因:';
-    });
-    /* 拒收确定按钮 */
-    $('.confirm').click(function () {
-        if ($('.refuseReason').val() == '') {
-            $("#alertText").html("请填写拒收原因");
-            alertMessage();
-        } else {
-            let data = new FormData();
-            data.append("id", applyFormId);
-            data.append("report", viewText + $('.refuseReason').val());
-            console.log(viewText + $('.refuseReason').val());
-            ajaxRequest("POST", sirReceiveMasterReject, data, false, false, true, sirReceiveMasterRejectSuccess, null, null);
-
-            function sirReceiveMasterRejectSuccess(result) {
-                $("#alertText").html("拒收成功");
-                alertMessage();
-                setTimeout(function () {
-                    window.location = '../page/administrator.html';
-                }, 2000);
-            }
-        }
-    });
-    /** 弹层关闭按钮 */
-    $('.refuseBtn').click(function () {
-        $('.background').css('display', 'none');
-        document.documentElement.style.overflow = "scroll";
-    });
-
-    function alertMessage() {
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['500px', '200px'],
-            closeBtn: false,
-            shade: [0.7, '#000000'],
-            shadeClose: false,
-            time: 2000,
-            zIndex: layer.zIndex,
-            content: _$('#alertBox')
-        });
-    }
-
     renderViewByRole(applyStatus);
 });

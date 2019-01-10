@@ -31,41 +31,14 @@ const ApplyStatus = {
     APPLY_DONE: "APPLY_DONE"
 };
 
-// 医生转诊订单列表
-function getReferralList(inviteStatus, pageNo, pageSize) {
-
-    console.log(inviteStatus)
-    let InviteStatus = {
-        INVITE_ACCEPT: "INQUIRY_APPLY_CREATE_SUCCESS",
-        INVITE_REVIEW: "INQUIRY_APPLY_ACCEDE",
-        INVITE_DATETIME: "INQUIRY_SLAVE_ACCEDE",
-        INVITE_ONGOING: "INQUIRY_DATETIME_LOCKED",
-        INVITE_FEEDBACK: "INQUIRY_MASTER_REJECT",
-        INVITE_REJECT: "INQUIRY_END"
-    };
-    switch (inviteStatus) {
-        case InviteStatus.INVITE_ACCEPT:
-            ajaxRequest("GET", inquiryCreateSuccess, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
-            break;
-        case InviteStatus.INVITE_REVIEW:
-            ajaxRequest("GET", inquiryApplyAccede, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
-            break;
-        case InviteStatus.INVITE_DATETIME:
-            ajaxRequest("GET", inquirySlaveMasterAccede, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
-            break;
-        case InviteStatus.INVITE_ONGOING:
-            ajaxRequest("GET", inquiryDate, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
-            break;
-        case InviteStatus.INVITE_FEEDBACK:
-            ajaxRequest("GET", inquirySlaveMasterReject, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
-            break;
-        case InviteStatus.INVITE_REJECT:
-            ajaxRequest("GET", inquiryEnd, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
-            break;
-        default:
-            return false;
-    }
-}
+const ReferralStatus = {
+    WAITING_AUDIT: "WAITING_AUDIT",
+    WAITING_ACCEDE: "WAITING_ACCEDE",
+    DATETIME_AUDIT: "DATETIME_AUDIT",
+    DATETIME_LOCKED: "DATETIME_LOCKED",
+    HAS_REJECT: "HAS_REJECT",
+    HAS_END: "HAS_END"
+};
 
 function renderApplyInquiryListView(data) {
     const myDate = new Date();
@@ -202,7 +175,7 @@ function emptySelect() {
     $('#tabContent').html("");
 }
 
-// 医生受邀订单列表
+/** 医生受邀订单列表 */
 function getInvitedList(inviteStatus, pageNoParam, pageSizeParam) {
     pageNo = pageNoParam;
     pageSize = pageSizeParam;
@@ -233,7 +206,7 @@ function getInvitedList(inviteStatus, pageNoParam, pageSizeParam) {
     }
 }
 
-// 医生发出订单列表
+/** 医生发出订单列表 */
 function getApplyList(inviteStatus, pageNoParam, pageSizeParam) {
 
     pageNo = pageNoParam;
@@ -259,6 +232,36 @@ function getApplyList(inviteStatus, pageNoParam, pageSizeParam) {
             break;
         case ApplyStatus.APPLY_DONE:
             ajaxRequest("GET", getApplyDoneUrl, null, false, false, true, renderApplyListView, emptySelect, null);
+            break;
+        default:
+            return false;
+    }
+}
+
+/** 医生转诊订单列表 */
+function getReferralList(inviteStatus, pageNoParam, pageSizeParam) {
+
+    pageNo = pageNoParam;
+    pageSize = pageSizeParam;
+
+    switch (inviteStatus) {
+        case ReferralStatus.WAITING_AUDIT:
+            ajaxRequest("GET", inquiryCreateSuccess, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        case ReferralStatus.WAITING_ACCEDE:
+            ajaxRequest("GET", inquiryApplyAccede, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        case ReferralStatus.DATETIME_AUDIT:
+            ajaxRequest("GET", inquirySlaveMasterAccede, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        case ReferralStatus.DATETIME_LOCKED:
+            ajaxRequest("GET", inquiryDate, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        case ReferralStatus.HAS_REJECT:
+            ajaxRequest("GET", inquirySlaveMasterReject, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        case ReferralStatus.HAS_END:
+            ajaxRequest("GET", inquiryEnd, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
             break;
         default:
             return false;

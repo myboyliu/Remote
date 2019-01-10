@@ -7,7 +7,7 @@ const myDate = new Date();
 let dateStr = myDate.getFullYear() + '-' + double(myDate.getMonth() + 1) + '-' + double(myDate.getDate());
 let currentMonth = myDate.getMonth() + 1;
 let isInvite = true;
-let InviteStatus = {
+const InviteStatus = {
     INVITE_ACCEPT: "INVITE_ACCEPT",
     INVITE_REVIEW: "INVITE_REVIEW",
     INVITE_SLAVE_REJECT: "INVITE_SLAVE_REJECT",
@@ -17,7 +17,7 @@ let InviteStatus = {
     INVITE_REJECT: "INVITE_REJECT",
     INVITE_DONE: "INVITE_DONE"
 };
-let ApplyStatus = {
+const ApplyStatus = {
     APPLY_REVIEW: "APPLY_REVIEW",
     APPLY_ACCEPT: "APPLY_ACCEPT",
     APPLY_DATETIME: "APPLY_DATETIME",
@@ -26,7 +26,14 @@ let ApplyStatus = {
     APPLY_REJECT: "APPLY_REJECT",
     APPLY_DONE: "APPLY_DONE"
 };
-
+const ReferralStatus = {
+    WAITING_AUDIT: "WAITING_AUDIT",
+    WAITING_ACCEDE: "WAITING_ACCEDE",
+    DATETIME_AUDIT: "DATETIME_AUDIT",
+    DATETIME_LOCKED: "DATETIME_LOCKED",
+    HAS_REJECT: "HAS_REJECT",
+    HAS_END: "HAS_END"
+};
 
 // 日期标记
 function MouthSection(month) {
@@ -141,6 +148,7 @@ function redrawDate() {
 }
 
 function renderApplyListView(data) {
+    console.log(data);
     const myDate = new Date();
     const year = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
     const month = double(myDate.getMonth() + 1); //获取当前月份(0-11,0代表1月)
@@ -189,11 +197,49 @@ function renderApplyListView(data) {
     $('#tabContent').html(_html);
 }
 
+function renderApplyInquiryListView(data) {
+    const myDate = new Date();
+    const year = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
+    const month = double(myDate.getMonth() + 1); //获取当前月份(0-11,0代表1月)
+    const day = double(myDate.getDate()); //获取当前日(1-31)
+    let _html = '';
+    for (let i = 0; i < data.length; i++) {
+        const timeStr = data[i].consultantApplyTime.split(' ')[0];
+        const time = data[i].consultantApplyTime.split(' ')[1];
+        const _year = timeStr.split('-')[0];
+        const _month = timeStr.split('-')[1];
+        const _day = timeStr.split('-')[2];
+        if (0 == 0) {
+            // 未读
+            _html += '<tr class="unread" applyFlag="' + data[i].applyUrgent + '" type="2" name="' + data[i].id + '">';
+        } else {
+            // 已读
+            _html += '<tr class="read" applyFlag="' + data[i].applyUrgent + '" type="2" name="' + data[i].id + '">';
+        }
+        _html += '<td>\
+                    <p class="overHidden3" title="' + data[i].caseSummary + '">' + data[i].caseSummary + '</p>\
+                </td>\
+                <td>\
+                    <p class="overHidden1" title="' + data[i].inviteSummary + '">' + data[i].inviteSummary + '</p>\
+                </td>\
+                <td>\
+                    <p class="overHidden2" title="' + data[i].applySummary + '">' + data[i].applySummary + '</p>\
+                </td>'
+        if (year == _year && month == _month && day == _day) {
+            _html += '<td class="tl2em">今天' + time + '</td>'
+        } else {
+            _html += '<td class="tl2em">' + data[i].consultantApplyTime + '</td>'
+        }
+        _html += '</tr>'
+    }
+    $('#referralTableBody').html(_html);
+}
+
 function emptySelect() {
     $('#tabContent').html("");
 }
 
-/** 查询医生受邀订单列表 */
+/** 查询医政受邀订单列表 */
 function getInvitedList(inviteStatus, pageNoParam, pageSizeParam) {
     pageNo = pageNoParam;
     pageSize = pageSizeParam;
@@ -227,7 +273,7 @@ function getInvitedList(inviteStatus, pageNoParam, pageSizeParam) {
     }
 }
 
-/** 查询医生发出订单列表 */
+/** 查询医政发出订单列表 */
 function getApplyList(inviteStatus, pageNoParam, pageSizeParam) {
     pageNo = pageNoParam;
     pageSize = pageSizeParam;
@@ -258,27 +304,33 @@ function getApplyList(inviteStatus, pageNoParam, pageSizeParam) {
     }
 }
 
-/**  医生转诊订单列表 */
-function getReferralList(applyFormId, pageNo, pageSize) {
-
-    // ajaxRequest("POST", createPictureApplyUrl, data, false, false, true, createPictureApplySuccess, requestField, null);
-    // $.ajax({
-    //     type: 'POST',
-    //     url: IP + 'transferTreatment/doctorFindList',
-    //     dataType: 'json',
-    //     data: {
-    //         "stateId": applyFormId,
-    //         "pageNo": pageNo,
-    //         "pageSize": pageSize,
-    //     },
-    //     xhrFields: {
-    //         withCredentials: true
-    //     },
-    //     crossDomain: true,
-    //     global: false,
-    //     success: function (data) {
-    //         console.log(data);
-    //         if (data.code == 1) {
+/**  查询医政转诊订单列表 */
+function getReferralList(inviteStatus, pageNoParam, pageSizeParam) {
+    pageNo = pageNoParam;
+    pageSize = pageSizeParam;
+    switch (inviteStatus) {
+        case ReferralStatus.WAITING_AUDIT:
+            ajaxRequest("GET", sirInquiryCheck, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        case ReferralStatus.WAITING_ACCEDE:
+            ajaxRequest("GET", sirInquiryAccept, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        case ReferralStatus.DATETIME_AUDIT:
+            ajaxRequest("GET", sirInquiryCheckDate, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        case ReferralStatus.DATETIME_LOCKED:
+            ajaxRequest("GET", sirInquiryDate, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        case ReferralStatus.HAS_REJECT:
+            ajaxRequest("GET", sirInquiryReject, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        case ReferralStatus.HAS_END:
+            ajaxRequest("GET", sirInquiryEnd, null, false, false, false, renderApplyInquiryListView, emptySelect, null);
+            break;
+        default:
+            return false;
+    }
+    //
     //             const myDate = new Date();
     //             const year = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
     //             const month = double(myDate.getMonth() + 1); //获取当前月份(0-11,0代表1月)
@@ -329,17 +381,8 @@ function getReferralList(applyFormId, pageNo, pageSize) {
     //             }
     //
     //             $('#referralTableBody').html(_html);
-    //         } else if (data.code == 250) {
-    //             window.location = '/yilaiyiwang/login/login.html';
-    //
-    //         } else if (data.code == 205) {
-    //             // 其他操作
-    //             $('#referralTableBody').html('');
     //         }
-    //     },
-    //     error: function (err) {
-    //         console.log(err);
-    //     },
+    //
     // })
 }
 
@@ -389,6 +432,7 @@ function currentApplyCount() {
 /** 查询受邀列表 总记录数*/
 function getInviteCount() {
     ajaxRequest("GET", receiveSelectAllCountSir, null, false, false, false, receiveSelectAllCountDoctorSuccess, null, null);
+
     function receiveSelectAllCountDoctorSuccess(result) {
         countObject = result;
         console.log(countObject);
@@ -409,7 +453,6 @@ function currentInviteCount() {
 
 // 获取草稿箱数据
 function getDrafts(pageNo, pageSize) {
-
 
 }
 
@@ -457,7 +500,7 @@ $(function () {
             $(this).find(".leftUL li").eq(0).addClass("ulAct");
             let inviteStatus = $(this).find(".leftUL li").eq(0).attr('name');
             pageCount = $("#INVITE_ACCEPT").html();
-            showPageList(inviteStatus,getInvitedList);
+            showPageList(inviteStatus, getInvitedList);
 
         } else if (_index == 1) {
             getApplyCount()
@@ -472,7 +515,7 @@ $(function () {
 
             let applyStatus = $(this).find('.leftUL li').eq(0).attr('name');
             pageCount = $("#APPLY_REVIEW").html();
-            showPageList(applyStatus,getApplyList);
+            showPageList(applyStatus, getApplyList);
 
         } else if (_index == 2) {
             // 转诊列表
@@ -509,7 +552,7 @@ $(function () {
         $(this).addClass("ulAct");
         let inviteStatus = $(this).attr('name');
         pageCount = $(this).children("div:eq(0)").html();
-        showPageList(inviteStatus,getInvitedList);
+        showPageList(inviteStatus, getInvitedList);
         return false;
     });
 
@@ -521,7 +564,7 @@ $(function () {
         $(this).addClass("ulAct");
         let applyStatus = $(this).attr('name');
         pageCount = $(this).children("div:eq(0)").html();
-        showPageList(applyStatus,getApplyList);
+        showPageList(applyStatus, getApplyList);
         return false;
     });
     // 转诊ul切换 transferTreatment/doctorFindList
@@ -549,7 +592,6 @@ $(function () {
         return false;
     });
 
-
     // 会诊列表详情
     $('#tabContent').delegate('tr', 'click', function () {
         selectOrderById($(this).attr('name'), $(this).attr('type'), $(this).attr('applyFlag'));
@@ -561,17 +603,13 @@ $(function () {
 
     // 医生工作台详情
     $('.workUl').delegate('.wordItem', "click", function () {
-        if ($(this).attr("inhospitalname") == localStorage.getItem("hospitalName")) {
-            selectOrderById($(this).attr("name"), 2, 1);
-        } else if ($(this).attr("outhospitalname") == localStorage.getItem("hospitalName")) {
-            selectOrderById($(this).attr("name"), 3, 1);
-        }
+        selectOrderById($(this).attr("name"), 3, 1);
     })
     getInvitedList("INVITE_ACCEPT", 0, 10)
 
     // 草稿箱详情
     $('.drafts_tbody').delegate('tr', 'click', function () {
-        localStorage.setItem('detailsId', $(this).attr('name'));
+        sessionStorage.setItem('detailsId', $(this).attr('name'));
         window.location = '/yilaiyiwang/detailsDraft/detailsDraft.html';
     })
 
