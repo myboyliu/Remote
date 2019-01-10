@@ -216,15 +216,6 @@ public class ApplyController extends BaseController {
             return badRequestOfArguments("添加申请时间失败");
         }
 
-        CaseConsultant caseConsultant = new CaseConsultant();
-        caseConsultant.setId(applyForm.getId());
-        caseConsultant.setApplyUserId(applyForm.getApplyUserId());
-        caseConsultant.setInviteUserId(applyForm.getInviteUserId());
-        caseConsultant.setCreateUser(userId);
-        int k = caseConsultantService.insertSelective(caseConsultant);
-        if (k < 1) {
-            return badRequestOfArguments("添加失败");
-        }
         applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.发起会诊.toString());
 
         return succeedRequest(applyForm);
