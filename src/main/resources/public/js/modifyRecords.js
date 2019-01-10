@@ -207,14 +207,11 @@ function buildCaseData() {
     ajaxRequest("POST", sirUpdateCase, data, false, false, true, updateCaseSuccess, failedParam, null);
     /** 修改申请信息 */
     function failedParam(data) {
-        console.log(data);
-        return false;
         layer.closeAll();
         layer.msg(data.result);
     }
 
     function updateCaseSuccess(result) {
-        console.log(result);
         window.location = '../page/adminApplyInfo.html';
     }
 
