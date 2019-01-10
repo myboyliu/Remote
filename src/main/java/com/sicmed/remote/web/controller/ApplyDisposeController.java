@@ -476,7 +476,7 @@ public class ApplyDisposeController extends BaseController {
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_REJECT);
         String msg1 = "受邀胡子很医生拒收,form修改失败";
         String msg2 = "受邀胡子很医生拒收,time修改失败";
-
+        applyNodeService.insertByStatus(id, ApplyNodeConstant.已拒收.toString());
         return updateStatus(id, null, applyStatus, msg1, msg2, report);
     }
 
@@ -640,6 +640,7 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
         if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(type)) {
             applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_BEGIN.toString());
+            applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
         }
         applyForm.setUpdateUser(userId);
         int i = applyFormService.updateByPrimaryKeySelective(applyForm);

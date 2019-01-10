@@ -332,7 +332,6 @@
             resultMap="ConsultationStatusBeanResultMap">
         select
         count(af.apply_status="CONSULTATION_APPLY_CREATE_SUCCESS" or NULL) cacs,
-
         (select count(*) from apply_form appf where appf.del_flag = "0" and
         appf.apply_status="CONSULTATION_APPLY_ACCEDE" and appf.apply_type in
         <foreach

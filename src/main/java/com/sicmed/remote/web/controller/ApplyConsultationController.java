@@ -7,6 +7,7 @@ import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ConsultationStatusBean;
+import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.service.ApplyFormService;
@@ -96,10 +97,12 @@ public class ApplyConsultationController extends BaseController {
         String applyStatus2 = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_REJECT);
         String applyStatus3 = String.valueOf(ConsultationStatus.CONSULTATION_DOCTOR_LOCKED);
         String applyStatus4 = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_ACCEDE);
+        String applyStatus5 = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE);
         statusList.add(applyStatus1);
         statusList.add(applyStatus2);
         statusList.add(applyStatus3);
         statusList.add(applyStatus4);
+        statusList.add(applyStatus5);
         String msg = "无待收诊";
 
         return sendSelect(statusList, msg);
@@ -181,7 +184,7 @@ public class ApplyConsultationController extends BaseController {
     public Map receiveSelect(List<String> statusList) {
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setConsultationTypeList(consultantTypeList);
@@ -319,7 +322,7 @@ public class ApplyConsultationController extends BaseController {
     public Map sirSendSelect(List<String> statusList, String msg) {
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setApplyHospitalId(userDetail.getHospitalId());
@@ -359,10 +362,12 @@ public class ApplyConsultationController extends BaseController {
         String applyStatus2 = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_REJECT);
         String applyStatus3 = String.valueOf(ConsultationStatus.CONSULTATION_DOCTOR_LOCKED);
         String applyStatus4 = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_ACCEDE);
+        String applyStatus5 = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE);
         statusList.add(applyStatus1);
         statusList.add(applyStatus2);
         statusList.add(applyStatus3);
         statusList.add(applyStatus4);
+        statusList.add(applyStatus5);
         String msg = "无待收诊";
 
         return sirSendSelect(statusList, msg);
@@ -445,7 +450,7 @@ public class ApplyConsultationController extends BaseController {
 
         String userId = getRequestToken();
 
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setConsultationTypeList(consultantTypeList);
@@ -626,7 +631,7 @@ public class ApplyConsultationController extends BaseController {
     public Map sendSelectAllCountSir() {
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
         ConsultationStatusBean consultationStatusBean = applyFormService.sendSelectAllCount(null, userDetail.getHospitalId(), consultantTypeList);
 
@@ -640,7 +645,7 @@ public class ApplyConsultationController extends BaseController {
     public Map receiveSelectAllCountDoctor() {
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
         ConsultationStatusBean consultationStatusBean = caseConsultantService.receiveSelectAllCount(userId, userDetail.getBranchId(),null, consultantTypeList);
 
@@ -654,7 +659,7 @@ public class ApplyConsultationController extends BaseController {
     public Map receiveSelectAllCountSir() {
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
         ConsultationStatusBean consultationStatusBean = caseConsultantService.receiveSelectAllCountSir(userDetail.getHospitalId(), consultantTypeList);
 

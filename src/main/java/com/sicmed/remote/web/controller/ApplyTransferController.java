@@ -7,8 +7,8 @@ import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ConsultationStatusBean;
+import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.ApplyForm;
-import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.service.ApplyFormService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -216,7 +215,7 @@ public class ApplyTransferController extends BaseController {
     public Map sirInquiryCheck() {
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
         String hospitalId = userDetail.getHospitalId();
 
         List<String> consultationStatusList = new ArrayList<>();
@@ -238,7 +237,7 @@ public class ApplyTransferController extends BaseController {
     public Map sirInquiryAccept() {
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
         String hospitalId = userDetail.getHospitalId();
 
         List<String> consultationStatusList = new ArrayList<>();
@@ -261,7 +260,7 @@ public class ApplyTransferController extends BaseController {
     public Map sirInquiryCheckDate() {
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
         String hospitalId = userDetail.getHospitalId();
 
         List<String> consultationStatusList = new ArrayList<>();
@@ -285,7 +284,7 @@ public class ApplyTransferController extends BaseController {
     @GetMapping(value = "sirInquiryDate")
     public Map sirInquiryDate() {
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
         String hospitalId = userDetail.getHospitalId();
 
         List<String> consultationStatusList = new ArrayList<>();
@@ -309,7 +308,7 @@ public class ApplyTransferController extends BaseController {
     @GetMapping(value = "sirInquiryReject")
     public Map sirInquiryReject() {
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
         String hospitalId = userDetail.getHospitalId();
 
         List<String> consultationStatusList = new ArrayList<>();
@@ -334,7 +333,7 @@ public class ApplyTransferController extends BaseController {
     public Map sirInquiryEnd() {
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
         String hospitalId = userDetail.getHospitalId();
 
         List<String> consultationStatusList = new ArrayList<>();
@@ -421,7 +420,7 @@ public class ApplyTransferController extends BaseController {
     public Map inquiryAllCountSir() {
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
         String hospitalId = userDetail.getHospitalId();
         if (StringUtils.isBlank(hospitalId)) {
             return badRequestOfArguments("获取登录用户医院Id失败");
@@ -452,7 +451,7 @@ public class ApplyTransferController extends BaseController {
     public Map inquiryCsAllCountSir() {
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
         ConsultationStatusBean consultationStatusBean = applyFormService.inquiryCreateSuccessAllCount(userId, userDetail.getHospitalId(), consultationTypeListInquiry);
 
@@ -479,7 +478,7 @@ public class ApplyTransferController extends BaseController {
     public Map inquirySMAdAllCountSir() {
 
         String userId = getRequestToken();
-        UserDetail userDetail = (UserDetail) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
         ConsultationStatusBean consultationStatusBean = applyFormService.inquirySMAdAllCount(userId, userDetail.getHospitalId(), consultationTypeListInquiry);
 
