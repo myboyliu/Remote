@@ -1,5 +1,7 @@
 package com.sicmed.remote.web.controller;
 
+import com.sicmed.remote.web.bean.CurrentUserBean;
+import com.sicmed.remote.web.bean.UserBean;
 import com.sicmed.remote.web.entity.PageEntity;
 import com.sicmed.remote.web.service.ProcedureService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +51,11 @@ public abstract class BaseController {
         String str = request.getHeader("token");
         return str;
     }
-
+    public CurrentUserBean getCurrentUser() {
+        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
+        String str = request.getHeader("token");
+        return (CurrentUserBean) redisTemplate.opsForValue().get(str);
+    }
     /**
      * 获取分页 参数
      *

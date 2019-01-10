@@ -104,7 +104,7 @@
     <div class="right">
         <div class="right_main">
             <!--拒收原因-->
-            <div id="refuseReasonBox" class="hosp  clearfix"  style="display: none;">
+            <div id="refuseReasonBox" class="hosp  clearfix" style="display: none;">
                 <img src="../images/rejectionCause.png" alt="拒收原因">
                 <span class="">拒收原因</span>
                 <div class="wire wire1"></div>
@@ -176,7 +176,7 @@
 
             </ul>
 
-             <div id="applyTime" class="hosp clearfix">
+            <div id="applyTimeListView" class="hosp clearfix">
                 <img src="../images/Scheduling.png" alt="会诊排期">
                 <span>会诊排期</span>
                 <div class="wire" style="width: 870px;"></div>
@@ -195,9 +195,9 @@
                     <span>订单编号：</span>
                     <span class="numbers"></span>
                 </h4>
-                <h4>
+                <h4 id="applyTime">
                     <span>申请时间：</span>
-                    <span class="applyDate">2018-04-09</span>
+                    <span class="applyDate"></span>
 
                 </h4>
                 <h4>
@@ -230,12 +230,19 @@
 <div class="operation clearfix">
     <div class="handle">
         <input type="button" value="返回" class="getBack">
+        <!-- 会诊按钮 -->
         <input type="button" value="拒收" class="rejection" style="display: none;">
         <input type="button" value="接收" class="receive" style="display: none;">
         <input type="button" value="MDT协调" class="MDTBtn" style="display: none;">
         <input type="button" value="编辑会诊报告" class="compileReport" style="display: none;">
         <input type="button" value="进入视频会诊室" class="entrance" style="display: none;">
         <input type="button" value="编辑临床反馈" class="editClinicalFeedback" style="display: none;">
+        <!-- 转诊按钮 -->
+        <input id="cancelReferral" type="button" value="取消转诊" class="cancelReferral">
+        <input id="agreeReferral" type="button" value="同意" class="agreeReferral">
+        <input id="rejectionReferral" type="button" value="拒收" class="rejectionReferral">
+        <input id="receiveReferral" type="button" value="接收" class="receiveReferral">
+
     </div>
     <p id="consultationPrice" style="display: none" class="feesText">诊费：￥<span class="money"></span></p>
 </div>
@@ -331,7 +338,8 @@
     <div id="rejectView" class="rejectionLayer re_layer">
         <div class="rejectionLayer_top">
             <span>填写拒收原因</span>
-            <input style="background: rgb(81, 109, 207); color: rgb(255, 255, 255);" type="button" value="建议多学科会诊" class="suggest ip">
+            <input style="background: rgb(81, 109, 207); color: rgb(255, 255, 255);" type="button" value="建议多学科会诊"
+                   class="suggest ip">
             <input type="button" value="其它原因" class="otherCause ip">
         </div>
         <div class="rejectionLayer_buttom">
