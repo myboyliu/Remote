@@ -32,7 +32,7 @@ $(function () {
         window.location = "/page/login.html";
     }
     // 0医生  1医政
-    if (localStorage.getItem('rolesName') == '医政') {
+    if (sessionStorage.getItem('rolesName') == '医政') {
         $('.guide > li[type=0]').hide();
     } else {
         $('.guide > li[type=1]').hide();
