@@ -543,7 +543,7 @@
                 </foreach>
             </if>
         </where>
-        order by apply_urgent desc ,update_time,create_time
+        order by apply_urgent desc ,consultant_apply_time,update_time,create_time
         limit #{beginNo},#{pageSize}
     </select>
 
