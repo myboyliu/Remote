@@ -258,6 +258,7 @@ public class ApplyDisposeController extends BaseController {
         // 图文会诊接收后立刻变为会诊中
         if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyType)) {
             applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
+            applyNodeService.insertByStatus(id, ApplyNodeConstant.已接诊.toString());
         }
 
         String msg1 = "受邀会诊收诊医政待收诊接受,form修改失败";
