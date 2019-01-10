@@ -1172,58 +1172,18 @@ main {
   z-index: 10001;
 }
 
-.rejectionLayer_buttom textarea {
-  width: 1036px;
-  height: 300px;
-  border-radius: 10px;
-  resize: none;
-  padding-top: 30px;
-  padding-left: 20px;
-}
 
-.closeBtn {
-  // width: 100px;
-  height: 40px;
-  line-height: 40px;
-  position: absolute;
-  top: -50px;
-  right: 0;
-  font-size: 18px;
-  cursor: pointer;
-  color: #fff;
-  font-weight: 400;
 
-  > img {
-    float: left;
-    margin: 5px 10px 0 0;
-  }
-
-  > span {
-    float: left;
-  }
-}
-
-.close-ico {
-  position: absolute;
-  top: 0;
-  left: -32px;
-  color: #fff;
-}
-
-/* ***********弹层*************** */
-#refuseBackConsultationBox {
+#refuseConsultationBox {
+  display: none;
 
   .rejectionLayer {
-    margin: 160px auto;
+    //margin: 160px auto;
     width: 1060px;
     height: 480px;
     background-color: #f4f4f4;
     position: relative;
-    border-radius: 10px;
-  }
-
-  .re_layer {
-    display: none;
+    //border-radius: 10px;
   }
 
   .confirm {
@@ -1294,10 +1254,47 @@ main {
     position: relative;
     border-radius: 10px;
   }
+
+  .rejectionLayer_buttom textarea {
+    width: 1036px;
+    height: 300px;
+    border-radius: 10px;
+    resize: none;
+    padding-top: 30px;
+    padding-left: 20px;
+  }
+
+  .closeBtn {
+    // width: 100px;
+    height: 40px;
+    line-height: 40px;
+    position: absolute;
+    top: -50px;
+    right: 0;
+    font-size: 18px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 400;
+
+    > img {
+      float: left;
+      margin: 5px 10px 0 0;
+    }
+
+    > span {
+      float: left;
+    }
+  }
+
+  .close-ico {
+    position: absolute;
+    top: 0;
+    left: -32px;
+    color: #fff;
+  }
 }
 
 #refuseBackReferralBox {
-  /* ***********弹层*************** */
   display: none;
 
   .rejectionLayer {
@@ -1306,10 +1303,6 @@ main {
     background-color: #f4f4f4;
     position: relative;
     // border-radius: 10px;
-  }
-
-  .re_layer {
-    // display: none;
   }
 
   .confirm {

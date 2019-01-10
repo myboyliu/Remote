@@ -124,11 +124,21 @@ $(function () {
         }
     });
     /** 拒收按钮事件 */
-    $('.rejection').click(function () {
-        $('.background').css('display', 'block');
-        $('.re_layer').css('display', 'block');
-        /* 开启弹层禁止屏幕滚动 */
-        document.documentElement.style.overflow = "hidden";
+    $('#refuseConsultation').click(function () {
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['1060px', '480px'],
+            closeBtn: false,
+            shade: [0.7, '#000000'],
+            shadeClose: false,
+            content: $('#refuseConsultationBox'),
+        });
+        // $('#refuseConsultationBox').css('display', 'block');
+        // // $('.background').css('display', 'block');
+        // $('.re_layer').css('display', 'block');
+        // /* 开启弹层禁止屏幕滚动 */
+        // document.documentElement.style.overflow = "hidden";
     });
     $('textarea').focus(function () {
         //  $('.font').css('display','none');
