@@ -127,7 +127,7 @@ function renderDoctorList(data) {
                             <p class="p4">选择此项,申请将发送至对方医院远程中心,由医务人员为您调度医生资源,诊费会在选定医生后确定。<br />请将您的备注信息填至【会/转诊目的】 </p>\
                         </div>\
                     </li>';
-    let currentUserId = localStorage.getItem('token');
+    let currentUserId = sessionStorage.getItem('token');
     for (let i = 0; i < data.length; i++) {
         if (currentUserId === data[i].id) {
             continue;
@@ -279,7 +279,7 @@ function createDraftApplyData(caseId, caseSummary) {
             content: $('.storage'),
         });
 
-        localStorage.setItem('detailsId', data.orderId);
+        sessionStorage.setItem('detailsId', data.orderId);
         setTimeout(function () {
             window.location = '../morkbench/morkbench.html';
         }, 2000);
@@ -298,7 +298,7 @@ function createDraftApplyData(caseId, caseSummary) {
             content: $('.storage'),
         });
 
-        localStorage.setItem('detailsId', data.orderId);
+        sessionStorage.setItem('detailsId', data.orderId);
         setTimeout(function () {
             window.location = '../detailsDraft/detailsDraft.html';
         }, 2000);
@@ -1435,9 +1435,9 @@ $(function () {
         }
         if (!hospitalInfo.id && inviteDoctorArray.length <= 0) {
             layer.msg('请选择医生或医院');
-        } else if (hospitalInfo.id && hospitalInfo.id === localStorage.getItem("hospitalId")) {
+        } else if (hospitalInfo.id && hospitalInfo.id === sessionStorage.getItem("hospitalId")) {
             layer.msg('转诊不能选择本院');
-        } else if (inviteDoctorArray.length > 0 && inviteDoctorArray[0].hospitalId === localStorage.getItem("hospitalId")) {
+        } else if (inviteDoctorArray.length > 0 && inviteDoctorArray[0].hospitalId === sessionStorage.getItem("hospitalId")) {
             layer.msg('转诊不能选择本院医生');
         } else if (inviteDoctorArray.length > 1) {
             layer.msg('转诊只可邀请1位医生');

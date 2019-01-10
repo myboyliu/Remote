@@ -156,18 +156,17 @@ $(function () {
     $('.doctorUl').delegate('.doctorChunk .graphicGroup', 'click', function () {
         let inviteDoctorArray = [];
         inviteDoctorArray.push({
-            id: $(this).parents('.doctorChunk').attr('name'), // 医生id
+            doctorId: $(this).parents('.doctorChunk').attr('name'), // 医生id
             hospitalName: $(this).parents('.doctorChunk').find('.hospital').html(), // 医院名字
             hospitalId: $(this).parents('.doctorChunk').find('.hospital').attr('name'), // 医院id
-            hospitalImgPic: $(this).parents('.doctorChunk').find('.hospital').attr('hospitalimgpic'), // 医院图文价格
-            hospitalVideoPic: $(this).parents('.doctorChunk').find('.hospital').attr('hospitalvideopic'), // 医院视频价格
-            deptName: $(this).parents('.doctorChunk').attr('deptName'), // 科室名字
-            deptId: $(this).parents('.doctorChunk').attr('deptId'), // 科室id
-            name: $(this).parents('.doctorChunk').find('.username').html(), // 医生名字
-            medicalFees: $(this).parents('.doctorChunk').find('.pric').attr('medicalFees'), // 图文价格
-            medicalFeesVideo: $(this).parents('.doctorChunk').find('.pric').attr('medicalFeesVideo'), // 视频价格
-            occupationName: $(this).parents('.doctorChunk').find('.occupation').html(), // 职称名字
-            occupationId: $(this).parents('.doctorChunk').find('.occupation').attr('name'), // 职称id
+            hospitalImgPrice: $(this).parents('.doctorChunk').find('.hospital').attr('hospitalimgpic'), // 医院图文价格
+            hospitalVideoPrice: $(this).parents('.doctorChunk').find('.hospital').attr('hospitalvideopic'), // 医院视频价格
+            branchName: $(this).parents('.doctorChunk').attr('deptName'), // 科室名字
+            branchId: $(this).parents('.doctorChunk').attr('deptId'), // 科室id
+            doctorName: $(this).parents('.doctorChunk').find('.username').html(), // 医生名字
+            doctorPicturePrice: $(this).parents('.doctorChunk').find('.pric').attr('medicalFees'), // 图文价格
+            doctorVideoPrice: $(this).parents('.doctorChunk').find('.pric').attr('medicalFeesVideo'), // 视频价格
+            doctorTitleName: $(this).parents('.doctorChunk').find('.occupation').html(), // 职称名字
         })
         sessionStorage.setItem('inviteDoctorArray', JSON.stringify(inviteDoctorArray));
         window.location = '../page/createCase.html';
