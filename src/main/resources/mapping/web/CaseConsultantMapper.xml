@@ -393,4 +393,75 @@
             </foreach>
         </where>
     </select>
+
+    <select id="ceshi" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
+            resultMap="ConsultationStatusBeanResultMap">
+        select count(af.apply_status = "CONSULTATION_APPLY_CREATE_SUCCESS" or NULL) cacs,
+        (select count(*)
+        from apply_form appf
+        where appf.del_flag = "0"
+        and appf.apply_status = "CONSULTATION_APPLY_ACCEDE"
+        and appf.apply_type in
+        <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        and appf.invite_branch_id = #{inviteUserId}) caa,
+        count(af.apply_status = "CONSULTATION_APPLY_REJECT" or NULL) car,
+        (select count(*)
+        from apply_form appr
+        where appr.del_flag = "0"
+        and appr.apply_status = "CONSULTATION_SLAVE_ACCEDE"
+        and appr.apply_type in
+        <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        and cc.invite_user_id = #{inviteUserId}) csa,
+        (select count(*)
+        from apply_form appju
+        where appju.del_flag = "0"
+        and appju.apply_status = "CONSULTATION_SLAVE_REJECT"
+        and appju.apply_type in
+        <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        and cc.invite_user_id = #{inviteUserId}) csr,
+        count(af.apply_status = "CONSULTATION_MASTER_ACCEDE" or NULL) cma,
+        (select count(*)
+        from apply_form appzhu
+        where appzhu.del_flag = "0"
+        and appzhu.apply_status = "CONSULTATION_MASTER_REJECT"
+        and appzhu.apply_type in
+        <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        and cc.invite_user_id = #{inviteUserId}) cmr,
+        (select count(*)
+        from apply_form appbut
+        where appbut.del_flag = "0"
+        and appbut.apply_status = "CONSULTATION_DOCTOR_LOCKED"
+        and appbut.apply_type in
+        <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        and cc.invite_user_id = #{inviteUserId}) cdrl,
+        count(af.apply_status = "CONSULTATION_DATETIME_LOCKED" or NULL) cdel,
+        count(af.apply_status = "CONSULTATION_BEGIN" or NULL) cb,
+        count(af.apply_status = "CONSULTATION_REPORT_SUBMITTED" or NULL) crs,
+        count(af.apply_status = "CONSULTATION_FEEDBACK_SUBMITTED" or NULL) cfs,
+        count(af.apply_status = "CONSULTATION_END" or NULL) ce
+        from case_consultant cc
+        left join apply_form af on af.id = cc.id and af.del_flag = "0"
+        <where>
+
+            <if test="inviteHospitalId != null">
+                af.invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR}
+            </if>
+            AND af.apply_type IN
+            <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            and (cc.invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
+            or cc.consultant_user_list like CONCAT('%',#{inviteUserId},'%'))
+        </where>
+    </select>
 </mapper>

@@ -44,7 +44,17 @@ public class CaseConsultantService implements BaseService<CaseConsultant> {
 
         return caseConsultantMapper.receiveSelectAllCount(applyFormBean);
     }
+    // 受邀会诊 医生 所有数目查询 测试
+    public ConsultationStatusBean ceshi(String userId, String branchId,String hospitalId, List<String> consultantTypeList) {
 
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setInviteUserId(userId);
+        applyFormBean.setInviteBranchId(branchId);
+        applyFormBean.setInviteHospitalId(hospitalId);
+        applyFormBean.setConsultationTypeList(consultantTypeList);
+
+        return caseConsultantMapper.ceshi(applyFormBean);
+    }
     // 受邀会诊 医政 所有数目查询
     public ConsultationStatusBean receiveSelectAllCountSir(String hospitalId, List<String> consultantTypeList) {
 

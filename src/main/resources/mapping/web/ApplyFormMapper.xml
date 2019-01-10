@@ -437,7 +437,9 @@
             <if test="applyBranchId != null">
                 apply_branch_id = #{applyBranchId,jdbcType=VARCHAR},
             </if>
-            consultant_apply_time = now(),
+            <if test="consultantApplyTime != null">
+                consultant_apply_time = #{consultantApplyTime,jdbcType=TIMESTAMP},
+            </if>
             <if test="applyStatus != null">
                 apply_status = #{applyStatus,jdbcType=VARCHAR},
             </if>

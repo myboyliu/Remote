@@ -30,4 +30,6 @@ public interface CaseConsultantMapper {
 
     ConsultationStatusBean receiveSelectAllCountSir(ApplyFormBean applyFormBean);
 
+    ConsultationStatusBean ceshi(ApplyFormBean applyFormBean);
+
 }
