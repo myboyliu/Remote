@@ -23,6 +23,27 @@ $(function () {
             content: _$('#throughBackReferralBox')
         });
     })
+    $("#throughBackReferralBoxYesBtn").click(function () {
+        let data = new FormData();
+        data.append("id", applyFormId);
+        ajaxRequest("POST", sirTransferCheckAccede, data, false, false, true, sirTransferCheckAccedeSuccess, failedParamFeadBack, null);
+        function sirTransferCheckAccedeSuccess(responseData) {
+            console.log(responseData);
+            layer.closeAll();
+            $("#alertText").html("审核通过");
+            alertMessage();
+            setTimeout(function () {
+                window.location = '../page/administrator.html';
+            }, 2000);
+        }
+        function failedParamFeadBack(failedParam) {
+            console.log(failedParam);
+            layer.closeAll();
+            $("#alertText").html("审核失败");
+            alertMessage();
+        }
+    })
+
     /** 取消按钮*/
     $("#cancelBackReferral").click(function () {
         layer.open({
@@ -58,6 +79,7 @@ $(function () {
             shadeClose: false,
             content: $('#refuseBackReferralBox'),
         });
+        document.documentElement.style.overflow = "hidden";
     })
     /** 接收按钮 */
     $("#receiveBackReferral").click(function () {
@@ -71,6 +93,28 @@ $(function () {
             content: _$('#receiveBackReferralBox')
         });
     })
+
+    /** 拒收确定按钮 */
+    $('#refuseBackReferralBoxBtn').click(function () {
+        if ($('.refuseReason').val() == '') {
+            $("#alertText").html("请填写拒收原因");
+            alertMessage();
+        } else {
+            let data = new FormData();
+            data.append("id", applyFormId);
+            data.append("report", viewText + $('.refuseReason').val());
+            console.log(viewText + $('.refuseReason').val());
+            ajaxRequest("POST", sirReceiveMasterReject, data, false, false, true, sirReceiveMasterRejectSuccess, null, null);
+
+            function sirReceiveMasterRejectSuccess(result) {
+                $("#alertText").html("拒收成功");
+                alertMessage();
+                setTimeout(function () {
+                    window.location = '../page/administrator.html';
+                }, 2000);
+            }
+        }
+    });
 
     $(".noBtn").click(function () {
         layer.closeAll();

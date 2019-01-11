@@ -34,13 +34,13 @@ function renderViewByRole(applyStatus) {
             //待收诊
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".modifier2").show();
-            $(".rejection").show();
             $(".modifier3").show();
             $(".modifier5").show();
+            $("#refuseConsultationBtn").show();
             if (inviteDoctorCount > 2) {
-                $("#MDTBtn").show();
+                $("#MDTConsultationBtn").show();
             } else {
-                $("#accept").show();
+                $("#receiveConsultationBtn").show();
             }
         } else if (applyStatus === "CONSULTATION_SLAVE_ACCEDE" || applyStatus === "CONSULTATION_MASTER_ACCEDE") {
             //排期审核
@@ -49,11 +49,9 @@ function renderViewByRole(applyStatus) {
             $(".rejection").show();
             $(".modifier3").show();
             $(".modifier5").show();
-            if (inviteDoctorCount > 2) {
-                $("#MDTBtn").show();
-            } else {
-                $(".examineBtn").show();
-            }
+            $("#refuseConsultationBtn").show();
+            $("#examineConsultationBtn").show();
+
         } else if (applyStatus === "CONSULTATION_SLAVE_REJECT") {
             //专家协调
             $(".progressBar li:nth-child(1)").addClass("libg");
@@ -61,23 +59,25 @@ function renderViewByRole(applyStatus) {
             $(".rejection").show();
             $(".modifier3").show();
             $(".modifier5").show();
-            $("#toBeMDT").show();
+            $("#toBeMDTConsultationBtn").show();
+            $("#refuseConsultationBtn").show();
 
         } else if (applyStatus === "CONSULTATION_DATETIME_LOCKED") {
             //已排期
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".modifier2").show();
-            $(".rejection").show();
+            $("#refuseConsultationBtn").show();
+
         } else if (applyStatus === "CONSULTATION_BEGIN") {
             //会诊中
             $(".progressBar li:nth-child(1)").addClass("libg");
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".modifier2").show();
-            $(".rejection").show();
+            $("#refuseConsultationBtn").show();
             if (isVideo) {
-                $("#enter_room").show();
+                $("#entryConsultationRoomBtn").show();
             }
         } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
             //待反馈
@@ -116,12 +116,12 @@ function renderViewByRole(applyStatus) {
         if (applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
             //创建成功
             $(".progressBar").hide();
-            $(".sendBack").show();
-            $(".audit").show();
             $(".modifier1").show();
             $(".modifier3").show();
             $(".modifier5").show();
             $(".modifier22").show();
+            $("#sendBackConsultationBtn").show();
+            $("#auditConsultationBtn").show();
         } else if (applyStatus === "CONSULTATION_MASTER_REJECT") {
             //会诊医政已拒绝
             $("#refuseReasonBox").show();
@@ -165,54 +165,83 @@ function renderViewByRole(applyStatus) {
             $(".modifier2").show();
         }
     } else {
-        $('.progressBar').empty();
-        let referralStatus = '';
-        for (var i = 1; i < referralStatusArr.length; i++) {
-            referralStatus += '<li style="width: 400px;">' + referralStatusArr[i] + '</li>'
-            $('.progressBar').html(referralStatus);
-        }
-        $(".progressBar li:nth-child(1)").addClass("libg");
-        if (applyStatus === "INQUIRY_APPLY_CREATE_SUCCESS") {
-            //待审核
-            $(".modifier1").show();
-            $(".modifier2").show();
-            $(".modifier3").show();
-            $(".modifier5").show();
-            $('.progressBar').hide();
-
-            $('#applyTime').hide();
-            $('#applyNumber').hide();
-            $('.layui-timeline').hide();
-            $("#sendBackReferral").show();
-            $("#throughBackReferral").show();
-            $("#cancelBackReferral").show();
-            $("#agreeBackReferral").show();
-            $("#refuseBackReferral").show();
-            $("#receiveBackReferral").show();
-
-
-
-
-        } else if (applyStatus === "INQUIRY_APPLY_ACCEDE") {
-            //待收诊
-            $("#rejectionReferral").show();
-            $("#receiveReferral").show();
-        } else if (applyStatus === "INQUIRY_SLAVE_ACCEDE") {
-            //排期审核
-
-        } else if (applyStatus === "INQUIRY_DATETIME_LOCKED") {
-            //已排期
-            $("#cancelReferral").show();
-            $("#agreeReferral").show();
-        } else if (applyStatus === "INQUIRY_MASTER_REJECT" || applyStatus === "INQUIRY_APPLY_REJECT" || applyStatus === "INQUIRY_SLAVE_REJECT") {
-            //已拒收
+        if(isInvite){
             $('.progressBar').empty();
-            referralStatus = '<li class="libg" style="width: 100%">' + '已拒收' + '</li>'
-            $('.progressBar').html(referralStatus);
-        } else if (applyStatus === "INQUIRY_END") {
-            //已结束
+            let referralStatus = '';
+            for (var i = 1; i < referralStatusArr.length; i++) {
+                referralStatus += '<li style="width: 400px;">' + referralStatusArr[i] + '</li>';
+                $('.progressBar').html(referralStatus);
+            }
+            $(".progressBar li:nth-child(1)").addClass("libg");
+           if (applyStatus === "INQUIRY_APPLY_ACCEDE") {
+                //待收诊
+               $(".modifier2").show();
+               $(".modifier5").show();
+                $("#refuseBackReferral").show();
+                $("#receiveBackReferral").show();
+            } else if (applyStatus === "INQUIRY_SLAVE_ACCEDE") {
+                //排期审核
 
+            } else if (applyStatus === "INQUIRY_DATETIME_LOCKED") {
+                //已排期
+                $("#cancelReferral").show();
+                $("#agreeReferral").show();
+            } else if (applyStatus === "INQUIRY_MASTER_REJECT" || applyStatus === "INQUIRY_APPLY_REJECT" || applyStatus === "INQUIRY_SLAVE_REJECT") {
+                //已拒收
+                $('.progressBar').empty();
+                referralStatus = '<li class="libg" style="width: 100%">' + '已拒收' + '</li>';
+                $('.progressBar').html(referralStatus);
+            } else if (applyStatus === "INQUIRY_END") {
+                //已结束
+
+            }
+        }else{
+            $('.progressBar').empty();
+            let referralStatus = '';
+            for (var i = 1; i < referralStatusArr.length; i++) {
+                referralStatus += '<li style="width: 400px;">' + referralStatusArr[i] + '</li>';
+                $('.progressBar').html(referralStatus);
+            }
+            $(".progressBar li:nth-child(1)").addClass("libg");
+            if (applyStatus === "INQUIRY_APPLY_CREATE_SUCCESS") {
+                //待审核
+                $(".modifier1").show();
+                $(".modifier2").show();
+                $(".modifier3").show();
+                $(".modifier5").show();
+
+                $('.progressBar').hide();
+                $('#applyTime').hide();
+                $('#applyNumber').hide();
+                $('.layui-timeline').hide();
+
+                $("#sendBackReferral").show();
+                $("#throughBackReferral").show();
+
+            } else if (applyStatus === "INQUIRY_APPLY_ACCEDE") {
+                //待收诊
+                $(".modifier2").show();
+
+                $("#rejectionReferral").show();
+                $("#receiveReferral").show();
+            } else if (applyStatus === "INQUIRY_SLAVE_ACCEDE") {
+                //排期审核
+
+            } else if (applyStatus === "INQUIRY_DATETIME_LOCKED") {
+                //已排期
+                $("#cancelReferral").show();
+                $("#agreeReferral").show();
+            } else if (applyStatus === "INQUIRY_MASTER_REJECT" || applyStatus === "INQUIRY_APPLY_REJECT" || applyStatus === "INQUIRY_SLAVE_REJECT") {
+                //已拒收
+                $('.progressBar').empty();
+                referralStatus = '<li class="libg" style="width: 100%">' + '已拒收' + '</li>';
+                $('.progressBar').html(referralStatus);
+            } else if (applyStatus === "INQUIRY_END") {
+                //已结束
+
+            }
         }
+
     }
 }
 
@@ -343,31 +372,42 @@ function getApplyInfo() {
     function getApplyInfoSuccess(result) {
         sessionStorage.setItem('applyInfo', JSON.stringify(result));
         /** 当前登陆人 信息*/
-        userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
-
+        userInfo = JSON.parse(sessionStorage.getItem('userInfo'));                        //当前登陆用户信息
         /** 当前申请 详细信息 */
-        applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
-        isReferral = applyInfo.applyType === "APPLY_REFERRAL" ? true : false;
-        isConsultation = applyInfo.applyType === "APPLY_REFERRAL" ? false : true;
+        applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));                      //会诊/转诊申请信息
+        applyFormId = applyInfo.id;                                                             //申请ID
+        applyTypeStr = applyInfo.applyType;                                                     //申请类型标识
+        applyStatus = applyInfo.applyStatus;                                                    //申请状态标识
+        isReferral = applyTypeStr === "APPLY_REFERRAL" ? true : false;                          //转诊申请标识
+        isConsultation = applyTypeStr === "APPLY_REFERRAL" ? false : true;                      //会诊申请标识
+        isInvite = userInfo.hospitalId === applyInfo.inviteHospitalId ? true : false;           //受邀医院标识
+        isApply = userInfo.hospitalId === applyInfo.applyHospitalId ? true : false;             //申请医院方标识
+        inviteDoctorCount = applyInfo.inviteSummary.split(";").length;                          //受邀医生数量
+        caseContentList = applyInfo.caseContentList;                                            //病历附件数据
+        applyTimeList = applyInfo.applyTimeList;                                                //申请时间数据
+        applyNodeList = applyInfo.applyNodeList;                                                //时间轴数据
     }
 }
-
+/** 操作提示弹窗 */
+function alertMessage() {
+    layer.open({
+        type: 1,
+        title: '',
+        area: ['500px', '200px'],
+        closeBtn: false,
+        shade: [0.7, '#000000'],
+        shadeClose: false,
+        time: 2000,
+        zIndex: layer.zIndex,
+        content: _$('#alertBox')
+    });
+}
 $(function () {
     getApplyInfo();
 
-    if (isReferral){
+    if (isReferral) {
         $("#consultationPriceView").hide();
     }
-    // isInvite = userInfo.hospitalId === applyInfo.inviteHospitalId ? true : false;
-    // isApply = userInfo.hospitalId === applyInfo.applyHospitalId ? true : false;
-    applyNodeList = applyInfo.applyNodeList;
-    applyFormId = applyInfo.id;
-    applyTypeStr = applyInfo.applyType;
-    caseContentList = applyInfo.caseContentList;
-    applyStatus = applyInfo.applyStatus;
-    inviteDoctorCount = applyInfo.inviteSummary.split(";").length;
-    applyTimeList = applyInfo.applyTimeList;
-
     /**网页标题*/
     $('head > title').html(applyInfo.patientSex + '/' + applyInfo.patientAge + '/' + applyInfo.caseDiagnosis + '-远程会诊平台');
     /** 拒收原因 */
@@ -495,7 +535,6 @@ $(function () {
     $('.schedulingBtn').click(function () {
         showDateView(applyTimeList);
     });
-
 
     /** 返回按钮 */
     $('.getBack').click(function () {
