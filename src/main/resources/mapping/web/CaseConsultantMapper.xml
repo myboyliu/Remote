@@ -407,44 +407,11 @@
         </foreach>
         and appf.invite_branch_id = #{inviteUserId}) caa,
         count(af.apply_status = "CONSULTATION_APPLY_REJECT" or NULL) car,
-        (select count(*)
-        from apply_form appr
-        where appr.del_flag = "0"
-        and appr.apply_status = "CONSULTATION_SLAVE_ACCEDE"
-        and appr.apply_type in
-        <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
-            #{item,jdbcType=VARCHAR}
-        </foreach>
-        and cc.invite_user_id = #{inviteUserId}) csa,
-        (select count(*)
-        from apply_form appju
-        where appju.del_flag = "0"
-        and appju.apply_status = "CONSULTATION_SLAVE_REJECT"
-        and appju.apply_type in
-        <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
-            #{item,jdbcType=VARCHAR}
-        </foreach>
-        and cc.invite_user_id = #{inviteUserId}) csr,
+        count(af.apply_status = "CONSULTATION_SLAVE_ACCEDE" or NULL) csa,
+        count(af.apply_status = "CONSULTATION_SLAVE_REJECT" or NULL) csr,
         count(af.apply_status = "CONSULTATION_MASTER_ACCEDE" or NULL) cma,
-        (select count(*)
-        from apply_form appzhu
-        where appzhu.del_flag = "0"
-        and appzhu.apply_status = "CONSULTATION_MASTER_REJECT"
-        and appzhu.apply_type in
-        <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
-            #{item,jdbcType=VARCHAR}
-        </foreach>
-        and cc.invite_user_id = #{inviteUserId}) cmr,
-        (select count(*)
-        from apply_form appbut
-        where appbut.del_flag = "0"
-        and appbut.apply_status = "CONSULTATION_DOCTOR_LOCKED"
-        and appbut.apply_type in
-        <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
-            #{item,jdbcType=VARCHAR}
-        </foreach>
-        and cc.invite_user_id = #{inviteUserId}) cdrl,
-        count(af.apply_status = "CONSULTATION_DATETIME_LOCKED" or NULL) cdel,
+        count(af.apply_status = "CONSULTATION_MASTER_REJECT" or NULL) cmr,
+        count(af.apply_status = "CONSULTATION_DOCTOR_LOCKED" or NULL) cdrl,
         count(af.apply_status = "CONSULTATION_BEGIN" or NULL) cb,
         count(af.apply_status = "CONSULTATION_REPORT_SUBMITTED" or NULL) crs,
         count(af.apply_status = "CONSULTATION_FEEDBACK_SUBMITTED" or NULL) cfs,
