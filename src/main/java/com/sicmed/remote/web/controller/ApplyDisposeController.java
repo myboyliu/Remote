@@ -389,7 +389,7 @@ public class ApplyDisposeController extends BaseController {
     @PostMapping(value = "sirTransferMasterAccede")
     public Map sirTransferMasterAccede(String id) {
 
-        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_MASTER_ACCEDE);
+        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED);
         String msg1 = "转诊医政待收诊同意,form修改失败";
         String msg2 = "转诊医政待收诊同意,time修改失败";
         applyNodeService.insertByStatus(id, ApplyNodeConstant.已接诊.toString());
