@@ -392,7 +392,7 @@ public class ApplyDisposeController extends BaseController {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_MASTER_ACCEDE);
         String msg1 = "转诊医政待收诊同意,form修改失败";
         String msg2 = "转诊医政待收诊同意,time修改失败";
-
+        applyNodeService.insertByStatus(id, ApplyNodeConstant.已接诊.toString());
         return updateStatus(id, null, applyStatus, msg1, msg2, null);
     }
 
@@ -406,7 +406,7 @@ public class ApplyDisposeController extends BaseController {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_MASTER_REJECT);
         String msg1 = "转诊医政待收诊拒绝,form修改失败";
         String msg2 = "转诊医政待收诊拒绝,time修改失败";
-
+        applyNodeService.insertByStatus(id, ApplyNodeConstant.已拒收.toString());
         return updateStatus(id, null, applyStatus, msg1, msg2, report);
     }
 
@@ -436,7 +436,7 @@ public class ApplyDisposeController extends BaseController {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_MASTER_REJECT);
         String msg1 = "转诊医政排期审核拒绝,form修改失败";
         String msg2 = "转诊医政排期审核拒绝,time修改失败";
-
+        applyNodeService.insertByStatus(id, ApplyNodeConstant.已拒收.toString());
         return updateStatus(id, null, applyStatus, msg1, msg2, report);
     }
 
@@ -450,7 +450,7 @@ public class ApplyDisposeController extends BaseController {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SENDER_CONFIRM);
         String msg1 = "转诊医政排期审核拒绝,form修改失败";
         String msg2 = "转诊医政排期审核拒绝,time修改失败";
-
+        applyNodeService.insertByStatus(id, ApplyNodeConstant.已排期.toString());
         return updateStatus(id, null, applyStatus, msg1, msg2, null);
     }
 
@@ -586,7 +586,7 @@ public class ApplyDisposeController extends BaseController {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SENDER_CONFIRM);
         String msg1 = "转诊医生已排期同意转诊,form修改失败";
         String msg2 = "转诊医生已排期同意转诊,time修改失败";
-
+        applyNodeService.insertByStatus(id, ApplyNodeConstant.已结束.toString());
         return updateStatus(id, null, applyStatus, msg1, msg2, null);
     }
 
@@ -600,7 +600,7 @@ public class ApplyDisposeController extends BaseController {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SENDER_CANCEL);
         String msg1 = "转诊医生已排期拒绝转诊,form修改失败";
         String msg2 = "转诊医生已排期拒绝转诊,time修改失败";
-
+        applyNodeService.insertByStatus(id, ApplyNodeConstant.已结束.toString());
         return updateStatus(id, null, applyStatus, msg1, msg2, report);
     }
 
