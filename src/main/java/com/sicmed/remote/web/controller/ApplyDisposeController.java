@@ -577,31 +577,42 @@ public class ApplyDisposeController extends BaseController {
     }
 
     /**
-     * 医生 转诊 已排期 同意
+     * 医生 转诊 待收诊 拒绝
      */
     @Transactional
-    @PostMapping(value = "doctorTransferDateAccede")
-    public Map doctorTransferDateAccede(String id) {
-
-        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SENDER_CONFIRM);
-        String msg1 = "转诊医生已排期同意转诊,form修改失败";
-        String msg2 = "转诊医生已排期同意转诊,time修改失败";
+    @PostMapping(value = "doctorTransferReject")
+    public Map doctorTransferReject(String id) {
+        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_END);
+        String msg1 = "受邀医生待收诊拒收,form修改失败";
+        String msg2 = "受邀医生待收诊拒收,time修改失败";
         applyNodeService.insertByStatus(id, ApplyNodeConstant.已结束.toString());
         return updateStatus(id, null, applyStatus, msg1, msg2, null);
     }
 
     /**
-     * 医生 转诊 已排期 取消
+     * 医生 转诊 待收诊 接收 排期审核
      */
     @Transactional
-    @PostMapping(value = "doctorTransferDateReject")
-    public Map doctorTransferDateReject(String id, String report) {
+    @PostMapping(value = "doctorTransDateCheck")
+    public Map doctorTransDateCheck(String id) {
+        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SLAVE_ACCEDE);
+        String msg1 = "受邀医生接收转诊进入排期审核,form修改失败";
+        String msg2 = "受邀医生接收转诊进入排期审核,time修改失败";
 
-        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SENDER_CANCEL);
-        String msg1 = "转诊医生已排期拒绝转诊,form修改失败";
-        String msg2 = "转诊医生已排期拒绝转诊,time修改失败";
-        applyNodeService.insertByStatus(id, ApplyNodeConstant.已结束.toString());
-        return updateStatus(id, null, applyStatus, msg1, msg2, report);
+        return updateStatus(id, null, applyStatus, msg1, msg2, null);
+    }
+
+    /**
+     * 医生 转诊 待收诊 接收 已排期
+     */
+    @Transactional
+    @PostMapping(value = "doctorTransDateSure")
+    public Map doctorTransDateSure(String id) {
+        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED);
+        String msg1 = "受邀医生接收转诊进入已排期,form修改失败";
+        String msg2 = "受邀医生接收转诊进入已排期,time修改失败";
+        applyNodeService.insertByStatus(id, ApplyNodeConstant.已排期.toString());
+        return updateStatus(id, null, applyStatus, msg1, msg2, null);
     }
 
     /**
