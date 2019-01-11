@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.omg.CORBA.INTERNAL;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcProperties;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -363,6 +364,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "转诊医政待审核通过,form修改失败";
         String msg2 = "转诊医政待审核通过,time修改失败";
         String orderNumber = OrderNumUtils.getOrderNo(redisTemplate);
+        applyNodeService.insertByStatus(id, ApplyNodeConstant.发起转诊.toString());
         return updateStatus(id, orderNumber, applyStatus, msg1, msg2, null);
     }
 
