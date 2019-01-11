@@ -1,6 +1,6 @@
 $(function () {
-    /**  会诊退回按钮弹出层 */
-    $('.sendBack').click(function () {
+    /**  首诊退回弹窗 */
+    $('#sendBackConsultationBtn').click(function () {
         layer.open({
             type: 1,
             title: '',
@@ -8,16 +8,11 @@ $(function () {
             closeBtn: false,
             shade: [0.7, '#000000'],
             shadeClose: false,
-            content: _$('.inviteObj')
+            content: _$('#sendBackConsultationBox')
         });
     });
-// 弹出层取消按钮
-    $(".inviteObj").find('.agin').click(function () {
-        layer.closeAll();
-        $('.inviteObj').hide();
-    });
-// 弹出层是的按钮
-    $(".inviteObj").find('.yes').click(function () {
+    /** 首诊退回确定按钮 */
+    $("#sendBackConsultationBoxYesBtn").click(function () {
         let data = new FormData();
         data.append("id", applyFormId);
         ajaxRequest("POST", sirSendCheckReject, data, false, false, true, sirSendCheckRejectSuccess, null, null);
@@ -34,8 +29,8 @@ $(function () {
         }
     });
 
-    /** 审核发布按钮接口 */
-    $('.audit').click(function () {
+    /** 首诊审核发布弹窗 */
+    $('#auditConsultationBtn').click(function () {
         // 弹出层
         layer.open({
             type: 1,
@@ -44,15 +39,11 @@ $(function () {
             closeBtn: false,
             shade: [0.7, '#000000'],
             shadeClose: false,
-            content: _$('.auditObj')
+            content: _$('#auditConsultationBox')
         });
     });
-
-    $(".auditObj").find(".agin").click(function () {
-        layer.closeAll();
-        $('.auditObj').hide();
-    });
-    $(".auditObj").find(".yes").click(function () {
+    /** 首诊发布确认按钮 */
+    $("#auditConsultationBoxYesBtn").click(function () {
         let data = new FormData();
         data.append("id", applyFormId);
         ajaxRequest("POST", sirSendCheckAccede, data, false, false, true, sirSendCheckAccedeSuccess, null, null);
@@ -64,8 +55,8 @@ $(function () {
             window.location = "../page/administrator.html";
         }
     });
-    /**MDT协调按钮*/
-    $('.MDTBtn').click(function () {
+    /** 会诊医政接收弹窗*/
+    $("#receiveConsultationBtn").click(function () {
         layer.open({
             type: 1,
             title: '',
@@ -73,28 +64,11 @@ $(function () {
             closeBtn: false,
             shade: [0.1, '#000000'],
             shadeClose: false,
-            content: _$('.MDTBox'),
+            content: _$("#receiveConsultationBox")
         });
     });
-    /** 会诊医政接收按钮*/
-    $('.accept').click(function () {
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['500px', '200px'],
-            closeBtn: false,
-            shade: [0.1, '#000000'],
-            shadeClose: false,
-            content: _$('.Receive'),
-        });
-    });
-
-    $('.submitBox .noBtn').click(function () {
-        layer.closeAll();
-        $('.submitBox').hide();
-    });
-
-    $('.submitBox .acceptBtn').click(function () {
+    /** 会诊医政接收确认按钮*/
+    $("#receiveConsultationBoxYesBtn,#MDTConsultationBoxYesBtn,#examineConsultationBoxYesBtn").click(function () {
         if (!applyInfo.inviteUserId) {
             layer.closeAll();
             $('.submitBox').hide();
@@ -108,7 +82,7 @@ $(function () {
         } else {
             let data = new FormData();
             data.append("id", applyFormId);
-            ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, sirReceiveMasterAccedeSuccess, null, null)
+            ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, sirReceiveMasterAccedeSuccess, null, null);
 
             //接收 成功回调
             function sirReceiveMasterAccedeSuccess() {
@@ -123,8 +97,34 @@ $(function () {
             return false;
         }
     });
-    /** 拒收按钮事件 */
-    $('#refuseConsultation').click(function () {
+
+    /** MDT协调/确认协调 弹窗*/
+    $('#MDTConsultationBtn,#toBeMDTConsultationBtn').click(function () {
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['500px', '200px'],
+            closeBtn: false,
+            shade: [0.1, '#000000'],
+            shadeClose: false,
+            content: _$('#MDTConsultationBox')
+        });
+    });
+    /** 会诊医政审核通过弹窗*/
+    $("#examineConsultationBtn").click(function () {
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['500px', '200px'],
+            closeBtn: false,
+            shade: [0.1, '#000000'],
+            shadeClose: false,
+            content: _$("#examineConsultationBox")
+        });
+    });
+
+    /** 拒收弹窗 */
+    $('#refuseConsultationBtn').click(function () {
         layer.open({
             type: 1,
             title: '',
@@ -134,11 +134,7 @@ $(function () {
             shadeClose: false,
             content: $('#refuseConsultationBox'),
         });
-        // $('#refuseConsultationBox').css('display', 'block');
-        // // $('.background').css('display', 'block');
-        // $('.re_layer').css('display', 'block');
-        // /* 开启弹层禁止屏幕滚动 */
-        // document.documentElement.style.overflow = "hidden";
+        document.documentElement.style.overflow = "hidden";
     });
     $('textarea').focus(function () {
         //  $('.font').css('display','none');
@@ -174,7 +170,7 @@ $(function () {
         viewText = '其他原因:';
     });
     /* 拒收确定按钮 */
-    $('.confirm').click(function () {
+    $('#refuseConsultationBoxBtn').click(function () {
         if ($('.refuseReason').val() == '') {
             $("#alertText").html("请填写拒收原因");
             alertMessage();
@@ -194,23 +190,6 @@ $(function () {
             }
         }
     });
-    /** 弹层关闭按钮 */
-    $('.refuseBtn').click(function () {
-        $('.background').css('display', 'none');
-        document.documentElement.style.overflow = "scroll";
-    });
 
-    function alertMessage() {
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['500px', '200px'],
-            closeBtn: false,
-            shade: [0.7, '#000000'],
-            shadeClose: false,
-            time: 2000,
-            zIndex: layer.zIndex,
-            content: _$('#alertBox')
-        });
-    }
+
 });

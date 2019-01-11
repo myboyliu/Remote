@@ -314,32 +314,26 @@
 <div class="nav">
     <div class="handle">
         <input type="button" value="返回" class="getBack">
-        <!--<input type="button" value="退回" class="sendBack" style="display: none;">-->
-        <!--<input type="button" value="审核发布" class="audit" style="display: none;">-->
-        <!--<input type="button" value="拒收" class="rejection" style="display: none;">-->
-        <!--<input type="button" value="接收" class="accept" style="display: none;">-->
-        <!--<input id="MDTBtn" type="button" value="MDT协调" class="MDTBtn" style="display: none;">-->
-        <!--<input id="toBeMDT" type="button" value="确认协调" class="toBeMDT MDTBtn" style="display: none;">-->
-        <!--<input id="accept" type="button" value="审核通过" class="examineBtn accept" style="display: none;">-->
-        <!--<input id="enter_room" type="button" value="进入视频会诊室" class="entrance" style="display: none;">-->
 
         <!-- 会诊按钮 -->
-        <input id="sendBackConsultation" type="button" value="退回" class="sendBack">
-        <input id="auditConsultation" type="button" value="审核发布" class="audit">
-        <input id="MDTConsultation" type="button" value="MDT协调" class="MDTBtn">
-        <input id="toBeMDTConsultation" type="button" value="确认协调" class="toBeMDT MDTBtn">
-        <input id="examineBtnConsultation" type="button" value="审核通过" class="examineBtn accept">
-        <input id="refuseConsultation" type="button" value="拒收" class="rejection">
-        <input id="receiveConsultation" type="button" value="接收" class="accept">
-        <input id="entranceConsultation" type="button" value="进入视频会诊室" class="entrance">
+        <!--发起-->
+        <input id="sendBackConsultationBtn" type="button" value="退回" class="sendBackConsultation">
+        <input id="auditConsultationBtn" type="button" value="审核发布" class="auditConsultation">
+        <!--受邀-->
+        <input id="refuseConsultationBtn" type="button" value="拒收" class="refuseConsultation rejection">
+        <input id="receiveConsultationBtn" type="button" value="接收" class="receiveConsultation">
+        <input id="MDTConsultationBtn" type="button" value="MDT协调" class="MDTConsultation">
+        <input id="examineConsultationBtn" type="button" value="审核通过" class="examineConsultation">
+        <input id="toBeMDTConsultationBtn" type="button" value="确认协调" class="toBeMDTConsultation">
+        <input id="entryConsultationRoomBtn" type="button" value="进入视频会诊室" class="entryConsultationRoom">
 
         <!-- 转诊按钮 -->
-        <!--<input id="sendBackReferral" type="button" value="退回" class="sendBackReferral">-->
-        <!--<input id="throughBackReferral" type="button" value="通过" class="throughReferral">-->
-        <!--<input id="cancelBackReferral" type="button" value="取消转诊" class="cancelReferral">-->
-        <!--<input id="agreeBackReferral" type="button" value="同意" class="agreeReferral">-->
-        <!--<input id="refuseBackReferral" type="button" value="拒绝" class="refuseReferral">-->
-        <!--<input id="receiveBackReferral" type="button" value="接收" class="receiveReferral">-->
+        <input id="sendBackReferral" type="button" value="退回" class="sendBackReferral">
+        <input id="throughBackReferral" type="button" value="通过" class="throughReferral">
+        <input id="cancelBackReferral" type="button" value="取消转诊" class="cancelReferral">
+        <input id="agreeBackReferral" type="button" value="同意" class="agreeReferral">
+        <input id="refuseBackReferral" type="button" value="拒绝" class="refuseReferral">
+        <input id="receiveBackReferral" type="button" value="接收" class="receiveReferral">
 
     </div>
 </div>
@@ -347,7 +341,7 @@
     Copyright © 2018 医来医往(北京)科技有限公司
 </div>
 <!-- 视频会诊时间选择 -->
-<div class="selectTimeContainer clearfix">
+<div id="selectTimeContainerBox" class="selectTimeContainer clearfix">
     <div class="closeBtnTime clearfix">
         <span>关闭</span>
         <img src="../images/close.png" alt="">
@@ -368,7 +362,7 @@
             <a class="clearBtn" href="javascript:">清空本页</a>
         </div>
         <div class="btnBox">
-            <a href="javascript:" class="yesBtn">确定</a>
+            <a id="selectTimeContainerBoxYesBtn" href="javascript:" class="yesBtn">确定</a>
         </div>
     </div>
 </div>
@@ -402,20 +396,13 @@
 <!-- 会诊按钮弹窗 -->
 <div id="sendBackConsultationBox" class="invite inviteObj">
     <p>确定退回此订单？</p>
-    <input type="button" value="取消" class="agin">
+    <input class="noBtn" type="button" value="取消">
     <input id="sendBackConsultationBoxYesBtn" type="button" value="是的，&nbsp;我确定" class="yes">
 </div>
 <div id="auditConsultationBox" class="invite auditObj">
     <p>是否确认审核发布病历？</p>
-    <input type="button" value="取消" class="agin">
+    <input class="noBtn" type="button" value="取消">
     <input id="auditConsultationBoxYesBtn" type="button" value="发布" class="yes">
-</div>
-<div class="operateBox submitBox MDTBox">
-    <p>确认已协调专家并接收吗？</p>
-    <div class="btnBox">
-        <a class="noBtn" href="javascript:">我再想想</a>
-        <a class="acceptBtn" href="javascript:">是的，接收</a>
-    </div>
 </div>
 <div id="receiveConsultationBox" class="operateBox submitBox Receive">
     <p>确定要接诊吗？</p>
@@ -424,7 +411,21 @@
         <a id="receiveConsultationBoxYesBtn" class="acceptBtn" href="javascript:">确定</a>
     </div>
 </div>
-<div id="refuseConsultationBox" class="">
+<div id="MDTConsultationBox" class="operateBox submitBox">
+    <p>确认已协调专家并接收吗？</p>
+    <div class="btnBox">
+        <a class="noBtn" href="javascript:">我再想想</a>
+        <a id="MDTConsultationBoxYesBtn" class="acceptBtn" href="javascript:">是的，接收</a>
+    </div>
+</div>
+<div id="examineConsultationBox" class="operateBox submitBox">
+    <p>确认该视频排期时间可用，系统将通过审核记录排期</p>
+    <div class="btnBox">
+        <a class="noBtn" href="javascript:;">取消</a>
+        <a id="examineConsultationBoxYesBtn" class="yesBtn" href="javascript:;">通过审核</a>
+    </div>
+</div>
+<div id="refuseConsultationBox" class="rejectBox">
     <!-- 拒收弹层 -->
     <div class="rejectionLayer re_layer">
         <div class="rejectionLayer_top">
@@ -442,8 +443,8 @@
                 <br>
             </div>
         </div>
-        <input type="button" value="确定" class="confirm">
-        <div class="closeBtn clearfix refuseBtn"><img src="../images/close.png" alt="">
+        <input id="refuseConsultationBoxBtn" type="button" value="确定" class="confirm">
+        <div class="noBtn closeBtn clearfix refuseBtn"><img src="../images/close.png" alt="">
             <span>关闭</span></div>
     </div>
 </div>
@@ -509,7 +510,7 @@
             <textarea name="" class="refuseReason rejectBoxArea"
                       placeholder="请尽量多的填写对医务人员和发件医生有参考价值的建议及原因..."></textarea>
         </div>
-        <input type="button" value="确定" class="confirm">
+        <input id="refuseBackReferralBoxBtn" type="button" value="确定" class="confirm">
         <div class="noBtn closeBtn clearfix refuseBtn"><img src="../images/close.png" alt=""><span>关闭</span></div>
     </div>
 </div>
