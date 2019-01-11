@@ -386,7 +386,7 @@ function getDrafts(pageNo, pageSize) {
 // 查看订单详情
 function selectOrderById(orderId) {
     sessionStorage.setItem('applyFormId', orderId);
-    window.location = '../page/Rfinish.html';
+    window.location = '../page/doctorApplyInfo.html';
 }
 
 // 草稿箱分页

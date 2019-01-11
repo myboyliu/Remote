@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <link href="../favicon.ico" rel="shortcut icon"/>
+    <link href="../images/favicon.ico" rel="shortcut icon"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>医政受邀已结束</title>
@@ -328,12 +328,10 @@
         <input id="entryConsultationRoomBtn" type="button" value="进入视频会诊室" class="entryConsultationRoom">
 
         <!-- 转诊按钮 -->
-        <input id="sendBackReferral" type="button" value="退回" class="sendBackReferral">
-        <input id="throughBackReferral" type="button" value="通过" class="throughReferral">
-        <input id="cancelBackReferral" type="button" value="取消转诊" class="cancelReferral">
-        <input id="agreeBackReferral" type="button" value="同意" class="agreeReferral">
-        <input id="refuseBackReferral" type="button" value="拒绝" class="refuseReferral">
-        <input id="receiveBackReferral" type="button" value="接收" class="receiveReferral">
+        <input id="sendBackReferralBtn" type="button" value="退回" class="sendBackReferral">
+        <input id="throughReferralBtn" type="button" value="通过" class="throughReferral">
+        <input id="refuseReferralBtn" type="button" value="拒绝" class="refuseReferral">
+        <input id="receiveReferralBtn" type="button" value="接收" class="receiveReferral">
 
     </div>
 </div>
@@ -470,35 +468,21 @@
         <a id="sendBackReferralBoxYesBtn" class="yesBtn" href="javascript:">是的，退回</a>
     </div>
 </div>
-<div id="throughBackReferralBox" class="operateBox submitBox">
+<div id="throughReferralBox" class="operateBox submitBox">
     <p>确定要通过该转诊？</p>
     <div class="btnBox">
         <a class="noBtn" href="javascript:">我再想想</a>
         <a id="throughBackReferralBoxYesBtn" class="yesBtn" href="javascript:">确认通过</a>
     </div>
 </div>
-<div id="receiveBackReferralBox" class="operateBox receiveBox">
+<div id="receiveReferralBox" class="operateBox receiveBox">
     <p>确定要接收该转诊？</p>
     <div class="btnBox">
         <a class="noBtn" href="javascript:">我再想想</a>
         <a id="receiveBackReferralBoxYesBtn" class="yesBtn" href="javascript:">确认接收</a>
     </div>
 </div>
-<div id="cancelBackReferralBox" class="operateBox cancelBox">
-    <p>确定要取消该转诊？</p>
-    <div class="btnBox">
-        <a class="noBtn" href="javascript:">我再想想</a>
-        <a id="cancelBackReferralBoxYesBtn" class="yesBtn" href="javascript:">确认取消</a>
-    </div>
-</div>
-<div id="agreeBackReferralBox" class="operateBox agreeBox">
-    <p>确定要同意该转诊？</p>
-    <div class="btnBox">
-        <a class="noBtn" href="javascript:">我再想想</a>
-        <a id="agreeBackReferralBoxYesBtn" class="yesBtn" href="javascript:">确认</a>
-    </div>
-</div>
-<div id="refuseBackReferralBox" class="rejectBox">
+<div id="refuseReferralBox" class="rejectBox">
     <div class="rejectionLayer re_layer">
         <div class="rejectionLayer_top">
             <span>填写拒收原因</span>

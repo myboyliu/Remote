@@ -8,11 +8,11 @@ $(function () {
             closeBtn: false,
             shade: [0.7, '#000000'],
             shadeClose: false,
-            content: _$('#sendBackReferralBox')
+            content: _$('#sendReferralBox')
         });
     })
     /** 通过按钮 */
-    $("#throughBackReferral").click(function () {
+    $("#throughReferralBtn").click(function () {
         layer.open({
             type: 1,
             title: '',
@@ -20,7 +20,7 @@ $(function () {
             closeBtn: false,
             shade: [0.7, '#000000'],
             shadeClose: false,
-            content: _$('#throughBackReferralBox')
+            content: _$('#throughReferralBox')
         });
     })
     $("#throughBackReferralBoxYesBtn").click(function () {
@@ -44,32 +44,8 @@ $(function () {
         }
     })
 
-    /** 取消按钮*/
-    $("#cancelBackReferral").click(function () {
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['500px', '200px'],
-            closeBtn: false,
-            shade: [0.7, '#000000'],
-            shadeClose: false,
-            content: _$('#cancelBackReferralBox')
-        });
-    })
-    /** 同意按钮 */
-    $("#agreeBackReferral").click(function () {
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['500px', '200px'],
-            closeBtn: false,
-            shade: [0.7, '#000000'],
-            shadeClose: false,
-            content: _$('#agreeBackReferralBox')
-        });
-    })
     /** 拒绝按钮 */
-    $("#refuseBackReferral").click(function () {
+    $("#refuseReferralBtn").click(function () {
         layer.open({
             type: 1,
             title: '',
@@ -77,12 +53,12 @@ $(function () {
             closeBtn: false,
             shade: [0.7, '#000000'],
             shadeClose: false,
-            content: $('#refuseBackReferralBox'),
+            content: $('#refuseReferralBox'),
         });
         document.documentElement.style.overflow = "hidden";
     })
     /** 接收按钮 */
-    $("#receiveBackReferral").click(function () {
+    $("#receiveReferralBtn").click(function () {
         layer.open({
             type: 1,
             title: '',
@@ -93,9 +69,28 @@ $(function () {
             content: _$('#receiveBackReferralBox')
         });
     })
-
+    $("#receiveReferralBoxYesBtn").click(function () {
+        let data = new FormData();
+        data.append("id", applyFormId);
+        ajaxRequest("POST", sirTransferMasterAccede, data, false, false, true, sirTransferMasterAccedeSuccess, failedParamFeadBack, null);
+        function sirTransferMasterAccedeSuccess(responseData) {
+            console.log(responseData);
+            layer.closeAll();
+            $("#alertText").html("接收成功");
+            alertMessage();
+            setTimeout(function () {
+                window.location = '../page/administrator.html';
+            }, 2000);
+        }
+        function failedParamFeadBack(failedParam) {
+            console.log(failedParam);
+            layer.closeAll();
+            $("#alertText").html("接收失败");
+            alertMessage();
+        }
+    })
     /** 拒收确定按钮 */
-    $('#refuseBackReferralBoxBtn').click(function () {
+    $('#refuseReferralBoxBtn').click(function () {
         if ($('.refuseReason').val() == '') {
             $("#alertText").html("请填写拒收原因");
             alertMessage();

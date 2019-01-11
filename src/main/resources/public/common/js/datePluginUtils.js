@@ -203,7 +203,7 @@ $(function () {
         $('.selectTimeContainer').hide();
     })
 
-    $('.yesBtn').click(function () {
+    $('#selectTimeContainerBoxYesBtn').click(function () {
         layer.closeAll();
         $('.selectTimeContainer').hide();
         dateList = [];

@@ -19,7 +19,7 @@ $(function () {
 
     $('.details').click(function(){
         sessionStorage.setItem('applyFormId', data.id);
-        window.location = ' ../page/Rfinish.html';
+        window.location = '../page/doctorApplyInfo.html';
     })
 
 })

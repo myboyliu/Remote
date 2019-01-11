@@ -125,7 +125,7 @@ const sirReceiveMasterReject = "/apply/dispose/sirReceiveMasterReject"; //会诊
 const sirUpdateDate = "/apply/dispose/sirUpdateDate"; //选择排期
 const sirUpdateDoctor = "/apply/dispose/sirUpdateDoctor"; //选择医生
 
-/** 转诊类别 医生查询 接口*/
+/** 转诊列表 医生查询 接口*/
 const inquiryCreateSuccess = "/apply/transfer/inquiryCreateSuccess";            //待审核
 const inquiryApplyAccede = "/apply/transfer/inquiryApplyAccede";                //待收诊
 const inquirySlaveMasterAccede = "/apply/transfer/inquirySlaveMasterAccede";    //排期审核
@@ -133,13 +133,23 @@ const inquiryDate = "/apply/transfer/inquiryDate";                              
 const inquirySlaveMasterReject = "/apply/transfer/inquirySlaveMasterReject";    //已拒收
 const inquiryEnd = "/apply/transfer/inquiryEnd";                                //已结束
 
-/** 转诊类别 医政查询 接口*/
+/** 转诊列表 医政查询 接口*/
 const sirInquiryCheck = "/apply/transfer/sirInquiryCheck";                      //待审核
 const sirInquiryAccept = "/apply/transfer/sirInquiryAccept";                    //待接收
 const sirInquiryCheckDate = "/apply/transfer/sirInquiryCheckDate";              //排期审核
 const sirInquiryDate = "/apply/transfer/sirInquiryDate";                        //已排期
 const sirInquiryReject = "/apply/transfer/sirInquiryReject";                    //已拒收
 const sirInquiryEnd = "/apply/transfer/sirInquiryEnd";                          //已结束
+
+/** 转诊医政操作接口 */
+const sirTransferCheckAccede = "/apply/dispose/sirTransferCheckAccede";                 //首诊审核 通过
+const sirTransferCheckReject = "/apply/dispose/sirTransferCheckReject";                 //首诊审核 退回
+
+const sirTransferMasterAccede = "/apply/dispose/sirTransferMasterAccede";               //代收诊   同意
+const sirTransferMasterReject = "/apply/dispose/sirTransferMasterReject";               //代收诊   拒绝
+const sirTransferDateCheckAccede = "/apply/dispose/sirTransferDateCheckAccede";         //排期审核 同意
+const sirTransferDateCheckReject = "/apply/dispose/sirTransferDateCheckReject";         //排期审核 拒绝
+
 
 /** 分页数量查询接口 */
 const sendSelectAllCountDoctor = "/apply/consultation/sendSelectAllCountDoctor";        //首诊医生发出列表

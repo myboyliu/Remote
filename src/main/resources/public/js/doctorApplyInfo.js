@@ -291,31 +291,55 @@ function renderViewByRole() {
             $('.progressBar').html(referralStatus);
         }
         $(".progressBar li:nth-child(1)").addClass("libg");
-        if (applyStatus === "INQUIRY_APPLY_CREATE_SUCCESS") {
-            //待审核
-            $('.progressBar').hide();
-            $('#applyTime').hide();
-            $('#applyNumber').hide();
-            $('.layui-timeline').hide();
-        } else if (applyStatus === "INQUIRY_APPLY_ACCEDE") {
-            //待收诊
-            $("#rejectionReferral").show();
-            $("#receiveReferral").show();
-        } else if (applyStatus === "INQUIRY_SLAVE_ACCEDE") {
-            //排期审核
+        if (isInvite) {
+            if (applyStatus === "INQUIRY_APPLY_CREATE_SUCCESS") {
+                //待审核
+                $('.progressBar').hide();
+                $('#applyTime').hide();
+                $('#applyNumber').hide();
+                $('.layui-timeline').hide();
+            } else if (applyStatus === "INQUIRY_APPLY_ACCEDE") {
+                //待收诊
+                $("#rejectionReferral").show();
+                $("#receiveReferral").show();
+            } else if (applyStatus === "INQUIRY_SLAVE_ACCEDE") {
+                //排期审核
 
-        } else if (applyStatus === "INQUIRY_DATETIME_LOCKED") {
-            //已排期
-            $("#cancelReferral").show();
-            $("#agreeReferral").show();
-        } else if (applyStatus === "INQUIRY_MASTER_REJECT" || applyStatus === "INQUIRY_APPLY_REJECT" || applyStatus === "INQUIRY_SLAVE_REJECT") {
-            //已拒收
-            $('.progressBar').empty();
-            referralStatus = '<li class="libg" style="width: 100%">' + '已拒收' + '</li>'
-            $('.progressBar').html(referralStatus);
-        } else if (applyStatus === "INQUIRY_END") {
-            //已结束
-
+            } else if (applyStatus === "INQUIRY_DATETIME_LOCKED") {
+                //已排期
+                $(".progressBar li:nth-child(2)").addClass("libg");
+            } else if (applyStatus === "INQUIRY_MASTER_REJECT" || applyStatus === "INQUIRY_APPLY_REJECT" || applyStatus === "INQUIRY_SLAVE_REJECT") {
+                //已拒收
+                $('.progressBar').empty();
+                referralStatus = '<li class="libg" style="width: 100%">' + '已拒收' + '</li>'
+                $('.progressBar').html(referralStatus);
+            } else if (applyStatus === "INQUIRY_END") {
+                //已结束
+                $(".progressBar li:nth-child(3)").addClass("libg");
+            }
+        } else {
+            if (applyStatus === "INQUIRY_APPLY_CREATE_SUCCESS") {
+                //待审核
+                $('.progressBar').hide();
+                $('#applyTime').hide();
+                $('#applyNumber').hide();
+                $('.layui-timeline').hide();
+            } else if (applyStatus === "INQUIRY_APPLY_ACCEDE") {
+                //待收诊
+            } else if (applyStatus === "INQUIRY_SLAVE_ACCEDE") {
+                //排期审核
+            } else if (applyStatus === "INQUIRY_DATETIME_LOCKED") {
+                //已排期
+                $(".progressBar li:nth-child(2)").addClass("libg");
+            } else if (applyStatus === "INQUIRY_MASTER_REJECT" || applyStatus === "INQUIRY_APPLY_REJECT" || applyStatus === "INQUIRY_SLAVE_REJECT") {
+                //已拒收
+                $('.progressBar').empty();
+                referralStatus = '<li class="libg" style="width: 100%">' + '已拒收' + '</li>'
+                $('.progressBar').html(referralStatus);
+            } else if (applyStatus === "INQUIRY_END") {
+                //已结束
+                $(".progressBar li:nth-child(3)").addClass("libg");
+            }
         }
     }
 }
