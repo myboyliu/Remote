@@ -56,4 +56,7 @@ public interface ApplyFormMapper {
     ConsultationStatusBean inquiryCreateSuccessAllCount(ApplyFormBean applyFormBean);
 
     ConsultationStatusBean inquirySMAdAllCount(ApplyFormBean applyFormBean);
+
+    int countDraft(ApplyForm applyForm);
+
 }
