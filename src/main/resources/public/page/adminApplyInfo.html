@@ -314,22 +314,32 @@
 <div class="nav">
     <div class="handle">
         <input type="button" value="返回" class="getBack">
-        <input type="button" value="退回" class="sendBack" style="display: none;">
-        <input type="button" value="审核发布" class="audit" style="display: none;">
-        <input type="button" value="拒收" class="rejection" style="display: none;">
-        <input type="button" value="接收" class="accept" style="display: none;">
-        <input id="MDTBtn" type="button" value="MDT协调" class="MDTBtn" style="display: none;">
-        <input id="toBeMDT" type="button" value="确认协调" class="toBeMDT MDTBtn" style="display: none;">
-        <input id="accept" type="button" value="审核通过" class="examineBtn accept" style="display: none;">
-        <input id="enter_room" type="button" value="进入视频会诊室" class="entrance" style="display: none;">
+        <!--<input type="button" value="退回" class="sendBack" style="display: none;">-->
+        <!--<input type="button" value="审核发布" class="audit" style="display: none;">-->
+        <!--<input type="button" value="拒收" class="rejection" style="display: none;">-->
+        <!--<input type="button" value="接收" class="accept" style="display: none;">-->
+        <!--<input id="MDTBtn" type="button" value="MDT协调" class="MDTBtn" style="display: none;">-->
+        <!--<input id="toBeMDT" type="button" value="确认协调" class="toBeMDT MDTBtn" style="display: none;">-->
+        <!--<input id="accept" type="button" value="审核通过" class="examineBtn accept" style="display: none;">-->
+        <!--<input id="enter_room" type="button" value="进入视频会诊室" class="entrance" style="display: none;">-->
+
+        <!-- 会诊按钮 -->
+        <input id="sendBackConsultation" type="button" value="退回" class="sendBack">
+        <input id="auditConsultation" type="button" value="审核发布" class="audit">
+        <input id="MDTConsultation" type="button" value="MDT协调" class="MDTBtn">
+        <input id="toBeMDTConsultation" type="button" value="确认协调" class="toBeMDT MDTBtn">
+        <input id="examineBtnConsultation" type="button" value="审核通过" class="examineBtn accept">
+        <input id="refuseConsultation" type="button" value="拒收" class="rejection">
+        <input id="receiveConsultation" type="button" value="接收" class="accept">
+        <input id="entranceConsultation" type="button" value="进入视频会诊室" class="entrance">
 
         <!-- 转诊按钮 -->
-        <input id="sendBackReferral" type="button" value="退回" class="sendBackReferral">
-        <input id="throughBackReferral" type="button" value="通过" class="throughReferral">
-        <input id="cancelBackReferral" type="button" value="取消转诊" class="cancelReferral">
-        <input id="agreeBackReferral" type="button" value="同意" class="agreeReferral">
-        <input id="refuseBackReferral" type="button" value="拒绝" class="refuseReferral">
-        <input id="receiveBackReferral" type="button" value="接收" class="receiveReferral">
+        <!--<input id="sendBackReferral" type="button" value="退回" class="sendBackReferral">-->
+        <!--<input id="throughBackReferral" type="button" value="通过" class="throughReferral">-->
+        <!--<input id="cancelBackReferral" type="button" value="取消转诊" class="cancelReferral">-->
+        <!--<input id="agreeBackReferral" type="button" value="同意" class="agreeReferral">-->
+        <!--<input id="refuseBackReferral" type="button" value="拒绝" class="refuseReferral">-->
+        <!--<input id="receiveBackReferral" type="button" value="接收" class="receiveReferral">-->
 
     </div>
 </div>
@@ -389,22 +399,17 @@
     </div>
     <a class="closeBtnImg" href="javascript:">关闭</a>
 </div>
-<!-- 确定退回此订单弹层 -->
-<div class="invite inviteObj">
+<!-- 会诊按钮弹窗 -->
+<div id="sendBackConsultationBox" class="invite inviteObj">
     <p>确定退回此订单？</p>
     <input type="button" value="取消" class="agin">
-    <input type="button" value="是的，&nbsp;我确定" class="yes">
+    <input id="sendBackConsultationBoxYesBtn" type="button" value="是的，&nbsp;我确定" class="yes">
 </div>
-<div class="invite auditObj">
+<div id="auditConsultationBox" class="invite auditObj">
     <p>是否确认审核发布病历？</p>
     <input type="button" value="取消" class="agin">
-    <input type="button" value="发布" class="yes">
+    <input id="auditConsultationBoxYesBtn" type="button" value="发布" class="yes">
 </div>
-
-<div id="alertBox" class="succeed" style="display: none;">
-    <p id="alertText"></p>
-</div>
-
 <div class="operateBox submitBox MDTBox">
     <p>确认已协调专家并接收吗？</p>
     <div class="btnBox">
@@ -412,21 +417,14 @@
         <a class="acceptBtn" href="javascript:">是的，接收</a>
     </div>
 </div>
-<div class="operateBox submitBox Receive">
+<div id="receiveConsultationBox" class="operateBox submitBox Receive">
     <p>确定要接诊吗？</p>
     <div class="btnBox">
         <a class="noBtn" href="javascript:">取消</a>
-        <a class="acceptBtn" href="javascript:">确定</a>
+        <a id="receiveConsultationBoxYesBtn" class="acceptBtn" href="javascript:">确定</a>
     </div>
 </div>
-<!-- 弹层 -->
-
-<div class="change">
-    <p>此订单已经发生改变</p>
-</div>
-
-<!-- 弹层部分 背景图加三个弹层 -->
-<div id="refuseBackConsultationBox" class="background">
+<div id="refuseConsultationBox" class="">
     <!-- 拒收弹层 -->
     <div class="rejectionLayer re_layer">
         <div class="rejectionLayer_top">
@@ -449,13 +447,20 @@
             <span>关闭</span></div>
     </div>
 </div>
+<!-- 弹层 -->
 
-<!-- 转诊 弹窗 -->
+<div id="alertBox" class="succeed" style="display: none;">
+    <p id="alertText"></p>
+</div>
+<div class="change">
+    <p>此订单已经发生改变</p>
+</div>
 <!--<div class="promptMsg">-->
-    <!--<p>退回成功</p>-->
+<!--<p>退回成功</p>-->
 <!--</div>-->
 
 
+<!-- 转诊 弹窗 -->
 
 <div id="sendBackReferralBox" class="operateBox sendBackBox">
     <p>确定要退回该转诊？</p>
