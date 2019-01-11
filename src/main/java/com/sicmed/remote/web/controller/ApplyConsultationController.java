@@ -361,13 +361,11 @@ public class ApplyConsultationController extends BaseController {
         String applyStatus1 = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_ACCEDE);
         String applyStatus2 = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_REJECT);
         String applyStatus3 = String.valueOf(ConsultationStatus.CONSULTATION_DOCTOR_LOCKED);
-        String applyStatus4 = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_ACCEDE);
-        String applyStatus5 = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE);
+        String applyStatus4 = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE);
         statusList.add(applyStatus1);
         statusList.add(applyStatus2);
         statusList.add(applyStatus3);
         statusList.add(applyStatus4);
-        statusList.add(applyStatus5);
         String msg = "无待收诊";
 
         return sirSendSelect(statusList, msg);
@@ -632,7 +630,6 @@ public class ApplyConsultationController extends BaseController {
 
         String userId = getRequestToken();
         CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
-
         ConsultationStatusBean consultationStatusBean = applyFormService.sendSelectAllCount(null, userDetail.getHospitalId(), consultantTypeList);
 
         return succeedRequest(consultationStatusBean);
