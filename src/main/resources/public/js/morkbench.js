@@ -301,6 +301,7 @@ function currentApplyCount() {
     applyAcceptCount += Number(countObject.consultationApplyAccede);
     applyAcceptCount += Number(countObject.consultationDoctorLocked);
     applyAcceptCount += Number(countObject.consultationSlaveReject);
+    applyAcceptCount += Number(countObject.consultationSlaveAccede);
     $("#APPLY_REVIEW").html(Number(countObject.consultationApplyCreateSuccess))
     $("#APPLY_ACCEPT").html(applyAcceptCount)
     $("#APPLY_DATETIME").html(Number(countObject.consultationDatetimeLocked))
@@ -326,7 +327,7 @@ function currentInviteCount() {
     $("#INVITE_DATETIME").html(Number(countObject.consultationDatetimeLocked))
     $("#INVITE_ONGOING").html(Number(countObject.consultationBegin))
     $("#INVITE_FEEDBACK").html(Number(countObject.consultationReportSubmitted))
-    $("#INVITE_REJECT").html(Number(countObject.consultationMasterReject) + Number(countObject.consultationSlaveReject))
+    $("#INVITE_REJECT").html(Number(countObject.consultationMasterReject))
     $("#INVITE_DONE").html(Number(countObject.consultationEn))
 }
 
