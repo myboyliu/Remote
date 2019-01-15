@@ -31,12 +31,6 @@ public enum InquiryStatus {
     //转诊时间已选定
     INQUIRY_DATETIME_LOCKED,
 
-    //发起人 确认转诊
-    INQUIRY_SENDER_CONFIRM,
-
-    //发起人 取消转诊
-    INQUIRY_SENDER_CANCEL,
-
     // 转诊已结束
     INQUIRY_END,
 }

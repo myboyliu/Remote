@@ -638,8 +638,6 @@
         <result column="cma" jdbcType="VARCHAR" property="inquiryMasterAccede"/>
         <result column="cmr" jdbcType="VARCHAR" property="inquiryMasterReject"/>
         <result column="cdrl" jdbcType="VARCHAR" property="inquiryDatetimeLockeD"/>
-        <result column="cdel" jdbcType="VARCHAR" property="inquirySenderConfirm"/>
-        <result column="cb" jdbcType="VARCHAR" property="inquirySenderCancel"/>
         <result column="crs" jdbcType="VARCHAR" property="inquiryEnd"/>
     </resultMap>
 
@@ -656,8 +654,6 @@
         count(apply_status="INQUIRY_MASTER_ACCEDE" or NULL) cma,
         count(apply_status="INQUIRY_MASTER_REJECT" or NULL) cmr,
         count(apply_status="INQUIRY_DATETIME_LOCKED" or NULL) cdrl,
-        count(apply_status="INQUIRY_SENDER_CONFIRM" or NULL) cdel,
-        count(apply_status="INQUIRY_SENDER_CANCEL" or NULL) cb,
         count(apply_status="INQUIRY_END" or NULL) crs
         from apply_form
         <where>
@@ -685,8 +681,6 @@
         count(apply_status="INQUIRY_MASTER_ACCEDE" or NULL) cma,
         count(apply_status="INQUIRY_MASTER_REJECT" or NULL) cmr,
         count(apply_status="INQUIRY_DATETIME_LOCKED" or NULL) cdrl,
-        count(apply_status="INQUIRY_SENDER_CONFIRM" or NULL) cdel,
-        count(apply_status="INQUIRY_SENDER_CANCEL" or NULL) cb,
         count(apply_status="INQUIRY_END" or NULL) crs
         from apply_form
         <where>
@@ -714,8 +708,6 @@
         count(apply_status="INQUIRY_MASTER_ACCEDE" or NULL) cma,
         count(apply_status="INQUIRY_MASTER_REJECT" or NULL) cmr,
         count(apply_status="INQUIRY_DATETIME_LOCKED" or NULL) cdrl,
-        count(apply_status="INQUIRY_SENDER_CONFIRM" or NULL) cdel,
-        count(apply_status="INQUIRY_SENDER_CANCEL" or NULL) cb,
         count(apply_status="INQUIRY_END" or NULL) crs
         from apply_form
         <where>
@@ -747,8 +739,6 @@
         count(apply_status="INQUIRY_MASTER_ACCEDE" or NULL) cma,
         count(apply_status="INQUIRY_MASTER_REJECT" or NULL) cmr,
         count(apply_status="INQUIRY_DATETIME_LOCKED" or NULL) cdrl,
-        count(apply_status="INQUIRY_SENDER_CONFIRM" or NULL) cdel,
-        count(apply_status="INQUIRY_SENDER_CANCEL" or NULL) cb,
         count(apply_status="INQUIRY_END" or NULL) crs
         from apply_form
         <where>

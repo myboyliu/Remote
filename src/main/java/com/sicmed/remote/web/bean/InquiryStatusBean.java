@@ -21,9 +21,5 @@ public class InquiryStatusBean {
 
     private String inquiryDatetimeLockeD;
 
-    private String inquirySenderConfirm;
-
-    private String inquirySenderCancel;
-
     private String inquiryEnd;
 }

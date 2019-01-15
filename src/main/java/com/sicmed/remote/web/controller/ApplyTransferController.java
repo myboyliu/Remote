@@ -108,9 +108,7 @@ public class ApplyTransferController extends BaseController {
 
         List<String> consultationStatusList = new ArrayList<>();
         String inquiryStatus1 = String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED);
-        String inquiryStatus2 = String.valueOf(InquiryStatus.INQUIRY_SENDER_CONFIRM);
         consultationStatusList.add(inquiryStatus1);
-        consultationStatusList.add(inquiryStatus2);
 
         String msg = "无已排期";
 
@@ -125,9 +123,7 @@ public class ApplyTransferController extends BaseController {
 
         List<String> consultationStatusList = new ArrayList<>();
         String inquiryStatus1 = String.valueOf(InquiryStatus.INQUIRY_END);
-        String inquiryStatus2 = String.valueOf(InquiryStatus.INQUIRY_SENDER_CANCEL);
         consultationStatusList.add(inquiryStatus1);
-        consultationStatusList.add(inquiryStatus2);
 
         String msg = "无已结束";
 
@@ -289,9 +285,7 @@ public class ApplyTransferController extends BaseController {
 
         List<String> consultationStatusList = new ArrayList<>();
         String inquiryStatus1 = String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED);
-        String inquiryStatus2 = String.valueOf(InquiryStatus.INQUIRY_SENDER_CONFIRM);
         consultationStatusList.add(inquiryStatus1);
-        consultationStatusList.add(inquiryStatus2);
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setApplyHospitalId(hospitalId);
@@ -337,10 +331,8 @@ public class ApplyTransferController extends BaseController {
         String hospitalId = userDetail.getHospitalId();
 
         List<String> consultationStatusList = new ArrayList<>();
-        String inquiryStatus1 = String.valueOf(InquiryStatus.INQUIRY_SENDER_CANCEL);
-        String inquiryStatus2 = String.valueOf(InquiryStatus.INQUIRY_END);
+        String inquiryStatus1 = String.valueOf(InquiryStatus.INQUIRY_END);
         consultationStatusList.add(inquiryStatus1);
-        consultationStatusList.add(inquiryStatus2);
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setApplyHospitalId(hospitalId);

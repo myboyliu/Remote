@@ -441,34 +441,6 @@ public class ApplyDisposeController extends BaseController {
     }
 
     /**
-     * 医政 转诊 已排期 同意
-     */
-    @Transactional
-    @PostMapping(value = "sirTransferDateAccede")
-    public Map sirTransferDateAccede(String id) {
-
-        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SENDER_CONFIRM);
-        String msg1 = "转诊医政排期审核拒绝,form修改失败";
-        String msg2 = "转诊医政排期审核拒绝,time修改失败";
-        applyNodeService.insertByStatus(id, ApplyNodeConstant.已排期.toString());
-        return updateStatus(id, null, applyStatus, msg1, msg2, null);
-    }
-
-    /**
-     * 医政 转诊 已排期 取消
-     */
-    @Transactional
-    @PostMapping(value = "sirTransferDateReject")
-    public Map sirTransferDateReject(String id, String report) {
-
-        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SENDER_CANCEL);
-        String msg1 = "转诊医政排期审核拒绝,form修改失败";
-        String msg2 = "转诊医政排期审核拒绝,time修改失败";
-
-        return updateStatus(id, null, applyStatus, msg1, msg2, report);
-    }
-
-    /**
      * 医生 受邀会诊 代收诊 拒收
      */
     @Transactional
