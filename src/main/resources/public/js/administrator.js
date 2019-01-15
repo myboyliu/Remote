@@ -1,7 +1,7 @@
-const count = 0; // 列表总条数
 let applyFormId = ''; // 订单id
-let countNum = 50;
 let countObject = {};
+let pageCount = 10;
+
 let markJson = {}; // 日期标记
 const myDate = new Date();
 let dateStr = myDate.getFullYear() + '-' + double(myDate.getMonth() + 1) + '-' + double(myDate.getDate());
@@ -453,6 +453,43 @@ function currentInviteCount() {
     $("#INVITE_DONE").html(Number(countObject.consultationEn))
 }
 
+/** 查询转诊列表 总记录数*/
+function getReferralCount() {
+    ajaxRequest("GET", inquiryAllCountSir, null, false, false, false, inquiryAllCountDoctorSuccess, null, null);
+
+    function inquiryAllCountDoctorSuccess(result) {
+        countObject = result;
+        console.log(result);
+        currentReferralCount();
+    }
+}
+
+/** 渲染转诊导航列表记录数*/
+function currentReferralCount() {
+    $("#WAITING_AUDIT").html(Number(countObject.inquiryApplyCreateSuccess))
+    $("#WAITING_ACCEDE").html(Number(countObject.inquiryApplyAccede))
+    $("#DATETIME_AUDIT").html(Number(countObject.inquirySlaveAccede))
+    $("#DATETIME_LOCKED").html(Number(countObject.inquiryDatetimeLocked))
+    $("#HAS_REJECT").html(Number(countObject.inquiryMasterReject) + Number(countObject.inquirySlaveReject))
+    $("#HAS_END").html(Number(countObject.inquiryEnd))
+}
+
+/** 分页查询转诊列表数据 */
+function showReferralPageList(status, feedBackFunction) {
+    layui.use('laypage', function () {
+        const laypage = layui.laypage;
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'referralListBox',
+            count: pageCount,
+            limit: pageSize,
+            theme: '#f6c567',
+            jump: function (obj, first) {
+                feedBackFunction(status, obj.curr, pageSize);
+            }
+        });
+    });
+}
 // 获取草稿箱数据
 function getDrafts(pageNo, pageSize) {
 
@@ -465,20 +502,7 @@ function selectOrderById(orderId, type, readFlag) {
     window.location = '../page/adminApplyInfo.html';
 }
 
-// 草稿箱分页
-// layui.use('laypage', function () {
-//     var laypage = layui.laypage;
-//     //执行一个laypage实例
-//     laypage.render({
-//         elem: 'drafts',
-//         count: draftsCount,
-//         limit: pageSize,
-//         theme: '#f6c567',
-//         jump: function (obj, first) {
-//             getDrafts(obj.curr, pageSize);
-//         }
-//     });
-// });
+
 
 $(function () {
     getInviteCount()
@@ -520,6 +544,7 @@ $(function () {
             showPageList(applyStatus, getApplyList);
 
         } else if (_index == 2) {
+            getReferralCount()
             // 转诊列表
             $('.drafts_table').css("display", 'none');
             $('.tables').css('display', 'none');
@@ -530,19 +555,8 @@ $(function () {
             $(this).find(".leftUL li").eq(0).addClass("ulAct");
 
             let inviteStatus = $(this).find(".leftUL li").eq(0).attr('name');
-            layui.use('laypage', function () {
-                const laypage = layui.laypage;
-                //执行一个laypage实例
-                laypage.render({
-                    elem: 'referralListBox',
-                    count: countNum,
-                    limit: pageSize,
-                    theme: '#f6c567',
-                    jump: function (obj, first) {
-                        getReferralList(inviteStatus, obj.curr, pageSize);
-                    }
-                });
-            });
+            pageCount = $("#WAITING_AUDIT").html();
+            showReferralPageList(inviteStatus,getReferralList);
         }
     });
 
@@ -575,22 +589,9 @@ $(function () {
         $('.originator').css('width', '160px');
         $(".ulAct").removeClass("ulAct");
         $(this).addClass("ulAct");
-
-        applyFormId = $(this).attr('name');
-
-        layui.use('laypage', function () {
-            const laypage = layui.laypage;
-            //执行一个laypage实例
-            laypage.render({
-                elem: 'referralListBox',
-                count: countNum,
-                limit: pageSize,
-                theme: '#f6c567',
-                jump: function (obj, first) {
-                    getReferralList(applyFormId, obj.curr, pageSize);
-                }
-            });
-        });
+        let referralStatus = $(this).attr('name');
+        pageCount = $(this).children("div:eq(0)").html();
+        showReferralPageList(referralStatus,getReferralList);
         return false;
     });
 

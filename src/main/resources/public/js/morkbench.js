@@ -1,8 +1,7 @@
 const count = 0; // 列表总条数
-let countNum = 10;
 let countObject = {};
-let draftsCount = 0; // 草稿箱总条数
-let orderStateId = ''; // 订单id
+let pageCount = 10;
+
 // 日历表
 let markJson = {}; // 日期标记
 const myDate = new Date();
@@ -11,6 +10,7 @@ let dateStr = myDate.getFullYear() + '-' + double(myDate.getMonth() + 1) + '-' +
 // currentMonth 默认月份
 let currentMonth = myDate.getMonth() + 1;
 const layPage = layui.laypage;
+
 const InviteStatus = {
     INVITE_ACCEPT: "INVITE_ACCEPT",
     INVITE_REVIEW: "INVITE_REVIEW",
@@ -268,13 +268,30 @@ function getReferralList(inviteStatus, pageNoParam, pageSizeParam) {
     }
 }
 
-/** 分页查询列表数据 */
+/** 分页查询会诊列表数据 */
 function showPageList(status, feedBackFunction) {
     layui.use('laypage', function () {
         const laypage = layui.laypage;
         //执行一个laypage实例
         laypage.render({
             elem: 'listBox',
+            count: pageCount,
+            limit: pageSize,
+            theme: '#f6c567',
+            jump: function (obj, first) {
+                feedBackFunction(status, obj.curr, pageSize);
+            }
+        });
+    });
+}
+
+/** 分页查询转诊列表数据 */
+function showReferralPageList(status, feedBackFunction) {
+    layui.use('laypage', function () {
+        const laypage = layui.laypage;
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'referralListBox',
             count: pageCount,
             limit: pageSize,
             theme: '#f6c567',
@@ -314,6 +331,7 @@ function currentApplyCount() {
 /** 查询受邀列表 总记录数*/
 function getInviteCount() {
     ajaxRequest("GET", receiveSelectAllCountDoctor, null, false, false, false, receiveSelectAllCountDoctorSuccess, null, null);
+
     function receiveSelectAllCountDoctorSuccess(result) {
         countObject = result;
         currentInviteCount();
@@ -331,57 +349,29 @@ function currentInviteCount() {
     $("#INVITE_DONE").html(Number(countObject.consultationEn))
 }
 
+/** 查询转诊列表 总记录数*/
+function getReferralCount() {
+    ajaxRequest("GET", inquiryAllCountDoctor, null, false, false, false, inquiryAllCountDoctorSuccess, null, null);
+
+    function inquiryAllCountDoctorSuccess(result) {
+        countObject = result;
+        currentReferralCount();
+    }
+}
+
+/** 渲染转诊导航列表记录数*/
+function currentReferralCount() {
+    $("#WAITING_AUDIT").html(Number(countObject.inquiryApplyCreateSuccess))
+    $("#WAITING_ACCEDE").html(Number(countObject.inquiryApplyAccede))
+    $("#DATETIME_AUDIT").html(Number(countObject.inquirySlaveAccede))
+    $("#DATETIME_LOCKED").html(Number(countObject.inquiryDatetimeLocked))
+    $("#HAS_REJECT").html(Number(countObject.inquiryMasterReject) + Number(countObject.inquirySlaveReject))
+    $("#HAS_END").html(Number(countObject.inquiryEnd))
+}
+
 // 获取草稿箱数据
 function getDrafts(pageNo, pageSize) {
-    // $.ajax({
-    //     type: 'POST',
-    //     url: IP + 'order/queryDraft',
-    //     dataType: 'json',
-    //     data: {
-    //         "pageNo": pageNo,
-    //         "pageSize": pageSize,
-    //     },
-    //     xhrFields: {
-    //         withCredentials: true
-    //     },
-    //     crossDomain: true,
-    //     global: false,
-    //     success: function (data) {
-    //         console.log(data)
-    //         if (data.status == 200) {
-    //             const myDate = new Date();
-    //             const year = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
-    //             const month = double(myDate.getMonth() + 1); //获取当前月份(0-11,0代表1月)
-    //             const day = double(myDate.getDate()); //获取当前日(1-31)
-    //             const tempArr = data.draftOrderList;
-    //             let _html = '';
-    //             for (let i = 0; i < tempArr.length; i++) {
-    //                 const timeStr = tempArr[i].time.split(' ')[0];
-    //                 const time = tempArr[i].time.split(' ')[1];
-    //                 const _year = timeStr.split('-')[0];
-    //                 const _month = timeStr.split('-')[1];
-    //                 const _day = timeStr.split('-')[2];
-    //                 _html += '<tr name="' + tempArr[i].id + '">\
-    // 					<td>\
-    // 						<p class="w520" title="' + tempArr[i].name + '/' + tempArr[i].sex + '/' + tempArr[i].age + '/' + tempArr[i].diagnosis + '">' + tempArr[i].name + '/' + tempArr[i].sex + '/' + tempArr[i].age + '/' + tempArr[i].diagnosis + '</p></td>';
-    //                 if (year == _year && month == _month && day == _day) {
-    //                     _html += '<td class="tl2em">今天' + time + '</td>';
-    //                 } else {
-    //                     _html += '<td class="tl2em">' + tempArr[i].time + '</td>'
-    //                 }
-    //                 _html += '</tr>'
-    //             }
-    //             $('.drafts_tbody').html(_html);
-    //         } else if (data.status == 250) {
-    //             window.location = '/yilaiyiwang/login/login.html';
-    //         } else {
-    //             // 其他操作
-    //         }
-    //     },
-    //     error: function (err) {
-    //         console.log(err);
-    //     },
-    // })
+
 }
 
 // 查看订单详情
@@ -389,21 +379,6 @@ function selectOrderById(orderId) {
     sessionStorage.setItem('applyFormId', orderId);
     window.location = '../page/doctorApplyInfo.html';
 }
-
-// 草稿箱分页
-// layui.use('laypage', function () {
-//     var laypage = layui.laypage;
-//     //执行一个laypage实例
-//     laypage.render({
-//         elem: 'drafts',
-//         count: draftsCount,
-//         limit: pageSize,
-//         theme: '#f6c567',
-//         jump: function (obj, first) {
-//             getDrafts(obj.curr, pageSize);
-//         }
-//     });
-// });
 
 $(function () {
     getInviteCount();
@@ -414,7 +389,6 @@ $(function () {
     $('.leftNav').click(function () {
         let _index = $(this).index();
         $(this).addClass('active').siblings('div').removeClass('active');
-        console.log(_index)
         if (_index == 0) {
             getInviteCount();
             // 医生受邀列表
@@ -441,6 +415,7 @@ $(function () {
             pageCount = $("#APPLY_REVIEW").html();
             showPageList(applyStatus, getApplyList);
         } else if (_index == 2) {
+            getReferralCount()
             // 医生转诊列表
             $('.drafts_table').css("display", 'none');
             $('.tables').css('display', 'none');
@@ -450,21 +425,8 @@ $(function () {
             $(".ulAct").removeClass("ulAct");
             $(this).find(".leftUL li").eq(0).addClass("ulAct");
             let inviteStatus = $(this).find(".leftUL li").eq(0).attr('name');
-            let countNum = 0;
-
-            layui.use('laypage', function () {
-                const laypage = layui.laypage;
-                //执行一个laypage实例
-                laypage.render({
-                    elem: 'referralListBox',
-                    count: countNum,
-                    limit: pageSize,
-                    theme: '#f6c567',
-                    jump: function (obj, first) {
-                        getReferralList(inviteStatus, obj.curr, pageSize);
-                    }
-                });
-            });
+            pageCount = $("#WAITING_AUDIT").html();
+            showReferralPageList(inviteStatus, getReferralList);
         } else if (_index == 3) {
             $('.drafts_table').css("display", 'block');
             $('.tables').css('display', 'none');
@@ -503,26 +465,9 @@ $(function () {
         $('.originator').css('width', '160px');
         $(".ulAct").removeClass("ulAct");
         $(this).addClass("ulAct");
-        // $(this).children("div").removeClass("unRead");
-        // if ($("#leftUL").children().find(".unRead").length == 0) {
-        //     $("#leftTitle").next("div").removeClass("unRead");
-        // }
-        orderStateId = $(this).attr('name');
-        let countNum = 0;
-
-        layui.use('laypage', function () {
-            const laypage = layui.laypage;
-            //执行一个laypage实例
-            laypage.render({
-                elem: 'referralListBox',
-                count: countNum,
-                limit: pageSize,
-                theme: '#f6c567',
-                jump: function (obj, first) {
-                    getReferralList(orderStateId, obj.curr, pageSize);
-                }
-            });
-        });
+        let referralStatus = $(this).attr('name');
+        pageCount = $(this).children("div:eq(0)").html();
+        showReferralPageList(referralStatus, getReferralList);
         return false;
     });
     // 会诊列表详情
@@ -559,7 +504,6 @@ $(function () {
         localStorage.setItem('detailsId', $(this).attr('name'));
         window.location = '/yilaiyiwang/detailsDraft/detailsDraft.html';
     })
-
 
     /*日历点击显示隐藏 */
     $("#calender").animate({

@@ -211,8 +211,8 @@ function renderViewByRole(applyStatus) {
                 $('#applyNumber').hide();
                 $('.layui-timeline').hide();
 
-                $("#sendBackReferral").show();
-                $("#throughBackReferral").show();
+                $("#sendBackReferralBtn").show();
+                $("#throughReferralBtn").show();
 
             } else if (applyStatus === "INQUIRY_APPLY_ACCEDE") {
                 //待收诊
@@ -396,6 +396,7 @@ function alertMessage() {
         content: _$('#alertBox')
     });
 }
+
 $(function () {
     getApplyInfo();
 

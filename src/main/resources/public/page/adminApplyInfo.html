@@ -460,14 +460,20 @@
 
 
 <!-- 转诊 弹窗 -->
-
-<div id="sendBackReferralBox" class="operateBox sendBackBox">
-    <p>确定要退回该转诊？</p>
-    <div class="btnBox">
-        <a class="noBtn" href="javascript:">我再想想</a>
-        <a id="sendBackReferralBoxYesBtn" class="yesBtn" href="javascript:">是的，退回</a>
+<!-- 退回弹层 -->
+<div id="sendBackReferralBox" class="referBox">
+    <div class="rejectionLayer re_layer">
+        <div class="rejectionLayer_top">
+            <span>填写退回原因</span>
+        </div>
+        <div class="rejectionLayer_buttom">
+            <textarea id="sendBackReferralBoxText" name="" class="referArea" placeholder="您的退回原因是..."></textarea>
+        </div>
+        <input id="sendBackReferralBoxYesBtn" type="button" value="确定" class="confirm">
+        <div class="noBtn closeBtn clearfix"><img src="../images/close.png" alt=""><span>关闭</span></div>
     </div>
 </div>
+
 <div id="throughReferralBox" class="operateBox submitBox">
     <p>确定要通过该转诊？</p>
     <div class="btnBox">

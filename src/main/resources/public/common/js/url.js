@@ -156,4 +156,8 @@ const sendSelectAllCountDoctor = "/apply/consultation/sendSelectAllCountDoctor";
 const receiveSelectAllCountDoctor = "/apply/consultation/receiveSelectAllCountDoctor";  //会诊医生接受列表
 const sendSelectAllCountSir = "/apply/consultation/sendSelectAllCountSir";              //首诊医政发出列表
 const receiveSelectAllCountSir = "/apply/consultation/receiveSelectAllCountSir";        //会诊医政接受列表
+const inquiryAllCountDoctor = "/apply/transfer/inquiryAllCountDoctor";                  //转诊医生列表
+const inquiryAllCountSir = "/apply/transfer/inquiryAllCountSir";                        //转诊医政列表
+
+
 

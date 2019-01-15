@@ -1,6 +1,5 @@
 let pageNo = 1;
 let pageSize = 10;
-let pageCount = 10;
 
 /**
  *
@@ -41,10 +40,4 @@ function ajaxRequest(type, url, data, processData, contentType, async, successCa
             errorCallBack();
         }
     });
-}
-
-function setPageCount(result) {
-    console.log(result);
-    pageCount = result;
-
 }

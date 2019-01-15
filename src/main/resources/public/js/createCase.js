@@ -15,7 +15,7 @@ let ObjArr = []; //  当前点击块文件数组对象
 let selectFileArr = []; // 某一块的图片展示数据
 let uploadFile = [];
 let fileIndex;
-
+let dateList = [];
 /** 渲染 病历页面 左侧导航 */
 function renderCaseTypeLeftNavigation(data) {
     let _html = '<li class="oneLevelItem patientInfo active">\
@@ -305,37 +305,6 @@ function createDraftApplyData(caseId, caseSummary) {
     }
 }
 
-/** 创建转诊申请*/
-function createReferralApplyData(caseId, caseSummary) {
-
-    let inviteSummary;
-
-    const data = new FormData();
-    data.append('caseRecordId', caseId); //病历ID
-    data.append('caseSummary', caseSummary); //病历摘要信息
-    data.append('applyUrgent', $('.urgent > a.active').attr('value')); //是否加急(1加急/是，0不加急/否)
-    data.append('applyRemark', $('#createCase_textGola').val()); //会诊目的
-    data.append('startEndTime', JSON.stringify(referralDateList));
-    if (inviteDoctorArray.length > 0) {
-        inviteSummary = "<" + inviteDoctorArray[0].doctorName + "/" + inviteDoctorArray[0].doctorTitleName + "/" + inviteDoctorArray[0].branchName + "/" + inviteDoctorArray[0].hospitalName + ">";
-        data.append('inviteSummary', inviteSummary); //受邀医生摘要信息
-        data.append('inviteHospitalId', inviteDoctorArray[0].hospitalId); // 会诊医院id
-        data.append('inviteBranchId', inviteDoctorArray[0].branchId); // 会诊科室id
-        data.append('inviteUserId', inviteDoctorArray[0].doctorId);
-    } else {
-        data.append("inviteSummary", "<" + hospitalInfo.hospitalName + ">");
-        data.append('inviteHospitalId', hospitalInfo.id);
-        data.append('inviteBranchId', hospitalInfo.branchId);
-    }
-    ajaxRequest("POST", createReferralApplyUrl, data, false, false, true, createReferralApplySuccess, requestField, null);
-
-    function createReferralApplySuccess(result) {
-        console.log(result);
-        sessionStorage.setItem('sendOrderData', JSON.stringify(result));
-        window.location = '../page/referralSuccess.html';
-    }
-}
-
 /** 创建图文会诊申请*/
 function createPictureApplyData(caseId, caseSummary) {
     const data = new FormData();
@@ -388,8 +357,6 @@ function createPictureApplyData(caseId, caseSummary) {
 }
 
 /** 创建视频会诊*/
-let dateList = [];
-
 function createVideoApplyData(caseId, caseSummary) {
     const data = new FormData();
     data.append('caseRecordId', caseId); //病历ID
@@ -439,6 +406,37 @@ function createVideoApplyData(caseId, caseSummary) {
         window.location = '../page/sendSuccess.html';
     }
 
+}
+
+/** 创建转诊申请*/
+function createReferralApplyData(caseId, caseSummary) {
+
+    let inviteSummary;
+
+    const data = new FormData();
+    data.append('caseRecordId', caseId); //病历ID
+    data.append('caseSummary', caseSummary); //病历摘要信息
+    data.append('applyUrgent', $('.urgent > a.active').attr('value')); //是否加急(1加急/是，0不加急/否)
+    data.append('applyRemark', $('#createCase_textGola').val()); //会诊目的
+    data.append('startEndTime', JSON.stringify(referralDateList));
+    if (inviteDoctorArray.length > 0) {
+        inviteSummary = "<" + inviteDoctorArray[0].doctorName + "/" + inviteDoctorArray[0].doctorTitleName + "/" + inviteDoctorArray[0].branchName + "/" + inviteDoctorArray[0].hospitalName + ">";
+        data.append('inviteSummary', inviteSummary); //受邀医生摘要信息
+        data.append('inviteHospitalId', inviteDoctorArray[0].hospitalId); // 会诊医院id
+        data.append('inviteBranchId', inviteDoctorArray[0].branchId); // 会诊科室id
+        data.append('inviteUserId', inviteDoctorArray[0].doctorId);
+    } else {
+        data.append("inviteSummary", "<" + hospitalInfo.hospitalName + ">");
+        data.append('inviteHospitalId', hospitalInfo.id);
+        data.append('inviteBranchId', hospitalInfo.branchId);
+    }
+    ajaxRequest("POST", createReferralApplyUrl, data, false, false, true, createReferralApplySuccess, requestField, null);
+
+    function createReferralApplySuccess(result) {
+        console.log(result);
+        sessionStorage.setItem('sendOrderData', JSON.stringify(result));
+        window.location = '../page/referralSuccess.html';
+    }
 }
 
 /** 请求失败回调函数*/
