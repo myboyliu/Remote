@@ -59,35 +59,36 @@ public class ApplyController extends BaseController {
     private ApplyNodeService applyNodeService;
 
     /**
-     * 添加草稿
+     * 添加草稿,草稿至少含有患者姓名,身份证,病例文件三种数据,否则无法创建
      *
      * @param casePatient
      * @param caseRecord
      * @param weightPathTypeId
+     * @param applyForm
      */
     @PostMapping(value = "draft")
-    public Map draft(CasePatient casePatient, CaseRecord caseRecord, String weightPathTypeId, ApplyForm applyForm) {
+    public Map draft(CasePatient casePatient,
+                     CaseRecord caseRecord,
+                     String weightPathTypeId, ApplyForm applyForm) {
 
-        if (casePatient != null) {
-            if (StringUtils.isNotBlank(casePatient.getPatientCard())) {
+        if (StringUtils.isBlank(casePatient.getPatientName()) || StringUtils.isBlank(casePatient.getPatientCard())
+                || StringUtils.isBlank(weightPathTypeId)) {
+            return badRequestOfArguments("数据不全,无法创建草稿");
+        }
 
-                if (!IdentityCardUtil.validateCard(casePatient.getPatientCard())) {
-                    return badRequestOfArguments("身份证输入有误");
-                }
-            }
+        if (!IdentityCardUtil.validateCard(casePatient.getPatientCard())) {
+            return badRequestOfArguments("身份证输入有误");
         }
 
         String userId = getRequestToken();
 
         // 添加病例患者基本信喜
-
         casePatient.setCreateUser(userId);
         int i = casePatientService.insertSelective(casePatient);
         if (i < 1) {
             return badRequestOfInsert("添加casePatient失败");
         }
         caseRecord.setPatientId(casePatient.getId());
-
 
         // 添加病例初步诊断结果
         caseRecord.setCreateUser(userId);
@@ -100,24 +101,20 @@ public class ApplyController extends BaseController {
         caseContentBean.setRecordId(caseRecord.getId());
         applyForm.setCaseRecordId(caseRecord.getId());
 
-        // 添加病例所需文件
-        if (StringUtils.isNotBlank(weightPathTypeId)) {
-
-            // 文件路径 与 病例文件id map解析
-            List<CaseContent> resultList;
-            try {
-                resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList>() {
-                }, Feature.OrderedField);
-            } catch (Exception e) {
-                return badRequestOfArguments("pathWeightTypeId 填写错误");
-            }
-            caseContentBean.setRecordId(caseRecord.getId());
-            caseContentBean.setCreateUser(userId);
-            caseContentBean.setWeightPathTypeId(resultList);
-            int k = caseContentService.insertByMap(caseContentBean);
-            if (k < 0) {
-                return badRequestOfInsert("添加CaseContent失败");
-            }
+        // 添加病例所需文件 文件路径 与 病例文件id map解析
+        List<CaseContent> resultList;
+        try {
+            resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList>() {
+            }, Feature.OrderedField);
+        } catch (Exception e) {
+            return badRequestOfArguments("pathWeightTypeId 填写错误");
+        }
+        caseContentBean.setRecordId(caseRecord.getId());
+        caseContentBean.setCreateUser(userId);
+        caseContentBean.setWeightPathTypeId(resultList);
+        int k = caseContentService.insertByMap(caseContentBean);
+        if (k < 0) {
+            return badRequestOfInsert("添加CaseContent失败");
         }
 
         // 添加applyForm,applyStatus申请状态为草稿
@@ -372,7 +369,7 @@ public class ApplyController extends BaseController {
     public Map draftSelect() {
 
         String userId = getRequestToken();
-        if (StringUtils.isBlank(userId)){
+        if (StringUtils.isBlank(userId)) {
             return badRequestOfArguments("获取登录用户id失败");
         }
         int i = applyFormService.countDraft(userId);
