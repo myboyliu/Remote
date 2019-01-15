@@ -19,7 +19,7 @@ public class InquiryStatusBean {
 
     private String inquiryMasterReject;
 
-    private String inquiryDatetimeLockeD;
+    private String inquiryDatetimeLocked;
 
     private String inquiryEnd;
 }

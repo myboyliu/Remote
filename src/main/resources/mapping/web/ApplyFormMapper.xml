@@ -637,7 +637,7 @@
         <result column="csr" jdbcType="VARCHAR" property="inquirySlaveReject"/>
         <result column="cma" jdbcType="VARCHAR" property="inquiryMasterAccede"/>
         <result column="cmr" jdbcType="VARCHAR" property="inquiryMasterReject"/>
-        <result column="cdrl" jdbcType="VARCHAR" property="inquiryDatetimeLockeD"/>
+        <result column="cdrl" jdbcType="VARCHAR" property="inquiryDatetimeLocked"/>
         <result column="crs" jdbcType="VARCHAR" property="inquiryEnd"/>
     </resultMap>
 
