@@ -200,6 +200,9 @@ public class ApplyDisposeController extends BaseController {
         String userId = getRequestToken();
 
         ApplyForm applyForm = new ApplyForm();
+        if (InquiryStatus.INQUIRY_APPLY_REJECT.toString().equals(applyStatus)) {
+            applyForm.setApplyType(ApplyType.APPLY_DRAFT.toString());
+        }
         applyForm.setId(id);
         if (StringUtils.isNotBlank(refuseRemark)) {
             applyForm.setRefuseRemark(refuseRemark);
@@ -211,9 +214,16 @@ public class ApplyDisposeController extends BaseController {
         if (i < 1) {
             return badRequestOfArguments(msg1);
         }
+
+        if (ApplyType.APPLY_REFERRAL.toString().equals(applyForm.getApplyType())
+                && InquiryStatus.INQUIRY_APPLY_REJECT.toString().equals(applyStatus)) {
+            int j = applyTimeService.delByApplyForm(id);
+            if (j < 1) {
+                return badRequestOfArguments(msg2);
+            }
+        }
         applyForm = applyFormService.getByPrimaryKey(id);
-        if (ApplyType.APPLY_CONSULTATION_VIDEO.toString().equals(applyForm.getApplyType()) ||
-                ApplyType.APPLY_REFERRAL.toString().equals(applyForm.getApplyType())) {
+        if (!ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyForm.getApplyType())) {
             ApplyTime applyTime = new ApplyTime();
             applyTime.setApplyFormId(applyForm.getId());
             applyTime.setApplyStatus(applyStatus);
@@ -223,6 +233,7 @@ public class ApplyDisposeController extends BaseController {
                 return badRequestOfArguments(msg2);
             }
         }
+
         if (applyStatus == ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString()) {
             applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已接诊.toString());
         } else if (applyStatus == "CONSULTATION_DATETIME_LOCKED") {
@@ -376,13 +387,13 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "sirTransferCheckReject")
-    public Map sirTransferCheckReject(String id, String report) {
+    public Map sirTransferCheckReject(String applyFormId, String refuseRemark) {
 
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_APPLY_REJECT);
         String msg1 = "转诊医政待审核拒绝,form修改失败";
         String msg2 = "转诊医政待审核拒绝,time修改失败";
 
-        return updateStatus(id, null, applyStatus, msg1, msg2, report);
+        return updateStatus(applyFormId, null, applyStatus, msg1, msg2, refuseRemark);
     }
 
     /**
@@ -556,12 +567,12 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "doctorTransferReject")
-    public Map doctorTransferReject(String id) {
-        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_END);
+    public Map doctorTransferReject(String id, String refuseRemark) {
+        String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SLAVE_REJECT);
         String msg1 = "受邀医生待收诊拒收,form修改失败";
         String msg2 = "受邀医生待收诊拒收,time修改失败";
-        applyNodeService.insertByStatus(id, ApplyNodeConstant.已结束.toString());
-        return updateStatus(id, null, applyStatus, msg1, msg2, null);
+        applyNodeService.insertByStatus(id, ApplyNodeConstant.已拒收.toString());
+        return updateStatus(id, null, applyStatus, msg1, msg2, refuseRemark);
     }
 
     /**
