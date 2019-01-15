@@ -39,8 +39,6 @@ public interface ApplyFormMapper {
 
     int updateInviteDoctorByPrimaryKeySelective(ApplyForm applyForm);
 
-    Integer sendSelectCount(ApplyFormBean applyFormBean);
-
     ConsultationStatusBean sendSelectAllCount(ApplyFormBean applyFormBean);
 
     InquiryStatusBean inquiryCreateSuccessAllCountDr(ApplyFormBean applyFormBean);

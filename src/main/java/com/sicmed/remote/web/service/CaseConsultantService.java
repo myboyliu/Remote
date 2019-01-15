@@ -1,5 +1,7 @@
 package com.sicmed.remote.web.service;
 
+import com.sicmed.remote.common.ConsultationStatus;
+import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
@@ -8,6 +10,7 @@ import com.sicmed.remote.web.mapper.CaseConsultantMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,20 +24,8 @@ public class CaseConsultantService implements BaseService<CaseConsultant> {
         return caseConsultantMapper.selectAssist(applyFormBean);
     }
 
-    // 查询每种状态的数目
-    public Integer selectCount(String userId, String hospitalId, List<String> consultantTypeList, List<String> applyStatusList) {
-
-        ApplyFormBean applyFormBean = new ApplyFormBean();
-        applyFormBean.setConsultationStatusList(applyStatusList);
-        applyFormBean.setInviteUserId(userId);
-        applyFormBean.setInviteHospitalId(hospitalId);
-        applyFormBean.setConsultationTypeList(consultantTypeList);
-
-        return caseConsultantMapper.selectCount(applyFormBean);
-    }
-
     // 受邀会诊 医生 所有数目查询
-    public ConsultationStatusBean receiveSelectAllCount(String userId, String branchId,String hospitalId, List<String> consultantTypeList) {
+    public ConsultationStatusBean receiveSelectAllCount(String userId, String branchId, String hospitalId, List<String> consultantTypeList) {
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setInviteUserId(userId);
@@ -44,17 +35,7 @@ public class CaseConsultantService implements BaseService<CaseConsultant> {
 
         return caseConsultantMapper.receiveSelectAllCount(applyFormBean);
     }
-    // 受邀会诊 医生 所有数目查询 测试
-    public ConsultationStatusBean ceshi(String userId, String branchId,String hospitalId, List<String> consultantTypeList) {
 
-        ApplyFormBean applyFormBean = new ApplyFormBean();
-        applyFormBean.setInviteUserId(userId);
-        applyFormBean.setInviteBranchId(branchId);
-        applyFormBean.setInviteHospitalId(hospitalId);
-        applyFormBean.setConsultationTypeList(consultantTypeList);
-
-        return caseConsultantMapper.ceshi(applyFormBean);
-    }
     // 受邀会诊 医政 所有数目查询
     public ConsultationStatusBean receiveSelectAllCountSir(String hospitalId, List<String> consultantTypeList) {
 
@@ -64,6 +45,37 @@ public class CaseConsultantService implements BaseService<CaseConsultant> {
 
         return caseConsultantMapper.receiveSelectAllCountSir(applyFormBean);
     }
+
+    // 受邀会诊 医生 所有数目查询 测试
+    public ConsultationStatusBean ceshi(String userId, String branchId, String hospitalId, List<String> consultantTypeList) {
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setInviteUserId(userId);
+        applyFormBean.setInviteBranchId(branchId);
+        applyFormBean.setInviteHospitalId(hospitalId);
+        applyFormBean.setConsultationTypeList(consultantTypeList);
+
+        return caseConsultantMapper.ceshi(applyFormBean);
+    }
+
+    // 医生 医政搜索
+    public List<ApplyFormBean> searchByRemark(String userId, String hospitalId, String condition) {
+
+        List<String> statusList = new ArrayList<>();
+        statusList.add(String.valueOf(ConsultationStatus.CONSULTATION_END));
+        statusList.add(String.valueOf(InquiryStatus.INQUIRY_END));
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setApplyUserId(userId);
+        applyFormBean.setInviteUserId(userId);
+        applyFormBean.setApplyHospitalId(hospitalId);
+        applyFormBean.setInviteHospitalId(hospitalId);
+        applyFormBean.setApplyRemark(condition);
+        applyFormBean.setConsultationStatusList(statusList);
+
+        return caseConsultantMapper.searchByRemark(applyFormBean);
+    }
+
     @Override
     public int insertSelective(CaseConsultant caseConsultant) {
         return caseConsultantMapper.insertSelective(caseConsultant);

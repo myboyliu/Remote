@@ -577,38 +577,6 @@ public class ApplyConsultationController extends BaseController {
         return sirReceiveSelect(statusList, msg);
     }
 
-    // 发出会诊 数目查询
-    @GetMapping(value = "sendSelectCount")
-    public Map sendSelectCount(String list, String hospitalId) {
-
-        List<String> statusList;
-        statusList = JSON.parseObject(list, new TypeReference<LinkedList>() {
-        }, Feature.OrderedField);
-
-        String userId = getRequestToken();
-
-        int i = applyFormService.sendSelectCount(userId, hospitalId, consultantTypeList, statusList);
-
-        return succeedRequest(i);
-    }
-
-    // 受邀会诊 数目查询
-    @GetMapping(value = "receiveSelectCount")
-    public Map receiveSelectCount(String list, String hospitalId) {
-
-
-        List<String> statusList;
-        statusList = JSON.parseObject(list, new TypeReference<LinkedList>() {
-        }, Feature.OrderedField);
-
-        String userId = getRequestToken();
-
-        int i = caseConsultantService.selectCount(userId, hospitalId, consultantTypeList, statusList);
-
-        return succeedRequest(i);
-
-    }
-
     /**
      * 发出会诊 医生 总项数目全部查询
      */

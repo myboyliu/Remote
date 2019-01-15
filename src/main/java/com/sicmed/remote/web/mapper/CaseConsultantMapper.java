@@ -24,11 +24,11 @@ public interface CaseConsultantMapper {
 
     List<ApplyForm> selectAssist(ApplyFormBean applyFormBean);
 
-    Integer selectCount(ApplyFormBean applyFormBean);
-
     ConsultationStatusBean receiveSelectAllCount(ApplyFormBean applyFormBean);
 
     ConsultationStatusBean receiveSelectAllCountSir(ApplyFormBean applyFormBean);
+
+    List<ApplyFormBean> searchByRemark(ApplyFormBean applyFormBean);
 
     ConsultationStatusBean ceshi(ApplyFormBean applyFormBean);
 

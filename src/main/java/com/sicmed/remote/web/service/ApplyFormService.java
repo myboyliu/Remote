@@ -48,18 +48,6 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         return applyFormMapper.softDel(id);
     }
 
-    // 发出会诊 数目查询
-    public Integer sendSelectCount(String userId, String hospitalId, List<String> consultantTypeList, List<String> statusList) {
-
-        ApplyFormBean applyFormBean = new ApplyFormBean();
-        applyFormBean.setApplyUserId(userId);
-        applyFormBean.setApplyHospitalId(hospitalId);
-        applyFormBean.setConsultationStatusList(statusList);
-        applyFormBean.setConsultationTypeList(consultantTypeList);
-
-        return applyFormMapper.sendSelectCount(applyFormBean);
-    }
-
     // 转诊 医生 各个状态数目查询
     public InquiryStatusBean inquiryCreateSuccessAllCountDr(String userId, List<String> consultantTypeList) {
 

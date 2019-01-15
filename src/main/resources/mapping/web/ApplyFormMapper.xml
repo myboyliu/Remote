@@ -549,35 +549,6 @@
         limit #{beginNo},#{pageSize}
     </select>
 
-    <!--// 发出会诊 数目查询-->
-    <select id="sendSelectCount" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
-            resultType="java.lang.Integer">
-        select count(*)
-        from apply_form
-        <where>
-            del_flag = "0"
-            <if test="applyUserId != null">
-                AND apply_user_id = #{applyUserId,jdbcType=VARCHAR}
-            </if>
-            <if test="applyHospitalId != null">
-                AND apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
-            </if>
-            <if test="consultationTypeList != null">
-                AND apply_type IN
-                <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-            <if test="consultationStatusList != null">
-                AND apply_status IN
-                <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-        </where>
-    </select>
-
-
     <!--发出会诊 总数目查询-->
     <resultMap id="ConsultationStatusBeanResultMap" type="com.sicmed.remote.web.bean.ConsultationStatusBean">
         <result column="cacs" jdbcType="VARCHAR" property="consultationApplyCreateSuccess"/>
