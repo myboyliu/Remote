@@ -43,13 +43,9 @@ public interface ApplyFormMapper {
 
     ConsultationStatusBean sendSelectAllCount(ApplyFormBean applyFormBean);
 
-    InquiryStatusBean inquiryAllCountDoctor(ApplyFormBean applyFormBean);
+    InquiryStatusBean inquiryCreateSuccessAllCountDr(ApplyFormBean applyFormBean);
 
-    InquiryStatusBean inquiryAllCountSir(ApplyFormBean applyFormBean);
-
-    InquiryStatusBean inquiryCreateSuccessAllCount(ApplyFormBean applyFormBean);
-
-    InquiryStatusBean inquirySMAdAllCount(ApplyFormBean applyFormBean);
+    InquiryStatusBean inquiryCreateSuccessAllCountSir(ApplyFormBean applyFormBean);
 
     int countDraft(ApplyForm applyForm);
 

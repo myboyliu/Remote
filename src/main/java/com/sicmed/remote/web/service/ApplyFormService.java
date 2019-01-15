@@ -60,48 +60,24 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         return applyFormMapper.sendSelectCount(applyFormBean);
     }
 
-    // 转诊 医生 其他 总数目查询
-    public InquiryStatusBean inquiryAllCountDoctor(String userId, List<String> consultantTypeList) {
+    // 转诊 医生 各个状态数目查询
+    public InquiryStatusBean inquiryCreateSuccessAllCountDr(String userId, List<String> consultantTypeList) {
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setConsultationTypeList(consultantTypeList);
         applyFormBean.setApplyUserId(userId);
-        applyFormBean.setInviteUserId(userId);
 
-        return applyFormMapper.inquiryAllCountDoctor(applyFormBean);
+        return applyFormMapper.inquiryCreateSuccessAllCountDr(applyFormBean);
     }
 
-    // 转诊 医证 其他 总数目查询
-    public InquiryStatusBean inquiryAllCountSir(String hospitalId, List<String> consultantTypeList) {
+    // 转诊 医政 各个状态总数目查询
+    public InquiryStatusBean inquiryCreateSuccessAllCountSir(String hospitalId, List<String> consultantTypeList) {
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setConsultationTypeList(consultantTypeList);
-        applyFormBean.setInviteHospitalId(hospitalId);
         applyFormBean.setApplyHospitalId(hospitalId);
 
-        return applyFormMapper.inquiryAllCountSir(applyFormBean);
-    }
-
-    // 转诊 排期审核 总数目查询,hospitalId为空时,查询对象医生;不为空时,医政
-    public InquiryStatusBean inquirySMAdAllCount(String userId, String hospitalId, List<String> consultantTypeList) {
-
-        ApplyFormBean applyFormBean = new ApplyFormBean();
-        applyFormBean.setConsultationTypeList(consultantTypeList);
-        applyFormBean.setInviteUserId(userId);
-        applyFormBean.setInviteHospitalId(hospitalId);
-
-        return applyFormMapper.inquirySMAdAllCount(applyFormBean);
-    }
-
-    // 转诊 待审核 总数目查询,hospitalId为空时,查询对象医生;不为空时,医政
-    public InquiryStatusBean inquiryCreateSuccessAllCount(String userId, String hospitalId, List<String> consultantTypeList) {
-
-        ApplyFormBean applyFormBean = new ApplyFormBean();
-        applyFormBean.setConsultationTypeList(consultantTypeList);
-        applyFormBean.setApplyUserId(userId);
-        applyFormBean.setApplyHospitalId(hospitalId);
-
-        return applyFormMapper.inquiryCreateSuccessAllCount(applyFormBean);
+        return applyFormMapper.inquiryCreateSuccessAllCountSir(applyFormBean);
     }
 
     // 发出会诊 总数目查询,hospitalId为空时,查询对象医生;不为空时,医政

@@ -1,12 +1,8 @@
 package com.sicmed.remote.web.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
-import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.bean.ApplyFormBean;
-import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.bean.InquiryStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
@@ -344,90 +340,29 @@ public class ApplyTransferController extends BaseController {
     }
 
     /**
-     * 转诊 其他 医生 总数目查询
-     */
-    @GetMapping(value = "inquiryAllCountDoctor")
-    public Map inquiryAllCountDoctor() {
-
-        String userId = getRequestToken();
-        if (StringUtils.isBlank(userId)) {
-            return badRequestOfArguments("获取登录用户I的失败");
-        }
-
-        InquiryStatusBean inquiryStatusBean = applyFormService.inquiryAllCountDoctor(userId, consultationTypeListInquiry);
-
-        return succeedRequest(inquiryStatusBean);
-    }
-
-    /**
-     * 转诊 其他 医政 总数目查询
-     */
-    @GetMapping(value = "inquiryAllCountSir")
-    public Map inquiryAllCountSir() {
-
-        String userId = getRequestToken();
-        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
-        String hospitalId = userDetail.getHospitalId();
-        if (StringUtils.isBlank(hospitalId)) {
-            return badRequestOfArguments("获取登录用户医院Id失败");
-        }
-
-        InquiryStatusBean inquiryStatusBean = applyFormService.inquiryAllCountSir(userDetail.getHospitalId(), consultationTypeListInquiry);
-
-        return succeedRequest(inquiryStatusBean);
-    }
-
-    /**
-     * 转诊 待审核 医生 数目查询
+     * 转诊 医生 数目查询
      */
     @GetMapping(value = "inquiryCsAllCountDr")
     public Map inquiryCsAllCountDr() {
 
         String userId = getRequestToken();
 
-        InquiryStatusBean inquiryStatusBean = applyFormService.inquiryCreateSuccessAllCount(userId, null, consultationTypeListInquiry);
+        InquiryStatusBean inquiryStatusBean = applyFormService.inquiryCreateSuccessAllCountDr(userId, consultationTypeListInquiry);
 
         return succeedRequest(inquiryStatusBean);
     }
 
     /**
-     * 转诊 待审核 医政 数目查询
+     * 转诊 医政 数目查询
      */
     @GetMapping(value = "inquiryCsAllCountSir")
     public Map inquiryCsAllCountSir() {
 
         String userId = getRequestToken();
         CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
-
-        InquiryStatusBean inquiryStatusBean = applyFormService.inquiryCreateSuccessAllCount(null, userDetail.getHospitalId(), consultationTypeListInquiry);
-
-        return succeedRequest(inquiryStatusBean);
-    }
-
-    /**
-     * 转诊 排期审核 医生 总数目查询
-     */
-    @GetMapping(value = "inquirySMAdAllCountDr")
-    public Map inquirySMAdAllCountDr() {
-
-        String userId = getRequestToken();
-
-        InquiryStatusBean inquiryStatusBean = applyFormService.inquirySMAdAllCount(userId, null, consultationTypeListInquiry);
+        InquiryStatusBean inquiryStatusBean = applyFormService.inquiryCreateSuccessAllCountSir(userDetail.getHospitalId(), consultationTypeListInquiry);
 
         return succeedRequest(inquiryStatusBean);
     }
 
-    /**
-     * 转诊 排期审核 医政 总数目查询
-     */
-    @GetMapping(value = "inquirySMAdAllCountSir")
-    public Map inquirySMAdAllCountSir() {
-
-        String userId = getRequestToken();
-        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
-
-        InquiryStatusBean inquiryStatusBean = applyFormService.inquirySMAdAllCount(null, userDetail.getHospitalId(), consultationTypeListInquiry);
-
-        return succeedRequest(inquiryStatusBean);
-    }
 }

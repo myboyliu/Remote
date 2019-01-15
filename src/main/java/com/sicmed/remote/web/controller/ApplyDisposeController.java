@@ -21,9 +21,7 @@ import com.sicmed.remote.web.service.ApplyTimeService;
 import com.sicmed.remote.web.service.CaseConsultantService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.omg.CORBA.INTERNAL;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcProperties;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +35,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author YoonaLt
+ * 页面点击功能实现
+ * @version 1.0 This Version Running JDK 1.8
+ */
 @Slf4j
 @RestController
 @RequestMapping(value = "apply/dispose")

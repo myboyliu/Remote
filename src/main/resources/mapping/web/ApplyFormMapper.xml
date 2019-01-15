@@ -641,69 +641,15 @@
         <result column="crs" jdbcType="VARCHAR" property="inquiryEnd"/>
     </resultMap>
 
-
-    <!--转诊 医生 其他总数查询-->
-    <select id="inquiryAllCountDoctor" parameterType="com.sicmed.remote.web.bean.InquiryStatusBean"
+    <!--转诊 医生 各状态数目查询-->
+    <select id="inquiryCreateSuccessAllCountDr" parameterType="com.sicmed.remote.web.bean.InquiryStatusBean"
             resultMap="InquiryStatusBeanResultMap">
         select
-        count(apply_status="INQUIRY_APPLY_CREATE_SUCCESS" or NULL) cacs,
+        count(apply_status="INQUIRY_APPLY_CREATE_SUCCESS" and invite_user_id != #{applyUserId} or NULL)
+        cacs,
         count(apply_status="INQUIRY_APPLY_ACCEDE" or NULL) caa,
         count(apply_status="INQUIRY_APPLY_REJECT" or NULL) car,
-        count(apply_status="INQUIRY_SLAVE_ACCEDE" or NULL) csa,
-        count(apply_status="INQUIRY_SLAVE_REJECT" or NULL) csr,
-        count(apply_status="INQUIRY_MASTER_ACCEDE" or NULL) cma,
-        count(apply_status="INQUIRY_MASTER_REJECT" or NULL) cmr,
-        count(apply_status="INQUIRY_DATETIME_LOCKED" or NULL) cdrl,
-        count(apply_status="INQUIRY_END" or NULL) crs
-        from apply_form
-        <where>
-            del_flag = "0"
-            <if test="consultationTypeList != null">
-                AND apply_type IN
-                <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-            AND (apply_user_id = #{applyUserId,jdbcType=VARCHAR}
-            or invite_user_id = #{inviteUserId,jdbcType=VARCHAR})
-        </where>
-    </select>
-
-    <!--转诊 医证 其他总数查询-->
-    <select id="inquiryAllCountSir" parameterType="com.sicmed.remote.web.bean.InquiryStatusBean"
-            resultMap="InquiryStatusBeanResultMap">
-        select
-        count(apply_status="INQUIRY_APPLY_CREATE_SUCCESS" or NULL) cacs,
-        count(apply_status="INQUIRY_APPLY_ACCEDE" or NULL) caa,
-        count(apply_status="INQUIRY_APPLY_REJECT" or NULL) car,
-        count(apply_status="INQUIRY_SLAVE_ACCEDE" or NULL) csa,
-        count(apply_status="INQUIRY_SLAVE_REJECT" or NULL) csr,
-        count(apply_status="INQUIRY_MASTER_ACCEDE" or NULL) cma,
-        count(apply_status="INQUIRY_MASTER_REJECT" or NULL) cmr,
-        count(apply_status="INQUIRY_DATETIME_LOCKED" or NULL) cdrl,
-        count(apply_status="INQUIRY_END" or NULL) crs
-        from apply_form
-        <where>
-            del_flag = "0"
-            <if test="consultationTypeList != null">
-                AND apply_type IN
-                <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-            AND (apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
-            or invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR})
-        </where>
-    </select>
-
-    <!--转诊 待审核 总数目查询,hospitalId为空时,查询对象医生;不为空时,医政-->
-    <select id="inquiryCreateSuccessAllCount" parameterType="com.sicmed.remote.web.bean.InquiryStatusBean"
-            resultMap="InquiryStatusBeanResultMap">
-        select
-        count(apply_status="INQUIRY_APPLY_CREATE_SUCCESS" or NULL) cacs,
-        count(apply_status="INQUIRY_APPLY_ACCEDE" or NULL) caa,
-        count(apply_status="INQUIRY_APPLY_REJECT" or NULL) car,
-        count(apply_status="INQUIRY_SLAVE_ACCEDE" or NULL) csa,
+        count(apply_status="INQUIRY_SLAVE_ACCEDE" and apply_user_id != #{applyUserId} or NULL) csa,
         count(apply_status="INQUIRY_SLAVE_REJECT" or NULL) csr,
         count(apply_status="INQUIRY_MASTER_ACCEDE" or NULL) cma,
         count(apply_status="INQUIRY_MASTER_REJECT" or NULL) cmr,
@@ -719,22 +665,21 @@
                 </foreach>
             </if>
             <if test="applyUserId != null">
-                AND apply_user_id = #{applyUserId,jdbcType=VARCHAR}
-            </if>
-            <if test="applyHospitalId != null">
-                AND apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
+                AND (apply_user_id = #{applyUserId,jdbcType=VARCHAR} or invite_user_id =
+                #{applyUserId,jdbcType=VARCHAR})
             </if>
         </where>
     </select>
 
-    <!--转诊 排期审核 总数目查询,hospitalId为空时,查询对象医生;不为空时,医政-->
-    <select id="inquirySMAdAllCount" parameterType="com.sicmed.remote.web.bean.InquiryStatusBean"
+    <!--转诊 医政 各状态数目查询-->
+    <select id="inquiryCreateSuccessAllCountSir" parameterType="com.sicmed.remote.web.bean.InquiryStatusBean"
             resultMap="InquiryStatusBeanResultMap">
         select
-        count(apply_status="INQUIRY_APPLY_CREATE_SUCCESS" or NULL) cacs,
+        count(apply_status="INQUIRY_APPLY_CREATE_SUCCESS" and invite_hospital_id != #{applyHospitalId} or NULL)
+        cacs,
         count(apply_status="INQUIRY_APPLY_ACCEDE" or NULL) caa,
         count(apply_status="INQUIRY_APPLY_REJECT" or NULL) car,
-        count(apply_status="INQUIRY_SLAVE_ACCEDE" or NULL) csa,
+        count(apply_status="INQUIRY_SLAVE_ACCEDE" and apply_hospital_id != #{applyHospitalId} or NULL) csa,
         count(apply_status="INQUIRY_SLAVE_REJECT" or NULL) csr,
         count(apply_status="INQUIRY_MASTER_ACCEDE" or NULL) cma,
         count(apply_status="INQUIRY_MASTER_REJECT" or NULL) cmr,
@@ -749,11 +694,9 @@
                     #{item,jdbcType=VARCHAR}
                 </foreach>
             </if>
-            <if test="inviteUserId != null">
-                AND invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
-            </if>
-            <if test="inviteHospitalId != null">
-                AND invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR}
+            <if test="applyUserId != null">
+                AND (apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR} or invite_hospital_id =
+                #{applyHospitalId,jdbcType=VARCHAR})
             </if>
         </where>
     </select>

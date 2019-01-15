@@ -29,7 +29,7 @@ import java.util.*;
 /**
  * @author YoonaLt
  * @version Running JDK 1.8
- * @description 转诊, 图文会诊, 视频会诊, 草稿
+ * @description 转诊, 图文会诊, 视频会诊, 草稿, 搜索
  * @data 2018/12/19
  */
 @Slf4j
@@ -375,4 +375,29 @@ public class ApplyController extends BaseController {
         int i = applyFormService.countDraft(userId);
         return succeedRequest(i);
     }
+
+    /**
+     * 医生 搜索
+     * applyForm applyRemark 字段模糊 applyStatus 已结束
+     * userId在case_consultant 表 consultant_user_list字段中
+     * applyForm全表搜索
+     * 病例主题 收件人 发件人 applyNumber  结束时间(排序,最新排在上面)
+     */
+    @GetMapping(value = "doctorSearch")
+    public Map doctorSearch(String condition) {
+
+        if (StringUtils.isBlank(condition)) {
+            return badRequestOfArguments("输入的搜索条件为空");
+        }
+
+        String userId = getRequestToken();
+
+        List<ApplyFormBean> applyFormBeanList = caseConsultantService.searchByRemark(userId, null, condition);
+        return succeedRequest(applyFormBeanList);
+    }
+
+
+    /**
+     * 医政 搜索
+     */
 }
