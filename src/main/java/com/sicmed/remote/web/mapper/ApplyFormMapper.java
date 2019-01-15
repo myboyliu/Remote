@@ -1,7 +1,9 @@
 package com.sicmed.remote.web.mapper;
 
+import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ConsultationStatusBean;
+import com.sicmed.remote.web.bean.InquiryStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 
 import java.util.List;
@@ -39,23 +41,15 @@ public interface ApplyFormMapper {
 
     Integer sendSelectCount(ApplyFormBean applyFormBean);
 
-    Integer inquiryCountSelect(ApplyFormBean applyFormBean);
-
-    Integer inquirySlaveMasterAccedeCount(ApplyFormBean applyFormBean);
-
-    Integer inquiryCreateSuccessCount(ApplyFormBean applyFormBean);
-
     ConsultationStatusBean sendSelectAllCount(ApplyFormBean applyFormBean);
 
-    ConsultationStatusBean inquiryAllCount(ApplyFormBean applyFormBean);
+    InquiryStatusBean inquiryAllCountDoctor(ApplyFormBean applyFormBean);
 
-    ConsultationStatusBean inquiryAllCountDoctor(ApplyFormBean applyFormBean);
+    InquiryStatusBean inquiryAllCountSir(ApplyFormBean applyFormBean);
 
-    ConsultationStatusBean inquiryAllCountSir(ApplyFormBean applyFormBean);
+    InquiryStatusBean inquiryCreateSuccessAllCount(ApplyFormBean applyFormBean);
 
-    ConsultationStatusBean inquiryCreateSuccessAllCount(ApplyFormBean applyFormBean);
-
-    ConsultationStatusBean inquirySMAdAllCount(ApplyFormBean applyFormBean);
+    InquiryStatusBean inquirySMAdAllCount(ApplyFormBean applyFormBean);
 
     int countDraft(ApplyForm applyForm);
 

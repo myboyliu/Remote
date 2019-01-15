@@ -8,6 +8,7 @@ import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.bean.CurrentUserBean;
+import com.sicmed.remote.web.bean.InquiryStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.service.ApplyFormService;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -351,52 +351,6 @@ public class ApplyTransferController extends BaseController {
         return sirInquirySelect(applyFormBean, consultationStatusList, msg);
     }
 
-    // 转诊 角色双方 数目查询
-    @GetMapping(value = "inquiryCount")
-    public Map inquiryCount(String list, String hospitalId) {
-
-        String userId = getRequestToken();
-
-        List<String> statusList;
-        statusList = JSON.parseObject(list, new TypeReference<LinkedList>() {
-        }, Feature.OrderedField);
-
-        int i = applyFormService.inquiryCountSelect(userId, hospitalId, consultationTypeListInquiry, statusList);
-
-        return succeedRequest(i);
-    }
-
-    // 转诊 排期审核 数目查询
-    @GetMapping(value = "inquirySlaveMasterAccedeCount")
-    public Map inquirySlaveMasterAccedeCount(String list, String hospitalId) {
-
-        List<String> statusList;
-        statusList = JSON.parseObject(list, new TypeReference<LinkedList>() {
-        }, Feature.OrderedField);
-
-        String userId = getRequestToken();
-
-        int i = applyFormService.inquirySlaveMasterAccedeCount(userId, hospitalId, consultationTypeListInquiry, statusList);
-
-        return succeedRequest(i);
-    }
-
-    // 转诊 待审核  查询
-    @GetMapping(value = "inquiryCreateSuccessCount")
-    public Map inquiryCreateSuccessCount(String list, String hospitalId) {
-
-        List<String> statusList;
-        statusList = JSON.parseObject(list, new TypeReference<LinkedList>() {
-        }, Feature.OrderedField);
-
-        String userId = getRequestToken();
-
-        int i = applyFormService.inquiryCreateSuccessCount(userId, hospitalId, consultationTypeListInquiry, statusList);
-
-        return succeedRequest(i);
-    }
-
-
     /**
      * 转诊 其他 医生 总数目查询
      */
@@ -408,9 +362,9 @@ public class ApplyTransferController extends BaseController {
             return badRequestOfArguments("获取登录用户I的失败");
         }
 
-        ConsultationStatusBean consultationStatusBean = applyFormService.inquiryAllCountDoctor(userId, consultationTypeListInquiry);
+        InquiryStatusBean inquiryStatusBean = applyFormService.inquiryAllCountDoctor(userId, consultationTypeListInquiry);
 
-        return succeedRequest(consultationStatusBean);
+        return succeedRequest(inquiryStatusBean);
     }
 
     /**
@@ -426,9 +380,9 @@ public class ApplyTransferController extends BaseController {
             return badRequestOfArguments("获取登录用户医院Id失败");
         }
 
-        ConsultationStatusBean consultationStatusBean = applyFormService.inquiryAllCountSir(userDetail.getHospitalId(), consultationTypeListInquiry);
+        InquiryStatusBean inquiryStatusBean = applyFormService.inquiryAllCountSir(userDetail.getHospitalId(), consultationTypeListInquiry);
 
-        return succeedRequest(consultationStatusBean);
+        return succeedRequest(inquiryStatusBean);
     }
 
     /**
@@ -439,9 +393,9 @@ public class ApplyTransferController extends BaseController {
 
         String userId = getRequestToken();
 
-        ConsultationStatusBean consultationStatusBean = applyFormService.inquiryCreateSuccessAllCount(userId, null, consultationTypeListInquiry);
+        InquiryStatusBean inquiryStatusBean = applyFormService.inquiryCreateSuccessAllCount(userId, null, consultationTypeListInquiry);
 
-        return succeedRequest(consultationStatusBean);
+        return succeedRequest(inquiryStatusBean);
     }
 
     /**
@@ -453,9 +407,9 @@ public class ApplyTransferController extends BaseController {
         String userId = getRequestToken();
         CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
-        ConsultationStatusBean consultationStatusBean = applyFormService.inquiryCreateSuccessAllCount(userId, userDetail.getHospitalId(), consultationTypeListInquiry);
+        InquiryStatusBean inquiryStatusBean = applyFormService.inquiryCreateSuccessAllCount(null, userDetail.getHospitalId(), consultationTypeListInquiry);
 
-        return succeedRequest(consultationStatusBean);
+        return succeedRequest(inquiryStatusBean);
     }
 
     /**
@@ -466,9 +420,9 @@ public class ApplyTransferController extends BaseController {
 
         String userId = getRequestToken();
 
-        ConsultationStatusBean consultationStatusBean = applyFormService.inquirySMAdAllCount(userId, null, consultationTypeListInquiry);
+        InquiryStatusBean inquiryStatusBean = applyFormService.inquirySMAdAllCount(userId, null, consultationTypeListInquiry);
 
-        return succeedRequest(consultationStatusBean);
+        return succeedRequest(inquiryStatusBean);
     }
 
     /**
@@ -480,8 +434,8 @@ public class ApplyTransferController extends BaseController {
         String userId = getRequestToken();
         CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
-        ConsultationStatusBean consultationStatusBean = applyFormService.inquirySMAdAllCount(userId, userDetail.getHospitalId(), consultationTypeListInquiry);
+        InquiryStatusBean inquiryStatusBean = applyFormService.inquirySMAdAllCount(null, userDetail.getHospitalId(), consultationTypeListInquiry);
 
-        return succeedRequest(consultationStatusBean);
+        return succeedRequest(inquiryStatusBean);
     }
 }
