@@ -21,7 +21,6 @@ $(function () {
             return false;
 
         } else {
-            return false;
             let formData = new FormData();
             formData.append("applyFormId",applyFormId);
             formData.append("refuseRemark",$('#sendBackReferralBoxText').val());
@@ -150,6 +149,7 @@ $(function () {
     $(".noBtn").click(function () {
         layer.closeAll();
         $(".rejectBox").hide();
+        $(".referBox").hide();
     })
 
 })

@@ -176,8 +176,9 @@ function renderViewByRole(applyStatus) {
             $(".progressBar li:nth-child(1)").addClass("libg");
            if (applyStatus === "INQUIRY_APPLY_ACCEDE") {
                 //待收诊
-                $("#refuseBackReferral").show();
-                $("#receiveBackReferral").show();
+               $(".modifier3").show();
+                $("#refuseReferralBtn").show();
+                $("#receiveReferralBtn").show();
             } else if (applyStatus === "INQUIRY_SLAVE_ACCEDE") {
                 //排期审核
             } else if (applyStatus === "INQUIRY_DATETIME_LOCKED") {

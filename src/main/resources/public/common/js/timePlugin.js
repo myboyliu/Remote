@@ -7,6 +7,7 @@ let startIndex = 0;
 let endIndex = 0;
 let dateList = []; // 选择的时间数据
 
+//渲染日历插件右侧时间内容
 function renderDateRightContent() {
     let startMinute = 0; // 开始总分钟数
     let endMinute = 0; // 结束总分钟数
@@ -29,6 +30,7 @@ function renderDateRightContent() {
     $('.rightContent').html(_html);
 }
 
+//重新渲染日历
 function redrawDate(dateTempList) {
     let markJson = {};
     for (let i = 0; i < dateTempList.length; i++) {
@@ -83,6 +85,7 @@ function redrawDate(dateTempList) {
     }
 }
 
+//展示日历插件
 function showDateView(applyTimeList) {
     let _$ = layui.jquery;
     layer.open({

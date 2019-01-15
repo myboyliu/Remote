@@ -2,7 +2,7 @@
  * 统一接口管理JS
  * @type {string}
  */
-const baseUrl = "http://192.168.0.222"; //服务地址
+const baseUrl = "http://127.0.0.1"; //服务地址
 
 const getAllHospital = "/hospital/select"; //查询所有医院类别
 
@@ -156,8 +156,8 @@ const sendSelectAllCountDoctor = "/apply/consultation/sendSelectAllCountDoctor";
 const receiveSelectAllCountDoctor = "/apply/consultation/receiveSelectAllCountDoctor";  //会诊医生接受列表
 const sendSelectAllCountSir = "/apply/consultation/sendSelectAllCountSir";              //首诊医政发出列表
 const receiveSelectAllCountSir = "/apply/consultation/receiveSelectAllCountSir";        //会诊医政接受列表
-const inquiryAllCountDoctor = "/apply/transfer/inquiryAllCountDoctor";                  //转诊医生列表
-const inquiryAllCountSir = "/apply/transfer/inquiryAllCountSir";                        //转诊医政列表
+const inquiryCsAllCountDr = "/apply/transfer/inquiryCsAllCountDr";                  //转诊医生列表
+const inquiryCsAllCountSir = "/apply/transfer/inquiryCsAllCountSir";                        //转诊医政列表
 
 
 

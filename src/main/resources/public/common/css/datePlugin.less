@@ -139,3 +139,105 @@
     }
   }
 }
+
+// 转诊时间选择
+.referralTimeSelect {
+  display: none;
+  width: 600px;
+  height: 580px;
+  .closeBtnTime {
+    // height: 50px;
+    display: inline-block;
+    text-align: right;
+    font-size: 18px;
+    color: #ffffff;
+    line-height: 32px;
+    right: 0;
+    position: absolute;
+    top: -35px;
+
+    img {
+      float: right;
+      margin: 3px 5px 0 0;
+      cursor: pointer;
+    }
+
+    span {
+      float: right;
+      cursor: pointer;
+    }
+  }
+  .selectTimeContent {
+    box-sizing: border-box;
+    background: #f4f4f4;
+    height: 580px;
+    width: 600px;
+    border-radius: 10px;
+    padding: 10px;
+    .referralTimeMain {
+      background: #fff;
+      overflow: hidden;
+      > h3 {
+        margin: 15px 0 0 20px;
+        font-weight: 600;
+        font-size: 18px;
+        color: #1937bc;
+
+        > span {
+          display: block;
+          font-size: 14px;
+        }
+      }
+      .timeBox {
+        display: inline-block;
+        margin: 10px 0;
+      }
+
+      > p {
+        font-size: 14px;
+        color: #101010;
+        line-height: 24px;
+        margin: 5px 20px 0;
+      }
+    }
+    .clearBox {
+      float: left;
+      width: 100%;
+      text-align: right;
+
+      .clearBtn {
+        margin: 10px 0 0;
+        display: inline-block;
+        width: 90px;
+        text-align: center;
+        height: 30px;
+        line-height: 30px;
+        font-size: 14px;
+        color: #212121;
+        background: #f6c567;
+        border-radius: 10px;
+      }
+    }
+
+    .btnBox {
+      float: left;
+      width: 100%;
+      // 确定按钮
+      .yesBtn {
+        display: block;
+        margin: 30px auto 0;
+        box-sizing: border-box;
+        width: 200px;
+        height: 40px;
+        border: 1px solid #3249c2;
+        background: #516dcf;
+        color: #ffffff;
+        font-size: 14px;
+        text-align: center;
+        line-height: 40px;
+        border-radius: 10px;
+      }
+    }
+  }
+
+}

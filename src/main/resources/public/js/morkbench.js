@@ -351,7 +351,7 @@ function currentInviteCount() {
 
 /** 查询转诊列表 总记录数*/
 function getReferralCount() {
-    ajaxRequest("GET", inquiryAllCountDoctor, null, false, false, false, inquiryAllCountDoctorSuccess, null, null);
+    ajaxRequest("GET", inquiryCsAllCountDr, null, false, false, false, inquiryAllCountDoctorSuccess, null, null);
 
     function inquiryAllCountDoctorSuccess(result) {
         countObject = result;

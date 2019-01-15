@@ -20,7 +20,7 @@
     <script src="../common/js/url.js"></script>
     <script src="../common/js/PDFObject.min.js"></script>
     <script src="../common/js/jQuery.print.min.js"></script>
-    <script src="../common/js/datePluginUtils.js"></script>
+    <script src="../common/js/timePlugin.js"></script>
     <script src="../common/js/picturePluginUtils.js"></script>
     <script src="../js/adminApplyInfo.js"></script>
     <script src="../js/adminReferralApplyInfo.js"></script>
@@ -481,13 +481,13 @@
         <a id="throughBackReferralBoxYesBtn" class="yesBtn" href="javascript:">确认通过</a>
     </div>
 </div>
-<div id="receiveReferralBox" class="operateBox receiveBox">
-    <p>确定要接收该转诊？</p>
-    <div class="btnBox">
-        <a class="noBtn" href="javascript:">我再想想</a>
-        <a id="receiveBackReferralBoxYesBtn" class="yesBtn" href="javascript:">确认接收</a>
-    </div>
-</div>
+<!--<div id="receiveReferralBox" class="operateBox receiveBox">-->
+    <!--<p>确定要接收该转诊？</p>-->
+    <!--<div class="btnBox">-->
+        <!--<a class="noBtn" href="javascript:">我再想想</a>-->
+        <!--<a id="receiveBackReferralBoxYesBtn" class="yesBtn" href="javascript:">确认接收</a>-->
+    <!--</div>-->
+<!--</div>-->
 <div id="refuseReferralBox" class="rejectBox">
     <div class="rejectionLayer re_layer">
         <div class="rejectionLayer_top">
@@ -502,6 +502,31 @@
         </div>
         <input id="refuseBackReferralBoxBtn" type="button" value="确定" class="confirm">
         <div class="noBtn closeBtn clearfix refuseBtn"><img src="../images/close.png" alt=""><span>关闭</span></div>
+    </div>
+</div>
+<!-- 转诊单个时间选择 -->
+<div id="receiveReferralBox" class="referralTimeOneSelect clearfix">
+    <div class="noBtn closeBtnTime clearfix">
+        <span>关闭</span>
+        <img src="../images/close.png" alt="">
+    </div>
+    <div class="selectTimeContent clearfix">
+        <div class="referralTimeMain">
+            <h3>发送视频转诊
+                <span>选择时间</span>
+            </h3>
+            <div style="text-align: center;" class="clearfix">
+                <div class="timeBox" id="referralTimeOneScope"></div>
+            </div>
+            <p>*选择您可接受的时间并上传，专家会根据您的选择确定最终时间</p>
+            <p>*您选择时段越多，越利于会/转诊的顺利进行</p>
+        </div>
+        <div class="clearBox">
+            <a class="clearBtn" href="javascript:;">清空本页</a>
+        </div>
+        <div class="btnBox">
+            <a href="javascript:;" class="yesBtn">确定</a>
+        </div>
     </div>
 </div>
 </body>
