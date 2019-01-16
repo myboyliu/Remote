@@ -184,16 +184,16 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 医政 会诊 转诊 更新申请状态
      *
-     * @param id
+     * @param applyFormId
      * @param applyStatus
      * @param msg1
      * @param msg2
      */
-    public Map updateStatus(String id, String orderNumber, String applyStatus, String msg1,
+    public Map updateStatus(String applyFormId, String orderNumber, String applyStatus, String msg1,
                             String msg2, String refuseRemark) {
 
-        if (StringUtils.isBlank(id)) {
-            return badRequestOfArguments("applyForm.id is null");
+        if (StringUtils.isBlank(applyFormId)) {
+            return badRequestOfArguments("applyFormId is null");
         }
 
         String userId = getRequestToken();
@@ -202,7 +202,7 @@ public class ApplyDisposeController extends BaseController {
         if (InquiryStatus.INQUIRY_APPLY_REJECT.toString().equals(applyStatus)) {
             applyForm.setApplyType(ApplyType.APPLY_DRAFT.toString());
         }
-        applyForm.setId(id);
+        applyForm.setId(applyFormId);
         if (StringUtils.isNotBlank(refuseRemark)) {
             applyForm.setRefuseRemark(refuseRemark);
         }
@@ -216,12 +216,12 @@ public class ApplyDisposeController extends BaseController {
 
         if (ApplyType.APPLY_REFERRAL.toString().equals(applyForm.getApplyType())
                 && InquiryStatus.INQUIRY_APPLY_REJECT.toString().equals(applyStatus)) {
-            int j = applyTimeService.delByApplyForm(id);
+            int j = applyTimeService.delByApplyForm(applyFormId);
             if (j < 1) {
                 return badRequestOfArguments(msg2);
             }
         }
-        applyForm = applyFormService.getByPrimaryKey(id);
+        applyForm = applyFormService.getByPrimaryKey(applyFormId);
         if (!ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyForm.getApplyType())) {
             ApplyTime applyTime = new ApplyTime();
             applyTime.setApplyFormId(applyForm.getId());
@@ -249,14 +249,14 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "sirReceiveMasterReject")
-    public Map sirConsultationMasterReject(String id, String report) {
+    public Map sirConsultationMasterReject(String applyFormId, String report) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_MASTER_REJECT);
 
         String msg1 = "受邀会诊收诊医政拒收,form修改失败";
         String msg2 = "受邀会诊收诊医政拒收,time修改失败";
 
-        return updateStatus(id, null, applyStatus, msg1, msg2, report);
+        return updateStatus(applyFormId, null, applyStatus, msg1, msg2, report);
     }
 
     /**
@@ -264,21 +264,21 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "sirReceiveMasterAccede")
-    public Map sirConsultationMasterAccede(String id) {
+    public Map sirConsultationMasterAccede(String applyFormId) {
 
-        String applyType = applyFormService.getByPrimaryKey(id).getApplyType();
+        String applyType = applyFormService.getByPrimaryKey(applyFormId).getApplyType();
         // 视频会诊状态变为会诊时间已选定
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
         // 图文会诊接收后立刻变为会诊中
         if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyType)) {
             applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
-            applyNodeService.insertByStatus(id, ApplyNodeConstant.已接诊.toString());
+            applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
         }
 
         String msg1 = "受邀会诊收诊医政待收诊接受,form修改失败";
         String msg2 = "受邀会诊收诊医政待收诊接受,time修改失败";
 
-        return updateStatus(id, null, applyStatus, msg1, msg2, null);
+        return updateStatus(applyFormId, null, applyStatus, msg1, msg2, null);
     }
 
     /**
@@ -286,13 +286,13 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "sirReceiveDateCheckAccede")
-    public Map sirDateCheckAccede(String id) {
+    public Map sirDateCheckAccede(String applyFormId) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
         String msg1 = "受邀会诊收诊医政排期审核接受,form修改失败";
         String msg2 = "受邀会诊收诊医政排期审核接受,time修改失败";
 
-        return updateStatus(id, null, applyStatus, msg1, msg2, null);
+        return updateStatus(applyFormId, null, applyStatus, msg1, msg2, null);
     }
 
 
@@ -301,11 +301,11 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "sirReceiveHarmonizeAccede")
-    public Map sirReceiveHarmonizeAccede(String id) {
+    public Map sirReceiveHarmonizeAccede(String applyFormId) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
 
-        String applyType = applyFormService.getByPrimaryKey(id).getApplyType();
+        String applyType = applyFormService.getByPrimaryKey(applyFormId).getApplyType();
         // 图文会诊砖家协调后立刻变为会诊中
         if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyType)) {
             applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
@@ -314,7 +314,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "受邀会诊收诊医政确认砖家协调,form修改失败";
         String msg2 = "受邀会诊收诊医政确认砖家协调,time修改失败";
 
-        return updateStatus(id, null, applyStatus, msg1, msg2, null);
+        return updateStatus(applyFormId, null, applyStatus, msg1, msg2, null);
     }
 
     /**
@@ -322,14 +322,14 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "sirSendCheckAccede")
-    public Map sirSendCheckAccede(String id) {
+    public Map sirSendCheckAccede(String applyFormId) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_APPLY_ACCEDE);
         String msg1 = "发出会诊医政待审核通过,form修改失败";
         String msg2 = "发出会诊医政待审核通过,time修改失败";
         String orderNumber = OrderNumUtils.getOrderNo(redisTemplate);
 
-        return updateStatus(id, orderNumber, applyStatus, msg1, msg2, null);
+        return updateStatus(applyFormId, orderNumber, applyStatus, msg1, msg2, null);
     }
 
     /**
@@ -337,26 +337,26 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "sirSendCheckReject")
-    public Map sirSendCheckReject(String id) {
+    public Map sirSendCheckReject(String applyFormId) {
 
-        if (StringUtils.isBlank(id)) {
+        if (StringUtils.isBlank(applyFormId)) {
             return badRequestOfArguments("applyFormId is null");
         }
 
         // 删除applyFormId对应的applyTime表中字段
-        int j = applyTimeService.delByApplyForm(id);
+        int j = applyTimeService.delByApplyForm(applyFormId);
         if (j < 0) {
             return badRequestOfArguments("删除applyTime失败");
         }
 
         // 删除CaseConsultant表对应字段
-        caseConsultantService.deleteByPrimaryKey(id);
+        caseConsultantService.deleteByPrimaryKey(applyFormId);
 
         // 设置applyForm类型为草稿
         ApplyForm applyForm = new ApplyForm();
         String userId = getRequestToken();
         String applyType2 = String.valueOf(ApplyType.APPLY_DRAFT);
-        applyForm.setId(id);
+        applyForm.setId(applyFormId);
         applyForm.setApplyType(applyType2);
         applyForm.setUpdateUser(userId);
         int i = applyFormService.updateByPrimaryKeySelective(applyForm);
@@ -701,7 +701,7 @@ public class ApplyDisposeController extends BaseController {
     public Map doctorAcceptOther(String applyFormId, String startEndTime) {
 
         if (StringUtils.isBlank(applyFormId)) {
-            return badRequestOfArguments("传入id为空");
+            return badRequestOfArguments("传入applyFormId为空");
         }
 
         String type = applyFormService.getByPrimaryKey(applyFormId).getApplyType();
