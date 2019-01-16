@@ -75,7 +75,7 @@ function renderDoctorListView(data) {
 
 /** 根据二级科室id查询医生 */
 function deptIdGetDoctors(deptId) {
-    var data = {"branchId": deptId};
+    let data = {"branchId": deptId};
     ajaxRequest("GET", getDoctorListByBranchIdUrl, data, true, "application/json", false, renderDoctorListView, null, null);
 }
 

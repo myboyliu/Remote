@@ -14,6 +14,7 @@ let isMainDoctor = false;
 let applyInfo = {};
 let userInfo = {};
 const _$ = layui.jquery;
+let referralModifyDoctor = {};
 
 let isReferral = false;
 let isConsultation = false; //true: 会诊订单 false: 不是会诊订单
@@ -165,6 +166,7 @@ function renderViewByRole(applyStatus) {
             $(".modifier2").show();
         }
     } else {
+        $('#adminConsultationDoctor').hide();
         $(".modifier2").show();
         if(isInvite){
             $('.progressBar').empty();
@@ -439,7 +441,17 @@ $(function () {
     // 发件人信息
     $('.recipientsInfo').html(applyInfo.applySummary);
     // 收件人信息
-    $('.addresserInfo').html(applyInfo.inviteSummary);
+    if(sessionStorage.getItem("referralModifyDoctor")){
+        referralModifyDoctor = JSON.parse(sessionStorage.getItem("referralModifyDoctor"));
+        sessionStorage.removeItem("referralModifyDoctor");
+        console.log(referralModifyDoctor)
+        // 收件人信息
+
+
+        $('.addresserInfo').html(referralModifyDoctor.inviteSummary);
+    }else{
+        $('.addresserInfo').html(applyInfo.inviteSummary);
+    }
 
     renderApplyTimeView(applyTimeList);
     /**会诊报告*/

@@ -1,5 +1,7 @@
 let refuseReferralReasonPrefix = "病床已满:";
 $(function () {
+
+
     /** 发起方操作 */
     //修改排期按钮点击事件
     $("#updateReferralDateTimeBtn").click(function () {

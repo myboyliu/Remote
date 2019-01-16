@@ -4,6 +4,8 @@ let isVideo = false;// 选择的医生信息数组
 let applyInfo = {};// 选择的医生信息数组
 let isInvite = false;
 let userInfo;
+let isReferral = false;
+let isConsultation = false;
 
 /** 渲染 医生页面 左侧导航 */
 function renderDoctorNavigation(data) {
@@ -74,7 +76,7 @@ function renderDoctorNavigation(data) {
     // favoriteHtml();
 
 
-    if(!isInvite){
+    if (!isInvite) {
         hospitalInfo["id"] = data[0].id;
         hospitalInfo["hospitalName"] = data[0].hospitalName;
         hospitalInfo["hospitalPhone"] = data[0].hospitalPhone;
@@ -96,7 +98,7 @@ function renderDoctorList(data) {
                         <div class="Firstdiamond"></div>\
                         <div class="message">\
                             <span class="mess_l">不选医生</span><span>远程中心</span>\
-                            <p class="p1" hospitalVideoPic="' + hospitalInfo.hospitalVideoPrice + '" hospitalImgPic="' + hospitalInfo.hospitalImgPrice + '" deptId="' + deptId + '" name="' + hospitalInfo.id + '">' + hospitalInfo.hospitalName + '</p>\
+                            <p class="p1" hospitalVideoPic="' + hospitalInfo.hospitalVideoPrice + '" hospitalImgPic="' + hospitalInfo.hospitalImgPrice + '" deptId="' + hospitalInfo.branchId + '" name="' + hospitalInfo.id + '">' + hospitalInfo.hospitalName + '</p>\
                             <p class="p4">选择此项,申请将发送至对方医院远程中心,由医务人员为您调度医生资源,诊费会在选定医生后确定。<br />请将您的备注信息填至【会/转诊目的】 </p>\
                         </div>\
                     </li>';
@@ -160,7 +162,8 @@ function renderAlreadyExistDoctor(inviteDoctorArray) {
 /** 根据二级科室id查询医生 */
 function getDoctorByBranchId(deptId) {
     deptId = deptId;
-    const data = {"branchId": deptId};
+    hospitalInfo["branchId"] = deptId;
+    let data = {"branchId": deptId};
     ajaxRequest("GET", getDoctorListByBranchIdUrl, data, true, "application/json", false, renderDoctorList, null, null);
 }
 
@@ -185,6 +188,9 @@ $(function () {
         if (userInfo.hospitalId === applyInfo.inviteHospitalId && applyInfo.applyStatus !== "CONSULTATION_APPLY_CREATE_SUCCESS") {
             isInvite = true;
         }
+        isReferral = applyInfo.applyType === "APPLY_REFERRAL" ? true : false;
+        isConsultation = applyInfo.applyType === "APPLY_REFERRAL" ? false : true;
+
         /** 获取通讯录左侧导航数据 */
         ajaxRequest("GET", getHospitalBranchListUrl, null, false, false, true, renderDoctorNavigation, null, null);
         if ("APPLY_CONSULTATION_VIDEO" === applyInfo.applyType) {
@@ -192,9 +198,32 @@ $(function () {
         }
         let consultantUserList = [];
         if (applyInfo.inviteUserId) {
-            consultantUserList = JSON.parse(applyInfo.consultantUserList)
-            for (let item of consultantUserList) {
-                let inviteDoctorArr = item.doctorName.replace("<", "").replace(">", "").split("/");
+            if (isConsultation) {
+                consultantUserList = JSON.parse(applyInfo.consultantUserList)
+                for (let item of consultantUserList) {
+                    let inviteDoctorArr = item.doctorName.replace("<", "").replace(">", "").split("/");
+                    let doctorName = inviteDoctorArr[0];
+                    let doctorTitleName = inviteDoctorArr[1];
+                    let branchName = inviteDoctorArr[2];
+                    let hospitalName = inviteDoctorArr[3];
+                    inviteDoctorArray.push({
+                        hospitalId: applyInfo.inviteHospitalId, // 医院id
+                        branchId: applyInfo.inviteBranchId, // 科室id
+                        doctorId: item.doctorId, // 医生id
+                        hospitalName: hospitalName, // 医院名字
+                        branchName: branchName, // 科室名字
+                        doctorName: doctorName, // 医生名字
+                        hospitalImgPrice: applyInfo.hospitalPrice, // 医院图文价格
+                        hospitalVideoPrice: applyInfo.hospitalPrice, // 医院视频价格
+                        doctorPicturePrice: item.price, // 图文价格
+                        doctorVideoPrice: item.price, // 视频价格
+                        doctorTitleName: doctorTitleName, // 职称名字
+                    });
+                }
+            } else if (isReferral) {
+                let inviteDoctor = applyInfo.inviteSummary
+
+                let inviteDoctorArr = inviteDoctor.replace("<", "").replace(">", "").split("/");
                 let doctorName = inviteDoctorArr[0];
                 let doctorTitleName = inviteDoctorArr[1];
                 let branchName = inviteDoctorArr[2];
@@ -202,17 +231,18 @@ $(function () {
                 inviteDoctorArray.push({
                     hospitalId: applyInfo.inviteHospitalId, // 医院id
                     branchId: applyInfo.inviteBranchId, // 科室id
-                    doctorId: item.doctorId, // 医生id
+                    doctorId: applyInfo.inviteUserId, // 医生id
                     hospitalName: hospitalName, // 医院名字
                     branchName: branchName, // 科室名字
                     doctorName: doctorName, // 医生名字
-                    hospitalImgPrice: applyInfo.hospitalPrice, // 医院图文价格
-                    hospitalVideoPrice: applyInfo.hospitalPrice, // 医院视频价格
-                    doctorPicturePrice: item.price, // 图文价格
-                    doctorVideoPrice: item.price, // 视频价格
+                    hospitalImgPrice: 0, // 医院图文价格
+                    hospitalVideoPrice: 0, // 医院视频价格
+                    doctorPicturePrice: 0, // 图文价格
+                    doctorVideoPrice: 0, // 视频价格
                     doctorTitleName: doctorTitleName, // 职称名字
                 });
             }
+
         }
         renderAlreadyExistDoctor(inviteDoctorArray);
     }
@@ -300,9 +330,12 @@ $(function () {
 
     // 选择医生事件--添加
     $('.doctorUl').delegate('.doctorChunk', 'click', function (event) {
+        if (isReferral) {
+            inviteDoctorArray = [];
+        }
         if ($(this).hasClass('noDoctor')) {
             hospitalInfo["id"] = $(this).find('.p1').attr('name');
-            hospitalInfo["branchId"] = $(this).find('.p1').attr('deptid');
+            hospitalInfo["branchId"] = $(this).find('.p1').attr('deptId');
             hospitalInfo["hospitalImgPrice"] = $(this).find('.p1').attr('hospitalImgPic');
             hospitalInfo["hospitalName"] = $(this).find('.p1').html();
             hospitalInfo["hospitalVideoPrice"] = $(this).find('.p1').attr('hospitalVideoPic');
@@ -328,7 +361,7 @@ $(function () {
             layer.msg('所选医生不能为该病历的发件医生');
         } else {
             // 点的某一个医生
-            var flag = true;
+            let flag = true;
             for (var i = 0; i < inviteDoctorArray.length; i++) {
                 if (inviteDoctorArray[i].doctorId == $(this).attr('name')) {
                     flag = false
@@ -367,7 +400,6 @@ $(function () {
     });
 
     function scrollTo(x) {
-        console.log(x)
         $('html, body').animate({
             scrollTop: x - 100,
         }, 300);
@@ -407,7 +439,29 @@ $(function () {
     })
     //    首诊医政修改病历基本信息 order/applyManagerUpdateOrder
     $('.save').click(function () {
-        console.log(inviteDoctorArray);
+        if (isReferral) {
+            let referralModifyDoctor = {};
+            if (inviteDoctorArray.length > 0) {
+                let inviteSummary = "<" + inviteDoctorArray[0].doctorName + "/" + inviteDoctorArray[0].doctorTitleName + "/" + inviteDoctorArray[0].branchName + "/" + inviteDoctorArray[0].hospitalName + ">;";
+                referralModifyDoctor = {
+                    "inviteSummary": inviteSummary,
+                    "hospitalId": inviteDoctorArray[0].hospitalId,
+                    "branchId": inviteDoctorArray[0].branchId,
+                    "doctorId": inviteDoctorArray[0].doctorId,
+                }
+            }else {
+                referralModifyDoctor = {
+                    "inviteSummary": "",
+                    "hospitalId": hospitalInfo.id,
+                    "branchId": hospitalInfo.branchId,
+                    "doctorId": "",
+                }
+
+            }
+            sessionStorage.setItem("referralModifyDoctor", JSON.stringify(referralModifyDoctor))
+            window.history.go(-1);
+            return false
+        }
         let data = new FormData();
         data.append("id", applyInfo.id); // 费用
         if (inviteDoctorArray.length > 0) {
