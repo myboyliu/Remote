@@ -457,13 +457,13 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "sirTransferMasterReject")
-    public Map sirTransferMasterReject(String applyFormId, String report) {
+    public Map sirTransferMasterReject(String applyFormId, String refuseRemark) {
 
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_MASTER_REJECT);
         String msg1 = "转诊医政待收诊拒绝,form修改失败";
         String msg2 = "转诊医政待收诊拒绝,time修改失败";
         applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已拒收.toString());
-        return updateStatus(applyFormId, null, applyStatus, msg1, msg2, report);
+        return updateStatus(applyFormId, null, applyStatus, msg1, msg2, refuseRemark);
     }
 
     /**
