@@ -8,6 +8,7 @@ import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.YoonaLtUtils.OrderNumUtils;
+import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
 import com.sicmed.remote.web.bean.ApplyTimeBean;
 import com.sicmed.remote.web.bean.ConsultantReportBean;
 import com.sicmed.remote.web.bean.ConsultationTimeBean;
@@ -19,6 +20,7 @@ import com.sicmed.remote.web.service.ApplyFormService;
 import com.sicmed.remote.web.service.ApplyNodeService;
 import com.sicmed.remote.web.service.ApplyTimeService;
 import com.sicmed.remote.web.service.CaseConsultantService;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +32,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author YoonaLt
@@ -397,17 +396,59 @@ public class ApplyDisposeController extends BaseController {
     }
 
     /**
+     * 转诊选定时间 添加
+     */
+    public Map transferDateSure(String applyFormId, String applyStatus, String inquiryDatetime) {
+
+        if (StringUtils.isBlank(applyFormId) || StringUtils.isBlank(inquiryDatetime)) {
+            return badRequestOfArguments("参数错误");
+        }
+
+        String userId = getRequestToken();
+
+        LinkedHashMap<String, String> resultMap = new LinkedHashMap<>();
+        Date date = YtDateUtils.stringToDate(inquiryDatetime);
+        String start = YtDateUtils.dateToString(YtDateUtils.parmDateBegin(date));
+        String end = YtDateUtils.dateToString(YtDateUtils.intradayEnd(date));
+        resultMap.put(start, end);
+
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setId(applyFormId);
+        applyForm.setUpdateUser(userId);
+        int i = applyFormService.updateStatus(applyForm, applyStatus, userId);
+        if (i < 1) {
+            return badRequestOfArguments("form修改失败");
+        }
+
+        int j = applyTimeService.delByApplyForm(applyFormId);
+        if (j < 1) {
+            return badRequestOfArguments("time修改失败");
+        }
+
+        ApplyTimeBean applyTimeBean = new ApplyTimeBean();
+        applyTimeBean.setApplyFormId(applyFormId);
+        applyTimeBean.setStartEndTime(resultMap);
+        applyTimeBean.setCreateUser(userId);
+        applyTimeBean.setApplyStatus(applyForm.getApplyStatus());
+        int k = applyTimeService.insertStartEndTimes(applyTimeBean);
+        if (k < 1) {
+            return badRequestOfArguments("重新添加申请时间失败");
+        }
+
+        return succeedRequest(applyForm);
+    }
+
+    /**
      * 医政 转诊 代收诊 同意
      */
     @Transactional
     @PostMapping(value = "sirTransferMasterAccede")
-    public Map sirTransferMasterAccede(String id) {
+    public Map sirTransferMasterAccede(String applyFormId, String inquiryDatetime) {
 
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED);
-        String msg1 = "转诊医政待收诊同意,form修改失败";
-        String msg2 = "转诊医政待收诊同意,time修改失败";
-        applyNodeService.insertByStatus(id, ApplyNodeConstant.已接诊.toString());
-        return updateStatus(id, null, applyStatus, msg1, msg2, null);
+
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
+        return transferDateSure(applyFormId, applyStatus, inquiryDatetime);
     }
 
     /**
@@ -429,14 +470,50 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "sirTransferDateCheckAccede")
-    public Map sirTransferDateCheckAccede(String id) {
+    public Map sirTransferDateCheckAccede(String applyFormId, String inquiryDatetime) {
 
-        // 选定转诊时间
+        if (StringUtils.isBlank(applyFormId)) {
+            return badRequestOfArguments("参数错误");
+        }
+
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED);
-        String msg1 = "转诊医政排期审核同意,form修改失败";
-        String msg2 = "转诊医政排期审核同意,time修改失败";
+        String userId = getRequestToken();
 
-        return updateStatus(id, null, applyStatus, msg1, msg2, null);
+        // 若修改时间
+        if (StringUtils.isNotBlank(inquiryDatetime)) {
+
+            LinkedHashMap<String, String> resultMap = new LinkedHashMap<>();
+            Date date = YtDateUtils.stringToDate(inquiryDatetime);
+            String start = YtDateUtils.dateToString(YtDateUtils.parmDateBegin(date));
+            String end = YtDateUtils.dateToString(YtDateUtils.intradayEnd(date));
+            resultMap.put(start, end);
+
+            int j = applyTimeService.delByApplyForm(applyFormId);
+            if (j < 1) {
+                return badRequestOfArguments("转诊医政待收诊同意,time修改失败");
+            }
+
+            ApplyTimeBean applyTimeBean = new ApplyTimeBean();
+            applyTimeBean.setApplyFormId(applyFormId);
+            applyTimeBean.setStartEndTime(resultMap);
+            applyTimeBean.setCreateUser(userId);
+            applyTimeBean.setApplyStatus(applyStatus);
+            int k = applyTimeService.insertStartEndTimes(applyTimeBean);
+            if (k < 1) {
+                return badRequestOfArguments("添加申请时间失败");
+            }
+        }
+
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setId(applyFormId);
+        applyForm.setUpdateUser(userId);
+        int i = applyFormService.updateStatus(applyForm, applyStatus, userId);
+        if (i < 1) {
+            return badRequestOfArguments("转诊医政待收诊同意,form修改失败");
+        }
+
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
+        return succeedRequest(applyForm);
     }
 
     /**
@@ -580,12 +657,10 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "doctorTransDateCheck")
-    public Map doctorTransDateCheck(String id) {
+    public Map doctorTransDateCheck(String applyFormId, String inquiryDatetime) {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SLAVE_ACCEDE);
-        String msg1 = "受邀医生接收转诊进入排期审核,form修改失败";
-        String msg2 = "受邀医生接收转诊进入排期审核,time修改失败";
-
-        return updateStatus(id, null, applyStatus, msg1, msg2, null);
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
+        return transferDateSure(applyFormId, applyStatus, inquiryDatetime);
     }
 
     /**
@@ -593,12 +668,10 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "doctorTransDateSure")
-    public Map doctorTransDateSure(String id) {
+    public Map doctorTransDateSure(String applyFormId, String inquiryDatetime) {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED);
-        String msg1 = "受邀医生接收转诊进入已排期,form修改失败";
-        String msg2 = "受邀医生接收转诊进入已排期,time修改失败";
-        applyNodeService.insertByStatus(id, ApplyNodeConstant.已排期.toString());
-        return updateStatus(id, null, applyStatus, msg1, msg2, null);
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
+        return transferDateSure(applyFormId, applyStatus, inquiryDatetime);
     }
 
     /**
