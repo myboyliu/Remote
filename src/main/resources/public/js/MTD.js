@@ -473,7 +473,7 @@ $(function () {
     })
     // 下一步修改排期按钮
     $('.mdt_Btn').click(function () {
-        showDateView(applyTimeList);
+        showTimeView(applyTimeList);
     })
     // 确认接收取消按钮
     $('.submitBoxPic').find('.noBtn').click(function () {

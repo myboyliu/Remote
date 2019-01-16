@@ -86,7 +86,7 @@ function redrawDate(dateTempList) {
 }
 
 //展示日历插件
-function showDateView(applyTimeList) {
+function showTimeView(applyTimeList) {
     let _$ = layui.jquery;
     layer.open({
         type: 1,

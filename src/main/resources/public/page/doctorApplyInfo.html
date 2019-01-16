@@ -20,9 +20,11 @@
     <script src="../common/js/jQuery.print.min.js"></script>
     <script src="../common/js/ajaxRequestUtils.js"></script>
     <script src="../common/js/timePlugin.js"></script>
+    <script src="../common/js/datePlugin.js"></script>
     <script src="../common/js/picturePluginUtils.js"></script>
     <script src="../common/js/url.js"></script>
     <script src="../js/doctorApplyInfo.js"></script>
+    <script src="../js/doctorReferralApplyInfo.js"></script>
     <!--[if lt IE9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -238,8 +240,8 @@
         <input type="button" value="进入视频会诊室" class="entrance" style="display: none;">
         <input type="button" value="编辑临床反馈" class="editClinicalFeedback" style="display: none;">
         <!-- 转诊按钮 -->
-        <input id="rejectionReferral" type="button" value="拒收" class="rejectionReferral">
-        <input id="receiveReferral" type="button" value="接收" class="receiveReferral">
+        <input id="refuseReferralBtn" type="button" value="拒收" class="rejectionReferral">
+        <input id="receiveReferralBtn" type="button" value="接收" class="receiveReferral">
 
     </div>
     <p id="consultationPrice" style="display: none" class="feesText">诊费：￥<span class="money"></span></p>
@@ -418,5 +420,56 @@
 </div>
 <div id="alertBox" class="pleasewirte">
     <p id="alertText"></p>
+</div>
+<!-- 转诊 弹窗-->
+<div id="receiveReferralBox" class="operateBox receiveBox">
+    <p>是否需要医政确认？</p>
+    <div class="btnBox">
+        <a id="receiveBySelfBtn" class="yesBtn" href="javascript:;">不需要</a>
+        <a id="sendManagerBtn" class="yesBtn" href="javascript:;">需要</a>
+    </div>
+</div>
+<!-- 拒绝转诊 拒绝原因弹窗 -->
+<div id="refuseReferralBox" class="rejectBox">
+    <div class="rejectionLayer re_layer">
+        <div class="rejectionLayer_top">
+            <span>填写拒收原因</span>
+            <input id="isFullRefuseReferralReason" style="background: rgb(81, 109, 207); color: rgb(255, 255, 255);"
+                   type="button" value="病床已满"
+                   class="suggest ip">
+            <input id="otherRefuseReferralReason" type="button" value="其它原因" class="otherCause ip">
+        </div>
+        <div class="rejectionLayer_buttom">
+            <textarea id="refuseReferralReason" name="" class="refuseReason rejectBoxArea"
+                      placeholder="请尽量多的填写对医务人员和发件医生有参考价值的建议及原因..."></textarea>
+        </div>
+        <input id="refuseReferralBoxBtn" type="button" value="确定" class="confirm">
+        <div class="noBtn closeBtn clearfix refuseBtn"><img src="../images/close.png" alt=""><span>关闭</span></div>
+    </div>
+</div>
+<!-- 接收转诊 时间选择弹窗 -->
+<div id="checkDateBox" class="referralDateSelect clearfix">
+    <div class="noBtn closeBtnTime clearfix">
+        <span>关闭</span>
+        <img src="../images/close.png" alt="">
+    </div>
+    <div class="selectTimeContent clearfix">
+        <div class="referralTimeMain">
+            <h3>发送视频转诊
+                <span>选择时间</span>
+            </h3>
+            <div style="text-align: center;" class="clearfix">
+                <div class="timeBox" id="referralTimeScope"></div>
+            </div>
+            <p>*选择您可接受的时间并上传，专家会根据您的选择确定最终时间</p>
+            <p>*您选择时段越多，越利于会/转诊的顺利进行</p>
+        </div>
+        <div class="clearBox">
+            <a id="checkDateBoxClearBtn" class="clearBtn" href="javascript:;">清空本页</a>
+        </div>
+        <div class="btnBox">
+            <a id="checkDateBoxYesBtn" href="javascript:;" class="yesBtn">确定</a>
+        </div>
+    </div>
 </div>
 </html>

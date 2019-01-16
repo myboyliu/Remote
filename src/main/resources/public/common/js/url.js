@@ -2,7 +2,7 @@
  * 统一接口管理JS
  * @type {string}
  */
-const baseUrl = "http://127.0.0.1"; //服务地址
+const baseUrl = "http://192.168.0.222"; //服务地址
 
 const getAllHospital = "/hospital/select"; //查询所有医院类别
 
@@ -141,6 +141,11 @@ const sirInquiryDate = "/apply/transfer/sirInquiryDate";                        
 const sirInquiryReject = "/apply/transfer/sirInquiryReject";                    //已拒收
 const sirInquiryEnd = "/apply/transfer/sirInquiryEnd";                          //已结束
 
+/** 转诊医生操作接口 */
+const doctorTransferReject = "/apply/dispose/doctorTransferReject";               //代收诊   拒绝
+const doctorTransDateCheck = "/apply/dispose/doctorTransDateCheck";               //代收诊   接收到排期审核
+const doctorTransDateSure = "/apply/dispose/doctorTransDateSure";                 //代收诊   接收到已排期
+
 /** 转诊医政操作接口 */
 const sirTransferCheckAccede = "/apply/dispose/sirTransferCheckAccede";                 //首诊审核 通过
 const sirTransferCheckReject = "/apply/dispose/sirTransferCheckReject";                 //首诊审核 退回
@@ -149,7 +154,6 @@ const sirTransferMasterAccede = "/apply/dispose/sirTransferMasterAccede";       
 const sirTransferMasterReject = "/apply/dispose/sirTransferMasterReject";               //代收诊   拒绝
 const sirTransferDateCheckAccede = "/apply/dispose/sirTransferDateCheckAccede";         //排期审核 同意
 const sirTransferDateCheckReject = "/apply/dispose/sirTransferDateCheckReject";         //排期审核 拒绝
-
 
 /** 分页数量查询接口 */
 const sendSelectAllCountDoctor = "/apply/consultation/sendSelectAllCountDoctor";        //首诊医生发出列表

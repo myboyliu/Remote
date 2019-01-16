@@ -186,6 +186,7 @@ function renderViewByRole(applyStatus) {
                $(".progressBar li:nth-child(2)").addClass("libg");
            } else if (applyStatus === "INQUIRY_MASTER_REJECT" || applyStatus === "INQUIRY_APPLY_REJECT" || applyStatus === "INQUIRY_SLAVE_REJECT") {
                 //已拒收
+               $("#refuseReasonBox").show();
                 $('.progressBar').empty();
                 referralStatus = '<li class="libg" style="width: 100%">' + '已拒收' + '</li>';
                 $('.progressBar').html(referralStatus);
@@ -227,6 +228,7 @@ function renderViewByRole(applyStatus) {
                 $(".progressBar li:nth-child(2)").addClass("libg");
             } else if (applyStatus === "INQUIRY_MASTER_REJECT" || applyStatus === "INQUIRY_APPLY_REJECT" || applyStatus === "INQUIRY_SLAVE_REJECT") {
                 //已拒收
+                $("#refuseReasonBox").show();
                 $('.progressBar').empty();
                 referralStatus = '<li class="libg" style="width: 100%">' + '已拒收' + '</li>';
                 $('.progressBar').html(referralStatus);
@@ -452,13 +454,17 @@ $(function () {
     //    临床反馈
     $('.applyFeedBack').html(applyInfo.consultantFeedback);
     //如果是图文会诊
-    if (applyInfo.applyType === "APPLY_CONSULTATION_IMAGE_TEXT") {
-        $('.schedule').hide();
-        $('.schedule_modules ').hide();
-    } else {
-        $('.schedule').show();
-        $('.schedule_modules ').show();
+    if (isVideo) {
+        $('#consultationDateTimeBox').show();
+        $('#referralDateTimeBox').hide();
+    } else if (isReferral) {
+        $('#referralDateTimeBox').show();
+        $('#consultationDateTimeBox').hide();
+    }else{
+        $('#referralDateTimeBox').hide();
+        $('#consultationDateTimeBox').hide();
     }
+
 
     /** 诊费 */
     let consultantPrice = applyInfo.consultantPrice;
@@ -523,13 +529,13 @@ $(function () {
         $('.ReceiptDoctor_modules').toggle(500);
     });
     //  修改会诊排期
-    $('#cutSch').click(function () {
+    $('.cutSch').click(function () {
         $(this).toggleClass("foundBtn");
         $('.schedule_modules').toggle(500);
     });
-    // 修改修改排期
-    $('.schedulingBtn').click(function () {
-        showDateView(applyTimeList);
+    // 修改排期
+    $('#updateConsultationDateTimeBtn').click(function () {
+        showTimeView(applyTimeList);
     });
 
     /** 返回按钮 */

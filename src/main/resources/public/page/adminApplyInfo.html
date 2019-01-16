@@ -21,6 +21,7 @@
     <script src="../common/js/PDFObject.min.js"></script>
     <script src="../common/js/jQuery.print.min.js"></script>
     <script src="../common/js/timePlugin.js"></script>
+    <script src="../common/js/datePlugin.js"></script>
     <script src="../common/js/picturePluginUtils.js"></script>
     <script src="../js/adminApplyInfo.js"></script>
     <script src="../js/adminReferralApplyInfo.js"></script>
@@ -166,15 +167,34 @@
                 </div>
             </div>
             <!-- 会诊排期模块 -->
-            <div class="hosp schedule clearfix">
+            <div id="consultationDateTimeBox" class="hosp schedule clearfix">
                 <img src="../images/Scheduling.png" alt="会诊排期">
                 <span class="fw">会诊排期</span>
                 <div class="wire wire5"></div>
                 <div class="modifier5" style="display: none;">
-                    <a class="schedulingBtn" href="javascript:">
+                    <a id="updateConsultationDateTimeBtn" class="schedulingBtn" href="javascript:">
                         <span>修改排期</span>
                     </a>
-                    <i class="chooseBtn" id="cutSch"></i>
+                    <i class="chooseBtn cutSch"></i>
+                </div>
+                <!-- 会诊排期可收缩模块 -->
+                <div class="schedule_modules">
+                    <p>
+                        <span class="startDate">开始时间</span>到
+                        <span class="endDate">结束时间</span>
+                    </p>
+                </div>
+            </div>
+            <!-- 转诊排期模块 -->
+            <div id="referralDateTimeBox" class="hosp schedule clearfix">
+                <img src="../images/Scheduling.png" alt="转诊排期">
+                <span class="fw">转诊排期</span>
+                <div class="wire wire5"></div>
+                <div class="modifier5" style="display: none;">
+                    <a id="updateReferralDateTimeBtn" class="schedulingBtn" href="javascript:">
+                        <span>修改排期</span>
+                    </a>
+                    <i class="chooseBtn cutSch"></i>
                 </div>
                 <!-- 会诊排期可收缩模块 -->
                 <div class="schedule_modules">
@@ -481,31 +501,32 @@
         <a id="throughBackReferralBoxYesBtn" class="yesBtn" href="javascript:">确认通过</a>
     </div>
 </div>
-<!--<div id="receiveReferralBox" class="operateBox receiveBox">-->
-    <!--<p>确定要接收该转诊？</p>-->
-    <!--<div class="btnBox">-->
-        <!--<a class="noBtn" href="javascript:">我再想想</a>-->
-        <!--<a id="receiveBackReferralBoxYesBtn" class="yesBtn" href="javascript:">确认接收</a>-->
-    <!--</div>-->
-<!--</div>-->
+
+<div id="receiveReferralBox" class="operateBox receiveBox">
+    <p>确定要接收该转诊？</p>
+    <div class="btnBox">
+        <a class="noBtn" href="javascript:">我再想想</a>
+        <a id="receiveReferralBoxYesBtn" class="yesBtn" href="javascript:">确认接收</a>
+    </div>
+</div>
 <div id="refuseReferralBox" class="rejectBox">
     <div class="rejectionLayer re_layer">
         <div class="rejectionLayer_top">
             <span>填写拒收原因</span>
-            <input style="background: rgb(81, 109, 207); color: rgb(255, 255, 255);" type="button" value="病床已满"
+            <input id="isFullRefuseReferralReason" style="background: rgb(81, 109, 207); color: rgb(255, 255, 255);" type="button" value="病床已满"
                    class="suggest ip">
-            <input type="button" value="其它原因" class="otherCause ip">
+            <input id="otherRefuseReferralReason" type="button" value="其它原因" class="otherCause ip">
         </div>
         <div class="rejectionLayer_buttom">
-            <textarea name="" class="refuseReason rejectBoxArea"
+            <textarea id="refuseReferralReason" name="" class="refuseReason rejectBoxArea"
                       placeholder="请尽量多的填写对医务人员和发件医生有参考价值的建议及原因..."></textarea>
         </div>
-        <input id="refuseBackReferralBoxBtn" type="button" value="确定" class="confirm">
+        <input id="refuseReferralBoxBtn" type="button" value="确定" class="confirm">
         <div class="noBtn closeBtn clearfix refuseBtn"><img src="../images/close.png" alt=""><span>关闭</span></div>
     </div>
 </div>
 <!-- 转诊单个时间选择 -->
-<div id="receiveReferralBox" class="referralTimeOneSelect clearfix">
+<div id="checkDateBox" class="referralDateSelect clearfix">
     <div class="noBtn closeBtnTime clearfix">
         <span>关闭</span>
         <img src="../images/close.png" alt="">
@@ -516,16 +537,16 @@
                 <span>选择时间</span>
             </h3>
             <div style="text-align: center;" class="clearfix">
-                <div class="timeBox" id="referralTimeOneScope"></div>
+                <div class="timeBox" id="referralTimeScope"></div>
             </div>
             <p>*选择您可接受的时间并上传，专家会根据您的选择确定最终时间</p>
             <p>*您选择时段越多，越利于会/转诊的顺利进行</p>
         </div>
         <div class="clearBox">
-            <a class="clearBtn" href="javascript:;">清空本页</a>
+            <a id="checkDateBoxClearBtn" class="clearBtn" href="javascript:;">清空本页</a>
         </div>
         <div class="btnBox">
-            <a href="javascript:;" class="yesBtn">确定</a>
+            <a id="checkDateBoxYesBtn" href="javascript:;" class="yesBtn">确定</a>
         </div>
     </div>
 </div>

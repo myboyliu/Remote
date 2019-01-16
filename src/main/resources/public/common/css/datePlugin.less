@@ -1,3 +1,20 @@
+body .laydate-day-mark {
+  background:#1937bc !important;
+  color:#fff;
+}
+body .laydate-day-mark:after {
+  background: none;
+}
+//body .layui-this {
+//  background-color: #009688 !important;
+//  .laydate-day-mark {
+//    background: none !important;
+//  }
+//}
+body .layui-layer {
+  background: none !important;
+}
+
 .selectTimeContainer {
   display: none;
   width: 1060px;
@@ -141,10 +158,11 @@
 }
 
 // 转诊时间选择
-.referralTimeSelect {
+#checkDateBox {
   display: none;
   width: 600px;
   height: 580px;
+
   .closeBtnTime {
     // height: 50px;
     display: inline-block;
@@ -167,6 +185,7 @@
       cursor: pointer;
     }
   }
+
   .selectTimeContent {
     box-sizing: border-box;
     background: #f4f4f4;
@@ -174,9 +193,11 @@
     width: 600px;
     border-radius: 10px;
     padding: 10px;
+
     .referralTimeMain {
       background: #fff;
       overflow: hidden;
+
       > h3 {
         margin: 15px 0 0 20px;
         font-weight: 600;
@@ -188,6 +209,7 @@
           font-size: 14px;
         }
       }
+
       .timeBox {
         display: inline-block;
         margin: 10px 0;
@@ -200,6 +222,7 @@
         margin: 5px 20px 0;
       }
     }
+
     .clearBox {
       float: left;
       width: 100%;
@@ -241,3 +264,4 @@
   }
 
 }
+
