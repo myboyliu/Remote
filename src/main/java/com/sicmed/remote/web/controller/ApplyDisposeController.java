@@ -377,7 +377,8 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "转诊医政待审核通过,form修改失败";
         String msg2 = "转诊医政待审核通过,time修改失败";
         String orderNumber = OrderNumUtils.getOrderNo(redisTemplate);
-        applyNodeService.insertByStatus(id, ApplyNodeConstant.发起转诊.toString());
+        ApplyForm applyForm = applyFormService.getByPrimaryKey(id);
+        applyNodeService.insertByNodeOperator(id, ApplyNodeConstant.发起转诊.toString(), applyForm.getApplySummary());
         return updateStatus(id, orderNumber, applyStatus, msg1, msg2, null);
     }
 
@@ -648,7 +649,8 @@ public class ApplyDisposeController extends BaseController {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SLAVE_REJECT);
         String msg1 = "受邀医生待收诊拒收,form修改失败";
         String msg2 = "受邀医生待收诊拒收,time修改失败";
-        applyNodeService.insertByStatus(id, ApplyNodeConstant.已拒收.toString());
+        ApplyForm applyForm = applyFormService.getByPrimaryKey(id);
+        applyNodeService.insertByNodeOperator(id, ApplyNodeConstant.已拒收.toString(), applyForm.getApplySummary());
         return updateStatus(id, null, applyStatus, msg1, msg2, refuseRemark);
     }
 
@@ -659,7 +661,8 @@ public class ApplyDisposeController extends BaseController {
     @PostMapping(value = "doctorTransDateCheck")
     public Map doctorTransDateCheck(String applyFormId, String inquiryDatetime) {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SLAVE_ACCEDE);
-        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
+        ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
+        applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已接诊.toString(), applyForm.getApplySummary());
         return transferDateSure(applyFormId, applyStatus, inquiryDatetime);
     }
 
@@ -670,7 +673,8 @@ public class ApplyDisposeController extends BaseController {
     @PostMapping(value = "doctorTransDateSure")
     public Map doctorTransDateSure(String applyFormId, String inquiryDatetime) {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED);
-        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
+        ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
+        applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已排期.toString(), applyForm.getApplySummary());
         return transferDateSure(applyFormId, applyStatus, inquiryDatetime);
     }
 
