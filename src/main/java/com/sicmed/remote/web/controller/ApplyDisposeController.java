@@ -371,15 +371,15 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "sirTransferCheckAccede")
-    public Map sirTransferCheckAccede(String id) {
+    public Map sirTransferCheckAccede(String applyFormId) {
 
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_APPLY_ACCEDE);
         String msg1 = "转诊医政待审核通过,form修改失败";
         String msg2 = "转诊医政待审核通过,time修改失败";
         String orderNumber = OrderNumUtils.getOrderNo(redisTemplate);
-        ApplyForm applyForm = applyFormService.getByPrimaryKey(id);
-        applyNodeService.insertByNodeOperator(id, ApplyNodeConstant.发起转诊.toString(), applyForm.getApplySummary());
-        return updateStatus(id, orderNumber, applyStatus, msg1, msg2, null);
+        ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
+        applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.发起转诊.toString(), applyForm.getApplySummary());
+        return updateStatus(applyFormId, orderNumber, applyStatus, msg1, msg2, null);
     }
 
     /**
@@ -457,13 +457,13 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "sirTransferMasterReject")
-    public Map sirTransferMasterReject(String id, String report) {
+    public Map sirTransferMasterReject(String applyFormId, String report) {
 
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_MASTER_REJECT);
         String msg1 = "转诊医政待收诊拒绝,form修改失败";
         String msg2 = "转诊医政待收诊拒绝,time修改失败";
-        applyNodeService.insertByStatus(id, ApplyNodeConstant.已拒收.toString());
-        return updateStatus(id, null, applyStatus, msg1, msg2, report);
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已拒收.toString());
+        return updateStatus(applyFormId, null, applyStatus, msg1, msg2, report);
     }
 
     /**
@@ -522,14 +522,14 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "sirTransferDateCheckReject")
-    public Map sirTransferDateCheckReject(String id, String report) {
+    public Map sirTransferDateCheckReject(String applyFormId, String report) {
 
         // 选定转诊时间
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_MASTER_REJECT);
         String msg1 = "转诊医政排期审核拒绝,form修改失败";
         String msg2 = "转诊医政排期审核拒绝,time修改失败";
-        applyNodeService.insertByStatus(id, ApplyNodeConstant.已拒收.toString());
-        return updateStatus(id, null, applyStatus, msg1, msg2, report);
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已拒收.toString());
+        return updateStatus(applyFormId, null, applyStatus, msg1, msg2, report);
     }
 
     /**
@@ -537,13 +537,13 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "doctor")
-    public Map doctorReceiveReject(String id, String report) {
+    public Map doctorReceiveReject(String applyFormId, String report) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_REJECT);
         String msg1 = "受邀胡子很医生拒收,form修改失败";
         String msg2 = "受邀胡子很医生拒收,time修改失败";
-        applyNodeService.insertByStatus(id, ApplyNodeConstant.已拒收.toString());
-        return updateStatus(id, null, applyStatus, msg1, msg2, report);
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已拒收.toString());
+        return updateStatus(applyFormId, null, applyStatus, msg1, msg2, report);
     }
 
     /**
@@ -551,12 +551,12 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "doctorSendFeedbackReportMoment")
-    public Map doctorSendFeedbackReportMoment(String id, String consultantFeedback, String report) {
+    public Map doctorSendFeedbackReportMoment(String applyFormId, String consultantFeedback, String report) {
 
         String userId = getRequestToken();
 
         CaseConsultant caseConsultant = new CaseConsultant();
-        caseConsultant.setId(id);
+        caseConsultant.setId(applyFormId);
         if (StringUtils.isNotBlank(consultantFeedback)) {
             caseConsultant.setConsultantFeedback(consultantFeedback);
         }
@@ -577,17 +577,17 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "doctorSendFeedbackReport")
-    public Map doctorSendFeedbackReport(String id, String consultantFeedback, String report) {
+    public Map doctorSendFeedbackReport(String applyFormId, String consultantFeedback, String report) {
 
-        if (StringUtils.isBlank(id)) {
-            return badRequestOfArguments("applyForm.id is null");
+        if (StringUtils.isBlank(applyFormId)) {
+            return badRequestOfArguments("applyFormId is null");
         }
 
         String userId = getRequestToken();
         String applyStatus = null;
 
         CaseConsultant caseConsultant = new CaseConsultant();
-        caseConsultant.setId(id);
+        caseConsultant.setId(applyFormId);
         if (StringUtils.isNotBlank(consultantFeedback)) {
             applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_END);
             caseConsultant.setConsultantFeedback(consultantFeedback);
@@ -603,13 +603,13 @@ public class ApplyDisposeController extends BaseController {
         }
 
         ApplyForm applyForm = new ApplyForm();
-        applyForm.setId(id);
+        applyForm.setId(applyFormId);
         int i = applyFormService.updateStatus(applyForm, applyStatus, userId);
         if (i < 1) {
             return badRequestOfArguments("form修改失败");
         }
 
-        applyForm = applyFormService.getByPrimaryKey(id);
+        applyForm = applyFormService.getByPrimaryKey(applyFormId);
         if (!ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyForm.getApplyType())) {
             ApplyTime applyTime = new ApplyTime();
             applyTime.setApplyFormId(applyForm.getId());
@@ -622,14 +622,14 @@ public class ApplyDisposeController extends BaseController {
         }
 
         if (applyStatus == ConsultationStatus.CONSULTATION_REPORT_SUBMITTED.toString()) {
-            applyNodeService.insertByStatus(id, ApplyNodeConstant.已提交会诊报告.toString());
+            applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已提交会诊报告.toString());
         } else if (applyStatus == ConsultationStatus.CONSULTATION_END.toString()) {
-            applyNodeService.insertByStatus(id, ApplyNodeConstant.已反馈.toString());
+            applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已反馈.toString());
 
             new Thread(() -> {
                 try {
                     Thread.sleep(1000);
-                    applyNodeService.insertByNodeOperator(id, ApplyNodeConstant.已结束.toString(), "");
+                    applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已结束.toString(), "");
                 } catch (Exception e) {
                     Thread.currentThread().interrupt();
                 }
@@ -645,13 +645,13 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "doctorTransferReject")
-    public Map doctorTransferReject(String id, String refuseRemark) {
+    public Map doctorTransferReject(String applyFormId, String refuseRemark) {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SLAVE_REJECT);
         String msg1 = "受邀医生待收诊拒收,form修改失败";
         String msg2 = "受邀医生待收诊拒收,time修改失败";
-        ApplyForm applyForm = applyFormService.getByPrimaryKey(id);
-        applyNodeService.insertByNodeOperator(id, ApplyNodeConstant.已拒收.toString(), applyForm.getApplySummary());
-        return updateStatus(id, null, applyStatus, msg1, msg2, refuseRemark);
+        ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
+        applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已拒收.toString(), applyForm.getApplySummary());
+        return updateStatus(applyFormId, null, applyStatus, msg1, msg2, refuseRemark);
     }
 
     /**
@@ -683,9 +683,9 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @GetMapping(value = "DraftDel")
-    public Map draftDel(String id) {
+    public Map draftDel(String applyFormId) {
 
-        int i = applyFormService.softDel(id);
+        int i = applyFormService.softDel(applyFormId);
         if (i < 1) {
             return badRequestOfArguments("删除草稿失败");
         }
