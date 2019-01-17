@@ -454,6 +454,7 @@ public class ApplyDisposeController extends BaseController {
         String orderNumber = OrderNumUtils.getOrderNo(redisTemplate);
 
         ApplyForm applyForm = new ApplyForm();
+        applyForm.setId(applyFormId);
         applyForm.setApplyStatus(applyStatus);
         applyForm.setUpdateUser(userId);
         applyForm.setApplyNumber(orderNumber);
