@@ -13,20 +13,17 @@ $(function () {
                 $('#textarea').val(item.report);
             }
         }
-        /* 点击编辑会诊报告 如果有暂存内容 显示在textare标签里 */
-        $('#consultantReportIframe').css('display', 'block');
-        $('#consultantReportView').css('display', 'block');
-        /* 开启弹层禁止屏幕滚动 */
-        document.documentElement.style.overflow = "hidden";
-        // }
-        // }
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['1060px', '480px'],
+            closeBtn: false,
+            shade: [0.7, '#000000'],
+            shadeClose: false,
+            content: _$('#consultantReportIframe')
+        });
+
     })
-    /* 弹层关闭按钮 */
-    $('#consultantReportIframe').find('.closeBtn').click(function () {
-        $('#consultantReportIframe').css('display', 'none');
-        $('#consultantReportView').css('display', 'none');
-        document.documentElement.style.overflow = "scroll";
-    });
     /* 编辑会诊报告提交按钮 */
     $('.refer').click(function () {
         for (let i = 1, len = consultantReport.length; i < len; i++) {
@@ -153,19 +150,19 @@ $(function () {
     })
 
     /** 编辑临床反馈 */
-    $('.editClinicalFeedback').click(function () {
-        $('#consultantFeedbackIframe').css('display', 'block');
-        $('#consultantFeedbackView').css('display', 'block');
-        document.documentElement.style.overflow = "hidden";
+    $('#editConsultationFeedbackBtn').click(function () {
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['1060px', '480px'],
+            closeBtn: false,
+            shade: [0.7, '#000000'],
+            shadeClose: false,
+            content: _$('#consultationFeedbackBox')
+        });
+
         $('#consultantFeedbackValue').val(applyInfo.consultantFeedback);
     })
-    /* 弹层关闭按钮 */
-    $('#consultantFeedbackIframe').find('.closeBtn').click(function () {
-        $('#consultantFeedbackIframe').css('display', 'none');
-        $('#consultantFeedbackView').css('display', 'none');
-        $('.accept_layer').css('display', 'none');
-        document.documentElement.style.overflow = "scroll";
-    });
 
     /** 编辑临床反馈提交按钮 /order/feedBack 首诊反馈 */
     $('.feed_SM').click(function () {
