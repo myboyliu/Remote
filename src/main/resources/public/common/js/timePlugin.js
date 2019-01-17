@@ -137,7 +137,35 @@ $(function () {
                     $('#timeUl > li').eq(i).addClass('active');
                 }
             }
-            if (isMainDoctor || isBranchDoctor) {
+            if (isOnly) {
+                if (isInvite) {
+                    dateTempList = [];
+                    dateTempList.push({
+                        "date": dateStr,
+                        "startIndex": startIndex,
+                        "endIndex": endIndex,
+                    });
+                } else {
+                    if (dateTempList.length == 0) {
+                        dateTempList.push({
+                            "date": dateStr,
+                            "startIndex": startIndex,
+                            "endIndex": endIndex,
+                        });
+                    } else {
+                        for (let i = 0; i < dateTempList.length; i++) {
+                            if (dateTempList[i].date == dateStr) {
+                                dateTempList.splice(i, 1);
+                            }
+                        }
+                        dateTempList.push({
+                            "date": dateStr,
+                            "startIndex": startIndex,
+                            "endIndex": endIndex,
+                        });
+                    }
+                }
+            } else {
                 if (newDateTimeList.length == 0) {
                     newDateTimeList.push({
                         "date": dateStr,
@@ -156,34 +184,7 @@ $(function () {
                         "endIndex": endIndex,
                     });
                 }
-                console.log(newDateTimeList);
                 dateTempList = newDateTimeList;
-            } else if (isInvite) {
-                dateTempList = [];
-                dateTempList.push({
-                    "date": dateStr,
-                    "startIndex": startIndex,
-                    "endIndex": endIndex,
-                });
-            } else {
-                if (dateTempList.length == 0) {
-                    dateTempList.push({
-                        "date": dateStr,
-                        "startIndex": startIndex,
-                        "endIndex": endIndex,
-                    });
-                } else {
-                    for (let i = 0; i < dateTempList.length; i++) {
-                        if (dateTempList[i].date == dateStr) {
-                            dateTempList.splice(i, 1);
-                        }
-                    }
-                    dateTempList.push({
-                        "date": dateStr,
-                        "startIndex": startIndex,
-                        "endIndex": endIndex,
-                    });
-                }
             }
             redrawDate(dateTempList);
         }

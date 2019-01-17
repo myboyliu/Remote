@@ -290,8 +290,8 @@ $(function () {
         window.location = '../page/MTD.html';
     })
 
-//  接收按钮事件 receive
-    $('.receive').click(function () {
+    //受邀医生接收 会诊申请按钮点击事件
+    $("#receiveConsultationBtn").click(function () {
         if (!isVideo) {
             layer.open({
                 type: 1,
@@ -300,10 +300,27 @@ $(function () {
                 closeBtn: false,
                 shade: [0.1, '#000000'],
                 shadeClose: false,
-                content: _$('.submitBox'),
+                content: _$('#receiveConsultationBox'),
             });
         } else {
+            isOnly = true;
             showTimeView(applyTimeList)
         }
-    });
+    })
+//  接收按钮事件 receive
+//     $('.receive').click(function () {
+//         if (!isVideo) {
+//             layer.open({
+//                 type: 1,
+//                 title: '',
+//                 area: ['500px', '200px'],
+//                 closeBtn: false,
+//                 shade: [0.1, '#000000'],
+//                 shadeClose: false,
+//                 content: _$('.submitBox'),
+//             });
+//         } else {
+//             showTimeView(applyTimeList)
+//         }
+//     });
 });
