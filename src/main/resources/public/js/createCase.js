@@ -16,6 +16,7 @@ let selectFileArr = []; // 某一块的图片展示数据
 let uploadFile = [];
 let fileIndex;
 let dateList = [];
+
 /** 渲染 病历页面 左侧导航 */
 function renderCaseTypeLeftNavigation(data) {
     let _html = '<li class="oneLevelItem patientInfo active">\
@@ -314,6 +315,7 @@ function createPictureApplyData(caseId, caseSummary) {
     data.append("applyUrgent", $('.urgent > a.active').attr('value')); //是否加急(1是0不是)
     data.append("applyRemark", $('#createCase_textGola').val()); //会诊目的
     data.append("consultantPrice", $('.imgPric').html()); // 费用
+
     if (inviteDoctorArray.length > 0) {
         let doctorList = [];
         let consultantReport = [];
@@ -364,6 +366,7 @@ function createVideoApplyData(caseId, caseSummary) {
     data.append('applyUrgent', $('.urgent > a.active').attr('value')); //是否加急(1加急/是，0不加急/否)
     data.append('applyRemark', $('#createCase_textGola').val()); //会诊目的
     data.append('consultantPrice', $('.videoPric').html()); // 费用
+
     if (inviteDoctorArray.length > 0) {
         const doctorList = [];
         let consultantReport = [];
@@ -792,16 +795,16 @@ $(function () {
                 reader.readAsDataURL(uploadFile[fileIndex]);
                 reader.onload = function (e) {
                     url = e.target.result;
-                    renderFileListView(baseUrl + "/" +result, url, type, result);
+                    renderFileListView(baseUrl + "/" + result, url, type, result);
                 }
             } else if (/(.pdf)$/gi.test(fileName)) {
                 type = "pdf";
                 url = "../images/pdf_icon.png";
-                renderFileListView(baseUrl + "/" +result, url, type, result);
+                renderFileListView(baseUrl + "/" + result, url, type, result);
             } else if (/(.dcm)$/gi.test(fileName)) {
                 type = "dcm";
                 url = "../images/dcm_icon.png";
-                renderFileListView(baseUrl + "/" +result, url, type, result);
+                renderFileListView(baseUrl + "/" + result, url, type, result);
             }
             // 总张数
             fileIndex++;
@@ -1097,8 +1100,9 @@ $(function () {
         if (isIncorrect) {
             return false;
         }
-        if (!hospitalInfo.id && inviteDoctorArray.length <= 0) {
+        if ($('.imgPric').html() === "-") {
             layer.msg('请选择医生或医院');
+            return false;
         } else {
             var _$ = layui.jquery;
             layer.open({
@@ -1130,9 +1134,10 @@ $(function () {
         if (isIncorrect) {
             return false;
         }
-        if (!hospitalInfo.id && inviteDoctorArray.length <= 0) {
+        if ($('.videoPric').html() === "-") {
             layer.msg('请选择医生或医院');
-        } else {
+            return false;
+        }else {
             layer.open({
                 type: 1,
                 content: $('.selectTimeContainer'),

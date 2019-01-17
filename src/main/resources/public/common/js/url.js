@@ -99,7 +99,7 @@ const sirReceiveBegin = "/apply/consultation/sirReceiveBegin";                  
 const sirReceiveReportSubmitted = "/apply/consultation/sirReceiveReportSubmitted";      // 查询受邀的列表 带反馈    列表
 const sirReceiveSlaveMasterReject = "/apply/consultation/sirReceiveSlaveMasterReject";  // 查询受邀的列表 已拒收    列表
 const sirReceiveEnd = "/apply/consultation/sirReceiveEnd";                              // 查询受邀的列表 已结束    列表
-/** 首診醫生 操作接口*/
+/** 首诊医生 操作接口*/
 const doctorSendFeedbackReportMoment = "/apply/dispose/doctorSendFeedbackReportMoment"; //医生 发出会诊 带反馈 编辑临床反馈 暂存 /医生 受邀会诊 会诊中 编辑会诊报告 暂存
 const doctorSendFeedbackReport = "/apply/dispose/doctorSendFeedbackReport"; //医生 发出会诊 带反馈 编辑临床反馈 暂存 /医生 受邀会诊 会诊中 编辑会诊报告 提交
 const doctorReceiveReject = "/apply/dispose/doctor"; //会诊中状态以及会诊中状态之前状态申请 拒收

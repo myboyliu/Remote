@@ -17,7 +17,6 @@ let caseContentList = [];
 let userInfo = {};
 const _$ = layui.jquery;
 
-let newDateTimeList = [];
 const statusArr = ["已拒收", '待收诊', '已排期', '会诊中', '待反馈', '已完成'];
 const referralStatusArr = ["已拒收", '待收诊', '已排期', '已完成'];
 
@@ -348,7 +347,6 @@ function renderViewByRole() {
 
 /**主会诊医生 修改 会诊排期*/
 function updateApplyTime(dateList) {
-    console.log(dateList);
     let data = new FormData();
     data.append("applyFormId", applyFormId);
     data.append("startEndTime", JSON.stringify(dateList));

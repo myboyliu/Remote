@@ -535,6 +535,12 @@ $(function () {
     });
     // 修改排期
     $('#updateConsultationDateTimeBtn').click(function () {
+        if (isInvite){
+            isOnly = true;
+        } else{
+            isOnly = false;
+        }
+
         showTimeView(applyTimeList);
     });
 

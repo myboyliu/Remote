@@ -304,20 +304,43 @@ $(function () {
             showTimeView(applyTimeList)
         }
     })
-//  接收按钮事件 receive
-//     $('.receive').click(function () {
-//         if (!isVideo) {
-//             layer.open({
-//                 type: 1,
-//                 title: '',
-//                 area: ['500px', '200px'],
-//                 closeBtn: false,
-//                 shade: [0.1, '#000000'],
-//                 shadeClose: false,
-//                 content: _$('.submitBox'),
-//             });
-//         } else {
-//             showTimeView(applyTimeList)
-//         }
-//     });
+    $("#receiveConsultationTimeBoxYesBtn").click(function () {
+        dateList = [];
+        for (let i = 0; i < newDateTimeList.length; i++) {
+            if (newDateTimeList[i].startIndex <= newDateTimeList[i].endIndex) {
+                dateList.push({
+                    'startTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].startIndex).html() + ':00',
+                    'endTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].endIndex).attr('enddate') + ':00'
+                });
+            } else {
+                dateList.push({
+                    'startTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].endIndex).html() + ':00',
+                    'endTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].startIndex).attr('enddate') + ':00'
+                });
+            }
+
+        }
+        if (dateList.length === 0) {
+            $("#alertText").html("请选择排期时间!");
+            alertMessage();
+            return false;
+        }
+        let data = new FormData();
+        data.append("applyFormId", applyFormId);
+        data.append("startEndTime", JSON.stringify(dateList));
+        if (isMainDoctor) {
+            ajaxRequest("POST", mainDoctorAccede, data, false, false, true, sirUpdateDateSuccess, null, null)
+        } else if (isBranchDoctor) {
+            ajaxRequest("POST", doctorAcceptOther, data, false, false, true, sirUpdateDateSuccess, null, null)
+        }
+
+        function sirUpdateDateSuccess(result) {
+            $("#alertText").html("接收成功");
+            alertMessage();
+            setTimeout(function () {
+                window.location = '../page/morkbench.html'
+            }, 2000);
+            return false;
+        }
+    })
 });

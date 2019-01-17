@@ -6,7 +6,6 @@ let isInvite = false;
 let userInfo;
 let applyTimeList = [];
 let isMainDoctor = false;
-let newDateTimeList = [];
 let deptId = "";
 let applyFormId;
 
@@ -143,55 +142,6 @@ function getDoctorByBranchId(deptId) {
     ajaxRequest("GET", getDoctorListByBranchIdUrl, data, true, "application/json", false, renderDoctorList, null, null);
 }
 
-/**主会诊医生 修改 会诊排期*/
-function updateApplyTime(dateList) {
-    console.log(dateList);
-    if (newDateTimeList.length > 0) {
-        let _$ = layui.jquery;
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['500px', '200px'],
-            closeBtn: false,
-            shade: [0.1, '#000000'],
-            shadeClose: false,
-            content: _$('.submitBox'),
-        });
-    } else {
-        let _$ = layui.jquery;
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['300px', '80px'],
-            closeBtn: false,
-            shade: [0.1, '#000000'],
-            shadeClose: false,
-            time: 1000,
-            content: _$('.noDate'),
-        });
-        setTimeout(function () {
-            $('.noDate').hide()
-        }, 1000)
-    }
-    return false;
-    if (isMainDoctor) {
-        let data = new FormData();
-        data.append("applyFormId", applyFormId);
-        data.append("startEndTime", JSON.stringify(dateList));
-        ajaxRequest("POST", allocationDoctorTime, data, false, false, true, sirUpdateDateSuccess, null, null)
-    }
-
-    function sirUpdateDateSuccess(result) {
-        $("#alertText").html("接收成功");
-        alertMessage();
-        setTimeout(function () {
-            window.location = '../page/morkbench.html'
-        }, 2000);
-        return false;
-    }
-
-}
-
 function sub() {
     let price;
     let data = new FormData();
@@ -253,10 +203,10 @@ function sub() {
         }
         data.append("consultantPrice", price);
     }
-    if (isVideo){
+    if (isVideo) {
         data.append("startEndTime", JSON.stringify(dateList));
         ajaxRequest("POST", allocationDoctorTime, data, false, false, true, allocationDoctorTimeSuccess, null, null);
-    } else{
+    } else {
         ajaxRequest("POST", allocationDoctorTimePicture, data, false, false, true, allocationDoctorTimeSuccess, null, null);
     }
 
@@ -472,9 +422,65 @@ $(function () {
 
     })
     // 下一步修改排期按钮
-    $('.mdt_Btn').click(function () {
+    $('#choiceConsultationTimeBtn').click(function () {
+        isOnly = true;
         showTimeView(applyTimeList);
     })
+
+    $("#consultationTimeBoxYesBtn").click(function () {
+        dateList = [];
+        for (let i = 0; i < newDateTimeList.length; i++) {
+            if (newDateTimeList[i].startIndex <= newDateTimeList[i].endIndex) {
+                dateList.push({
+                    'startTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].startIndex).html() + ':00',
+                    'endTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].endIndex).attr('enddate') + ':00'
+                });
+            } else {
+                dateList.push({
+                    'startTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].endIndex).html() + ':00',
+                    'endTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].startIndex).attr('enddate') + ':00'
+                });
+            }
+
+        }
+        /**主会诊医生 修改 会诊排期*/
+        if (dateList.length === 0) {
+            let _$ = layui.jquery;
+            layer.open({
+                type: 1,
+                title: '',
+                area: ['300px', '80px'],
+                closeBtn: false,
+                shade: [0.1, '#000000'],
+                shadeClose: false,
+                time: 1000,
+                content: _$('.noDate'),
+            });
+            setTimeout(function () {
+                $('.noDate').hide()
+            }, 1000)
+        } else {
+            console.log(1111111111)
+            return false;
+            let data = new FormData();
+            data.append("applyFormId", applyFormId);
+            data.append("startEndTime", JSON.stringify(dateList));
+            ajaxRequest("POST", allocationDoctorTime, data, false, false, true, sirUpdateDateSuccess, null, null)
+        }
+
+        function sirUpdateDateSuccess(result) {
+            $("#alertText").html("接收成功");
+            alertMessage();
+            setTimeout(function () {
+                window.location = '../page/morkbench.html'
+            }, 2000);
+            return false;
+        }
+
+        return false;
+
+    })
+
     // 确认接收取消按钮
     $('.submitBoxPic').find('.noBtn').click(function () {
         layer.closeAll();

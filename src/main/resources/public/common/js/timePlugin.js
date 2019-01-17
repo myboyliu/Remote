@@ -6,7 +6,7 @@ let dateTempList = []; // 收集的时间段
 let startIndex = 0;
 let endIndex = 0;
 let dateList = []; // 选择的时间数据
-
+let newDateTimeList = [];
 //渲染日历插件右侧时间内容
 function renderDateRightContent() {
     let startMinute = 0; // 开始总分钟数
@@ -138,53 +138,37 @@ $(function () {
                 }
             }
             if (isOnly) {
-                if (isInvite) {
-                    dateTempList = [];
+                dateTempList = [];
+                dateTempList.push({
+                    "date": dateStr,
+                    "startIndex": startIndex,
+                    "endIndex": endIndex,
+                });
+
+                newDateTimeList.push({
+                    "date": dateStr,
+                    "startIndex": startIndex,
+                    "endIndex": endIndex,
+                });
+            } else {
+                if (dateTempList.length == 0) {
                     dateTempList.push({
                         "date": dateStr,
                         "startIndex": startIndex,
                         "endIndex": endIndex,
                     });
                 } else {
-                    if (dateTempList.length == 0) {
-                        dateTempList.push({
-                            "date": dateStr,
-                            "startIndex": startIndex,
-                            "endIndex": endIndex,
-                        });
-                    } else {
-                        for (let i = 0; i < dateTempList.length; i++) {
-                            if (dateTempList[i].date == dateStr) {
-                                dateTempList.splice(i, 1);
-                            }
-                        }
-                        dateTempList.push({
-                            "date": dateStr,
-                            "startIndex": startIndex,
-                            "endIndex": endIndex,
-                        });
-                    }
-                }
-            } else {
-                if (newDateTimeList.length == 0) {
-                    newDateTimeList.push({
-                        "date": dateStr,
-                        "startIndex": startIndex,
-                        "endIndex": endIndex,
-                    });
-                } else {
-                    for (let i = 0; i < newDateTimeList.length; i++) {
-                        if (newDateTimeList[i].date == dateStr) {
-                            newDateTimeList.splice(i, 1);
+                    for (let i = 0; i < dateTempList.length; i++) {
+                        if (dateTempList[i].date == dateStr) {
+                            dateTempList.splice(i, 1);
                         }
                     }
-                    newDateTimeList.push({
+                    dateTempList.push({
                         "date": dateStr,
                         "startIndex": startIndex,
                         "endIndex": endIndex,
                     });
                 }
-                dateTempList = newDateTimeList;
             }
             redrawDate(dateTempList);
         }
