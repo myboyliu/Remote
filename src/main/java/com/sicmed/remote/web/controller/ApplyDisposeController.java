@@ -373,8 +373,7 @@ public class ApplyDisposeController extends BaseController {
      */
     @PostMapping(value = "sirTransferAmendDor")
     public Map sirTransferAmendDor(String applyFormId, String inviteSummary, String inviteBranchId, String inviteUserId, String inviteHospitalId) {
-        if (StringUtils.isBlank(applyFormId) || StringUtils.isBlank(inviteSummary) || StringUtils.isBlank(inviteUserId)
-                || StringUtils.isBlank(inviteBranchId)) {
+        if (StringUtils.isBlank(applyFormId) || StringUtils.isBlank(inviteBranchId)) {
             return badRequestOfArguments("参数有误");
         }
 
