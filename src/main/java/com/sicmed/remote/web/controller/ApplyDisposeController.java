@@ -372,7 +372,7 @@ public class ApplyDisposeController extends BaseController {
      * 转诊 修改接收人
      */
     @PostMapping(value = "sirTransferAmendDor")
-    public Map sirTransferAmendDor(String applyFormId, String inviteSummary, String inviteBranchId, String inviteUserId) {
+    public Map sirTransferAmendDor(String applyFormId, String inviteSummary, String inviteBranchId, String inviteUserId, String inviteHospitalId) {
         if (StringUtils.isBlank(applyFormId) || StringUtils.isBlank(inviteSummary) || StringUtils.isBlank(inviteUserId)
                 || StringUtils.isBlank(inviteBranchId)) {
             return badRequestOfArguments("参数有误");
@@ -384,6 +384,7 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setInviteUserId(inviteUserId);
         applyForm.setInviteSummary(inviteSummary);
         applyForm.setInviteBranchId(inviteBranchId);
+        applyForm.setInviteHospitalId(inviteHospitalId);
         applyForm.setUpdateUser(userId);
         int i = applyFormService.updateByPrimaryKeySelective(applyForm);
         if (i < 1) {
