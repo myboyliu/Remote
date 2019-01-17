@@ -709,4 +709,59 @@
         select count(id) from apply_form
         where del_flag = "0" and apply_user_id = #{applyUserId} and apply_type = #{applyType}
     </select>
+
+    <!--医生 搜索-->
+    <resultMap id="BeanSearchResultMap" type="com.sicmed.remote.web.bean.ApplyFormBean">
+        <id column="ayfId" jdbcType="VARCHAR" property="id"/>
+        <result column="ayfapplySummary" jdbcType="VARCHAR" property="applySummary"/>
+        <result column="ayfinviteSummary" jdbcType="VARCHAR" property="inviteSummary"/>
+        <result column="ayfconsultantApplyTime" jdbcType="TIMESTAMP" property="consultantApplyTime"/>
+        <result column="ayfapplyType" jdbcType="VARCHAR" property="applyType"/>
+        <result column="ayfapplyUrgent" jdbcType="VARCHAR" property="applyUrgent"/>
+        <result column="ayfapplyNumber" jdbcType="VARCHAR" property="applyNumber"/>
+        <result column="ayfcaseSummary" jdbcType="VARCHAR" property="caseSummary"/>
+
+    </resultMap>
+    <sql id="Bean_Column_Search_List">
+        ayf.id ayfId,ayf.apply_summary ayfapplySummary,ayf.invite_summary ayfinviteSummary,
+        ayf.consultant_apply_time ayfconsultantApplyTime,ayf.apply_type ayfapplyType,
+        ayf.apply_urgent ayfapplyUrgent,ayf.apply_number ayfapplyNumber,ayf.case_summary ayfcaseSummary
+    </sql>
+    <select id="searchByRemark" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
+            resultMap="BeanSearchResultMap">
+        select
+        <include refid="Bean_Column_Search_List"/>
+        from apply_form ayf
+        left join case_consultant cct on cct.id = ayf.id
+        WHERE ayf.del_flag = "0"
+        and ayf.apply_remark like CONCAT('%', #{applyRemark,jdbcType=VARCHAR}, '%')
+        and ayf.apply_status IN
+        <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        and (ayf.invite_user_id = #{applyUserId,jdbcType=VARCHAR} or
+        ayf.apply_user_id = #{applyUserId,jdbcType=VARCHAR} or
+        cct.consultant_user_list like CONCAT('%', #{applyUserId,jdbcType=VARCHAR}, '%'))
+        order by ayf.consultant_apply_time
+        limit #{beginNo},#{pageSize}
+    </select>
+
+    <!--医政 搜索-->
+    <select id="sirSearchByRemark" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
+            resultMap="BeanSearchResultMap">
+        select
+        <include refid="Bean_Column_Search_List"/>
+        from apply_form ayf
+        left join case_consultant cct on cct.id = ayf.id
+        WHERE ayf.del_flag = "0"
+        and ayf.apply_remark like CONCAT('%', #{applyRemark,jdbcType=VARCHAR}, '%')
+        and ayf.apply_status IN
+        <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
+            #{item,jdbcType=VARCHAR}
+        </foreach>
+        and (ayf.invite_hospital_id = #{applyHospitalId,jdbcType=VARCHAR} or
+        ayf.apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR})
+        order by ayf.consultant_apply_time
+        limit #{beginNo},#{pageSize}
+    </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.sicmed.remote.web.service;
 
 import com.sicmed.remote.common.ApplyType;
+import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ConsultationStatusBean;
@@ -8,9 +9,11 @@ import com.sicmed.remote.web.bean.InquiryStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.mapper.ApplyFormMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -85,6 +88,34 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         applyForm.setApplyUserId(string);
         applyForm.setApplyType(ApplyType.APPLY_DRAFT.toString());
         return applyFormMapper.countDraft(applyForm);
+    }
+
+    // 医生 搜索
+    public List<ApplyFormBean> searchByRemark(String userId, String condition) {
+
+        List<String> statusList = new ArrayList<>();
+        statusList.add(String.valueOf(ConsultationStatus.CONSULTATION_END));
+        statusList.add(String.valueOf(InquiryStatus.INQUIRY_END));
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setApplyUserId(userId);
+        applyFormBean.setApplyRemark(condition);
+        applyFormBean.setConsultationStatusList(statusList);
+        return applyFormMapper.searchByRemark(applyFormBean);
+    }
+
+    // 医证 搜索
+    public List<ApplyFormBean> sirSearchByRemark(String hospitalId, String condition) {
+
+        List<String> statusList = new ArrayList<>();
+        statusList.add(String.valueOf(ConsultationStatus.CONSULTATION_END));
+        statusList.add(String.valueOf(InquiryStatus.INQUIRY_END));
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setApplyHospitalId(hospitalId);
+        applyFormBean.setApplyRemark(condition);
+        applyFormBean.setConsultationStatusList(statusList);
+        return applyFormMapper.sirSearchByRemark(applyFormBean);
     }
 
     @Override

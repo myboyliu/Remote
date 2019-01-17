@@ -47,4 +47,7 @@ public interface ApplyFormMapper {
 
     int countDraft(ApplyForm applyForm);
 
+    List<ApplyFormBean> searchByRemark(ApplyFormBean applyFormBean);
+
+    List<ApplyFormBean> sirSearchByRemark(ApplyFormBean applyFormBean);
 }
