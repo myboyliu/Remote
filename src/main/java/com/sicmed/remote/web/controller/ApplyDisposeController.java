@@ -369,12 +369,82 @@ public class ApplyDisposeController extends BaseController {
     }
 
     /**
+     * 转诊 修改接收人
+     */
+    @PostMapping(value = "sirTransferAmendDor")
+    public Map sirTransferAmendDor(String applyFormId, String inviteSummary, String inviteBranchId, String inviteUserId) {
+        if (StringUtils.isBlank(applyFormId) || StringUtils.isBlank(inviteSummary) || StringUtils.isBlank(inviteUserId)
+                || StringUtils.isBlank(inviteBranchId)) {
+            return badRequestOfArguments("参数有误");
+        }
+
+        String userId = getRequestToken();
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setId(applyFormId);
+        applyForm.setInviteUserId(inviteUserId);
+        applyForm.setInviteSummary(inviteSummary);
+        applyForm.setInviteBranchId(inviteBranchId);
+        applyForm.setUpdateUser(userId);
+        int i = applyFormService.updateByPrimaryKeySelective(applyForm);
+        if (i < 1) {
+            return badRequestOfArguments("修改医生失败");
+        }
+        return succeedRequest("修改成功");
+    }
+
+    /**
+     * 转诊 修改时间
+     */
+    @PostMapping(value = "sirTransferAmendTime")
+    public Map sirTransferAmendTime(String applyFormId, String startEndTime) {
+        if (StringUtils.isBlank(applyFormId) || StringUtils.isBlank(startEndTime)) {
+            return badRequestOfArguments("参数有误");
+        }
+
+        String userId = getRequestToken();
+        int j = applyTimeService.delByApplyForm(applyFormId);
+        if (j < 1) {
+            return badRequestOfArguments("删除原时间失败");
+        }
+
+        List<String> lists;
+        LinkedHashMap<String, String> resultMap = new LinkedHashMap<>();
+        try {
+            lists = JSON.parseObject(startEndTime, new TypeReference<List<String>>() {
+            }, Feature.OrderedField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return badRequestOfArguments("startEndTime 格式有误");
+        }
+        if (lists == null) {
+            return badRequestOfArguments("未输入日期");
+        }
+        for (String time : lists) {
+            Date date = YtDateUtils.stringToDate(time);
+            String start = YtDateUtils.dateToString(YtDateUtils.parmDateBegin(date));
+            String end = YtDateUtils.dateToString(YtDateUtils.intradayEnd(date));
+            resultMap.put(start, end);
+        }
+
+        // 添加 转诊申请 时间
+        ApplyTimeBean applyTimeBean = new ApplyTimeBean();
+        applyTimeBean.setApplyFormId(applyFormId);
+        applyTimeBean.setStartEndTime(resultMap);
+        applyTimeBean.setCreateUser(userId);
+        int k = applyTimeService.insertStartEndTimes(applyTimeBean);
+        if (k < 1) {
+            return badRequestOfArguments("添加申请时间失败");
+        }
+        return succeedRequest("修改时间成功");
+
+    }
+
+    /**
      * 医政 转诊 待审核 审核通过
      */
     @Transactional
     @PostMapping(value = "sirTransferCheckAccede")
-    public Map sirTransferCheckAccede(String applyFormId, String inviteSummary, String inviteHospitalId,
-                                      String inviteBranchId, String inviteUserId, String startEndTime) {
+    public Map sirTransferCheckAccede(String applyFormId) {
         if (StringUtils.isBlank(applyFormId)) {
             return badRequestOfArguments("参数错误");
         }
@@ -383,58 +453,14 @@ public class ApplyDisposeController extends BaseController {
         String userId = getRequestToken();
         String orderNumber = OrderNumUtils.getOrderNo(redisTemplate);
 
-        ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
+        ApplyForm applyForm = new ApplyForm();
         applyForm.setApplyStatus(applyStatus);
         applyForm.setUpdateUser(userId);
         applyForm.setApplyNumber(orderNumber);
-        applyForm.setInviteBranchId(inviteBranchId);
-        applyForm.setInviteHospitalId(inviteHospitalId);
 
-        if (StringUtils.isNotBlank(inviteUserId) && StringUtils.isNotBlank(inviteSummary)) {
-            applyForm.setInviteUserId(inviteUserId);
-            applyForm.setInviteSummary(inviteSummary);
-        }
         int i = applyFormService.updateByPrimaryKeySelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("修改applyForm失败");
-        }
-
-        if (StringUtils.isNotBlank(startEndTime)) {
-
-            int j = applyTimeService.delByApplyForm(applyFormId);
-            if (j < 1) {
-                return badRequestOfArguments("删除原时间失败");
-            }
-
-            List<String> lists;
-            LinkedHashMap<String, String> resultMap = new LinkedHashMap<>();
-            try {
-                lists = JSON.parseObject(startEndTime, new TypeReference<List<String>>() {
-                }, Feature.OrderedField);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return badRequestOfArguments("startEndTime 格式有误");
-            }
-            if (lists == null) {
-                return badRequestOfArguments("日期输入有误");
-            }
-            for (String time : lists) {
-                Date date = YtDateUtils.stringToDate(time);
-                String start = YtDateUtils.dateToString(YtDateUtils.parmDateBegin(date));
-                String end = YtDateUtils.dateToString(YtDateUtils.intradayEnd(date));
-                resultMap.put(start, end);
-            }
-
-            // 添加 转诊申请 时间
-            ApplyTimeBean applyTimeBean = new ApplyTimeBean();
-            applyTimeBean.setApplyFormId(applyForm.getId());
-            applyTimeBean.setStartEndTime(resultMap);
-            applyTimeBean.setCreateUser(userId);
-            applyTimeBean.setApplyStatus(applyForm.getApplyStatus());
-            int k = applyTimeService.insertStartEndTimes(applyTimeBean);
-            if (k < 1) {
-                return badRequestOfArguments("添加申请时间失败");
-            }
         }
 
         applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.发起转诊.toString(), applyForm.getApplySummary());
