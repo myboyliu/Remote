@@ -58,24 +58,6 @@ public class CaseConsultantService implements BaseService<CaseConsultant> {
         return caseConsultantMapper.ceshi(applyFormBean);
     }
 
-    // 医生 医政搜索
-    public List<ApplyFormBean> searchByRemark(String userId, String hospitalId, String condition) {
-
-        List<String> statusList = new ArrayList<>();
-        statusList.add(String.valueOf(ConsultationStatus.CONSULTATION_END));
-        statusList.add(String.valueOf(InquiryStatus.INQUIRY_END));
-
-        ApplyFormBean applyFormBean = new ApplyFormBean();
-        applyFormBean.setApplyUserId(userId);
-        applyFormBean.setInviteUserId(userId);
-        applyFormBean.setApplyHospitalId(hospitalId);
-        applyFormBean.setInviteHospitalId(hospitalId);
-        applyFormBean.setApplyRemark(condition);
-        applyFormBean.setConsultationStatusList(statusList);
-
-        return caseConsultantMapper.searchByRemark(applyFormBean);
-    }
-
     @Override
     public int insertSelective(CaseConsultant caseConsultant) {
         return caseConsultantMapper.insertSelective(caseConsultant);

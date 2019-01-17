@@ -290,49 +290,6 @@
         limit #{beginNo},#{pageSize}
     </select>
 
-    <!--医生 医政搜索-->
-    <resultMap id="BeanFormSearchResultMap" type="com.sicmed.remote.web.entity.ApplyForm">
-        <id column="afId" jdbcType="VARCHAR" property="id"/>
-        <result column="afCaseRecordId" jdbcType="VARCHAR" property="caseRecordId"/>
-        <result column="afCaseSummary" jdbcType="VARCHAR" property="caseSummary"/>
-        <result column="afApplySummary" jdbcType="VARCHAR" property="applySummary"/>
-        <result column="afInviteSummary" jdbcType="VARCHAR" property="inviteSummary"/>
-        <result column="afConsultantApplyTime" jdbcType="TIMESTAMP" property="consultantApplyTime"/>
-        <result column="afApplyStatus" jdbcType="VARCHAR" property="applyStatus"/>
-        <result column="afApplyType" jdbcType="VARCHAR" property="applyType"/>
-        <result column="afApplyRemark" jdbcType="VARCHAR" property="applyRemark"/>
-        <result column="afApplyNumber" jdbcType="VARCHAR" property="applyNumber"/>
-    </resultMap>
-    <select id="searchByRemark" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
-            resultMap="BeanFormSearchResultMap">
-        select af.id afId,af.case_summary afCaseSummary, af.apply_summary afApplySummary, af.invite_summary
-        afInviteSummary,
-        af.consultant_apply_time afConsultantApplyTime,af.apply_status afApplyStatus,af.case_record_id afCaseRecordId,
-        af.apply_type afApplyType, af.apply_remark afApplyRemark,af.apply_number afApplyNumber
-        from case_consultant cc
-        left join apply_form af on af.id = cc.id and af.del_flag = "0"
-        <where>
-            af.apply_remark like CONCAT('%',#{applyRemark},'%')
-            AND af.apply_status IN
-            <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
-                #{item,jdbcType=VARCHAR}
-            </foreach>
-            <if test="applyUserId != null">
-                AND apply_user_id = #{applyUserId,jdbcType=VARCHAR}
-            </if>
-            <if test="applyHospitalId != null">
-                AND apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
-            </if>
-            <if test="inviteHospitalId != null">
-                AND invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR}
-            </if>
-            and (cc.invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
-            or cc.consultant_user_list like CONCAT('%',#{inviteUserId},'%'))
-        </where>
-        order by consultant_apply_time
-        limit #{beginNo},#{pageSize}
-    </select>
-
     <!--受邀会诊 医生 所有数目查询-->
     <resultMap id="ConsultationStatusBeanResultMap" type="com.sicmed.remote.web.bean.ConsultationStatusBean">
         <result column="cacs" jdbcType="VARCHAR" property="consultationApplyCreateSuccess"/>

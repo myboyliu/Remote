@@ -435,7 +435,7 @@ public class ApplyDisposeController extends BaseController {
         if (k < 1) {
             return badRequestOfArguments("添加申请时间失败");
         }
-        return succeedRequest("修改时间成功");
+        return succeedRequest(resultMap);
 
     }
 
