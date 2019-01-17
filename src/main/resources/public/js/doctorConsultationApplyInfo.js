@@ -56,8 +56,8 @@ $(function () {
             }
         }
         let data = new FormData();
+        data.append("applyFormId", applyFormId);
         data.append("report", JSON.stringify(consultantReport));
-        data.append("id", applyFormId);
         if (!isMainDoctor) {
             ajaxRequest("POST", doctorSendFeedbackReportMoment, data, false, false, true, success, failed, null);
         } else {
@@ -107,7 +107,7 @@ $(function () {
         }
         let data = new FormData();
         data.append("report", JSON.stringify(consultantReport));
-        data.append("id", applyFormId);
+        data.append("applyFormId", applyFormId);
         ajaxRequest("POST", doctorSendFeedbackReportMoment, data, false, false, true, success, failed, null);
         console.log(consultantReport);
 
@@ -172,7 +172,7 @@ $(function () {
         let newConsultantFeedback = $('.feedback_Val').val();
         let data = new FormData();
         data.append("consultantFeedback", newConsultantFeedback);
-        data.append("id", applyFormId);
+        data.append("applyFormId", applyFormId);
         ajaxRequest("POST", doctorSendFeedbackReport, data, false, false, true, doctorSendFeedbackReportSuccess, doctorSendFeedbackReportFailed, null);
 
     })
@@ -180,7 +180,7 @@ $(function () {
     $('.feed_TS').click(function () {
         let newConsultantFeedback = $('.feedback_Val').val();
         let data = new FormData();
-        data.append("id", applyFormId);
+        data.append("applyFormId", applyFormId);
         data.append("consultantFeedback", newConsultantFeedback);
         ajaxRequest("POST", doctorSendFeedbackReportMoment, data, false, false, true, doctorSendFeedbackReportMomentSuccess, doctorSendFeedbackReportMomentFailed, null);
     })

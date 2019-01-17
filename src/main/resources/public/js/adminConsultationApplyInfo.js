@@ -14,7 +14,7 @@ $(function () {
     /** 首诊退回确定按钮 */
     $("#sendBackConsultationBoxYesBtn").click(function () {
         let data = new FormData();
-        data.append("id", applyFormId);
+        data.append("applyFormId", applyFormId);
         ajaxRequest("POST", sirSendCheckReject, data, false, false, true, sirSendCheckRejectSuccess, null, null);
 
         function sirSendCheckRejectSuccess(result) {
@@ -45,7 +45,7 @@ $(function () {
     /** 首诊发布确认按钮 */
     $("#auditConsultationBoxYesBtn").click(function () {
         let data = new FormData();
-        data.append("id", applyFormId);
+        data.append("applyFormId", applyFormId);
         ajaxRequest("POST", sirSendCheckAccede, data, false, false, true, sirSendCheckAccedeSuccess, null, null);
 
         function sirSendCheckAccedeSuccess(result) {
@@ -81,7 +81,7 @@ $(function () {
             alertMessage();
         } else {
             let data = new FormData();
-            data.append("id", applyFormId);
+            data.append("applyFormId", applyFormId);
             ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, sirReceiveMasterAccedeSuccess, null, null);
 
             //接收 成功回调
@@ -176,7 +176,7 @@ $(function () {
             alertMessage();
         } else {
             let data = new FormData();
-            data.append("id", applyFormId);
+            data.append("applyFormId", applyFormId);
             data.append("report", viewText + $('.refuseReason').val());
             console.log(viewText + $('.refuseReason').val());
             ajaxRequest("POST", sirReceiveMasterReject, data, false, false, true, sirReceiveMasterRejectSuccess, null, null);
