@@ -464,6 +464,7 @@ public class ApplyDisposeController extends BaseController {
             return badRequestOfArguments("修改applyForm失败");
         }
 
+        applyForm = applyFormService.getByPrimaryKey(applyFormId);
         applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.发起转诊.toString(), applyForm.getApplySummary());
         return succeedRequest(applyForm);
     }
