@@ -34,4 +34,6 @@ public interface CustomBranchMapper {
     int deleteCustomBranchIdList(@Param("removeCustomBranchBeanList") List<String> removeCustomBranchBeanList);
 
     List<HospitalBean> selectHospitalBranchList(Hospital hospital);
+
+    List<HospitalBean> getMasterHospitalBranchList(Hospital hospital);
 }

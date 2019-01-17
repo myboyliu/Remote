@@ -63,4 +63,8 @@ public class CustomBranchService implements BaseService<CustomBranch> {
     public List<HospitalBean> getHospitalBranchList(Hospital hospital) {
         return customBranchMapper.selectHospitalBranchList(hospital);
     }
+
+    public List<HospitalBean> getMasterHospitalBranchList(Hospital hospital) {
+        return customBranchMapper.getMasterHospitalBranchList(hospital);
+    }
 }

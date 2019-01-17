@@ -290,7 +290,7 @@ $(function () {
         isMainDoctor = userInfo.id === applyInfo.inviteUserId ? true : false;
         applyTimeList = applyInfo.applyTimeList;
         /** 获取通讯录左侧导航数据 */
-        ajaxRequest("GET", getHospitalBranchListUrl, null, false, false, false, renderDoctorNavigation, null, null);
+        ajaxRequest("GET", getMasterHospitalBranchList, null, false, false, false, renderDoctorNavigation, null, null);
         if ("APPLY_CONSULTATION_VIDEO" === applyInfo.applyType) {
             isVideo = true;
         }

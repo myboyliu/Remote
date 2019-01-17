@@ -156,4 +156,20 @@ public class CustomBranchController extends BaseController {
         }
         return succeedRequestOfSelect(hospitalBeanList);
     }
+
+    /**
+     * 查询上级医院科室三级联动列表
+     *
+     * @return
+     */
+    @GetMapping(value = "getMasterHospitalBranchList")
+    public Object getMasterHospitalBranchList() {
+
+        List<HospitalBean> hospitalBeanList = customBranchService.getMasterHospitalBranchList(null);
+
+        if (hospitalBeanList.isEmpty()) {
+            return badRequestOfSelect("");
+        }
+        return succeedRequestOfSelect(hospitalBeanList);
+    }
 }

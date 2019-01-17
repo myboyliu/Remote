@@ -503,7 +503,7 @@ $(function () {
     /**查询病历类型列表*/
     ajaxRequest("GET", getAllCaseContentType, null, true, false, true, renderCaseTypeLeftNavigation, null, null);
     /** 获取通讯录左侧导航数据 */
-    ajaxRequest("GET", getHospitalBranchListUrl, null, false, false, true, renderDoctorNavigation, null, null);
+    ajaxRequest("GET", getMasterHospitalBranchList, null, false, false, true, renderDoctorNavigation, null, null);
 
     // 判断是从医生通讯录来的
     if (JSON.parse(sessionStorage.getItem('inviteDoctorArray'))) {

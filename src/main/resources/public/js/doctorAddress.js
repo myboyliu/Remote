@@ -81,7 +81,7 @@ function deptIdGetDoctors(deptId) {
 
 $(function () {
     /** 获取通讯录左侧导航数据 */
-    ajaxRequest("GET", getHospitalBranchListUrl, null, false, false, true, renderLeftNavigation, null, null);
+    ajaxRequest("GET", getMasterHospitalBranchList, null, false, false, true, renderLeftNavigation, null, null);
 
     $(window).scroll(function () {
         $('.hospitalUl').css({

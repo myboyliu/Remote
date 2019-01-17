@@ -347,4 +347,12 @@
         WHERE
         customBranch.del_flag = "0"
     </select>
+    <select id="getMasterHospitalBranchList" parameterType="com.sicmed.remote.web.entity.Hospital" resultMap="HospitalBeanResultMap">
+        select
+        <include refid="HospitalBean_Column_List"/>
+        from custom_branch customBranch
+        <include refid="HospitalBean_Left_Join"/>
+        WHERE
+        customBranch.del_flag = "0" AND hospital.hospital_weight = 0
+    </select>
 </mapper>
