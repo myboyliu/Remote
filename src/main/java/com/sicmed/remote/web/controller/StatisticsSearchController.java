@@ -50,10 +50,8 @@ public class StatisticsSearchController extends BaseController {
         return succeedRequest(applyFormBeanList);
     }
 
-
     /**
      * 医政 主页面搜索
-     *
      */
     @GetMapping(value = "sirSearch")
     public Map sirSearch(String condition) {

@@ -963,6 +963,10 @@ public class ApplyDisposeController extends BaseController {
     public Map allocationDoctorTime(String applyFormId, String inviteSummary, String startEndTime, String consultantUserList, BigDecimal consultantPrice,
                                     String consultantReport) {
 
+        if (StringUtils.isBlank(applyFormId) || StringUtils.isBlank(inviteSummary) || StringUtils.isBlank(startEndTime) ||
+                StringUtils.isBlank(consultantUserList) || StringUtils.isBlank(consultantReport) || consultantPrice == null) {
+            return badRequestOfArguments("参数错误");
+        }
         String userId = getRequestToken();
 
         // 更新applyForm状态
