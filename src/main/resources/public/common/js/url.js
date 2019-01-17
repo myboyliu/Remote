@@ -48,7 +48,8 @@ const getDoctorListByCurrentUserUrl = "/user/managementDoctor";
 
 const getDoctorDetailByIdUrl = "/user/personalCenter";
 
-const getHospitalBranchListUrl = "/custom/branch/getHospitalBranchList"; //查询通讯录左侧导航 数据
+const getHospitalBranchListUrl = "/custom/branch/getHospitalBranchList";                    //查询通讯录左侧导航 数据
+const getMasterHospitalBranchList = "/custom/branch/getMasterHospitalBranchList";           //查询通讯录左侧导航 数据
 
 const getDoctorListByBranchIdUrl = "/user/addressBook";
 
@@ -149,6 +150,8 @@ const doctorTransDateSure = "/apply/dispose/doctorTransDateSure";               
 /** 转诊医政操作接口 */
 const sirTransferCheckAccede = "/apply/dispose/sirTransferCheckAccede";                 //首诊审核 通过
 const sirTransferCheckReject = "/apply/dispose/sirTransferCheckReject";                 //首诊审核 退回
+const sirTransferAmendDor = "/apply/dispose/sirTransferAmendDor";                       //首诊 修改医生
+const sirTransferAmendTime = "/apply/dispose/sirTransferAmendTime";                     //首诊 修改排期
 
 const sirTransferMasterAccede = "/apply/dispose/sirTransferMasterAccede";               //代收诊   同意
 const sirTransferMasterReject = "/apply/dispose/sirTransferMasterReject";               //代收诊   拒绝

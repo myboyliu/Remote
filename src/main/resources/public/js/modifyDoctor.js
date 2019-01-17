@@ -6,7 +6,7 @@ let isInvite = false;
 let userInfo;
 let isReferral = false;
 let isConsultation = false;
-
+let applyFormId = "";
 /** 渲染 医生页面 左侧导航 */
 function renderDoctorNavigation(data) {
     let _html = '';
@@ -185,6 +185,7 @@ $(function () {
     if (JSON.parse(sessionStorage.getItem('applyInfo'))) {
         applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
         userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+        applyFormId = applyInfo.id;
         if (userInfo.hospitalId === applyInfo.inviteHospitalId && applyInfo.applyStatus !== "CONSULTATION_APPLY_CREATE_SUCCESS") {
             isInvite = true;
         }
@@ -192,7 +193,7 @@ $(function () {
         isConsultation = applyInfo.applyType === "APPLY_REFERRAL" ? false : true;
 
         /** 获取通讯录左侧导航数据 */
-        ajaxRequest("GET", getHospitalBranchListUrl, null, false, false, true, renderDoctorNavigation, null, null);
+        ajaxRequest("GET", getMasterHospitalBranchList, null, false, false, true, renderDoctorNavigation, null, null);
         if ("APPLY_CONSULTATION_VIDEO" === applyInfo.applyType) {
             isVideo = true;
         }
@@ -451,15 +452,26 @@ $(function () {
                 }
             }else {
                 referralModifyDoctor = {
-                    "inviteSummary": "",
+                    "inviteSummary": "<" + hospitalInfo.hospitalName + ">",
                     "hospitalId": hospitalInfo.id,
                     "branchId": hospitalInfo.branchId,
                     "doctorId": "",
                 }
 
             }
-            sessionStorage.setItem("referralModifyDoctor", JSON.stringify(referralModifyDoctor))
-            window.history.go(-1);
+            let formData = new FormData();
+            formData.append("applyFormId",applyFormId);
+            formData.append("inviteSummary",referralModifyDoctor.inviteSummary);
+            formData.append("inviteHospitalId",referralModifyDoctor.hospitalId);
+            formData.append("inviteBranchId",referralModifyDoctor.branchId);
+            formData.append("inviteUserId",referralModifyDoctor.doctorId);
+
+            ajaxRequest("POST", sirTransferAmendDor, formData, false, false, true, sirTransferAmendDorSuccess, null, null);
+
+            function sirTransferAmendDorSuccess(result) {
+                // window.history.go(-1);
+                window.location = '../page/adminApplyInfo.html';
+            }
             return false
         }
         let data = new FormData();

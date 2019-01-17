@@ -119,12 +119,12 @@ $(function () {
     $("#checkDateBoxYesBtn").click(function () {
 
         dateList = [];
-        let tempHtml = '';
+        // let tempHtml = '';
         for (let key in markReferralJson) {
-            tempHtml += '<p>' + key + '</p>';
+            // tempHtml += '<p>' + key + '</p>';
             dateList.push(key);
         }
-        $(".schedule_modules").html(tempHtml);
+        // $(".schedule_modules").html(tempHtml);
         if(isInvite){
             if (dateList.length === 1) {
                 layer.closeAll();
@@ -148,6 +148,15 @@ $(function () {
             if (dateList.length > 1) {
                 layer.closeAll();
                 $(".referralDateSelect").hide();
+                let formData = new FormData();
+                formData.append("applyFormId",applyFormId);
+                formData.append("startEndTime",JSON.stringify(dateList));
+                ajaxRequest("POST",sirTransferAmendTime,formData,false,false,true,sirTransferAmendTimeSuccess,null,null);
+                function sirTransferAmendTimeSuccess(result) {
+                    getApplyInfo();
+                    renderApplyTimeView(applyTimeList);
+                }
+
             }  else {
                 $("#alertText").html("当前时间不符合要求，请选选择时间");
                 alertMessage();
