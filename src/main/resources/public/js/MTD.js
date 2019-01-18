@@ -460,25 +460,62 @@ $(function () {
                 $('.noDate').hide()
             }, 1000)
         } else {
-            console.log(1111111111)
-            return false;
             let data = new FormData();
-            data.append("applyFormId", applyFormId);
+            let doctorList = [];
+            let consultantReport = [];
+            price = Number(inviteDoctorArray[0].hospitalVideoPrice)
+
+            let inviteSummary = "";
+            for (let i = 0; i < inviteDoctorArray.length; i++) {
+                let inviteDoctor = "<" + inviteDoctorArray[i].doctorName + "/" + inviteDoctorArray[i].doctorTitleName + "/" + inviteDoctorArray[i].branchName + "/" + inviteDoctorArray[i].hospitalName + ">";
+                if (isVideo) {
+                    doctorList.push({
+                        "doctorName": inviteDoctor,
+                        "doctorId": inviteDoctorArray[i].doctorId,
+                        "price": inviteDoctorArray[i].doctorVideoPrice,
+                    });
+                    price += Number(inviteDoctorArray[i].doctorVideoPrice);
+                } else {
+                    doctorList.push({
+                        "doctorName": inviteDoctor,
+                        "doctorId": inviteDoctorArray[i].doctorId,
+                        "price": inviteDoctorArray[i].doctorPicturePrice,
+                    });
+                    price += Number(inviteDoctorArray[i].doctorPicturePrice);
+                }
+                consultantReport.push({
+                    "doctorName": inviteDoctorArray[i].doctorName,
+                    "doctorId": inviteDoctorArray[i].doctorId,
+                    "report": "",
+                    "reportStatus": "1"
+                })
+                inviteSummary += inviteDoctor + ";";
+            }
             data.append("startEndTime", JSON.stringify(dateList));
+            data.append("inviteSummary", inviteSummary);
+            data.append("consultantReport", JSON.stringify(consultantReport));
+            data.append('consultantUserList', JSON.stringify(doctorList));
+            data.append("consultantPrice", price); // 费用
+            data.append("applyFormId", applyFormId);
             ajaxRequest("POST", allocationDoctorTime, data, false, false, true, sirUpdateDateSuccess, null, null)
+            function sirUpdateDateSuccess(result) {
+                let _$ = layui.jquery;
+                layer.open({
+                    type: 1,
+                    title: '',
+                    area: ['300px', '80px'],
+                    closeBtn: false,
+                    shade: [0.1, '#000000'],
+                    shadeClose: false,
+                    time: 1000,
+                    content: _$('.receiveSuccess'),
+                });
+                setTimeout(function () {
+                    window.location = '../page/morkbench.html'
+                }, 1000);
+            }
         }
-
-        function sirUpdateDateSuccess(result) {
-            $("#alertText").html("接收成功");
-            alertMessage();
-            setTimeout(function () {
-                window.location = '../page/morkbench.html'
-            }, 2000);
-            return false;
-        }
-
         return false;
-
     })
 
     // 确认接收取消按钮

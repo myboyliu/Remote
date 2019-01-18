@@ -304,6 +304,9 @@ $(function () {
             showTimeView(applyTimeList)
         }
     })
+    $("#receiveConsultationBoxYesBtn").click(function () {
+        
+    })
     $("#receiveConsultationTimeBoxYesBtn").click(function () {
         dateList = [];
         for (let i = 0; i < newDateTimeList.length; i++) {

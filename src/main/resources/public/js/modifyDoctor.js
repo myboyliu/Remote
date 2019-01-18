@@ -440,7 +440,7 @@ $(function () {
     })
     //    首诊医政修改病历基本信息 order/applyManagerUpdateOrder
     $('.save').click(function () {
-        if (isReferral) {
+        if (isReferral) {``````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
             let referralModifyDoctor = {};
             if (inviteDoctorArray.length > 0) {
                 let inviteSummary = "<" + inviteDoctorArray[0].doctorName + "/" + inviteDoctorArray[0].doctorTitleName + "/" + inviteDoctorArray[0].branchName + "/" + inviteDoctorArray[0].hospitalName + ">;";

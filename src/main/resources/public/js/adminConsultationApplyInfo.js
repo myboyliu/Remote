@@ -74,7 +74,7 @@ $(function () {
             $('.submitBox').hide();
             $("#alertText").html("请先分配主会诊医生");
             alertMessage();
-        } else if ($('.schedule_modules >p').length !== 1 && applyInfo.applyType !== "APPLY_CONSULTATION_IMAGE_TEXT") {
+        } else if ($('#consultationDateTimeList >p').length !== 1 && applyInfo.applyType !== "APPLY_CONSULTATION_IMAGE_TEXT") {
             layer.closeAll();
             $('.submitBox').hide();
             $("#alertText").html("请选定会诊时间");
