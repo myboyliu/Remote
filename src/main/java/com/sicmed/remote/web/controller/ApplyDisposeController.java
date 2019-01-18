@@ -766,21 +766,6 @@ public class ApplyDisposeController extends BaseController {
     }
 
     /**
-     * 医生 草稿箱 删除
-     */
-    @Transactional
-    @GetMapping(value = "DraftDel")
-    public Map draftDel(String applyFormId) {
-
-        int i = applyFormService.softDel(applyFormId);
-        if (i < 1) {
-            return badRequestOfArguments("删除草稿失败");
-        }
-
-        return succeedRequest("删除成功");
-    }
-
-    /**
      * 医生 受邀会诊 待收诊 接收 原接收人非本人
      */
     @Transactional

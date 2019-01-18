@@ -14,4 +14,5 @@ public interface CaseRecordMapper {
     int updateByPrimaryKeySelective(CaseRecord record);
 
     int updateByPrimaryKey(CaseRecord record);
+
 }

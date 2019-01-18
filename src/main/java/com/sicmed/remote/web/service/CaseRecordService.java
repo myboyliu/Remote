@@ -26,7 +26,7 @@ public class CaseRecordService implements BaseService<CaseRecord> {
 
     @Override
     public int updateByPrimaryKeySelective(CaseRecord caseRecord) {
-        return  caseRecordMapper.updateByPrimaryKeySelective(caseRecord);
+        return caseRecordMapper.updateByPrimaryKeySelective(caseRecord);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class CaseRecordService implements BaseService<CaseRecord> {
 
     @Override
     public CaseRecord getByPrimaryKey(String id) {
-        return null;
+        return caseRecordMapper.selectByPrimaryKey(id);
     }
 
     @Override

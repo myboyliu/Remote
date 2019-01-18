@@ -1,7 +1,5 @@
 package com.sicmed.remote.web.service;
 
-import com.sicmed.remote.common.ConsultationStatus;
-import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
@@ -10,7 +8,6 @@ import com.sicmed.remote.web.mapper.CaseConsultantMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
