@@ -252,6 +252,7 @@ public class UserController extends BaseController {
         }
         userControllerBean.setHospitalName(currentUserBean.getHospitalName());
         userControllerBean.setBranchName(currentUserBean.getBranchName());
+        userControllerBean.setSpecialistTypeName(currentUserBean.getSpecialistTypeName());
         return succeedRequestOfSelect(userControllerBean);
     }
 
