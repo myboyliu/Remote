@@ -103,32 +103,46 @@
                 <p>权限类型</p>
                 <input type="text" value="" class="rolesName bgc_bdbdbd" disabled="disabled">
                 <p>
-                    <span>上传医师执业资格证</span>
-                    <span class="events">限jpg/png/pdf格式</span>
+                    <span>医师执业资格证</span>
+                    <!--<span class="events">限jpg/png/pdf格式</span>-->
                 </p>
-                <span id="olf" class="covers">打开本地文件</span>
-                <input type="file" id="upload" class="center_three_input_top credentialsImage">
-                <button class="upload_btn">上传</button>
+                <!--<span id="olf" class="covers">打开本地文件</span>-->
+                <!--<input type="file" id="upload" class="center_three_input_top credentialsImage">-->
+                <span id="doctorCardUploadBox" class="noImgSpan">
+                    <span id="doctorCardUploadBtn" class="noImgSpanUploadSpan">选择图片</span>
+                    <input id="doctorCardUploadInput" type="file" class="noImgSpanUploadInput">
+                    <pre style="line-height:24px;margin-top: 10px;">支持jpg、png、pdf,大小不超过5M</pre>
+                    <pre style="line-height:24px;">只可上传一次,需要修改请联系医务人员</pre>
+                </span>
+                <img id="doctorCardImgBox" src="" alt=""/>
+                <!--<button class="upload_btn">上传</button>-->
                 <p>
-                    <span class="odds">上传签名</span>
-                    <span class="events">限jpg/png/pdf格式</span>
+                    <span class="odds">签名</span>
+                    <!--<span class="events">限jpg/png/pdf格式</span>-->
                 </p>
-                <span id="uhs" class="covers">打开本地文件</span>
-                <input id="uploadTwo" type="file" class="center_three_input_botton ">
-                <button class="uploadTwo_btn">上传</button>
+                <!--<span id="uhs" class="covers">打开本地文件</span>-->
+                <!--<input id="uploadTwo" type="file" class="center_three_input_botton ">-->
+                <span id="signatureUploadBox" class="noImgSpan">
+                    <span id="signatureUploadBtn" class="noImgSpanUploadSpan">选择图片</span>
+                    <input id="signatureUploadInput" type="file" class="noImgSpanUploadInput">
+                    <pre style="line-height:24px;margin-top: 10px;">支持jpg、png、pdf,大小不超过5M</pre>
+                    <pre style="line-height:24px;">只可上传一次,需要修改请联系医务人员</pre>
+                </span>
+                <img id="signatureImgBox" src="" alt=""/>
+                <!--<button class="uploadTwo_btn">上传</button>-->
             </div>
             <div>
                 <p style="padding-top: 0">旧密码</p>
-                <input type="password" value="" class="oldPassword">
+                <input maxlength="16" type="password" value="" class="oldPassword">
                 <p>
                     <span>新密码</span>
                     <span class="cPasswold">确认新密码</span>
                 </p>
-                <input type="password" value="" class="newPassword">
+                <input maxlength="16" type="password" value="" class="newPassword">
                 <!-- <p></p> -->
-                <input type="password" value="" class="center_three_input_three">
+                <input maxlength="16" type="password" value="" class="center_three_input_three">
                 <br/>
-                <input type="button" value="修改" class="center_affBtn">
+                <input id="modifyPasswordBtn" type="button" value="修改" class="center_affBtn">
             </div>
 
         </div>

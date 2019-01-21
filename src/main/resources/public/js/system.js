@@ -228,12 +228,12 @@ function renderDoctorInfoView(result) {
 
 /** 渲染医生详细信息页面病例类型*/
 function renderCaseView(result) {
-    var _html = '';
-    for (var i = 0; i < result.length; i++) {
+    let _html = '';
+    for (let i = 0; i < result.length; i++) {
         _html += '<div class="catalogue clearfix">\
                             <p>' + result[i].caseTypeName + '</p>';
-        var twoArr = result[i].childList;
-        for (var j = 0; j < twoArr.length; j++) {
+        let twoArr = result[i].childList;
+        for (let j = 0; j < twoArr.length; j++) {
             // _html += '<div type="" class="checkSingle CheckBg" name="' + twoArr[j].id + '">' + twoArr[j].caseTypeName + '</div>'
             _html += '<div parentName="' + result.caseTypeName + '" id="' + twoArr[j].id + '" type="" class="checkSingle " name="' + twoArr[j].id + '">' + twoArr[j].caseTypeName + '</div>'
         }
