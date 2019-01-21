@@ -3,8 +3,9 @@ let oldTelephone = '';
 let oldBeGoodAt = '';
 let newTelephone = '';
 let newBeGoodAt = '';
-let newBeGoodAt = '';
-let newBeGoodAt = '';
+let isModify = false;
+let userCaseTypeIsModify = false;
+let _$ = layui.jquery;
 
 function renderUserInfo() {
     $('.name').val(userInfo.userName);
@@ -18,6 +19,7 @@ function renderUserInfo() {
     $('.medicalFees').val(userInfo.consultationPicturePrice);
     $('.medicalFeesVideo').val(userInfo.consultationVideoPrice);
     $('.text-adaption').val(userInfo.userStrong);
+    $('.rolesName').val(sessionStorage.getItem("rolesName"));
 
     let caseTypeList = userInfo.caseTypeIds;
     for (let i = 0; i < caseTypeList.length; i++) {
@@ -40,14 +42,14 @@ function renderUserInfo() {
 
 /** 渲染医生详细信息页面病例类型*/
 function renderCaseView(result) {
+    console.log(result)
     let _html = '';
     for (let i = 0; i < result.length; i++) {
         _html += '<div class="catalogue clearfix">\
                             <p>' + result[i].caseTypeName + '</p>';
         let twoArr = result[i].childList;
         for (let j = 0; j < twoArr.length; j++) {
-            // _html += '<div type="" class="checkSingle CheckBg" name="' + twoArr[j].id + '">' + twoArr[j].caseTypeName + '</div>'
-            _html += '<div parentName="' + result.caseTypeName + '" id="' + twoArr[j].id + '" type="" class="checkSingle " name="' + twoArr[j].id + '">' + twoArr[j].caseTypeName + '</div>'
+            _html += '<div parentName="' + result[i].caseTypeName + '" id="' + twoArr[j].id + '" type="" class="checkSingle " name="' + twoArr[j].id + '">' + twoArr[j].caseTypeName + '</div>'
         }
         _html += '</div>';
     }
@@ -58,16 +60,20 @@ function getPersonalInfo() {
     ajaxRequest("GET", getPersonalInfoUrl, null, false, false, false, getPersonalInfoSuccess, getPersonalInfoFailed, null);
 
     function getPersonalInfoSuccess(personalInfo) {
-        console.log(personalInfo)
         userInfo = personalInfo;
     }
 
     function getPersonalInfoFailed(personalInfo) {
-        console.log(personalInfo)
+        layer.msg('查询个人信息失败!');
+        setTimeout(function () {
+            location.href = '../page/login.html';
+        }, 2000);
     }
 }
 
 $(function () {
+
+    let formData = new FormData();
     /**获取病历类型列表*/
     ajaxRequest("GET", getAllCaseContentType, null, true, false, false, renderCaseView, null, null);
     getPersonalInfo();
@@ -88,41 +94,50 @@ $(function () {
     });
     //上传医师资格证
     $("#doctorCardUploadInput").change(function () {
-            let fileObj = new FormData();
-            fileObj.append("file", this.files[0]);
-            ajaxRequest("POST", uploadFileUrl, fileObj, false, false, true, uploadSuccess, null, null);
-            function uploadSuccess(result) {
-                $('#doctorCardImgBox').attr("src", baseUrl + "/" + result);
-                $("#doctorCardUploadBox").hide();
-                $('#doctorCardImgBox').show();
-            }
+        let fileObj = new FormData();
+        fileObj.append("file", this.files[0]);
+        ajaxRequest("POST", uploadFileUrl, fileObj, false, false, true, uploadSuccess, null, null);
+
+        function uploadSuccess(result) {
+            $('#doctorCardImgBox').attr("src", baseUrl + "/" + result);
+            $("#doctorCardUploadBox").hide();
+            $('#doctorCardImgBox').show();
+            formData.append("doctorCardFront", result);
+            isModify = true;
+            $('.center_lastBtn').addClass('active');
+            $('.center_lastBtn').css('cursor', 'pointer');
+        }
     })
     //上传签名
     $("#signatureUploadInput").change(function () {
         let fileObj = new FormData();
         fileObj.append("file", this.files[0]);
         ajaxRequest("POST", uploadFileUrl, fileObj, false, false, true, uploadSuccess, null, null);
+
         function uploadSuccess(result) {
             $('#signatureImgBox').attr("src", baseUrl + "/" + result);
             $("#signatureUploadBox").hide();
             $('#signatureImgBox').show();
+            formData.append("signature", result);
+            isModify = true;
+            $('.center_lastBtn').addClass('active');
+            $('.center_lastBtn').css('cursor', 'pointer');
         }
     })
     /* 点击修改按钮修改个人密码 */
     $('#modifyPasswordBtn').click(function () {
         if (!RegExpObj.Reg_PassWord.test($('.newPassword').val())) {
             layer.msg('密码格式不正确', {time: 3000});
-
         } else if ($('.newPassword').val() == '') {
             layer.msg('密码不能为空', {time: 3000});
         } else if ($('.newPassword').val() != $('.center_three_input_three').val()) {
             layer.msg('两次密码输入不一致', {time: 3000});
         } else {
             $('.newPassword').val();
-            let formData = new FormData();
-            formData.append("oldPassword", $('.oldPassword').val())
-            formData.append("newPassword", $('.newPassword').val())
-            ajaxRequest("POST", modifyPassword, formData, false, false, true, modifyPasswordSuccess, modifyPasswordFailed, null);
+            let passwordFormData = new FormData();
+            passwordFormData.append("oldPassword", $('.oldPassword').val())
+            passwordFormData.append("newPassword", $('.newPassword').val())
+            ajaxRequest("POST", modifyPassword, passwordFormData, false, false, true, modifyPasswordSuccess, modifyPasswordFailed, null);
 
             function modifyPasswordSuccess() {
                 layer.msg("修改密码成功", {time: 3000});
@@ -133,7 +148,6 @@ $(function () {
 
             function modifyPasswordFailed(result) {
                 layer.msg("原密码有误");
-                console.log(result)
             }
         }
     });
@@ -141,21 +155,29 @@ $(function () {
     /* 添加个人病历要求 */
     // 单个按钮
     $(".enroll_three").on('click', '.checkSingle', function () {
-        if ($(this).attr('type') == '') {
-            if ($(this).hasClass('CheckBg')) {
-                $(this).attr('type', '1').addClass('operate').toggleClass('CheckBg');
+        if ($(this).hasClass('CheckBg')) {
+            if ($(this).hasClass('operate')) {
+                $(this).removeClass('operate');
             } else {
-                $(this).attr('type', '0').addClass('operate').toggleClass('CheckBg');
+                $(this).addClass('operate');
             }
-        } else if ($(this).attr('type') == '0') {
-            $(this).attr('type', '').removeClass('operate').toggleClass('CheckBg');
-        } else if ($(this).attr('type') == '1') {
-            $(this).attr('type', '').removeClass('operate').toggleClass('CheckBg');
+            $(this).removeClass('CheckBg');
+        } else {
+            if ($(this).hasClass('operate')) {
+                $(this).removeClass('operate');
+            } else {
+                $(this).addClass('operate');
+            }
+            $(this).addClass('CheckBg');
         }
+
         if ($('.operate').length > 0) {
+            userCaseTypeIsModify = true;
+            isModify = true;
             $('.center_lastBtn').addClass('active');
             $('.center_lastBtn').css('cursor', 'pointer');
         } else {
+            userCaseTypeIsModify = false;
             $('.center_lastBtn').removeClass('active');
             $('.center_lastBtn').css('cursor', 'default');
         }
@@ -163,6 +185,7 @@ $(function () {
 
     $('.telephone, #textAdaotion').bind('input propertychange', function () {
         if (oldTelephone != $('.telephone').val() || oldBeGoodAt != $('#textAdaotion').val() || $('.operate').length > 0) {
+            isModify = true;
             $('.center_lastBtn').addClass('active');
             $('.center_lastBtn').css('cursor', 'pointer');
         } else {
@@ -170,82 +193,66 @@ $(function () {
             $('.center_lastBtn').css('cursor', 'default');
         }
     });
-    // $('.telephone, #textAdaotion').blur(function () {
 
-    // });
     /* 更改个人信息-电话和擅长 */
     $('.center_lastBtn').click(function () {
-        // 修改信息判断
-        if (oldTelephone != newTelephone || oldBeGoodAt != newBeGoodAt || $('.operate').length > 0) {
-            var caseTypeList = [];
-            for (var i = 0; i < $('.operate').length; i++) {
-                caseTypeList.push({
-                    "caseTypeId": $('.operate').eq(i).attr('name'),
-                    "caseTypeName": $('.operate').eq(i).html(),
-                    "types": $('.operate').eq(i).attr('type')
-                });
-            }
-            $.ajax({
-                type: 'POST',
-                url: IP + 'user/updateSelfDetail',
-                dataType: 'json',
-                data: {
-                    "telephone": $('.telephone').val(),
-                    "beGoodAt": $('.text-adaption').val(),
-                    "caseTypeList": JSON.stringify(caseTypeList)
-                },
-                xhrFields: {
-                    withCredentials: true
-                },
-                crossDomain: true,
-                success: function (data) {
-                    if (data.status == 200) {
-                        /* 暂存操作成功操作 */
-                        var _$ = layui.jquery;
-                        layer.open({
-                            type: 1,
-                            title: false,
-                            closeBtn: 0,
-                            area: '340px',
-                            skin: 'layui-layer-nobg', //没有背景色
-                            // shadeClose: false,
-                            shade: 0,
-                            time: 2000,
-                            content: _$('.storage')
-                        });
-                        $('.center_lastBtn').attr('disabled', 'true');
-                        $('.center_lastBtn').css({
-                            color: " #999",
-                            background: " #dbdbdb",
-                            //    cursor: "default"
-                        });
-                        setTimeout(() => {
-                            location.reload();
-                        }, 1100);
 
-                    } else if (data.status == 250) {
-                        window.location = '../login/login.html'
-                    } else {
-                        var _$ = layui.jquery;
-                        layer.open({
-                            type: 1,
-                            title: false,
-                            closeBtn: 0,
-                            area: '340px',
-                            skin: 'layui-layer-nobg', //没有背景色
-                            // shadeClose: false,
-                            shade: 0,
-                            time: 2000,
-                            content: _$('.storage')
-                        });
-                        $('.storage').children('span').html('保存失败');
-                        $('.storage').children('img').attr('src', '../images/lose_img.png');
-                    }
-                },
-                error: function (err) {
-                    console.log(err);
-                },
-            });
+        // 修改信息判断
+        if (isModify) {
+            if (userCaseTypeIsModify) {
+                let caseTypeJsonStr = "{";
+                for (let i = 0; i < $('.checkSingle.CheckBg').length; i++) {
+                    let a = $('.checkSingle.CheckBg').eq(i).attr('name');
+                    let b = $('.checkSingle.CheckBg').eq(i).html();
+                    let c = $('.checkSingle.CheckBg').eq(i).attr('parentName');
+                    caseTypeJsonStr += "'" + a + "':'" + c + "-" + b + "',";
+                }
+                caseTypeJsonStr = caseTypeJsonStr.substring(0, caseTypeJsonStr.length - 1);
+                caseTypeJsonStr += "}";
+                formData.append("idTypeName", caseTypeJsonStr);
+            }
+
+            formData.append("userStrong", $('.text-adaption').val());
+            formData.append("phoneNumber", $('.telephone').val());
+            ajaxRequest("POST", modifyPersonalInfo, formData, false, false, true, modifyPersonalInfoSuccess, modifyPersonalInfoFailed, null);
+
+            function modifyPersonalInfoSuccess(result) {
+                console.log(result);
+                layer.open({
+                    type: 1,
+                    title: false,
+                    closeBtn: 0,
+                    area: '340px',
+                    skin: 'layui-layer-nobg', //没有背景色
+                    shade: 0,
+                    time: 2000,
+                    content: _$('.storage')
+                });
+                $('.center_lastBtn').attr('disabled', 'true');
+                $('.center_lastBtn').css({
+                    color: " #999",
+                    background: " #dbdbdb",
+                });
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            }
+
+            function modifyPersonalInfoFailed(result) {
+                console.log(result);
+                layer.open({
+                    type: 1,
+                    title: false,
+                    closeBtn: 0,
+                    area: '340px',
+                    skin: 'layui-layer-nobg',
+                    shade: 0,
+                    time: 2000,
+                    content: _$('.storage')
+                });
+                $('.storage').children('span').html('保存失败');
+                $('.storage').children('img').attr('src', '../images/lose_img.png');
+            }
         }
     });
 
