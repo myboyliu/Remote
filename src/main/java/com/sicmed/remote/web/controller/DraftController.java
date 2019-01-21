@@ -1,7 +1,6 @@
 package com.sicmed.remote.web.controller;
 
 import com.sicmed.remote.common.ApplyType;
-import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.bean.DraftBean;
 import com.sicmed.remote.web.entity.*;
 import com.sicmed.remote.web.service.*;
@@ -116,14 +115,4 @@ public class DraftController extends BaseController {
         return succeedRequest("删除成功");
     }
 
-    /**
-     * 草稿箱 转诊
-     */
-    
-    /**
-     * 草稿箱 图文会诊
-     */
-    /**
-     * 草稿箱 视频会诊
-     */
 }

@@ -16,16 +16,12 @@ import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.ApplyTime;
 import com.sicmed.remote.web.entity.CaseConsultant;
-import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.service.*;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.omg.PortableInterceptor.INACTIVE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,9 +53,6 @@ public class ApplyDisposeController extends BaseController {
 
     @Autowired
     private ApplyNodeService applyNodeService;
-
-    @Autowired
-    private UserDetailService userDetailService;
 
     /**
      * 医政 工作台 重新分配医生
@@ -199,10 +192,14 @@ public class ApplyDisposeController extends BaseController {
         }
 
         String userId = getRequestToken();
+        Date date = new Date();
 
         ApplyForm applyForm = new ApplyForm();
         if (InquiryStatus.INQUIRY_APPLY_REJECT.toString().equals(applyStatus)) {
             applyForm.setApplyType(ApplyType.APPLY_DRAFT.toString());
+        }
+        if (ConsultationStatus.CONSULTATION_APPLY_ACCEDE.toString().equals(applyStatus)) {
+            applyForm.setConsultantApplyTime(date);
         }
         applyForm.setId(applyFormId);
         if (StringUtils.isNotBlank(refuseRemark)) {
@@ -449,6 +446,7 @@ public class ApplyDisposeController extends BaseController {
             return badRequestOfArguments("参数错误");
         }
 
+        Date date = new Date();
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_APPLY_ACCEDE);
         String userId = getRequestToken();
         String orderNumber = OrderNumUtils.getOrderNo(redisTemplate);
@@ -458,6 +456,7 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setApplyStatus(applyStatus);
         applyForm.setUpdateUser(userId);
         applyForm.setApplyNumber(orderNumber);
+        applyForm.setConsultantApplyTime(date);
 
         int i = applyFormService.updateByPrimaryKeySelective(applyForm);
         if (i < 1) {

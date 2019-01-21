@@ -71,4 +71,6 @@ public class StatisticsSearchController extends BaseController {
 
         return succeedRequest(applyFormBeanList);
     }
+
+
 }
