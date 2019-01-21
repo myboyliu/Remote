@@ -218,20 +218,40 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 个人中心信息及医政管理中心医生详细信息展示
+     * 医政管理中心医生详细信息展示
      */
     @GetMapping(value = "personalCenter")
     public Map personalCenter(String userId) {
 
         if (StringUtils.isBlank(userId)) {
-            userId = getRequestToken();
+            return badRequestOfArguments("参数为空");
         }
 
         UserControllerBean userControllerBean = userDetailService.selectPersonalCenter(userId);
         if (userControllerBean == null) {
-            return badRequestOfSelect("个人中心查询个人信息失败");
+            return badRequestOfSelect("医政个人中心查询医生信息失败");
         }
 
+        return succeedRequestOfSelect(userControllerBean);
+    }
+
+    /**
+     * 个人中心信息展示
+     */
+    @GetMapping(value = "dorPersonalCenter")
+    public Map dorPersonalCenter() {
+
+        String userId = getRequestToken();
+        if (StringUtils.isBlank(userId)) {
+            return badRequestOfArguments("获取登录用户id失败");
+        }
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        UserControllerBean userControllerBean = userDetailService.selectPersonalCenter(userId);
+        if (userControllerBean == null) {
+            return badRequestOfSelect("个人中心查询信息失败");
+        }
+        userControllerBean.setHospitalName(currentUserBean.getHospitalName());
+        userControllerBean.setBranchName(currentUserBean.getBranchName());
         return succeedRequestOfSelect(userControllerBean);
     }
 
