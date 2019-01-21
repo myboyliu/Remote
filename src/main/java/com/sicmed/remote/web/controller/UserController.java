@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -300,6 +301,7 @@ public class UserController extends BaseController {
      * @param idTypeName
      * @param userStrong
      */
+    @Transactional
     @PostMapping(value = "modifyPersonal")
     public Map modifyPersonal(String phoneNumber, String idTypeName, String userStrong,
                               String signature, String doctorCardFront) {
@@ -368,7 +370,7 @@ public class UserController extends BaseController {
             userSign.setSignature(signature);
         }
         if (StringUtils.isNotBlank(doctorCardFront)) {
-            userSign.setDoctorCardContrary(doctorCardFront);
+            userSign.setDoctorCardFront(doctorCardFront);
         }
         userSign.setId(userId);
         int l = userSignService.updateByPrimaryKeySelective(userSign);
