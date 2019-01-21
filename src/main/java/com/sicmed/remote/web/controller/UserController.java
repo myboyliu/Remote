@@ -301,7 +301,8 @@ public class UserController extends BaseController {
      * @param userStrong
      */
     @PostMapping(value = "modifyPersonal")
-    public Map modifyPersonal(String phoneNumber, String idTypeName, String userStrong) {
+    public Map modifyPersonal(String phoneNumber, String idTypeName, String userStrong,
+                              String signature, String doctorCardFront) {
 
         String userId = getRequestToken();
         LinkedHashMap<String, String> resultMap = null;
@@ -361,6 +362,19 @@ public class UserController extends BaseController {
             return badRequestOfUpdate("更新个人信息失败");
         }
 
+        UserSign userSign = new UserSign();
+        userSign.setUpdateUser(userId);
+        if (StringUtils.isNotBlank(signature)) {
+            userSign.setSignature(signature);
+        }
+        if (StringUtils.isNotBlank(doctorCardFront)) {
+            userSign.setDoctorCardContrary(doctorCardFront);
+        }
+        userSign.setId(userId);
+        int l = userSignService.updateByPrimaryKeySelective(userSign);
+        if (l < 1) {
+            return badRequestOfArguments("修改资格证失败");
+        }
         return succeedRequest(userDetail);
     }
 
@@ -398,8 +412,12 @@ public class UserController extends BaseController {
 
         UserSign userSign = new UserSign();
         userSign.setUpdateUser(userId);
-        userSign.setSignature(signature);
-        userSign.setDoctorCardContrary(doctorCardFront);
+        if (StringUtils.isNotBlank(signature)) {
+            userSign.setSignature(signature);
+        }
+        if (StringUtils.isNotBlank(doctorCardFront)) {
+            userSign.setDoctorCardContrary(doctorCardFront);
+        }
         userSign.setId(id);
         int i = userSignService.updateByPrimaryKeySelective(userSign);
         if (i < 1) {
