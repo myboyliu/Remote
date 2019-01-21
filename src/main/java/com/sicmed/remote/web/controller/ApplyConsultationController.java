@@ -1,15 +1,11 @@
 package com.sicmed.remote.web.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
-import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.ApplyForm;
-import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.service.ApplyFormService;
 import com.sicmed.remote.web.service.CaseConsultantService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
