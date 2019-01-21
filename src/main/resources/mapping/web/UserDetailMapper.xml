@@ -127,9 +127,9 @@ us.doctor_card_front us_dcf,
 us.approve_status us_as,
 ut.case_type_id ut_cyi
 from user_detail ud
-left join user_account ua on ud.id = ua.id
-left join user_sign us on ud.id = us.id
-left  join user_case_type ut on ud.id = ut.user_id
+left join user_account ua on ud.id = ua.id and ua.del_flag = '0'
+left join user_sign us on ud.id = us.id and us.del_flag = '0'
+left  join user_case_type ut on ud.id = ut.user_id and ut.del_flag = '0'
 where ud.id = #{userId}
     </select>
 
