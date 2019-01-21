@@ -4,7 +4,6 @@ import com.sicmed.remote.web.entity.*;
 import com.sicmed.remote.web.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,16 +71,13 @@ public class DraftController extends BaseController {
      * 医生 草稿箱 删除
      * 此处为物理删除
      */
-    @Transactional
     @GetMapping(value = "draftDel")
     public Map draftDel(String applyFormId) {
         if (StringUtils.isBlank(applyFormId)) {
             return badRequestOfArguments("参数有误");
         }
 
-        ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
-
-        int i = applyFormService.draftDel(applyForm);
+        int i = applyFormService.draftDel(applyFormId);
         if (i < 1) {
             return badRequestOfArguments("删除草稿失败或无此id对应applyForm");
         }

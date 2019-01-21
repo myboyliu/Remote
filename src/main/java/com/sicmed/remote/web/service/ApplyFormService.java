@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,12 @@ public class ApplyFormService implements BaseService<ApplyForm> {
 
     @Autowired
     private CaseContentService caseContentService;
+
+    @Autowired
+    private ApplyFormService applyFormService;
+
+    @Autowired
+    private CaseConsultantService caseConsultantService;
 
     // 更新applyForm表单apply_status状态
     public int updateStatus(ApplyForm applyForm, String applyStatus, String userId) {
@@ -128,7 +135,10 @@ public class ApplyFormService implements BaseService<ApplyForm> {
     }
 
     // 删除草稿
-    public int draftDel(ApplyForm applyForm) {
+    @Transactional
+    public int draftDel(String applyFormId) {
+
+        ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
         // 获取caseRecordId
         String caseRecordId = applyForm.getCaseRecordId();
         // 删除caseRecordId相关的病例信息
@@ -139,6 +149,7 @@ public class ApplyFormService implements BaseService<ApplyForm> {
             caseContentService.deleteByCaseRecordId(caseRecordId);
             caseRecordService.deleteByPrimaryKey(caseRecordId);
         }
+        caseConsultantService.deleteByPrimaryKey(applyFormId);
         return applyFormMapper.deleteByPrimaryKey(applyForm.getId());
     }
 

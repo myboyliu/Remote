@@ -2,8 +2,8 @@
  * 统一接口管理JS
  * @type {string}
  */
-const baseUrl = "http://192.168.0.222"; //服务地址
-
+// const baseUrl = "http://192.168.0.222"; //服务地址
+const baseUrl = "http://127.0.0.1"; //服务地址
 const getAllHospital = "/hospital/select"; //查询所有医院类别
 
 const getBranchByHospitalIdUrl = "/custom/branch/getByHospitalId"; //查询所有科室列表

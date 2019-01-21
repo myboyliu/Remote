@@ -81,21 +81,10 @@ public class ApplyController extends BaseController {
         }
 
         String userId = getRequestToken();
-
-        // 添加病例患者基本信喜
-        casePatient.setCreateUser(userId);
-        int i = casePatientService.insertSelective(casePatient);
-        if (i < 1) {
-            return badRequestOfInsert("添加casePatient失败");
+        if (StringUtils.isBlank(userId)) {
+            return badRequestOfArguments("未能获取登录用户Id");
         }
 
-        // 添加病例初步诊断结果
-        caseRecord.setPatientId(casePatient.getId());
-        caseRecord.setCreateUser(userId);
-        int j = caseRecordService.insertSelective(caseRecord);
-        if (j < 1) {
-            return badRequestOfInsert("添加caseRecord的caseDiagnosis失败");
-        }
 
         // 添加病例所需文件 文件路径 与 病例文件id map解析
         List<CaseContent> resultList;
@@ -105,9 +94,10 @@ public class ApplyController extends BaseController {
         } catch (Exception e) {
             return badRequestOfArguments("pathWeightTypeId 填写错误");
         }
+
         CaseContentBean caseContentBean = new CaseContentBean();
-        caseContentBean.setRecordId(caseRecord.getId());
-        caseContentBean.setRecordId(caseRecord.getId());
+        caseContentBean.setCasePatient(casePatient);
+        caseContentBean.setCaseRecord(caseRecord);
         caseContentBean.setCreateUser(userId);
         caseContentBean.setWeightPathTypeId(resultList);
         int k = caseContentService.insertByMap(caseContentBean);
