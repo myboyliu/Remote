@@ -1,11 +1,7 @@
 package com.sicmed.remote.web.controller;
 
-import com.sicmed.remote.web.entity.ApplyForm;
-import com.sicmed.remote.web.entity.CaseRecord;
-import com.sicmed.remote.web.service.ApplyFormService;
-import com.sicmed.remote.web.service.CaseContentService;
-import com.sicmed.remote.web.service.CasePatientService;
-import com.sicmed.remote.web.service.CaseRecordService;
+import com.sicmed.remote.web.entity.*;
+import com.sicmed.remote.web.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,14 +26,47 @@ public class DraftController extends BaseController {
     private ApplyFormService applyFormService;
 
     @Autowired
-    private CasePatientService casePatientService;
+    private CaseConsultantService caseConsultantService;
 
     @Autowired
     private CaseRecordService caseRecordService;
 
     @Autowired
+    private CasePatientService casePatientService;
+
+    @Autowired
     private CaseContentService caseContentService;
 
+    /**
+     * 草稿箱信息返回
+     */
+    @GetMapping(value = "msgShow")
+    public Map msgShow(String applyFormId) {
+
+        if (StringUtils.isBlank(applyFormId)) {
+            return badRequestOfArguments("参数错误");
+        }
+
+        ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
+
+        CaseConsultant caseConsultant = caseConsultantService.getByPrimaryKey(applyFormId);
+        BigDecimal hospitalPrice = caseConsultant.getHospitalPrice();
+        // 需要获取userIdList,并解析合并医生价格
+        String doctorListStr = caseConsultant.getConsultantUserList();
+        if (StringUtils.isNotBlank(doctorListStr)) {
+
+        }
+
+        String caseRecordId = applyForm.getCaseRecordId();
+        CaseRecord caseRecord = caseRecordService.getByPrimaryKey(caseRecordId);
+
+        String casePatientId = caseRecord.getPatientId();
+        CasePatient casePatient = casePatientService.getByPrimaryKey(casePatientId);
+
+        List<CaseContent> caseContentList = caseContentService.findByCaseRecordId(caseRecordId);
+
+        return null;
+    }
 
     /**
      * 医生 草稿箱 删除
@@ -49,16 +80,8 @@ public class DraftController extends BaseController {
         }
 
         ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
-        String caseRecordId = applyForm.getCaseRecordId();
-        // 删除caseRecordId相关的病例信息
-        if (StringUtils.isNotBlank(caseRecordId)) {
-            CaseRecord caseRecord = caseRecordService.getByPrimaryKey(caseRecordId);
-            String casePatientId = caseRecord.getPatientId();
-            casePatientService.deleteByPrimaryKey(casePatientId);
-            caseContentService.deleteByCaseRecordId(caseRecordId);
-            caseRecordService.deleteByPrimaryKey(caseRecordId);
-        }
-        int i = applyFormService.softDel(applyFormId);
+
+        int i = applyFormService.draftDel(applyForm);
         if (i < 1) {
             return badRequestOfArguments("删除草稿失败或无此id对应applyForm");
         }

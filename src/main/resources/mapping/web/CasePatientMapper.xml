@@ -34,6 +34,63 @@
         select * from case_patient where patient_card = #{patientCard}
     </select>
 
+    <!--动态查询-->
+    <select id="findByDynamicParam" parameterType="com.sicmed.remote.web.entity.CasePatient"
+            resultMap="BaseResultMap">
+        select * from case_patient where
+        <if test="id != null">
+            id = #{id,jdbcType=VARCHAR}
+        </if>
+        <if test="patientNumber != null">
+            and patient_number = #{patientNumber,jdbcType=VARCHAR}
+        </if>
+        <if test="patientName != null">
+            and patient_name = #{patientName,jdbcType=VARCHAR}
+        </if>
+        <if test="patientCard != null">
+            and patient_card = #{patientCard,jdbcType=VARCHAR}
+        </if>
+        <if test="patientPhone != null">
+            and patient_phone = #{patientPhone,jdbcType=VARCHAR}
+        </if>
+        <if test="patientBirthday != null">
+            and patient_birthday = #{patientBirthday,jdbcType=VARCHAR}
+        </if>
+        <if test="cityId != null">
+            and city_id = #{cityId,jdbcType=VARCHAR}
+        </if>
+        <if test="detailAddress != null">
+            and detail_address = #{detailAddress,jdbcType=VARCHAR}
+        </if>
+        <if test="educationId != null">
+            and education_id = #{educationId,jdbcType=VARCHAR}
+        </if>
+        <if test="professionId != null">
+            and profession_id = #{professionId,jdbcType=VARCHAR}
+        </if>
+        <if test="nationId != null">
+            and nation_id = #{nationId,jdbcType=VARCHAR}
+        </if>
+        <if test="bloodGroupId != null">
+            and blood_group_id = #{bloodGroupId,jdbcType=VARCHAR}
+        </if>
+        <if test="createTime != null">
+            and create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="createUser != null">
+            and create_user = #{createUser,jdbcType=VARCHAR}
+        </if>
+        <if test="updateUser != null">
+            and update_user = #{updateUser,jdbcType=VARCHAR}
+        </if>
+        <if test="deleteTime != null">
+            and delete_time = #{deleteTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="deleteUser != null">
+            and delete_user = #{deleteUser,jdbcType=VARCHAR}
+        </if>
+        del_flag = "0"
+    </select>
     <!--身份证更新患者-->
     <update id="updateByCard" parameterType="com.sicmed.remote.web.entity.CasePatient">
         update case_patient

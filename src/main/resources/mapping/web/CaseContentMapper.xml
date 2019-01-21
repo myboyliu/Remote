@@ -49,13 +49,20 @@
     </insert>
 
     <!--由caseRecordId删除对应的病例-->
-    <update id="deleteByCaseRecordId" parameterType="java.lang.String">
-        update case_content set del_flag = "1" where record_id = #{recordId}
-    </update>
+    <delete id="deleteByCaseRecordId" parameterType="java.lang.String">
+    delete from case_content
+    where record_id = #{recordId}
+  </delete>
 
-    <!--selectRecordId查询-->
+    <!--selectRecordId查询数目-->
     <select id="selectRecordId" parameterType="java.lang.String" resultType="java.lang.Integer">
         select count(*) from case_content where record_id = #{recordId} and del_flag = "0"
+    </select>
+
+    <!--recordId查询-->
+    <select id="findByCaseRecordId" parameterType="java.lang.String"
+            resultType="com.sicmed.remote.web.entity.CaseContent">
+        select *from case_content where record_id = #{recordId} and del_flag = "0"
     </select>
 
     <insert id="insert" parameterType="com.sicmed.remote.web.entity.CaseContent">

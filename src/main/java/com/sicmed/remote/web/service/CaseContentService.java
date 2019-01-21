@@ -64,6 +64,10 @@ public class CaseContentService implements BaseService<CaseContent> {
         return caseContentMapper.selectRecordId(recordId);
     }
 
+    // 由recordId查询
+    public List<CaseContent> findByCaseRecordId(String caseRecordId){
+        return caseContentMapper.findByCaseRecordId(caseRecordId);
+    }
     @Override
     public int insertSelective(CaseContent caseContent) {
         return caseContentMapper.insertSelective(caseContent);

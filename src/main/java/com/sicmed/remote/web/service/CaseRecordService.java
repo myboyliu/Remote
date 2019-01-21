@@ -41,6 +41,6 @@ public class CaseRecordService implements BaseService<CaseRecord> {
 
     @Override
     public List<CaseRecord> findByDynamicParam(CaseRecord caseRecord) {
-        return null;
+        return caseRecordMapper.findByDynamicParam(caseRecord);
     }
 }

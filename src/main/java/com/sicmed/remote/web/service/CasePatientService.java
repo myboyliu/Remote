@@ -43,11 +43,11 @@ public class CasePatientService implements BaseService<CasePatient> {
 
     @Override
     public CasePatient getByPrimaryKey(String id) {
-        return null;
+        return casePatientMapper.selectByPrimaryKey(id);
     }
 
     @Override
     public List<CasePatient> findByDynamicParam(CasePatient casePatient) {
-        return null;
+        return casePatientMapper.findByDynamicParam(casePatient);
     }
 }

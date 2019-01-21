@@ -7,14 +7,14 @@ import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.bean.InquiryStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
+import com.sicmed.remote.web.entity.CaseRecord;
 import com.sicmed.remote.web.mapper.ApplyFormMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.omg.CORBA.PUBLIC_MEMBER;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @Slf4j
@@ -23,6 +23,15 @@ public class ApplyFormService implements BaseService<ApplyForm> {
 
     @Autowired
     private ApplyFormMapper applyFormMapper;
+
+    @Autowired
+    private CasePatientService casePatientService;
+
+    @Autowired
+    private CaseRecordService caseRecordService;
+
+    @Autowired
+    private CaseContentService caseContentService;
 
     // 更新applyForm表单apply_status状态
     public int updateStatus(ApplyForm applyForm, String applyStatus, String userId) {
@@ -116,6 +125,21 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         applyFormBean.setApplyRemark(condition);
         applyFormBean.setConsultationStatusList(statusList);
         return applyFormMapper.sirSearchByRemark(applyFormBean);
+    }
+
+    // 删除草稿
+    public int draftDel(ApplyForm applyForm) {
+        // 获取caseRecordId
+        String caseRecordId = applyForm.getCaseRecordId();
+        // 删除caseRecordId相关的病例信息
+        if (StringUtils.isNotBlank(caseRecordId)) {
+            CaseRecord caseRecord = caseRecordService.getByPrimaryKey(caseRecordId);
+            String casePatientId = caseRecord.getPatientId();
+            casePatientService.deleteByPrimaryKey(casePatientId);
+            caseContentService.deleteByCaseRecordId(caseRecordId);
+            caseRecordService.deleteByPrimaryKey(caseRecordId);
+        }
+        return applyFormMapper.deleteByPrimaryKey(applyForm.getId());
     }
 
     @Override

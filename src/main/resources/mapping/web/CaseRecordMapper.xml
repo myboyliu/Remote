@@ -33,6 +33,67 @@
         from case_record
         where id = #{id,jdbcType=VARCHAR}
     </select>
+
+    <!--动态查询-->
+    <select id="findByDynamicParam" parameterType="com.sicmed.remote.web.entity.CaseRecord"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from case_record
+        where
+        <if test="id !=null">
+            id = #{id,jdbcType=VARCHAR}
+        </if>
+        <if test="caseNumber != null">
+            and case_number = #{caseNumber,jdbcType=VARCHAR}
+        </if>
+        <if test="patientId != null">
+            and patient_id = #{patientId,jdbcType=VARCHAR}
+        </if>
+        <if test="mainSuit != null">
+            and  main_suit = #{mainSuit,jdbcType=VARCHAR}
+        </if>
+        <if test="pastMedicalHistory != null">
+            and  past_medical_history = #{pastMedicalHistory,jdbcType=VARCHAR}
+        </if>
+        <if test="existingMedicalHistory != null">
+            and  existing_medical_history = #{existingMedicalHistory,jdbcType=VARCHAR}
+        </if>
+        <if test="allergicHistory != null">
+            and allergic_history = #{allergicHistory,jdbcType=VARCHAR}
+        </if>
+        <if test="caseDiagnosis != null">
+            and case_diagnosis = #{caseDiagnosis,jdbcType=VARCHAR}
+        </if>
+        <if test="createTime != null">
+            and create_time = #{createTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="createUser != null">
+            and create_user = #{createUser,jdbcType=VARCHAR}
+        </if>
+        <if test="updateUser != null">
+            and update_user = #{updateUser,jdbcType=VARCHAR}
+        </if>
+        <if test="deleteTime != null">
+            and delete_time = #{deleteTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="deleteUser != null">
+            and delete_user = #{deleteUser,jdbcType=VARCHAR}
+        </if>
+        <if test="patientAge != null">
+            and patient_age = #{patientAge,jdbcType=INTEGER}
+        </if>
+        <if test="patientSex != null">
+            and patient_sex = #{patientSex,jdbcType=CHAR}
+        </if>
+        <if test="patientHeight != null">
+            and patient_height = #{patientHeight,jdbcType=INTEGER}
+        </if>
+        <if test="patientWeight != null">
+            and patient_weight = #{patientWeight,jdbcType=INTEGER}
+        </if>
+        and del_flag = "0"
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from case_record
     where id = #{id,jdbcType=VARCHAR}

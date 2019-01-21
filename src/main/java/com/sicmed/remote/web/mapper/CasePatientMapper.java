@@ -2,6 +2,8 @@ package com.sicmed.remote.web.mapper;
 
 import com.sicmed.remote.web.entity.CasePatient;
 
+import java.util.List;
+
 public interface CasePatientMapper {
     int deleteByPrimaryKey(String id);
 
@@ -18,4 +20,7 @@ public interface CasePatientMapper {
     CasePatient selectByCard(String patientCard);
 
     int updateByCard(CasePatient casePatient);
+
+    List<CasePatient> findByDynamicParam(CasePatient casePatient);
+
 }

@@ -66,10 +66,10 @@ public class ApplyController extends BaseController {
      * @param weightPathTypeId
      * @param applyForm
      */
+    @Transactional
     @PostMapping(value = "draft")
-    public Map draft(CasePatient casePatient,
-                     CaseRecord caseRecord,
-                     String weightPathTypeId, ApplyForm applyForm) {
+    public Map draft(CasePatient casePatient, CaseRecord caseRecord, String weightPathTypeId, ApplyForm applyForm,
+                     String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport) {
 
         if (StringUtils.isBlank(casePatient.getPatientName()) || StringUtils.isBlank(casePatient.getPatientCard())
                 || StringUtils.isBlank(weightPathTypeId)) {
@@ -88,18 +88,14 @@ public class ApplyController extends BaseController {
         if (i < 1) {
             return badRequestOfInsert("添加casePatient失败");
         }
-        caseRecord.setPatientId(casePatient.getId());
 
         // 添加病例初步诊断结果
+        caseRecord.setPatientId(casePatient.getId());
         caseRecord.setCreateUser(userId);
         int j = caseRecordService.insertSelective(caseRecord);
         if (j < 1) {
             return badRequestOfInsert("添加caseRecord的caseDiagnosis失败");
         }
-
-        CaseContentBean caseContentBean = new CaseContentBean();
-        caseContentBean.setRecordId(caseRecord.getId());
-        applyForm.setCaseRecordId(caseRecord.getId());
 
         // 添加病例所需文件 文件路径 与 病例文件id map解析
         List<CaseContent> resultList;
@@ -109,6 +105,8 @@ public class ApplyController extends BaseController {
         } catch (Exception e) {
             return badRequestOfArguments("pathWeightTypeId 填写错误");
         }
+        CaseContentBean caseContentBean = new CaseContentBean();
+        caseContentBean.setRecordId(caseRecord.getId());
         caseContentBean.setRecordId(caseRecord.getId());
         caseContentBean.setCreateUser(userId);
         caseContentBean.setWeightPathTypeId(resultList);
@@ -123,6 +121,7 @@ public class ApplyController extends BaseController {
             return badRequestOfArguments("获取医生详细信息失败");
         }
 
+        applyForm.setCaseRecordId(caseRecord.getId());
         applyForm.setApplyHospitalId(currentUserBean.getHospitalId());
         applyForm.setApplyBranchId(currentUserBean.getBranchId());
         applyForm.setApplyUserId(userId);
@@ -133,6 +132,20 @@ public class ApplyController extends BaseController {
             return badRequestOfArguments("添加草稿失败");
         }
 
+        CaseConsultant caseConsultant = new CaseConsultant();
+        caseConsultant.setId(applyForm.getId());
+        caseConsultant.setCreateUser(userId);
+        caseConsultant.setConsultantUserList(consultantUserList);
+        caseConsultant.setConsultantPrice(consultantPrice);
+        caseConsultant.setHospitalPrice(hospitalPrice);
+        caseConsultant.setInviteUserId(applyForm.getInviteUserId());
+        caseConsultant.setApplyUserId(userId);
+        caseConsultant.setConsultantReport(consultantReport);
+
+        int a = caseConsultantService.insertSelective(caseConsultant);
+        if (a < 1) {
+            return badRequestOfArguments("添加失败");
+        }
         return succeedRequest(casePatient);
     }
 
@@ -346,7 +359,7 @@ public class ApplyController extends BaseController {
     }
 
     /**
-     * 医生工作台详细信息展示
+     * 医生工作台详细信息展示(无草稿页面展示)
      */
     @GetMapping(value = "detailById")
     public Map detailById(String applyFormId) {
