@@ -117,6 +117,7 @@ public class ApplyController extends BaseController {
         applyForm.setApplyUserId(userId);
         String applyType = String.valueOf(ApplyType.APPLY_DRAFT);
         applyForm.setApplyType(applyType);
+        applyForm.setCreateUser(userId);
         int l = applyFormService.insertSelective(applyForm);
         if (l < 1) {
             return badRequestOfArguments("添加草稿失败");

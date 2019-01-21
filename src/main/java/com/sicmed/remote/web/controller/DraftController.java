@@ -1,5 +1,7 @@
 package com.sicmed.remote.web.controller;
 
+import com.sicmed.remote.common.ApplyType;
+import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.entity.*;
 import com.sicmed.remote.web.service.*;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +39,27 @@ public class DraftController extends BaseController {
     private CaseContentService caseContentService;
 
     /**
-     * 草稿箱信息返回
+     * 用户查询草稿
+     */
+    @GetMapping(value = "selectByUser")
+    public Map selectByUser() {
+        String userId = getRequestToken();
+        if (StringUtils.isBlank(userId)) {
+            return badRequestOfArguments("无法获取登录用户Id");
+        }
+
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setCreateUser(userId);
+        applyForm.setApplyType(ApplyType.APPLY_DRAFT.toString());
+        List<ApplyForm> applyFormList = applyFormService.findByDynamicParam(applyForm);
+        if (applyFormList == null) {
+            return badRequestOfArguments("查询出错");
+        }
+        return succeedRequest(applyFormList);
+    }
+
+    /**
+     * 草稿箱详细信息返回
      */
     @GetMapping(value = "msgShow")
     public Map msgShow(String applyFormId) {
