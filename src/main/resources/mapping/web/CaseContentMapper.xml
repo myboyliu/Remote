@@ -61,7 +61,7 @@
 
     <!--recordId查询-->
     <select id="findByCaseRecordId" parameterType="java.lang.String"
-            resultType="com.sicmed.remote.web.entity.CaseContent">
+            resultMap="BaseResultMap">
         select *from case_content where record_id = #{recordId} and del_flag = "0"
     </select>
 

@@ -2,6 +2,7 @@ package com.sicmed.remote.web.controller;
 
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.InquiryStatus;
+import com.sicmed.remote.web.bean.DraftBean;
 import com.sicmed.remote.web.entity.*;
 import com.sicmed.remote.web.service.*;
 import org.apache.commons.lang3.StringUtils;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -69,24 +69,33 @@ public class DraftController extends BaseController {
         }
 
         ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
-
-        CaseConsultant caseConsultant = caseConsultantService.getByPrimaryKey(applyFormId);
-        BigDecimal hospitalPrice = caseConsultant.getHospitalPrice();
-        // 需要获取userIdList,并解析合并医生价格
-        String doctorListStr = caseConsultant.getConsultantUserList();
-        if (StringUtils.isNotBlank(doctorListStr)) {
-
+        if (applyForm == null) {
+            return badRequestOfArguments("获取applyForm失败");
         }
 
-        String caseRecordId = applyForm.getCaseRecordId();
-        CaseRecord caseRecord = caseRecordService.getByPrimaryKey(caseRecordId);
+        CaseConsultant caseConsultant = caseConsultantService.getByPrimaryKey(applyFormId);
 
-        String casePatientId = caseRecord.getPatientId();
-        CasePatient casePatient = casePatientService.getByPrimaryKey(casePatientId);
+        String caseRecordId = applyForm.getCaseRecordId();
+        if (StringUtils.isBlank(caseRecordId)) {
+            return badRequestOfArguments("获取caseRecordId失败");
+        }
+        CaseRecord caseRecord = caseRecordService.getByPrimaryKey(caseRecordId);
 
         List<CaseContent> caseContentList = caseContentService.findByCaseRecordId(caseRecordId);
 
-        return null;
+        String casePatientId = caseRecord.getPatientId();
+        if (StringUtils.isBlank(casePatientId)) {
+            return badRequestOfArguments("获取casePatientId失败");
+        }
+        CasePatient casePatient = casePatientService.getByPrimaryKey(casePatientId);
+
+        DraftBean draftBean = new DraftBean();
+        draftBean.setApplyForm(applyForm);
+        draftBean.setCaseConsultant(caseConsultant);
+        draftBean.setCaseContentList(caseContentList);
+        draftBean.setCaseRecord(caseRecord);
+        draftBean.setCasePatient(casePatient);
+        return succeedRequest(draftBean);
     }
 
     /**
@@ -110,6 +119,7 @@ public class DraftController extends BaseController {
     /**
      * 草稿箱 转诊
      */
+    
     /**
      * 草稿箱 图文会诊
      */

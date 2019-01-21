@@ -59,7 +59,7 @@ public class ApplyController extends BaseController {
     private ApplyNodeService applyNodeService;
 
     /**
-     * 添加草稿,草稿至少含有患者姓名,身份证,病例文件三种数据,否则无法创建
+     * 添加草稿,草稿至少含有患者姓名,身份证,病例文件三种数据,否则无法创建,
      *
      * @param casePatient
      * @param caseRecord
