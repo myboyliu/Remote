@@ -42,7 +42,6 @@ function renderUserInfo() {
 
 /** 渲染医生详细信息页面病例类型*/
 function renderCaseView(result) {
-    console.log(result)
     let _html = '';
     for (let i = 0; i < result.length; i++) {
         _html += '<div class="catalogue clearfix">\
@@ -217,7 +216,6 @@ $(function () {
             ajaxRequest("POST", modifyPersonalInfo, formData, false, false, true, modifyPersonalInfoSuccess, modifyPersonalInfoFailed, null);
 
             function modifyPersonalInfoSuccess(result) {
-                console.log(result);
                 layer.open({
                     type: 1,
                     title: false,
@@ -239,7 +237,6 @@ $(function () {
             }
 
             function modifyPersonalInfoFailed(result) {
-                console.log(result);
                 layer.open({
                     type: 1,
                     title: false,
@@ -262,7 +259,6 @@ $(function () {
     }).on('input propertychange', function () {
         this.style.height = 'auto';
         this.style.height = (this.scrollHeight) + 'px';
-        console.log(this.scrollHeight)
     });
     $('#textAdaotion').each(function () {
         this.setAttribute('style', 'height:' + (this.scrollHeight + 40) + 'px;overflow-y:hidden;');

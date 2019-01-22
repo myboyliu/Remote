@@ -1,25 +1,30 @@
 //  查询医院信息
-var doctorInfo = {};
+let doctorInfo = {};
 
-var hospitalId = '';
-var oldHospitalName = '';
-var oldHospitalTel = '';
-var oldImgPic = '';
-var oldVideoPic = '';
-var newHospitalName = '';
-var newHospitalTel = '';
-var newImgPic = '';
-var newVideoPic = '';
+let hospitalId = '';
+let oldHospitalName = '';
+let oldHospitalTel = '';
+let oldImgPic = '';
+let oldVideoPic = '';
+let newHospitalName = '';
+let newHospitalTel = '';
+let newImgPic = '';
+let newVideoPic = '';
 
-var oldName = ''; // 旧名字
-var oldMoney = ''; // 旧图文价格
-var oldMoneyVideo = ''; //旧视频价格
-var newName = ''; // 新名字
-var newMoney = ''; // 新图文价格
-var newMoneyVideo = ''; // 新视频价格
-var expertId = '';
-var operationIndex = '';
+let oldName = ''; // 旧名字
+let oldMoney = ''; // 旧图文价格
+let oldMoneyVideo = ''; //旧视频价格
+let newName = ''; // 新名字
+let newMoney = ''; // 新图文价格
+let newMoneyVideo = ''; // 新视频价格
+let expertId = '';
+let operationIndex = '';
+let _$ = layui.jquery;
+let isModify = false;
+let userCaseTypeIsModify = false;
 
+let baseCaseTypeList = [];
+let formData;
 /** 渲染医院管理页面*/
 function renderHospitalView(result) {
     $(".promptText").show();
@@ -104,7 +109,7 @@ function renderSpecialistTypeView(array) {
 
 /** 渲染医生列表左侧下拉列表*/
 function renderDoctorListView(array) {
-    var _html = '';
+    let _html = '';
     for (var i = 0; i < array.length; i++) {
         _html += '<li class="oneLevelItem">\
                             <p class="oneLevelName" title="' + array[i].branchName + '">' + array[i].branchName + '</p>\
@@ -159,11 +164,13 @@ function renderRolesSelect(result) {
 
 /** 渲染医生信息页面科室下拉列表*/
 function renderBranchSelect(result) {
-    var _html = '<option value="">请选择</option>';
-    for (var i = 0; i < result.length; i++) {
-        var customBranchList = result[i].customBranchList;
-        for (var j = 0; j < customBranchList.length; j++) {
-            _html += ' <option value="' + customBranchList[j].id + '">' + customBranchList[j].customName + '</option>';
+    let _html = '<option value="">请选择</option>';
+    for (let i = 0; i < result.length; i++) {
+        let customBranchList = result[i].customBranchList;
+        for (let j = 0; j < customBranchList.length; j++) {
+            if (customBranchList[j].id && customBranchList[j].customName) {
+                _html += ' <option value="' + customBranchList[j].id + '">' + customBranchList[j].customName + '</option>';
+            }
         }
     }
     $('.deptSelect').html(_html);
@@ -183,6 +190,7 @@ function renderSpecialistTypeSelect(array) {
 /** 渲染医生信息页面*/
 function renderDoctorInfoView(result) {
     doctorInfo = result;
+    renderCaseView(baseCaseTypeList);
     // AUTHENTICATION_CREATE_SUCCESS未审核 AUTHENTICATION_ACCEDE通过 2拒绝 3不完整
     if (result.approveStatus == "AUTHENTICATION_CREATE_SUCCESS") {
         $('.fexidContent').show().find('div').hide().eq(0).show();
@@ -198,10 +206,10 @@ function renderDoctorInfoView(result) {
         $('.coverage').hide();
         $('.fexidContent').show();
     }
-    $('#userName').val(result.userName);
+    $('#userName').val(result.userPhone);
     $('#userId').val(result.id);
     $('#name').val(result.userName);
-    $('#telephone').val(result.userPhone);
+    $('#telephone').val(result.telephone);
     $('#hospitalName').val(result.hospitalName);
     $('#medicalFees').val(result.consultationPicturePrice);
     $('#medicalFeesVideo').val(result.consultationVideoPrice);
@@ -211,14 +219,19 @@ function renderDoctorInfoView(result) {
     $('.deptSelect').val(result.branchId);
     $('.expertSelect').val(result.specialistTypeId);
     if (result.doctorCardFront) {
-        $('.cardName').html(result.doctorCardFront);
+        $('#doctorCardImgBox').attr("src", "/" + result.doctorCardFront);
+    }else{
+        $('#doctorCardImgBox').attr("src", "");
     }
     if (result.signature) {
-        $('.signName').html(result.signature);
+        $('#signatureImgBox').attr("src", "/" + result.signature);
+    }else{
+        $('#signatureImgBox').attr("src", "");
     }
-    var caseTypeList = result.caseTypeIds;
-    for (var i = 0; i < caseTypeList.length; i++) {
-        var caseTypeDomId = "#" + caseTypeList[i].caseTypeId;
+    let caseTypeList = result.caseTypeIds;
+    for (let i = 0; i < caseTypeList.length; i++) {
+        let caseTypeDomId = "#" + caseTypeList[i].caseTypeId;
+
         $(caseTypeDomId).addClass("CheckBg");
     }
     $('#beGoodAt').each(function () {
@@ -228,14 +241,14 @@ function renderDoctorInfoView(result) {
 
 /** 渲染医生详细信息页面病例类型*/
 function renderCaseView(result) {
+    baseCaseTypeList = result;
     let _html = '';
     for (let i = 0; i < result.length; i++) {
         _html += '<div class="catalogue clearfix">\
                             <p>' + result[i].caseTypeName + '</p>';
         let twoArr = result[i].childList;
         for (let j = 0; j < twoArr.length; j++) {
-            // _html += '<div type="" class="checkSingle CheckBg" name="' + twoArr[j].id + '">' + twoArr[j].caseTypeName + '</div>'
-            _html += '<div parentName="' + result.caseTypeName + '" id="' + twoArr[j].id + '" type="" class="checkSingle " name="' + twoArr[j].id + '">' + twoArr[j].caseTypeName + '</div>'
+            _html += '<div parentName="' + result[i].caseTypeName + '" id="' + twoArr[j].id + '" type="" class="checkSingle " name="' + twoArr[j].id + '">' + twoArr[j].caseTypeName + '</div>'
         }
         _html += '</div>';
     }
@@ -247,7 +260,7 @@ function emptyResult() {
 }
 
 $(function () {
-
+    formData = new FormData();
     /** 获取医院信息 */
     ajaxRequest("GET", getHospitalByCurrentUserUrl, null, false, false, true, renderHospitalView, emptyResult, null);
 
@@ -484,7 +497,6 @@ $(function () {
                 $(this).unbind();
             })
 
-
         } else if ($(this).attr('type') == '') {
             $(this).addClass('choose').attr('type', 'ADD_BRANCH').parents('.unselectedContent').siblings('.selectedContent').find('.selectedBox').prepend($(this));
         } else {
@@ -573,57 +585,40 @@ $(function () {
         $('.doctorContent').show();
         // doctorIdGetInfo($(this).attr('name'));
         /** 查询医生详细信息 */
-        var data = {"userId": $(this).attr('name')};
+        let data = {"userId": $(this).attr('name')};
         ajaxRequest("GET", getDoctorDetailByIdUrl, data, true, "application/json", true, renderDoctorInfoView, null, null);
         return false;
     });
 
+    //上传医师资格证
+    $("#doctorCardUploadInput").change(function () {
+        let fileObj = new FormData();
+        fileObj.append("file", this.files[0]);
+        ajaxRequest("POST", uploadFileUrl, fileObj, false, false, true, uploadSuccess, null, null);
 
-
-
-    var doctorCard = "0";
-    var signature = "0";
-
-
-    //上传医师资格证，记录文件名添加到span里
-    cardUpload.onchange = function () {
-        cardName.innerHTML = cardUpload.files[0].name;
-    };
-    var signature;
-    //上传签名，记录文件名添加到span里
-    signUpload.onchange = function () {
-        signName.innerHTML = signUpload.files[0].name;
-    }
-    /** 证书上传事件*/
-    $('.cardBtn').click(function () {
-        if ($('.cardUp')[0].files.length > 0) {
-            var fileData = new FormData();
-            fileData.append('file', $('.cardUp')[0].files[0])
-            doctorCard = "1";
-            ajaxRequest("POST", uploadFileUrl, fileData, false, false, true, uploadSuccess, uploadFailed, null);
+        function uploadSuccess(result) {
+            $('#doctorCardImgBox').attr("src", baseUrl + "/" + result);
+            formData.append("doctorCardFront", result);
+            isModify = true;
+            $('.modifyBtn').removeClass("disabled");
         }
     })
+    //上传签名
+    $("#signatureUploadInput").change(function () {
+        let fileObj = new FormData();
+        fileObj.append("file", this.files[0]);
+        ajaxRequest("POST", uploadFileUrl, fileObj, false, false, true, uploadSuccess, null, null);
 
-    /** 签名上传事件*/
-    $('.signBtn').click(function () {
-        if ($('.signUp')[0].files.length > 0) {
-            var fb = new FormData();
-            fb.append('file', $('.signUp')[0].files[0])
-            signature = "1";
-            ajaxRequest("POST", uploadFileUrl, fb, false, false, true, uploadSuccess, uploadFailed, null);
+        function uploadSuccess(result) {
+            $('#signatureImgBox').attr("src", baseUrl + "/" + result);
+            formData.append("signature", result);
+            isModify = true;
+            $('.modifyBtn').removeClass("disabled");
         }
     })
 
     /** 上传成功回调方法*/
-    function uploadSuccess(result) {
-        if (doctorCard == "1") {
-            doctorCard = result;
-            $('.cardName').html(doctorCard);
-        }else {
-            signature = result;
-            $('.signName').html(signature);
-        }
-        var _$ = layui.jquery;
+    function uploadSuccess() {
         layer.open({
             type: 1,
             title: '',
@@ -634,14 +629,13 @@ $(function () {
             time: 2000,
             content: _$('.successBox'),
         });
-        setTimeout(function () {
-            $('.successBox').hide();
-        }, 2000)
+        // setTimeout(function () {
+        //     $('.successBox').hide();
+        // }, 2000)
     }
 
     /** 上传失败回调方法*/
     function uploadFailed() {
-        var _$ = layui.jquery;
         layer.open({
             type: 1,
             title: '',
@@ -652,9 +646,9 @@ $(function () {
             time: 2000,
             content: _$('.loseBox'),
         });
-        setTimeout(function () {
-            $('.loseBox').hide();
-        }, 2000)
+        // setTimeout(function () {
+        //     $('.loseBox').hide();
+        // }, 2000)
     }
 
     $('.expertSelect').change(function () {
@@ -664,7 +658,6 @@ $(function () {
 
     // 重置密码
     $('.resetBtn').click(function () {
-        var _$ = layui.jquery;
         layer.open({
             type: 1,
             title: '',
@@ -682,12 +675,12 @@ $(function () {
     })
     // 重置密码确定按钮
     $('.replacementYesBtn').click(function () {
-        var data = new FormData();
-        data.append("id", $('#userName').attr('userId'));
+        let data = new FormData();
+        data.append("id", $('#userId').val());
         ajaxRequest("POST", adminChangePassWord, data, false, false, true, resetSuccess, resetFailed, null);
 
         function resetSuccess() {
-            var _$ = layui.jquery;
+            layer.closeAll();
             layer.open({
                 type: 1,
                 title: '',
@@ -695,16 +688,13 @@ $(function () {
                 closeBtn: false,
                 shade: [0.1, '#000000'],
                 shadeClose: false,
-                //  time: 2000,
+                time: 2000,
                 content: _$('.successBox'),
             });
-            setTimeout(function () {
-                layer.closeAll();
-            }, 2000)
+
         }
 
         function resetFailed() {
-            var _$ = layui.jquery;
             layer.open({
                 type: 1,
                 title: '',
@@ -712,152 +702,136 @@ $(function () {
                 closeBtn: false,
                 shade: [0.1, '#000000'],
                 shadeClose: false,
-                //  time: 2000,
+                time: 2000,
                 content: _$('.loseBox'),
             });
-            setTimeout(function () {
-                layer.closeAll();
-            }, 2000)
         }
     })
 
-// 单个按钮
+    // 单个按钮
     $(".requireBox").on('click', '.checkSingle', function () {
-        if ($(this).attr('type') == '') {
-            if ($(this).hasClass('CheckBg')) {
-                $(this).attr('type', '1').addClass('operate').toggleClass('CheckBg');
+        if ($(this).hasClass('CheckBg')) {
+            if ($(this).hasClass('operate')) {
+                $(this).removeClass('operate');
             } else {
-                $(this).attr('type', '0').addClass('operate').toggleClass('CheckBg');
+                $(this).addClass('operate');
             }
-        } else if ($(this).attr('type') == '0') {
-            $(this).attr('type', '').removeClass('operate').toggleClass('CheckBg');
-        } else if ($(this).attr('type') == '1') {
-            $(this).attr('type', '').removeClass('operate').toggleClass('CheckBg');
+            $(this).removeClass('CheckBg');
+        } else {
+            if ($(this).hasClass('operate')) {
+                $(this).removeClass('operate');
+            } else {
+                $(this).addClass('operate');
+            }
+            $(this).addClass('CheckBg');
         }
+
         if ($('.operate').length > 0) {
-            $('.modifyBtn').removeClass("disabled");
+            userCaseTypeIsModify = true;
+        } else {
+            userCaseTypeIsModify = false;
         }
         disabledFlag();
     })
 
-// 权限类型
-    $('.powerSelect').change(function () {
-        if ($(this).val() != doctorInfo.rolesId) {
-            $('.modifyBtn').removeClass("disabled");
+    // 登陆账号
+    $('#userName').change(function () {
+        if(doctorInfo.userPhone ===  $('#userName').val()){
+            formData.delete("accountNum");
+        }else{
+            formData.append("accountNum", $('#userName').val());
         }
+        disabledFlag();
+    })
+
+    // 权限类型
+    $('.powerSelect').change(function () {
         disabledFlag();
     })
 
 // 职称
     $('.titleSelect').change(function () {
-        if ($(this).val() != doctorInfo.occupationId) {
-            $('.modifyBtn').removeClass("disabled");
-        }
         disabledFlag();
     })
 
 // 科室
     $('.deptSelect').change(function () {
-        if ($(this).val() != doctorInfo.hospitalDeptId) {
-            $('.modifyBtn').removeClass("disabled");
-        }
         disabledFlag();
     })
 
 // 专家类型
     $('.expertSelect').change(function () {
-        if ($(this).val() != doctorInfo.specialistTypeId) {
-            $('.modifyBtn').removeClass("disabled");
-        }
         disabledFlag();
     })
 
 // 姓名
     $("#name").blur(function () {
-        if ($(this).val() != doctorInfo.name) {
-            $('.modifyBtn').removeClass("disabled");
-        }
         disabledFlag();
     })
 
 // 电话
     $('#telephone').blur(function () {
-        if ($(this).val() != doctorInfo.telephone) {
-            $('.modifyBtn').removeClass("disabled");
-        }
         disabledFlag();
     });
 
 // 图文诊费/元
     $('#medicalFees').blur(function () {
-        if ($(this).val() != doctorInfo.medicalFees) {
-            $('.modifyBtn').removeClass("disabled");
-        }
         disabledFlag();
     });
 
 // 视频诊费/元
     $('#medicalFeesVideo').blur(function () {
-        if ($(this).val() != doctorInfo.medicalFeesVideo) {
-            $('.modifyBtn').removeClass("disabled");
-        }
         disabledFlag();
     });
 
 // 擅长
     $('#beGoodAt').blur(function () {
-        if ($(this).val() != doctorInfo.beGoodAt) {
-            $('.modifyBtn').removeClass("disabled");
-        }
         disabledFlag();
     });
 
     function disabledFlag() {
-        if ($('#name').val() == doctorInfo.name && $('#telephone').val() == doctorInfo.telephone && $('#medicalFees').val() == doctorInfo.medicalFees && $('#medicalFeesVideo').val() == doctorInfo.medicalFeesVideo && $('#beGoodAt').val() == doctorInfo.beGoodAt && $('.powerSelect').val() == doctorInfo.rolesId && $('.titleSelect').val() == doctorInfo.occupationId && $('.deptSelect').val() == doctorInfo.hospitalDeptId && $('.expertSelect').val() == doctorInfo.specialistTypeId && $('.operate').length == 0) {
+        if (userCaseTypeIsModify || $('#name').val() == doctorInfo.name || $('#telephone').val() == doctorInfo.telephone || $('#medicalFees').val() == doctorInfo.medicalFees || $('#medicalFeesVideo').val() == doctorInfo.medicalFeesVideo || $('#beGoodAt').val() == doctorInfo.beGoodAt || $('.powerSelect').val() == doctorInfo.rolesId || $('.titleSelect').val() == doctorInfo.occupationId || $('.deptSelect').val() == doctorInfo.hospitalDeptId || $('.expertSelect').val() == doctorInfo.specialistTypeId || $('.operate').length == 0) {
+            $('.modifyBtn').removeClass("disabled");
+            isModify = true;
+        } else {
             $('.modifyBtn').addClass("disabled");
+            isModify = false;
         }
     }
 
 // 修改医生信息
     $('.modifyBtn').click(function () {
-        if (!$(this).hasClass("disabled")) {
-            // 修改信息判断
-            var data = new FormData();
-            if ($('.operate').length > 0) {
-                var caseTypeJsonStr = "{";
-                for (var i = 0; i < $('.CheckBg').length; i++) {
-                    var a = $('.checkSingle.CheckBg').eq(i).attr('name');
-                    var b = $('.checkSingle.CheckBg').eq(i).html();
-                    var c = $('.checkSingle.CheckBg').eq(i).attr('parentName');
+        if (isModify) {
+            if (userCaseTypeIsModify) {
+                let caseTypeJsonStr = "{";
+                for (let i = 0; i < $('.checkSingle.CheckBg').length; i++) {
+                    let a = $('.checkSingle.CheckBg').eq(i).attr('name');
+                    let b = $('.checkSingle.CheckBg').eq(i).html();
+                    let c = $('.checkSingle.CheckBg').eq(i).attr('parentName');
                     caseTypeJsonStr += "'" + a + "':'" + c + "-" + b + "',";
                 }
                 caseTypeJsonStr = caseTypeJsonStr.substring(0, caseTypeJsonStr.length - 1);
                 caseTypeJsonStr += "}";
-                data.append("idTypeName", caseTypeJsonStr);
+                formData.append("idTypeName", caseTypeJsonStr);
             }
 
-            if (doctorCard.length > 16) {
-                data.append('doctorCardFront', doctorCard);
-            }
-            if (signature.length > 16) {
-                data.append("signature", signature);
-            }
-            data.append("userName", $('#name').val());
-            data.append("telephone", $('#telephone').val());
-            data.append("consultationPicturePrice", $('#medicalFees').val());
-            data.append("consultationVideoPrice", $('#medicalFeesVideo').val());
-            data.append("userStrong", $('#beGoodAt').val());
-            data.append("titleName", $('.titleSelect').val());
-            data.append("specialistTypeId", $('.expertSelect').val());
-            data.append("branchId", $('.deptSelect').val());
-            data.append("userId", $('#userName').attr('userId'));
-
-            ajaxRequest("POST", updateDoctorDetailUtl, data, false, false, true, updateDoctorDetailSuccess, updateDoctorDetailFailed, null);
+            formData.append("userName", $('#name').val());
+            formData.append("telephone", $('#telephone').val());
+            formData.append("consultationPicturePrice", $('#medicalFees').val());
+            formData.append("consultationVideoPrice", $('#medicalFeesVideo').val());
+            formData.append("userStrong", $('#beGoodAt').val());
+            formData.append("titleName", $('.titleSelect').val());
+            formData.append("specialistTypeId", $('.expertSelect').val());
+            formData.append("branchId", $('.deptSelect').val());
+            formData.append("userDetailId", $('#userId').val());
+            ajaxRequest("POST", managementUpdateUser, formData, false, false, true, updateDoctorDetailSuccess, updateDoctorDetailFailed, null);
 
             function updateDoctorDetailSuccess() {
+                /** 查询医生管理页面左侧导航医生列表 */
+                formData = new FormData();
+                ajaxRequest("GET", getDoctorListByCurrentUserUrl, null, false, false, true, renderDoctorListView, emptyResult, null);
                 $('.checkSingle').removeClass('operate');
                 $(".modifyBtn").addClass("disabled");
-                var _$ = layui.jquery;
                 layer.open({
                     type: 1,
                     title: '',
@@ -875,7 +849,6 @@ $(function () {
             }
 
             function updateDoctorDetailFailed() {
-                var _$ = layui.jquery;
                 layer.open({
                     type: 1,
                     title: '',
@@ -895,7 +868,6 @@ $(function () {
 
 // 通过审核按钮
     $('.adoptBtn').click(function () {
-        var _$ = layui.jquery;
         layer.open({
             type: 1,
             title: '',
@@ -905,7 +877,6 @@ $(function () {
             shadeClose: false,
             content: _$('.approved'),
         });
-
 
     })
 
@@ -917,13 +888,13 @@ $(function () {
 // 通过审核弹窗的确定按钮
     $('.approvedYesBtn').click(function () {
 
-        var data = new FormData();
+        let data = new FormData();
 
-        data.append("id", $('#userId').val());
+        data.append("userId", $('#userId').val());
         ajaxRequest("POST", approveRegisterUrl, data, false, false, true, approveRegisterSuccess, approveRegisterFailed, null);
 
         function approveRegisterSuccess(result) {
-            var _$ = layui.jquery;
+            layer.closeAll();
             layer.open({
                 type: 1,
                 title: '',
@@ -934,18 +905,11 @@ $(function () {
                 time: 2000,
                 content: _$('.successBox'),
             });
-            setTimeout(function () {
-                $('.successBox').hide();
-                layer.closeAll();
-            }, 2000)
-            // 通过后删掉左面导航栏上的图标，
             $('.threeLevelItem.active').find('img').remove();
-            // 调用查医生信息方法
             renderDoctorInfoView(result);
         }
 
         function approveRegisterFailed() {
-            var _$ = layui.jquery;
             layer.open({
                 type: 1,
                 title: '',
@@ -956,15 +920,11 @@ $(function () {
                 time: 2000,
                 content: _$('.loseBox'),
             });
-            setTimeout(function () {
-                $('.loseBox').hide();
-            }, 2000)
         }
     })
 
 // 拒绝审核
     $('.refuseBtn').click(function () {
-        var _$ = layui.jquery;
         layer.open({
             type: 1,
             title: '',
@@ -975,22 +935,19 @@ $(function () {
             content: _$('.decline'),
         });
 
-
         // 拒绝审核弹窗的取消按钮
         $('.declineNoBtn').click(function () {
             layer.closeAll();
         })
 
-
     })
     // 拒绝审核的确定按钮
     $('.declineYesBtn').click(function () {
         var data = new FormData();
-        data.append("id", $('#userId').val());
+        data.append("userId", $('#userId').val());
         ajaxRequest("POST", overruleRegisterUrl, data, false, false, true, overruleRegisterSuccess, overruleRegisterFailed, null);
 
         function overruleRegisterSuccess() {
-            var _$ = layui.jquery;
             layer.open({
                 type: 1,
                 title: '',
@@ -1001,9 +958,7 @@ $(function () {
                 time: 3000,
                 content: _$('.successBox'),
             });
-            //    拒绝后改变图片
             $('.threeLevelItem.active').find('img').attr('src', '../images/Denied.png'); //
-            // doctorIdGetInfo($('.threeLevelItem.active').attr('name'));
             $('.fexidContent').hide();
             setTimeout(function () {
                 layer.closeAll();
@@ -1011,7 +966,6 @@ $(function () {
         }
 
         function overruleRegisterFailed() {
-            var _$ = layui.jquery;
             layer.open({
                 type: 1,
                 title: '',
@@ -1029,7 +983,7 @@ $(function () {
 
     })
 
-// 修改
+    // 修改
     $('.expertTypeTbody').delegate('.modifyBtn', 'click', function () {
         operationIndex = $(this).parents('tr').index();
         if ($(this).html() == '修改') {
@@ -1084,7 +1038,6 @@ $(function () {
     $('.expertTypeTbody').delegate('.delBtn', 'click', function () {
         expertId = $(this).parents('tr').attr('name');
         operationIndex = $(this).parents('tr').index();
-        var _$ = layui.jquery;
         layer.open({
             type: 1,
             title: '',
@@ -1138,7 +1091,6 @@ $(function () {
             expertId = $(this).parents('tr').attr('name');
             hospitalId = $(this).parents('tr').attr('hospitalId');
             operationIndex = $(this).parents('tr').index();
-            var _$ = layui.jquery;
             layer.open({
                 type: 1,
                 title: '',
