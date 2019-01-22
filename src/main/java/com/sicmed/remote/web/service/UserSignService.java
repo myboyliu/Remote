@@ -77,7 +77,7 @@ public class UserSignService implements BaseService<UserSign> {
 
     @Override
     public UserSign getByPrimaryKey(String id) {
-        return null;
+        return userSignMapper.selectByPrimaryKey(id);
     }
 
     @Override

@@ -181,23 +181,27 @@ public class UserController extends BaseController {
 
         UserAccount resultUserAccount = userAccountService.selectSaltPw(userAccount.getUserPhone());
         if (resultUserAccount == null) {
-            return badRequestOfSelect("userPhone查询salt,password失败");
+            return badRequestOfSelect("用户名错误");
+        }
+
+        String userAccountId = resultUserAccount.getId();
+        UserSign userSign = userSignService.getByPrimaryKey(userAccountId);
+        if (DoctorCertified.AUTHENTICATION_CREATE_SUCCESS.toString().equals(userSign.getApproveStatus())) {
+            return badRequestOfArguments("未认证");
         }
 
         String salt = resultUserAccount.getSalt();
         String encryptionPassWord = DigestUtils.md5DigestAsHex((userAccount.getUserPassword() + salt).getBytes());
         if (!encryptionPassWord.equals(resultUserAccount.getUserPassword())) {
-            return badRequestOfArguments("输入的密码有误");
+            return badRequestOfArguments("密码错误");
         }
 
         userAccount.setUserPassword(encryptionPassWord);
         Date lastLoginTime = new Date();
         userAccount.setLastLoginTime(lastLoginTime);
         userAccount.setId(resultUserAccount.getId());
-        int i = userAccountService.updateByPrimaryKeySelective(userAccount, httpServletRequest);
-        if (i < 1) {
-            return badRequestOfInsert("更新用户登录信息失败");
-        }
+        userAccountService.updateByPrimaryKeySelective(userAccount, httpServletRequest);
+
 
         String userId = resultUserAccount.getId();
 //        UserDetail userDetail = userDetailService.getByPrimaryKey(userId);
