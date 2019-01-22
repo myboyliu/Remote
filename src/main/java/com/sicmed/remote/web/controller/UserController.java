@@ -449,7 +449,7 @@ public class UserController extends BaseController {
                 userSign.setSignature(signature);
             }
             if (StringUtils.isNotBlank(doctorCardFront)) {
-                userSign.setDoctorCardContrary(doctorCardFront);
+                userSign.setDoctorCardFront(doctorCardFront);
             }
             userSign.setId(userDetailId);
             int i = userSignService.updateByPrimaryKeySelective(userSign);
