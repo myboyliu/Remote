@@ -22,4 +22,6 @@ public interface UserAccountMapper {
     int selectCountPhone(String phoneNumber);
 
     UserAccount selectSaltPw(String userPhone);
+
+    UserAccount selectByUserPhone(String userPhone);
 }

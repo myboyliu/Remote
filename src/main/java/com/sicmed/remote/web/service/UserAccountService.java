@@ -48,6 +48,11 @@ public class UserAccountService implements BaseService<UserAccount> {
         return userAccountMapper.insertSelective(userAccount);
     }
 
+    // user_account.user_phone查询
+    public UserAccount selectByUserPhone(String userPhone){
+        return userAccountMapper.selectByUserPhone(userPhone);
+    }
+
     public int updateByPrimaryKeySelective(UserAccount userAccount, HttpServletRequest httpServletRequest) {
         String lastLoginIp = getUserIp(httpServletRequest);
         userAccount.setLastLoginIp(lastLoginIp);

@@ -419,7 +419,7 @@ public class UserController extends BaseController {
         // 修改UserAccount账户
         if (StringUtils.isNotBlank(accountNum)) {
 
-            UserAccount userAccount = userAccountService.getByPrimaryKey(userDetailId);
+            UserAccount userAccount = userAccountService.selectByUserPhone(accountNum);
             if (userAccount == null) {
                 return badRequestOfArguments("修改账户名失败,无此账户");
             }

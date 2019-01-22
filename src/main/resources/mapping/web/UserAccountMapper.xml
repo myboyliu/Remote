@@ -27,6 +27,11 @@
         select count(*) from user_account where user_phone = #{userPhone}
     </select>
 
+    <!--注册用户名查询-->
+    <select id="selectByUserPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from user_account where user_phone = #{userPhone}
+    </select>
+
     <!--login查询salt password-->
     <select id="selectSaltPw" parameterType="java.lang.String" resultMap="BaseResultMap">
         select  id,salt,user_password from user_account where user_phone = #{userPhone}
