@@ -172,7 +172,8 @@ public class UserController extends BaseController {
      * @param httpServletRequest
      */
     @PostMapping(value = "login")
-    public Map userLogin(@Validated UserAccount userAccount, BindingResult br, HttpServletRequest httpServletRequest) {
+    public Map userLogin(@Validated UserAccount userAccount, BindingResult br, HttpServletRequest
+            httpServletRequest) {
 
         if (br.hasErrors()) {
             return fieldErrorsBuilder(br);
@@ -330,41 +331,36 @@ public class UserController extends BaseController {
             }
         }
 
-        if (resultMap != null && !resultMap.isEmpty()) {
-
-            StringBuffer stringBuffer = new StringBuffer();
-            for (Map.Entry<String, String> m : resultMap.entrySet()) {
-                idList.add(m.getKey());
-                stringBuffer.append(m.getValue() + "、");
-            }
-            stringBuffer.deleteCharAt(stringBuffer.length() - 1);
-            // 病例类型名称集合
-            String typeName = stringBuffer.toString();
-
-            userDetail.setNeedCaseType(typeName);
-
-            // 删除原userId对应的UserCaseType字段,并添加新的 UserCaseType
-            int i = userCaseTypeService.deleteByUserId(userId);
-            if (i < 1) {
-                return badRequestOfDelete("删除原UserCaseType失败");
-            }
-
-            Map<String, String> userCaseTypeMap = new LinkedHashMap<>();
-            for (String id : idList) {
-                userCaseTypeMap.put(id, userId);
-            }
-            int k = userCaseTypeService.insertMulitple(userCaseTypeMap);
-            if (k < 1) {
-                return badRequestOfInsert("添加UserCaseType失败");
-            }
-
+        if (resultMap == null || resultMap.isEmpty()) {
+            return badRequestOfArguments("解析idTypeName失败");
         }
 
-        int j = userDetailService.updateByPrimaryKeySelective(userDetail);
-        if (j < 1) {
-            return badRequestOfUpdate("更新个人信息失败");
+        // 病例类型名称集合
+        StringBuffer stringBuffer = new StringBuffer();
+        for (Map.Entry<String, String> m : resultMap.entrySet()) {
+            idList.add(m.getKey());
+            stringBuffer.append(m.getValue() + "、");
+        }
+        stringBuffer.deleteCharAt(stringBuffer.length() - 1);
+        String typeName = stringBuffer.toString();
+        userDetail.setNeedCaseType(typeName);
+
+        // 删除原userId对应的UserCaseType字段,并添加新的 UserCaseType
+        int i = userCaseTypeService.deleteByUserId(userId);
+        if (i < 1) {
+            return badRequestOfDelete("删除原UserCaseType失败");
         }
 
+        Map<String, String> userCaseTypeMap = new LinkedHashMap<>();
+        for (String id : idList) {
+            userCaseTypeMap.put(id, userId);
+        }
+        int k = userCaseTypeService.insertMulitple(userCaseTypeMap);
+        if (k < 1) {
+            return badRequestOfInsert("添加UserCaseType失败");
+        }
+
+        // 修改UserSing
         UserSign userSign = new UserSign();
         userSign.setUpdateUser(userId);
         if (StringUtils.isNotBlank(signature)) {
@@ -378,6 +374,12 @@ public class UserController extends BaseController {
         if (l < 1) {
             return badRequestOfArguments("修改资格证失败");
         }
+
+        int j = userDetailService.updateByPrimaryKeySelective(userDetail);
+        if (j < 1) {
+            return badRequestOfUpdate("更新个人信息失败");
+        }
+
         return succeedRequest(userDetail);
     }
 
@@ -405,36 +407,107 @@ public class UserController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "managementUpdateUser")
-    public Map managementUpdateUser(UserDetail userDetail, String signature, String doctorCardFront) {
+    public Map managementUpdateUser(UserDetail userDetail, String userDetailId, String accountNum,
+                                    String idTypeName, String signature, String doctorCardFront) {
 
-        if (StringUtils.isBlank(userDetail.getId())) {
+        if (StringUtils.isBlank(userDetailId)) {
             return badRequestOfArguments("被修改用户id为空");
         }
 
         String userId = getRequestToken();
-        String id = userDetail.getId();
 
-        UserSign userSign = new UserSign();
-        userSign.setUpdateUser(userId);
-        if (StringUtils.isNotBlank(signature)) {
-            userSign.setSignature(signature);
-        }
-        if (StringUtils.isNotBlank(doctorCardFront)) {
-            userSign.setDoctorCardContrary(doctorCardFront);
-        }
-        userSign.setId(id);
-        int i = userSignService.updateByPrimaryKeySelective(userSign);
-        if (i < 1) {
-            return badRequestOfArguments("修改userSign失败");
+        // 修改UserAccount账户
+        if (StringUtils.isNotBlank(accountNum)) {
+
+            UserAccount userAccount = userAccountService.getByPrimaryKey(userDetailId);
+            if (userAccount == null) {
+                return badRequestOfArguments("修改账户名失败,无此账户");
+            }
+            if (accountNum.equals(userAccount.getUserPhone())) {
+                return badRequestOfArguments("账户名已存在,无法使用此名");
+            }
+
+            String salt = RandomStringUtils.randomAlphanumeric(32);
+            String newPsd = "yc123456";
+            String encryptionPassWord = DigestUtils.md5DigestAsHex((newPsd + salt).getBytes());
+            userAccount.setUserPhone(accountNum);
+            userAccount.setId(userDetailId);
+            userAccount.setUpdateUser(userId);
+            userAccount.setSalt(salt);
+            userAccount.setUserPassword(encryptionPassWord);
+            int i = userAccountService.updateByPrimaryKeySelective(userAccount);
+            if (i > 0) {
+                return succeedRequest("修改账号成功");
+            }
         }
 
+        // 修改UserSign
+        if (StringUtils.isNotBlank(signature) || StringUtils.isNotBlank(doctorCardFront)) {
+            UserSign userSign = new UserSign();
+            userSign.setUpdateUser(userId);
+            if (StringUtils.isNotBlank(signature)) {
+                userSign.setSignature(signature);
+            }
+            if (StringUtils.isNotBlank(doctorCardFront)) {
+                userSign.setDoctorCardContrary(doctorCardFront);
+            }
+            userSign.setId(userDetailId);
+            int i = userSignService.updateByPrimaryKeySelective(userSign);
+            if (i < 1) {
+                return badRequestOfArguments("修改userSign失败");
+            }
+        }
 
+        // 修改UserCaseType
+        if (StringUtils.isNotBlank(idTypeName)) {
+            // 删除原病例需求
+            int i = userCaseTypeService.deleteByUserId(userDetailId);
+            if (i < 0) {
+                return badRequestOfArguments("删除原兵力要求失败");
+            }
+
+            LinkedHashMap<String, String> resultMap;
+            try {
+                resultMap = JSON.parseObject(idTypeName, new TypeReference<LinkedHashMap<String, String>>() {
+                }, Feature.OrderedField);
+            } catch (Exception e) {
+                return badRequestOfArguments("idTypeName 格式错误");
+            }
+
+            List<String> idList = new ArrayList<>();
+            if (resultMap == null || resultMap.isEmpty()) {
+                return badRequestOfArguments("解析idTypeName失败");
+
+            }
+
+            // 病例类型名称集合
+            StringBuffer stringBuffer = new StringBuffer();
+            for (Map.Entry<String, String> m : resultMap.entrySet()) {
+                idList.add(m.getKey());
+                stringBuffer.append(m.getValue() + "、");
+            }
+            stringBuffer.deleteCharAt(stringBuffer.length() - 1);
+            String typeName = stringBuffer.toString();
+            userDetail.setNeedCaseType(typeName);
+
+            // 添加新的UserCaseType
+            Map<String, String> userCaseTypeMap = new LinkedHashMap<>();
+            for (String id : idList) {
+                userCaseTypeMap.put(id, userDetailId);
+            }
+            int j = userCaseTypeService.insertMulitple(userCaseTypeMap);
+            if (j < 1) {
+                return badRequestOfInsert("添加新的UserCaseType失败");
+            }
+        }
+
+        // 修改UserDetail
         userDetail.setUpdateUser(userId);
+        userDetail.setId(userDetailId);
         int j = userDetailService.updateByPrimaryKeySelective(userDetail);
         if (j < 1) {
             return badRequestOfArguments("修改userDetail失败");
         }
-
 
         return succeedRequest("修改成功");
     }
