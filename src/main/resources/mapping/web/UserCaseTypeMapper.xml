@@ -30,7 +30,7 @@
     <update id="deleteByUserId" parameterType="java.lang.String">
         update user_case_type
         <set>
-            del_flag = 1
+            del_flag = "1"
         </set>
         where user_id = #{userId}
     </update>

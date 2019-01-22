@@ -82,6 +82,7 @@ public class UserController extends BaseController {
      * @param httpServletRequest
      * @return
      */
+    @Transactional
     @PostMapping(value = "register")
     public Map userRegister(@Validated UserAccount userAccount, BindingResult brOfUserAccount,
                             @Validated UserDetail userDetail, BindingResult brOfUserDet,
@@ -402,6 +403,7 @@ public class UserController extends BaseController {
     /**
      * 管理中心修改医生信息
      */
+    @Transactional
     @PostMapping(value = "managementUpdateUser")
     public Map managementUpdateUser(UserDetail userDetail, String signature, String doctorCardFront) {
 
@@ -457,14 +459,15 @@ public class UserController extends BaseController {
      * 医生注册审核通过
      */
     @PostMapping(value = "agreeRegister")
-    public Map agreeRegister(UserSign userSign) {
+    public Map agreeRegister(String userId) {
 
-        String userId = getRequestToken();
-        if (StringUtils.isBlank(userSign.getId())) {
+        if (StringUtils.isBlank(userId)) {
             return badRequestOfArguments("userSing为空");
         }
 
-        userSign.setUpdateUser(userId);
+        UserSign userSign = new UserSign();
+        userSign.setId(userId);
+        userSign.setUpdateUser(getRequestToken());
         userSign.setApproveStatus(DoctorCertified.AUTHENTICATION_ACCEDE.toString());
         int i = userSignService.updateByPrimaryKeySelective(userSign);
         if (i > 0) {
@@ -478,16 +481,14 @@ public class UserController extends BaseController {
      * 医生注册审核未通过
      */
     @PostMapping(value = "disagreeRegister")
-    public Map disagreeRegister(UserSign userSign) {
+    public Map disagreeRegister(String userId) {
 
-        String userId = getRequestToken();
-        if (StringUtils.isBlank(userSign.getId())) {
-            return badRequestOfArguments("userDetailId为空");
+        String operatorId = getRequestToken();
+        if (StringUtils.isBlank(userId)) {
+            return badRequestOfArguments("医生id为空或医政id未获取");
         }
 
-        userSign.setUpdateUser(userId);
-        userSign.setApproveStatus(DoctorCertified.AUTHENTICATION_FAILED.toString());
-        int i = userSignService.updateByPrimaryKeySelective(userSign);
+        int i = userSignService.auditNotPass(operatorId, userId);
         if (i > 0) {
             return succeedRequest("审核未通过");
         }
