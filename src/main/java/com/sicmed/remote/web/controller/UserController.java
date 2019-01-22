@@ -331,9 +331,6 @@ public class UserController extends BaseController {
             }
         }
 
-        if (resultMap == null || resultMap.isEmpty()) {
-            return badRequestOfArguments("解析idTypeName失败");
-        }
 
         // 病例类型名称集合
         StringBuffer stringBuffer = new StringBuffer();
@@ -347,7 +344,7 @@ public class UserController extends BaseController {
 
         // 删除原userId对应的UserCaseType字段,并添加新的 UserCaseType
         int i = userCaseTypeService.deleteByUserId(userId);
-        if (i < 1) {
+        if (i < 0) {
             return badRequestOfDelete("删除原UserCaseType失败");
         }
 
@@ -356,23 +353,25 @@ public class UserController extends BaseController {
             userCaseTypeMap.put(id, userId);
         }
         int k = userCaseTypeService.insertMulitple(userCaseTypeMap);
-        if (k < 1) {
+        if (k < 0) {
             return badRequestOfInsert("添加UserCaseType失败");
         }
 
         // 修改UserSing
-        UserSign userSign = new UserSign();
-        userSign.setUpdateUser(userId);
-        if (StringUtils.isNotBlank(signature)) {
-            userSign.setSignature(signature);
-        }
-        if (StringUtils.isNotBlank(doctorCardFront)) {
-            userSign.setDoctorCardFront(doctorCardFront);
-        }
-        userSign.setId(userId);
-        int l = userSignService.updateByPrimaryKeySelective(userSign);
-        if (l < 1) {
-            return badRequestOfArguments("修改资格证失败");
+        if (StringUtils.isNotBlank(signature) || StringUtils.isNotBlank(doctorCardFront)) {
+            UserSign userSign = new UserSign();
+            userSign.setUpdateUser(userId);
+            if (StringUtils.isNotBlank(signature)) {
+                userSign.setSignature(signature);
+            }
+            if (StringUtils.isNotBlank(doctorCardFront)) {
+                userSign.setDoctorCardFront(doctorCardFront);
+            }
+            userSign.setId(userId);
+            int l = userSignService.updateByPrimaryKeySelective(userSign);
+            if (l < 1) {
+                throw new RuntimeException();
+            }
         }
 
         int j = userDetailService.updateByPrimaryKeySelective(userDetail);
@@ -434,8 +433,8 @@ public class UserController extends BaseController {
             userAccount.setSalt(salt);
             userAccount.setUserPassword(encryptionPassWord);
             int i = userAccountService.updateByPrimaryKeySelective(userAccount);
-            if (i > 0) {
-                return succeedRequest("修改账号成功");
+            if (i < 1) {
+                return succeedRequest("修改账号失败");
             }
         }
 
@@ -452,17 +451,12 @@ public class UserController extends BaseController {
             userSign.setId(userDetailId);
             int i = userSignService.updateByPrimaryKeySelective(userSign);
             if (i < 1) {
-                return badRequestOfArguments("修改userSign失败");
+                throw new RuntimeException();
             }
         }
 
         // 修改UserCaseType
         if (StringUtils.isNotBlank(idTypeName)) {
-            // 删除原病例需求
-            int i = userCaseTypeService.deleteByUserId(userDetailId);
-            if (i < 0) {
-                return badRequestOfArguments("删除原兵力要求失败");
-            }
 
             LinkedHashMap<String, String> resultMap;
             try {
@@ -473,9 +467,11 @@ public class UserController extends BaseController {
             }
 
             List<String> idList = new ArrayList<>();
-            if (resultMap == null || resultMap.isEmpty()) {
-                return badRequestOfArguments("解析idTypeName失败");
 
+            // 删除原病例需求
+            int i = userCaseTypeService.deleteByUserId(userDetailId);
+            if (i < 0) {
+                return badRequestOfArguments("删除原病例要求失败");
             }
 
             // 病例类型名称集合
@@ -494,8 +490,8 @@ public class UserController extends BaseController {
                 userCaseTypeMap.put(id, userDetailId);
             }
             int j = userCaseTypeService.insertMulitple(userCaseTypeMap);
-            if (j < 1) {
-                return badRequestOfInsert("添加新的UserCaseType失败");
+            if (j < 0) {
+                return badRequestOfArguments("添加新的病例需求失败");
             }
         }
 
@@ -504,7 +500,8 @@ public class UserController extends BaseController {
         userDetail.setId(userDetailId);
         int j = userDetailService.updateByPrimaryKeySelective(userDetail);
         if (j < 1) {
-            return badRequestOfArguments("修改userDetail失败");
+            throw new RuntimeException();
+
         }
 
         return succeedRequest("修改成功");
