@@ -171,7 +171,7 @@ where ud.id = #{userId} and ud.del_flag = "0"
         from user_detail ud
         left join user_sign us on us.id = ud.id
         where
-        ud.del_flag = "0"
+        ud.del_flag = "0" and us.approve_status = "AUTHENTICATION_ACCEDE"
         AND ud.branch_id = #{branchId}
     </select>
 
