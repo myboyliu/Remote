@@ -366,18 +366,4 @@ public class ApplyController extends BaseController {
         return succeedRequest(applyFormBean);
     }
 
-    /**
-     * 医生查询草稿数量
-     */
-    @GetMapping(value = "draftCount")
-    public Map draftSelect() {
-
-        String userId = getRequestToken();
-        if (StringUtils.isBlank(userId)) {
-            return badRequestOfArguments("获取登录用户id失败");
-        }
-        int i = applyFormService.countDraft(userId);
-        return succeedRequest(i);
-    }
-
 }

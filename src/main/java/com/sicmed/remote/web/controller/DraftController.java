@@ -38,6 +38,20 @@ public class DraftController extends BaseController {
     private CaseContentService caseContentService;
 
     /**
+     * 医生查询草稿数量
+     */
+    @GetMapping(value = "draftCount")
+    public Map draftCount() {
+
+        String userId = getRequestToken();
+        if (StringUtils.isBlank(userId)) {
+            return badRequestOfArguments("获取登录用户id失败");
+        }
+        int i = applyFormService.countDraft(userId);
+        return succeedRequest(i);
+    }
+
+    /**
      * 用户查询草稿
      */
     @GetMapping(value = "selectByUser")
@@ -48,7 +62,7 @@ public class DraftController extends BaseController {
         }
 
         ApplyForm applyForm = new ApplyForm();
-        applyForm.setCreateUser(userId);
+        applyForm.setApplyUserId(userId);
         applyForm.setApplyType(ApplyType.APPLY_DRAFT.toString());
         List<ApplyForm> applyFormList = applyFormService.findByDynamicParam(applyForm);
         if (applyFormList == null) {
