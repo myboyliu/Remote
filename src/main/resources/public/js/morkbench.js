@@ -370,8 +370,11 @@ function currentReferralCount() {
 }
 
 // 获取草稿箱数据
-function getDrafts(pageNo, pageSize) {
-
+function getDraftsCount() {
+    ajaxRequest("GET", draftCount, null, false, false, true, draftCountSuccess, null, null);
+    function draftCountSuccess(result) {
+        console.log(result)
+    }
 }
 
 // 查看订单详情
@@ -381,6 +384,7 @@ function selectOrderById(orderId) {
 }
 
 $(function () {
+    getDraftsCount();
     getInviteCount();
     pageCount = $("#INVITE_ACCEPT").html();
 

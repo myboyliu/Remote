@@ -172,7 +172,10 @@ const sirTransferMasterReject = "/apply/dispose/sirTransferMasterReject";       
 const sirTransferDateCheckAccede = "/apply/dispose/sirTransferDateCheckAccede";         //排期审核 同意
 const sirTransferDateCheckReject = "/apply/dispose/sirTransferDateCheckReject";         //排期审核 拒绝
 
+/** 草稿接口 */
+const selectByUser = "/draft/selectByUser";                                             //想草稿列表
 /** 分页数量查询接口 */
+const draftCount = "/draft/draftCount";                                                 //草稿数量
 const sendSelectAllCountDoctor = "/apply/consultation/sendSelectAllCountDoctor";        //首诊医生发出列表
 const receiveSelectAllCountDoctor = "/apply/consultation/receiveSelectAllCountDoctor";  //会诊医生接受列表
 const sendSelectAllCountSir = "/apply/consultation/sendSelectAllCountSir";              //首诊医政发出列表
