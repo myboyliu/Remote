@@ -14,6 +14,9 @@ const getPersonalInfoUrl = "/user/dorPersonalCenter";                           
 const modifyPassword = "/user/modifyPassword";                                  //跟据旧密码修改密码
 const modifyPersonalInfo = "/user/modifyPersonal";                              //修改个人信息
 
+/** 医政 管理中心接口 */
+const managementUpdateUser = "/user/managementUpdateUser";                      //医政修改医生信息
+
 const getDoctorDetailByIdUrl = "/user/personalCenter";                          //查询医生详细信息
 
 const getAllHospital = "/hospital/select";                                      //查询所有医院类别

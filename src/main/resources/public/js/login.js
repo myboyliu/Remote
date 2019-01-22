@@ -27,9 +27,11 @@ $(function () {
             var data = new FormData();
             data.append("userPhone", $('#iphoneInputIn').val());
             data.append("userPassword", $('#passwordUp').val());
-            ajaxRequest("POST", loginUrl, data, false, false, true, loginSuccess, function () {
-                layer.msg("用户名或密码错误！", {time: 2000});
-            }, null);
+            ajaxRequest("POST", loginUrl, data, false, false, true, loginSuccess, loginFailed, null);
+
+            function loginFailed(data) {
+                layer.msg(data.result, {time: 2000});
+            }
 
             /**登陆成功回调方法*/
             function loginSuccess(responseJson) {

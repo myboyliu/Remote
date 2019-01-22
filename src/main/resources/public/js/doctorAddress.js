@@ -40,6 +40,7 @@ function renderLeftNavigation(data) {
 
 /** 渲染 医生列表 */
 function renderDoctorListView(data) {
+    console.log(data)
     let hospitalId = $("#hospitalBranchNavigation li.active").attr("hospitalid");
     let hospitalName = $("#hospitalBranchNavigation li.active p").attr("title");
     let branchId = $("#hospitalBranchNavigation li.active ul li.active ul li.active").attr("name");

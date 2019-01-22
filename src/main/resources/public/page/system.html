@@ -206,7 +206,7 @@
                 <div class="coverage"></div>
                 <div class="textItem">
                     <h3>登录账号</h3>
-                    <input id="userName" class="accountText readonlyText" readonly="readonly" type="text">
+                    <input maxlength="11" id="userName" class="accountText" type="text">
                     <input id="userId" type="hidden">
                 </div>
                 <div class="textItem">
@@ -214,27 +214,36 @@
                     <select class="powerSelect" name="" lay-filter="">
                     </select>
                 </div>
-                <div class="textItem clearfix">
-                    <img style="width: 80px; height: 80px;" src="/GhqcXkqLzEfdpm6J.jpg" id="doctorCardImg">
-                    <h3>上传医师执业资格证<span>限jpg/png/pdf格式</span></h3>
-                    <span id="cardName" class="cardName fileNameSpan">打开本地文件</span>
-                    <input id="cardUpload" class="file cardUp" type="file" accept=".png,.jpg,.pdf">
-                    <a class="cardBtn" href="javascript:;">上传</a>
+
+                <div class="imgItem clearfix">
+                    <p>
+                        <span>医师执业资格证</span>
+                    </p>
+                    <div class="imgBox">
+                        <img id="doctorCardImgBox" src="">
+                    </div>
+                    <span  class="">选择文件</span>
+                    <input id="doctorCardUploadInput" class="file" type="file" accept=".png,.jpg,.pdf">
+                    <h3>支持jpg/png/pdf,大小不超过5M</h3>
                 </div>
-                <div class="textItem clearfix">
-                    <img style="width: 80px; height: 80px;" src="/GhqcXkqLzEfdpm6J.jpg" id="doctorSignImg">
-                    <h3>上传签名<span>限jpg/png/pdf格式</span></h3>
-                    <span id="signName" class="signName fileNameSpan">打开本地文件</span>
-                    <input id="signUpload" class="file signUp" type="file" accept=".png,.jpg,.pdf">
-                    <a class="signBtn" href="javascript:;">上传</a>
+                <div class="imgItem clearfix">
+                    <p>
+                        <span class="odds">签名</span>
+                    </p>
+                    <div class="imgBox">
+                        <img id="signatureImgBox" src="">
+                    </div>
+                    <span class="">选择文件</span>
+                    <input id="signatureUploadInput" class="file" type="file" accept=".png,.jpg,.pdf">
+                    <h3>支持jpg/png/pdf,大小不超过5M</h3>
                 </div>
                 <div class="textItem">
                     <h3>姓名</h3>
-                    <input id="name" class="accountText" type="text">
+                    <input maxlength="16" id="name" class="accountText" type="text">
                 </div>
                 <div class="textItem">
                     <h3>电话</h3>
-                    <input id="telephone" class="accountText" type="text">
+                    <input maxlength="11" id="telephone" class="accountText" type="text">
                 </div>
                 <div class="textItem">
                     <h3>职称</h3>
@@ -263,17 +272,17 @@
                 </div>
                 <div class="textItem">
                     <h3>图文诊费/元</h3>
-                    <input id="medicalFees" class="accountText imgPrice" onkeyup="value=value.replace(/[^\d]/g,'')"
+                    <input maxlength="6" id="medicalFees" class="accountText imgPrice" onkeyup="value=value.replace(/[^\d]/g,'')"
                            type="text">
                 </div>
                 <div class="textItem">
                     <h3>视频诊费/元</h3>
-                    <input id="medicalFeesVideo" class="accountText videoPrice"
+                    <input maxlength="6" id="medicalFeesVideo" class="accountText videoPrice"
                            onkeyup="value=value.replace(/[^\d]/g,'')" type="text">
                 </div>
                 <div class="textareaItem">
                     <h3>擅长<span>可输入擅长的疾病、擅长的治疗技术...</span></h3>
-                    <textarea id="beGoodAt" name="name" rows="" cols="" class="text-adaption"></textarea>
+                    <textarea maxlength="1024" id="beGoodAt" name="name" rows="" cols="" class="text-adaption"></textarea>
                 </div>
                 <div class="requireContent">
                     <h3>病历要求<span>从下方提供的列表中选择</span></h3>
