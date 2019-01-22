@@ -420,13 +420,11 @@ public class UserController extends BaseController {
         if (StringUtils.isNotBlank(accountNum)) {
 
             UserAccount userAccount = userAccountService.selectByUserPhone(accountNum);
-            if (userAccount == null) {
-                return badRequestOfArguments("修改账户名失败,无此账户");
-            }
-            if (accountNum.equals(userAccount.getUserPhone())) {
-                return badRequestOfArguments("账户名已存在,无法使用此名");
+            if (userAccount != null) {
+                return badRequestOfArguments("账户名已存在");
             }
 
+            userAccount = new UserAccount();
             String salt = RandomStringUtils.randomAlphanumeric(32);
             String newPsd = "yc123456";
             String encryptionPassWord = DigestUtils.md5DigestAsHex((newPsd + salt).getBytes());
