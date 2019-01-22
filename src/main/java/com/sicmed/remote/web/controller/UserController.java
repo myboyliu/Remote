@@ -251,7 +251,7 @@ public class UserController extends BaseController {
         if (userControllerBean == null) {
             return badRequestOfSelect("个人中心查询信息失败");
         }
-        userControllerBean.setHospitalName(currentUserBean.getHospitalName());
+
         userControllerBean.setBranchName(currentUserBean.getBranchName());
         userControllerBean.setSpecialistTypeName(currentUserBean.getSpecialistTypeName());
         return succeedRequestOfSelect(userControllerBean);

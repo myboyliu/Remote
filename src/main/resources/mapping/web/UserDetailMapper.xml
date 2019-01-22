@@ -99,10 +99,13 @@
         <result column="ua_phone" jdbcType="VARCHAR" property="userPhone"/>
 
         <!--一个userDetailId对应一个userSign-->
-
         <result column="us_st" jdbcType="VARCHAR" property="signature"/>
         <result column="us_dcf" jdbcType="VARCHAR" property="doctorCardFront"/>
         <result column="us_as" jdbcType="VARCHAR" property="approveStatus"/>
+        <result column="us_as" jdbcType="VARCHAR" property="approveStatus"/>
+
+        <!--医院名称-->
+        <result column="bh_hn" jdbcType="VARCHAR" property="hospitalName"/>
 
         <!--一个userDetailId对应多个userCaseType-->
         <collection property="caseTypeIds" ofType="com.sicmed.remote.web.entity.UserCaseType" javaType="ArrayList">
@@ -125,12 +128,14 @@ ua.user_phone ua_phone,
 us.signature us_st,
 us.doctor_card_front us_dcf,
 us.approve_status us_as,
-ut.case_type_id ut_cyi
+ut.case_type_id ut_cyi,
+bh.hospital_name bh_hn
 from user_detail ud
 left join user_account ua on ud.id = ua.id and ua.del_flag = '0'
 left join user_sign us on ud.id = us.id and us.del_flag = '0'
 left  join user_case_type ut on ud.id = ut.user_id and ut.del_flag = '0'
-where ud.id = #{userId}
+left join base_hospital bh on ud.hospital_id = bh.id
+where ud.id = #{userId} and ud.del_flag = "0"
     </select>
 
     <!--branchId查询userDetail   医生通讯录医生信息展示-->
