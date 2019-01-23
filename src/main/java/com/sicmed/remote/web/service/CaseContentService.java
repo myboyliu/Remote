@@ -50,9 +50,9 @@ public class CaseContentService implements BaseService<CaseContent> {
         return caseContentMapper.insertByMap(caseContentBean);
     }
 
-    // 草稿创建完整病例
+    // 草稿创建病例
     @Transactional
-    public int draftInsertFullCase(CasePatient casePatient, String casePatientId, CaseRecord caseRecord, String caseRecordId,
+    public int draftInsertCase(CasePatient casePatient, String casePatientId, CaseRecord caseRecord, String caseRecordId,
                                    List<CaseContent> resultList, String userId) {
         casePatient.setId(casePatientId);
         casePatient.setUpdateUser(userId);

@@ -160,13 +160,53 @@ public class DraftController extends BaseController {
         } catch (Exception e) {
             return badRequestOfArguments("pathWeightTypeId 填写错误");
         }
+        if (resultList.size() == 0) {
+            return badRequestOfArguments("无病例需求文件");
+        }
 
         String userId = getRequestToken();
-        int i = caseContentService.draftInsertFullCase(casePatient, casePatientId, caseRecord, caseRecordId, resultList, userId);
+        int i = caseContentService.draftInsertCase(casePatient, casePatientId, caseRecord, caseRecordId, resultList, userId);
         if (i < 1) {
             return badRequestOfArguments("创建病例失败");
         }
         return succeedRequest(caseRecord);
     }
 
+    /**
+     * 草稿,保存草稿
+     */
+    @PostMapping(value = "saveDraft")
+    public Map saveDraft(CasePatient casePatient, String casePatientId, CaseRecord caseRecord, String caseRecordId,
+                         String weightPathTypeId) {
+
+        if (StringUtils.isBlank(casePatient.getPatientName()) || StringUtils.isBlank(casePatient.getPatientCard())
+                || StringUtils.isBlank(weightPathTypeId)) {
+            return badRequestOfArguments("数据不全,无法创建草稿");
+        }
+
+        if (!IdentityCardUtil.validateCard(casePatient.getPatientCard())) {
+            return badRequestOfArguments("身份证输入有误");
+        }
+
+        // 文件路径 与 病例文件id map解析,添加病例附件
+        List<CaseContent> resultList;
+        try {
+            resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList>() {
+            }, Feature.OrderedField);
+        } catch (Exception e) {
+            return badRequestOfArguments("pathWeightTypeId 填写错误");
+        }
+
+        if (resultList.size() == 0) {
+            return badRequestOfArguments("无病例需求文件");
+        }
+
+        String userId = getRequestToken();
+        int i = caseContentService.draftInsertCase(casePatient, casePatientId, caseRecord, caseRecordId, resultList, userId);
+        if (i < 1) {
+            return badRequestOfArguments("创建病例失败");
+        }
+        return succeedRequest(caseRecord);
+
+    }
 }

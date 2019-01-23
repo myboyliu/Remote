@@ -121,6 +121,9 @@ public class CaseController extends BaseController {
         } catch (Exception e) {
             return badRequestOfArguments("pathWeightTypeId 填写错误");
         }
+        if (resultList.size() == 0) {
+            return badRequestOfArguments("无病例需求文件");
+        }
         CaseContentBean caseContentBean = new CaseContentBean();
         caseContentBean.setCasePatient(casePatient);
         caseContentBean.setCaseRecord(caseRecord);
@@ -157,6 +160,10 @@ public class CaseController extends BaseController {
             }, Feature.OrderedField);
         } catch (Exception e) {
             return badRequestOfArguments("pathWeightTypeId 填写错误");
+        }
+
+        if (resultList.size() == 0) {
+            return badRequestOfArguments("无病例需求文件");
         }
 
         CaseContentBean caseContentBean = new CaseContentBean();

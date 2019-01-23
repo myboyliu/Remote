@@ -56,8 +56,12 @@ public class ApplyController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "draft")
-    public Map draft(ApplyForm applyForm, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport) {
+    public Map draft(ApplyForm applyForm, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport,
+                     String draftId) {
 
+        if (StringUtils.isNotBlank(draftId)) {
+            applyFormService.deleteApplyFormDraft(draftId);
+        }
 
         String userId = getRequestToken();
         // 添加applyForm,applyStatus申请状态为草稿
