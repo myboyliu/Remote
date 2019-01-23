@@ -114,7 +114,6 @@ public class CaseController extends BaseController {
         }*/
 
         // 文件路径 与 病例文件id map解析,添加病例附件
-
         List<CaseContent> resultList;
         try {
             resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList>() {

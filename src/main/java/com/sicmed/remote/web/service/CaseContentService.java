@@ -3,6 +3,7 @@ package com.sicmed.remote.web.service;
 import com.sicmed.remote.web.bean.CaseContentBean;
 import com.sicmed.remote.web.entity.CaseContent;
 import com.sicmed.remote.web.entity.CasePatient;
+import com.sicmed.remote.web.entity.CaseRecord;
 import com.sicmed.remote.web.mapper.CaseContentMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,11 +47,35 @@ public class CaseContentService implements BaseService<CaseContent> {
 
         return caseContentMapper.insertByMap(caseContentBean);
     }
+
+    // 草稿创建完整病例
+    @Transactional
+    public int draftInsertFullCase(CasePatient casePatient, String casePatientId, CaseRecord caseRecord, String caseRecordId,
+                                   List<CaseContent> resultList, String userId) {
+        casePatient.setId(casePatientId);
+        casePatient.setUpdateUser(userId);
+        casePatientService.updateByPrimaryKeySelective(casePatient);
+
+        caseRecord.setId(caseRecordId);
+        caseRecord.setUpdateUser(userId);
+        caseRecordService.updateByPrimaryKeySelective(caseRecord);
+
+        caseContentMapper.deleteByCaseRecordId(caseRecordId);
+
+        CaseContentBean caseContentBean = new CaseContentBean();
+        caseContentBean.setCasePatient(casePatient);
+        caseContentBean.setRecordId(caseRecordId);
+        caseContentBean.setCreateUser(userId);
+        caseContentBean.setWeightPathTypeId(resultList);
+        return caseContentMapper.insertByMap(caseContentBean);
+    }
+
     // 创建病例
     public int insertContentByMap(CaseContentBean caseContentBean) {
 
         return caseContentMapper.insertByMap(caseContentBean);
     }
+
     public int deleteByCaseRecordId(String caseRecordId) {
         return caseContentMapper.deleteByCaseRecordId(caseRecordId);
     }
@@ -65,9 +90,10 @@ public class CaseContentService implements BaseService<CaseContent> {
     }
 
     // 由recordId查询
-    public List<CaseContent> findByCaseRecordId(String caseRecordId){
+    public List<CaseContent> findByCaseRecordId(String caseRecordId) {
         return caseContentMapper.findByCaseRecordId(caseRecordId);
     }
+
     @Override
     public int insertSelective(CaseContent caseContent) {
         return caseContentMapper.insertSelective(caseContent);

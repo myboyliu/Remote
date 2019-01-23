@@ -34,8 +34,11 @@ public class CaseRecord extends BaseEntity {
     @Size(min = 2, max = 255, message = "caseDiagnosis 长度不合规")
     private String caseDiagnosis;
 
+    @Min(1)
+    @Max(150)
     private Integer patientAge;
 
+    @NotBlank
     private String patientSex;
 
     @Min(value = 10, message = "身高不能小于10cm")

@@ -85,7 +85,6 @@ public class ApplyController extends BaseController {
             return badRequestOfArguments("未能获取登录用户Id");
         }
 
-
         // 添加病例所需文件 文件路径 与 病例文件id map解析
         List<CaseContent> resultList;
         try {
