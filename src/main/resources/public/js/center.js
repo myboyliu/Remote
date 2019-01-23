@@ -208,6 +208,9 @@ $(function () {
                 }
                 caseTypeJsonStr = caseTypeJsonStr.substring(0, caseTypeJsonStr.length - 1);
                 caseTypeJsonStr += "}";
+                if( $('.checkSingle.CheckBg').length === 0){
+                    caseTypeJsonStr = "{}";
+                }
                 formData.append("idTypeName", caseTypeJsonStr);
             }
 
@@ -216,6 +219,7 @@ $(function () {
             ajaxRequest("POST", modifyPersonalInfo, formData, false, false, true, modifyPersonalInfoSuccess, modifyPersonalInfoFailed, null);
 
             function modifyPersonalInfoSuccess(result) {
+                formData = new FormData();
                 layer.open({
                     type: 1,
                     title: false,
@@ -237,6 +241,7 @@ $(function () {
             }
 
             function modifyPersonalInfoFailed(result) {
+                formData = new FormData();
                 layer.open({
                     type: 1,
                     title: false,

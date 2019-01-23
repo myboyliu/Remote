@@ -175,6 +175,15 @@ function emptySelect() {
     $('#tabContent').html("");
 }
 
+/** 渲染 草稿列表 */
+function renderDraftListView(data) {
+    let _html = '';
+    for (let i = 0; i < data.length; i++) {
+        _html += '<tr name="' + data[i].id + '"><td><p class="w520" title="' + data[i].caseSummary + '">' + data[i].caseSummary + '</p></td></tr>';
+    }
+    $('.drafts_tbody').html(_html);
+}
+
 /** 医生受邀订单列表 */
 function getInvitedList(inviteStatus, pageNoParam, pageSizeParam) {
     pageNo = pageNoParam;
@@ -268,6 +277,13 @@ function getReferralList(inviteStatus, pageNoParam, pageSizeParam) {
     }
 }
 
+/** 医生草稿列表 */
+function getDraftList(pageNoParam, pageSizeParam) {
+    pageNo = pageNoParam;
+    pageSize = pageSizeParam;
+    ajaxRequest("GET", selectByUser, null, false, false, false, renderDraftListView, emptySelect, null);
+}
+
 /** 分页查询会诊列表数据 */
 function showPageList(status, feedBackFunction) {
     layui.use('laypage', function () {
@@ -297,6 +313,23 @@ function showReferralPageList(status, feedBackFunction) {
             theme: '#f6c567',
             jump: function (obj, first) {
                 feedBackFunction(status, obj.curr, pageSize);
+            }
+        });
+    });
+}
+
+/** 分页查询 草稿数量 */
+function showDraftPageList(feedBackFunction) {
+    layui.use('laypage', function () {
+        const laypage = layui.laypage;
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'drafts',
+            count: pageCount,
+            limit: pageSize,
+            theme: '#f6c567',
+            jump: function (obj, first) {
+                feedBackFunction(obj.curr, pageSize);
             }
         });
     });
@@ -373,7 +406,7 @@ function currentReferralCount() {
 function getDraftsCount() {
     ajaxRequest("GET", draftCount, null, false, false, true, draftCountSuccess, null, null);
     function draftCountSuccess(result) {
-        console.log(result)
+        $("#DRAFT").html(Number(result))
     }
 }
 
@@ -381,6 +414,11 @@ function getDraftsCount() {
 function selectOrderById(orderId) {
     sessionStorage.setItem('applyFormId', orderId);
     window.location = '../page/doctorApplyInfo.html';
+}
+// 查看草稿详情
+function selectDraftById(orderId) {
+    sessionStorage.setItem('draftId', orderId);
+    window.location = '../page/createCase.html';
 }
 
 $(function () {
@@ -435,7 +473,7 @@ $(function () {
             $('.drafts_table').css("display", 'block');
             $('.tables').css('display', 'none');
             $('.referralTable').css("display", 'none');
-            getDrafts(pageNo, pageSize);
+            showDraftPageList(getDraftList);
         }
     });
 
@@ -505,8 +543,7 @@ $(function () {
     });
     // 草稿箱详情
     $('.drafts_tbody').delegate('tr', 'click', function () {
-        localStorage.setItem('detailsId', $(this).attr('name'));
-        window.location = '/yilaiyiwang/detailsDraft/detailsDraft.html';
+        selectDraftById( $(this).attr('name'))
     })
 
     /*日历点击显示隐藏 */

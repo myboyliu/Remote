@@ -71,7 +71,8 @@ const uploadFileUrl = "/file/upload";
 
 /** 创建病历模块 */
 const createCaseUrl = "/case/insertNewCase";                                            //创建病历接口
-const createDraftApplyUrl = "/apply/draft";                                             //创建草稿
+const insertHalfCase = "/case/insertHalfCase";                                          //创建不完整病历接口
+const createDraft = "/apply/draft";                                                     //创建草稿
 const createReferralApplyUrl = "/apply/transfer";                                       //创建转诊
 const createPictureApplyUrl = "/apply/picture";                                         //创建图文会诊
 const createVideoApplyUrl = "/apply/video";                                             //创建视频会诊
@@ -174,6 +175,8 @@ const sirTransferDateCheckReject = "/apply/dispose/sirTransferDateCheckReject"; 
 
 /** 草稿接口 */
 const selectByUser = "/draft/selectByUser";                                             //想草稿列表
+const draftDel = "/draft/draftDel";                                                     //删除草稿
+const draftFullCase = "/draft/draftFullCase";                                           //草稿病历完善
 /** 分页数量查询接口 */
 const draftCount = "/draft/draftCount";                                                 //草稿数量
 const sendSelectAllCountDoctor = "/apply/consultation/sendSelectAllCountDoctor";        //首诊医生发出列表
