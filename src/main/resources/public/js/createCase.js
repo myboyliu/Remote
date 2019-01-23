@@ -192,6 +192,55 @@ function getDoctorByBranchId(deptId) {
     const data = {"branchId": deptId};
     ajaxRequest("GET", getDoctorListByBranchIdUrl, data, true, "application/json", false, renderDoctorList, null, null);
 }
+function updateDraftCaseData(successCallBack){
+    let data = new FormData();
+    let caseContentArray = [];
+    if (fileAllArr.length > 0) {
+        // 图片描述和类型
+        const descArr = $('.upfileUl > li.upfileItem');
+        for (let i = 0; i < descArr.length; i++) {
+            const fileLi = descArr.eq(i).find('.fileContent > li.fileItem');
+            for (let j = 0; j < fileLi.length; j++) {
+                caseContentArray.push({
+                    contentTypeId: descArr.eq(i).attr("id"),
+                    contentPath: fileLi.eq(j).find("p.fileName").html(),
+                    contentRemark: fileLi.eq(j).find("p.fileName").attr("desc"),
+                    orderWeight: j
+                })
+            }
+        }
+    }
+    let patientSex = $('.sex > a.active').html();
+    let patientAge = $('#age').val() + $('.choiceAge').val();
+    let caseDiagnosis = $('#createCase_textDiagnose').val();
+    //患者信息
+    data.append("casePatientId", casePatientId);
+    data.append("patientName", $('#username').val());
+    data.append("patientCard", $('#idCard').val());
+    data.append("patientPhone", $('#phone').val());
+    data.append("detailAddress", $('#address').val());
+    //病历信息
+    data.append("caseRecordId", caseRecordId);
+    data.append("patientAge", $('#age').val());// + $('.choiceAge').val()
+    data.append("patientSex", patientSex);
+    data.append("patientHeight", $('#high').val());
+    data.append("patientWeight", Number($('#weight').val()) * 1000);
+    data.append("caseDiagnosis", caseDiagnosis); //初步诊断
+    data.append("weightPathTypeId", JSON.stringify(caseContentArray)); //病历附件信息
+    let caseSummary = "***/" + patientSex + "/" + patientAge + "/" + caseDiagnosis;
+
+    /** 提交病历信息*/
+    ajaxRequest("POST", updateDraftCase, data, false, false, true, createCaseSuccess, failedParam, null);
+
+    function failedParam(data) {
+        layer.closeAll();
+        layer.msg(data.result);
+    }
+
+    function createCaseSuccess(result) {
+        successCallBack(result.id, caseSummary);
+    }
+}
 
 function updateCaseData(successCallBack) {
     let data = new FormData();
@@ -1318,7 +1367,7 @@ $(function () {
             return false;
         }
         if (isDraft) {
-            updateCaseData(createDraftApplyData);
+            updateDraftCaseData(createDraftApplyData);
         } else {
             createHalfCase(createDraftApplyData);
         }

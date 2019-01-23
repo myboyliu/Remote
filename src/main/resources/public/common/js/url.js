@@ -73,6 +73,7 @@ const uploadFileUrl = "/file/upload";
 const createCaseUrl = "/case/insertNewCase";                                            //创建病历接口
 const insertHalfCase = "/case/insertHalfCase";                                          //创建不完整病历接口
 const createDraft = "/apply/draft";                                                     //创建草稿
+const updateDraftCase = "/draft/saveDraft";                                             //修改草稿病历
 const createReferralApplyUrl = "/apply/transfer";                                       //创建转诊
 const createPictureApplyUrl = "/apply/picture";                                         //创建图文会诊
 const createVideoApplyUrl = "/apply/video";                                             //创建视频会诊
