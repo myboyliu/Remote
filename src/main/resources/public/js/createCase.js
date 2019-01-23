@@ -738,6 +738,8 @@ function renderDraftInfo(draftInfo) {
 
 $(function () {
 
+    // let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    // if(userInfo)
     /**查询病历类型列表*/
     ajaxRequest("GET", getAllCaseContentType, null, true, false, false, renderCaseTypeLeftNavigation, null, null);
     /** 获取通讯录左侧导航数据 */
@@ -1316,7 +1318,7 @@ $(function () {
             return false;
         }
         if (isDraft) {
-            createHalfCase(createDraftApplyData);
+            updateCaseData(createDraftApplyData);
         } else {
             createHalfCase(createDraftApplyData);
         }
