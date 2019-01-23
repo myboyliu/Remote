@@ -338,12 +338,16 @@ public class UserController extends BaseController {
             }
             // 病例类型名称集合
             StringBuffer stringBuffer = new StringBuffer();
-            for (Map.Entry<String, String> m : resultMap.entrySet()) {
-                idList.add(m.getKey());
-                stringBuffer.append(m.getValue() + "、");
+            String typeName = "";
+            if (resultMap.size() > 0) {
+                for (Map.Entry<String, String> m : resultMap.entrySet()) {
+                    idList.add(m.getKey());
+                    stringBuffer.append(m.getValue() + "、");
+                }
+                stringBuffer.deleteCharAt(stringBuffer.length() - 1);
+                typeName = stringBuffer.toString();
             }
-            stringBuffer.deleteCharAt(stringBuffer.length() - 1);
-            String typeName = stringBuffer.toString();
+
             userDetail.setNeedCaseType(typeName);
 
             // 删除原userId对应的UserCaseType字段,并添加新的 UserCaseType
@@ -481,12 +485,16 @@ public class UserController extends BaseController {
 
             // 病例类型名称集合
             StringBuffer stringBuffer = new StringBuffer();
-            for (Map.Entry<String, String> m : resultMap.entrySet()) {
-                idList.add(m.getKey());
-                stringBuffer.append(m.getValue() + "、");
+            String typeName = "";
+            if (resultMap.size() > 0) {
+                for (Map.Entry<String, String> m : resultMap.entrySet()) {
+                    idList.add(m.getKey());
+                    stringBuffer.append(m.getValue() + "、");
+                }
+                stringBuffer.deleteCharAt(stringBuffer.length() - 1);
+                typeName = stringBuffer.toString();
             }
-            stringBuffer.deleteCharAt(stringBuffer.length() - 1);
-            String typeName = stringBuffer.toString();
+
             userDetail.setNeedCaseType(typeName);
 
             // 添加新的UserCaseType
