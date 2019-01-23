@@ -6,6 +6,8 @@ import com.sicmed.remote.web.entity.*;
 import com.sicmed.remote.web.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,9 +46,6 @@ public class DraftController extends BaseController {
     public Map draftCount() {
 
         String userId = getRequestToken();
-        if (StringUtils.isBlank(userId)) {
-            return badRequestOfArguments("获取登录用户id失败");
-        }
         int i = applyFormService.countDraft(userId);
         return succeedRequest(i);
     }
@@ -57,9 +56,6 @@ public class DraftController extends BaseController {
     @GetMapping(value = "selectByUser")
     public Map selectByUser() {
         String userId = getRequestToken();
-        if (StringUtils.isBlank(userId)) {
-            return badRequestOfArguments("无法获取登录用户Id");
-        }
 
         ApplyForm applyForm = new ApplyForm();
         applyForm.setApplyUserId(userId);
@@ -129,4 +125,27 @@ public class DraftController extends BaseController {
         return succeedRequest("删除成功");
     }
 
+    /**
+     * 草稿,创建完整病例
+     */
+    /**
+     * 草稿,转诊
+     */
+    public Map draftTransfer(@Validated ApplyForm applyForm, BindingResult applyFormBr, String startEndTime, String applyFormId) {
+        return null;
+    }
+
+    /**
+     * 草稿,图文会诊
+     */
+    public Map draftImage(String applyFormId) {
+        return null;
+    }
+
+    /**
+     * 草稿,视频会诊
+     */
+    public Map draftVideo(String applyFormId) {
+        return null;
+    }
 }
