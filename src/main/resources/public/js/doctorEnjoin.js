@@ -1,14 +1,182 @@
-$(function () {
-    var pageNo = 1;// 页码
-    var pageSize = 10;// 每页多少条
-    var pageFlag = true;// 是否有下一页
-    var longTimeArr = [];// 长期医嘱
-    var temporaryDrugArr = [];// 临时药物
-    var temporaryTreatArr = [];// 临时诊疗
-    var surgeryArr = []; // 手术备品
+// 模糊查询药品
+function fuzzySearchMedical(obj, searchText, pageNoParam, pageSizeParam) {
+    pageNo = pageNoParam;
+    pageSize = pageSizeParam;
+    let searchFormData = {"searchText": searchText};
+    ajaxRequest("GET", draftDel, getMedicalList, true, "application/json", true, getMedicalListSuccess, null, null);
 
-    var unitArr = ["g", "mg", "ug", "ml"];// 单位数组
-    var frequencyArr = ["q.1/2h", "q.h", "q.2h", "q.3h", "q.4h", "q.6h", "q.8h", "q.12h", "q.72h.",
+    function getMedicalListSuccess(data) {
+        // 成功操作
+        if (pageNo == 1 && data.data.page == 0) {
+            layer.msg("未搜到相关药品");
+            obj.hide();
+        } else {
+            obj.siblings("input").focus();
+            // 渲染数据列表
+            let tempArr = data.data.medicalList;
+            let _html = '';
+            for (let i = 0; i < tempArr.length; i++) {
+                _html += '<a name="' + tempArr[i].id + '" medicalNameChina="' + tempArr[i].medicalNameChina + '" href="javascript:;">' + tempArr[i].medicalNameChina + '<img src="./search_active.png" alt=""></a>'
+            }
+            obj.find(".searchResult").html(_html);
+            // 渲染数据总条数
+            obj.find(".searchNum").html(data.data.page);
+            // 显示结果模块
+            obj.slideDown();
+            // 判断是否有下一页
+            if (data.data.medicalList.length >= pageSize) {
+                pageFlag = true;
+                obj.find(".next").removeClass("noClick");
+            } else {
+                pageFlag = false;
+                obj.find(".next").addClass("noClick");
+            }
+            // 判断是否有上一页
+            if (pageNo > 1) {
+                obj.find(".prev").removeClass("noClick");
+            } else {
+                obj.find(".prev").addClass("noClick");
+            }
+        }
+    }
+}
+
+// 模糊搜索诊疗项
+function fuzzySearchCheck(obj, searchText, pageNo, pageSize) {
+    $.ajax({
+        type: 'POST',
+        url: IP + 'check/fuzzySearchCheck',
+        dataType: 'json',
+        data: {
+            "name": searchText,
+            "pageNo": pageNo,
+            "pageSize": pageSize,
+        },
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
+        success: function (data) {
+            console.log(data)
+            if (data.code == 1) {
+                // 成功操作
+                if (pageNo == 1 && data.data.page == 0) {
+                    layer.msg("未搜到相关诊疗");
+                    obj.hide();
+                } else {
+                    obj.siblings("input").focus();
+                    // 渲染数据列表
+                    let tempArr = data.data.twxrayCheckList;
+                    let _html = '';
+                    for (let i = 0; i < tempArr.length; i++) {
+                        _html += '<a name="' + tempArr[i].id + '" checkName="' + tempArr[i].checkName + '" href="javascript:;">' + tempArr[i].checkName + '<img src="./search_active.png" alt=""></a>'
+                    }
+                    obj.find(".searchResult").html(_html);
+                    // 渲染数据总条数
+                    obj.find(".searchNum").html(data.data.page);
+                    // 显示结果模块
+                    obj.slideDown();
+                    // 判断是否有下一页
+                    if (data.data.twxrayCheckList.length >= pageSize) {
+                        pageFlag = true;
+                        obj.find(".next").removeClass("noClick");
+                    } else {
+                        pageFlag = false;
+                        obj.find(".next").addClass("noClick");
+                    }
+                    // 判断是否有上一页
+                    if (pageNo > 1) {
+                        obj.find(".prev").removeClass("noClick");
+                    } else {
+                        obj.find(".prev").addClass("noClick");
+                    }
+                }
+            } else if (data.code == 250) {
+                // 未登录操作
+                window.location = '/yilaiyiwang/login/login.html';
+            } else {
+                // 其他操作
+            }
+        },
+        error: function (err) {
+            console.log(err);
+        },
+    });
+}
+
+// 模糊搜索备品
+function fuzzySearchConsumables(obj, searchText, pageNo, pageSize) {
+    $.ajax({
+        type: 'POST',
+        url: IP + 'consumables/fuzzySearchConsumables',
+        dataType: 'json',
+        data: {
+            "name": searchText,
+            "pageNo": pageNo,
+            "pageSize": pageSize,
+        },
+        xhrFields: {
+            withCredentials: true
+        },
+        crossDomain: true,
+        success: function (data) {
+            console.log(data)
+            if (data.code == 1) {
+                // 成功操作
+                if (pageNo == 1 && data.data.page == 0) {
+                    layer.msg("未搜到相关器械");
+                    obj.hide();
+                } else {
+                    // 渲染数据列表
+                    let tempArr = data.data.consumablesList;
+                    let _html = '';
+                    for (let i = 0; i < tempArr.length; i++) {
+                        _html += '<a name="' + tempArr[i].id + '" consumablesName="' + tempArr[i].consumablesName + '" href="javascript:;">' + tempArr[i].consumablesName + '<img src="./search_active.png" alt=""></a>'
+                    }
+                    obj.find(".searchResult").html(_html);
+                    // 渲染数据总条数
+                    obj.find(".searchNum").html(data.data.page);
+                    // 显示结果模块
+                    obj.slideDown();
+                    // 判断是否有下一页
+                    if (data.data.consumablesList.length >= pageSize) {
+                        pageFlag = true;
+                        obj.find(".next").removeClass("noClick");
+                    } else {
+                        pageFlag = false;
+                        obj.find(".next").addClass("noClick");
+                    }
+                    // 判断是否有上一页
+                    if (pageNo > 1) {
+                        obj.find(".prev").removeClass("noClick");
+                    } else {
+                        obj.find(".prev").addClass("noClick");
+                    }
+                }
+            } else if (data.code == 250) {
+                // 未登录操作
+                window.location = '/yilaiyiwang/login/login.html';
+            } else {
+                // 其他操作
+            }
+        },
+        error: function (err) {
+            console.log(err);
+        },
+    });
+}
+
+$(function () {
+    let pageNo = 1;// 页码
+    let pageSize = 10;// 每页多少条
+    let pageFlag = true;// 是否有下一页
+    let longTimeArr = [];// 长期医嘱
+    let temporaryDrugArr = [];// 临时药物
+    let temporaryTreatArr = [];// 临时诊疗
+    let surgeryArr = []; // 手术备品
+
+    let unitArr = ["g", "mg", "ug", "ml"];// 单位数组
+    let frequencyArr = ["q.1/2h", "q.h", "q.2h", "q.3h", "q.4h", "q.6h", "q.8h", "q.12h", "q.72h.",
         "q.d.",
         "b.i.d.",
         "t.i.d.",
@@ -36,7 +204,7 @@ $(function () {
         "a.c.",
         "p.c.",
         "t.i.d. a.c.", "hs"];// 每日用次数组
-    var wayArr = ["gtt",
+    let wayArr = ["gtt",
         "id",
         "ih",
         "im/m.",
@@ -49,23 +217,23 @@ $(function () {
         "lnhal",
         "ig"];// 给药方式数组
 
-
     // 通过订单id查询订单详情
-    var data = JSON.parse(sessionStorage.getItem('data'));
+    let data = JSON.parse(sessionStorage.getItem('data'));
     console.log(data);
 
     // 获取当前时间
     function getNowTime() {
-        var _data = new Date();
-        var str = _data.toLocaleDateString() + ' ' + _data.getHours() + ":" + _data.getMinutes();
+        let _data = new Date();
+        let str = _data.toLocaleDateString() + ' ' + _data.getHours() + ":" + _data.getMinutes();
         return str;
     }
-    render();
+
+    // render();
     // 渲染layer
     function layerRender() {
         layui.use(['form', 'layedit', 'laydate'], function () {
-            var laydate = layui.laydate;
-            var form = layui.form;//高版本建议把括号去掉，有的低版本，需要加()
+            let laydate = layui.laydate;
+            let form = layui.form;//高版本建议把括号去掉，有的低版本，需要加()
             form.render();
             // 选择时间工具
             $('.selectTimeTool').each(function () {
@@ -77,502 +245,306 @@ $(function () {
             });
         })
     }
+
     // 渲染医嘱数据
-    function render() {
-        for (var i = 0; i < data.orderDoctorsList.length; i++) {
-            if (data.orderDoctorsList[i].id == localStorage.getItem("userId")) {
-                $(".verdictArea").val(data.orderDoctorsList[i].feedBack)
-            }
-        }
-        if (data.orderFormBean.orders) {
-            var doctorEnjoinJson = JSON.parse(data.orderFormBean.orders);
-            // 长期医嘱
-            $(".dataUl").html('');
-            if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0) {
-                $(".longTimeBox").find(".dataUl").show();
-                $(".longTimeBox").find(".remarkBox").show();
-                $(".longTimeBox").find(".noData").hide();
-                $(".longTimeAreaObj").html(doctorEnjoinJson.longTimeArea);
-                $(".longTimeAreaNum").html(doctorEnjoinJson.longTimeArea.length);
-                var _html = "";
-                for (var i = 0; i < doctorEnjoinJson.longTimeArr.length; i++) {
-                    _html += '<li class="dataItem">\
-                    <div class="headTopBox">\
-                        <span>执行时间</span>\
-                        <div class="selectTimeInput selectTimeInputBefore">\
-                            <input type="text" readonly class="selectTimeTool mustValue startTimeObj" placeholder="点击选择" value="'+ doctorEnjoinJson.longTimeArr[i].startTime + '"/>\
-                        </div>\
-                        <span>结束时间</span>\
-                        <div class="selectTimeInput selectTimeInputBefore">\
-                            <input type="text" readonly class="selectTimeTool mustValue endTimeObj" placeholder="点击选择" value="'+ doctorEnjoinJson.longTimeArr[i].endTime + '" />\
-                        </div>\
-                    </div>\
-                    <p class="divideLine"></p>\
-                    <div class="listBottomBox">';
-                    var twoLevelArr = doctorEnjoinJson.longTimeArr[i].drugArr;
-                    for (var j = 0; j < twoLevelArr.length; j++) {
-                        if (j == 0) {
-                            _html += '<div class="listItem">\
-                            <span class="drugName nameObj">'+ twoLevelArr[j].name + '</span>\
-                            <div class="drugRule">\
-                                <input type="text" class="mustValue singleNumObj" oninput="value=value.replace(/[^\\d]/g,\'\')" value="'+ twoLevelArr[j].singleNum + '" placeholder="单次计量">&nbsp;&nbsp;/&nbsp;&nbsp;\
-                                <div class="layui-input-inline" style="width: 80px;margin-right: 20px;">\
-                                    <select class="mustValue unitObj" name="">'
-                            for (var z = 0; z < unitArr.length; z++) {
-                                if (unitArr[z] == twoLevelArr[j].unit) {
-                                    _html += '<option selected value="' + unitArr[z] + '">' + unitArr[z] + '</option>'
-                                } else {
-                                    _html += '<option value="' + unitArr[z] + '">' + unitArr[z] + '</option>'
-                                }
-                            }
-                            _html += '</select>\
-                                </div>\
-                                <div class="layui-input-inline" style="width:116px;margin-right: 20px;">\
-                                    <select class="mustValue frequencyObj" lay-verify="" lay-search="">\
-                                        <option value="">每日用次</option>'
-                            for (var z = 0; z < frequencyArr.length; z++) {
-                                if (frequencyArr[z] == twoLevelArr[j].frequency) {
-                                    _html += '<option selected value="' + frequencyArr[z] + '">' + frequencyArr[z] + '</option>'
-                                } else {
-                                    _html += '<option value="' + frequencyArr[z] + '">' + frequencyArr[z] + '</option>'
-                                }
-                            }
-                            _html += '</select>\
-                                </div>\
-                                <div class="layui-input-inline" style="width:116px;margin-right: 20px;">\
-                                    <select name="" class="mustValue meansObj" lay-verify="" lay-search="">\
-                                        <option value="">给药途径</option>'
-                            for (var z = 0; z < wayArr.length; z++) {
-                                if (wayArr[z] == twoLevelArr[j].means) {
-                                    _html += '<option selected value="' + wayArr[z] + '">' + wayArr[z] + '</option>'
-                                } else {
-                                    _html += '<option value="' + wayArr[z] + '">' + wayArr[z] + '</option>'
-                                }
-                            }
-                            _html += '</select>\
-                                </div>\
-                            </div>\
-                        </div>'
-                        } else {
-                            _html += '<p class="divideLine"></p><div class="listItem">\
-                            <span class="drugName nameObj">'+ twoLevelArr[j].name + '</span>\
-                            <div class="drugRule">\
-                                <input type="text" class="mustValue singleNumObj" oninput="value=value.replace(/[^\\d]/g,\'\')" value="'+ twoLevelArr[j].singleNum + '" placeholder="单次计量">&nbsp;&nbsp;/&nbsp;&nbsp;\
-                                <div class="layui-input-inline" style="width: 80px;margin-right: 20px;">\
-                                    <select class="mustValue unitObj" name="">'
-                            for (var z = 0; z < unitArr.length; z++) {
-                                if (unitArr[z] == twoLevelArr[j].unit) {
-                                    _html += '<option selected value="' + unitArr[z] + '">' + unitArr[z] + '</option>'
-                                } else {
-                                    _html += '<option value="' + unitArr[z] + '">' + unitArr[z] + '</option>'
-                                }
-                            }
-                            _html += '</select>\
-                                </div>\
-                            </div>\
-                        </div>'
-                        }
-                    }
-                    _html += '</div></li>';
-                }
-                $(".longTimeBox").find(".dataUl").html(_html);
-            } else {
-                $(".longTimeBox").find(".noData").show();
-                $(".longTimeBox").find(".dataUl").hide();
-                $(".longTimeBox").find(".remarkBox").hide();
-            }
-            // 临时医嘱 药物
-            if (doctorEnjoinJson.temporaryDrugArr && doctorEnjoinJson.temporaryDrugArr.length > 0) {
-                $(".temporaryDrugBox").find(".dataUl").show();
-                $(".temporaryDrugBox").find(".noData").hide();
-                var _html = "";
-                for (var i = 0; i < doctorEnjoinJson.temporaryDrugArr.length; i++) {
-                    _html += '<li class="dataItem">\
-                    <div class="headTopBox">\
-                        <span>下达时间</span>\
-                        <div class="selectTimeInput">\
-                            <input type="text" value="'+ getNowTime() + '" class="mustValue arriveTimeObj" readonly placeholder="点击选择" />\
-                        </div>\
-                    </div>\
-                    <p class="divideLine"></p>\
-                    <div class="listBottomBox">';
-                    var twoLevelArr = doctorEnjoinJson.temporaryDrugArr[i].drugArr;
-                    for (var j = 0; j < twoLevelArr.length; j++) {
-                        if (j == 0) {
-                            _html += '<div class="listItem">\
-                                <span class="drugName nameObj">'+ twoLevelArr[j].name + '</span>\
-                                <div class="drugRule">\
-                                    <input type="text" class="mustValue singleNumObj" oninput="value=value.replace(/[^\\d]/g,\'\')" value="'+ twoLevelArr[j].singleNum + '" placeholder="单次计量">&nbsp;&nbsp;/&nbsp;&nbsp;\
-                                    <div class="layui-input-inline" style="width: 80px;margin-right: 20px;">\
-                                        <select class="mustValue unitObj" name="">'
-                            for (var z = 0; z < unitArr.length; z++) {
-                                if (unitArr[z] == twoLevelArr[j].unit) {
-                                    _html += '<option selected value="' + unitArr[z] + '">' + unitArr[z] + '</option>'
-                                } else {
-                                    _html += '<option value="' + unitArr[z] + '">' + unitArr[z] + '</option>'
-                                }
-                            }
-                            _html += '</select>\
-                                    </div>\
-                                    <div class="layui-input-inline" style="width:116px;margin-right: 20px;">\
-                                        <select name="" class="mustValue meansObj" lay-verify="" lay-search="">\
-                                            <option value="">给药途径</option>'
-                            for (var z = 0; z < wayArr.length; z++) {
-                                if (wayArr[z] == twoLevelArr[j].means) {
-                                    _html += '<option selected value="' + wayArr[z] + '">' + wayArr[z] + '</option>'
-                                } else {
-                                    _html += '<option value="' + wayArr[z] + '">' + wayArr[z] + '</option>'
-                                }
-                            }
-                            _html += '</select>\
-                                    </div>\
-                                </div>\
-                            </div>'
-                        } else {
-                            _html += '<p class="divideLine"></p><div class="listItem">\
-                                <span class="drugName nameObj">'+ twoLevelArr[j].name + '</span>\
-                                <div class="drugRule">\
-                                    <input type="text" class="mustValue singleNumObj" oninput="value=value.replace(/[^\\d]/g,\'\')" value="'+ twoLevelArr[j].singleNum + '" placeholder="单次计量">&nbsp;&nbsp;/&nbsp;&nbsp;\
-                                    <div class="layui-input-inline" style="width: 80px;margin-right: 20px;">\
-                                        <select class="mustValue unitObj" name="">'
-                            for (var z = 0; z < unitArr.length; z++) {
-                                if (unitArr[z] == twoLevelArr[j].unit) {
-                                    _html += '<option selected value="' + unitArr[z] + '">' + unitArr[z] + '</option>'
-                                } else {
-                                    _html += '<option value="' + unitArr[z] + '">' + unitArr[z] + '</option>'
-                                }
-                            }
-                            _html += '</select>\
-                                    </div>\
-                                </div>\
-                            </div>'
-                        }
-                    }
-                    _html += '</div>\
-                </li>';
-                }
-                $(".temporaryDrugBox").find(".dataUl").html(_html);
-            } else {
-                $(".temporaryDrugBox").find(".noData").show();
-                $(".temporaryDrugBox").find(".dataUl").hide();
-            }
-            // 临时医嘱 诊疗
-            if (doctorEnjoinJson.temporaryTreatArr && doctorEnjoinJson.temporaryTreatArr.length > 0) {
-                $(".temporaryTreatBox").find(".dataUl").show();
-                $(".temporaryTreatBox").find(".noData").hide();
-                var _html = "";
-                for (var i = 0; i < doctorEnjoinJson.temporaryTreatArr.length; i++) {
-                    _html += '<li class="dataItem">\
-                        <div class="headTopBox">\
-                            <span>下达时间</span>\
-                            <div class="selectTimeInput">\
-                                <input type="text" value="'+ getNowTime() + '" class="mustValue arriveTimeObj" readonly placeholder="点击选择" />\
-                            </div>\
-                        </div>\
-                        <p class="divideLine"></p>\
-                        <div class="listBottomBox">\
-                            <div class="listItem">\
-                                <span class="drugName nameObj">'+ doctorEnjoinJson.temporaryTreatArr[i].name + '</span>\
-                            </div>\
-                        </div>\
-                    </li>'
-                }
-                $(".temporaryTreatBox .dataUl").html(_html);
-            } else {
-                $(".temporaryTreatBox").find(".noData").show();
-                $(".temporaryTreatBox").find(".dataUl").hide();
-            }
-            if (doctorEnjoinJson.temporaryDrugArr || doctorEnjoinJson.temporaryTreatArr) {
-                if (doctorEnjoinJson.temporaryDrugArr && doctorEnjoinJson.temporaryDrugArr.length > 0 || doctorEnjoinJson.temporaryTreatArr && doctorEnjoinJson.temporaryTreatArr.length > 0) {
-                    $(".temporaryTreatBox").find(".remarkBox").show();
-                    $(".temporaryAreaObj").html(doctorEnjoinJson.temporaryArea);
-                    $(".temporaryAreaNum").html(doctorEnjoinJson.temporaryArea.length);
-                } else {
-                    $(".temporaryTreatBox").find(".remarkBox").hide();
-                }
-            }
-            if (doctorEnjoinJson.surgeryArr && doctorEnjoinJson.surgeryArr.length > 0) {
-                $(".surgeryBox").find(".dataUl").show();
-                $(".surgeryBox").find(".remarkBox").show();
-                $(".surgeryBox").find(".noData").hide();
-                $(".surgeryAreaObj").html(doctorEnjoinJson.surgeryArea);
-                $(".surgeryAreaNum").html(doctorEnjoinJson.surgeryArea.length);
-                var _html = '';
-                for (var x = 0; x < doctorEnjoinJson.surgeryArr.length; x++) {
-                    var tempObj = doctorEnjoinJson.surgeryArr[x];
-                    $.ajax({
-                        type: 'POST',
-                        url: IP + 'consumables/findSpecificationsById',
-                        dataType: 'json',
-                        data: {
-                            "id": doctorEnjoinJson.surgeryArr[x].surgeryId,
-                        },
-                        async: false,
-                        xhrFields: {
-                            withCredentials: true
-                        },
-                        crossDomain: true,
-                        success: function (data) {
-                            console.log(data)
-                            if (data.code == 1) {
-                                if (data.data.length > 0) {
-                                    var _html = '<option value=""></option>';
-                                    for (var i = 0; i < data.data.length; i++) {
-                                        if (tempObj.surgerySize == data.data[i].specificationsName) {
-                                            _html += '<option selected value="' + data.data[i].specificationsName + '">' + data.data[i].specificationsName + '</option>'
-                                        } else {
-                                            _html += '<option value="' + data.data[i].specificationsName + '">' + data.data[i].specificationsName + '</option>'
-                                        }
-                                    }
-                                    var tempHtml = '<li class="dataItem">\
-                                            <div class="listBottomBox">\
-                                                <div class="listItem">\
-                                                    <span class="drugName surgeryNameObj" name="'+ tempObj.surgeryId + '">' + tempObj.surgeryName + '</span>\
-                                                    <div class="drugRule">\
-                                                        <div class="layui-input-inline" style="width: 300px;">\
-                                                            <select class="mustValue surgerySizeObj" name="">'+ _html + '</select>\
-                                                        </div>\
-                                                        <input type="text" class="mustValue surgeryNumObj" value="'+ tempObj.surgeryNum + '" oninput="value=value.replace(/[^\\d]/g,\'\')" placeholder="数量" style="margin-right: 20px;">\
-                                                    </div>\
-                                                </div>\
-                                            </div>\
-                                        </li>';
-                                } else {
-                                    var tempHtml = '<li class="dataItem">\
-                                    <div class="listBottomBox">\
-                                        <div class="listItem">\
-                                            <span class="drugName surgeryNameObj" name="'+ tempObj.surgeryId + '">' + tempObj.surgeryName + '</span>\
-                                            <div class="drugRule">\
-                                                <div class="layui-input-inline" style="width: 300px;">\
-                                                    <select class="mustValue surgerySizeObj" name=""><option value="--">--</option></select>\
-                                                </div>\
-                                                <input type="text" class="mustValue surgeryNumObj" value="'+ tempObj.surgeryNum + '" oninput="value=value.replace(/[^\\d]/g,\'\')" placeholder="数量" style="margin-right: 20px;">\
-                                            </div>\
-                                        </div>\
-                                    </div>\
-                                </li>';
-                                }
-                                $(".surgeryBox").find(".dataUl").append(tempHtml);
-                                $(".surgerySearchContent").hide();
-                                layerRender();
-                            } else if (data.code == 250) {
-                                // 未登录操作
-                                window.location = '/yilaiyiwang/login/login.html';
-                            } else {
-                                // 其他操作
-                            }
-                        },
-                        error: function (err) {
-                            console.log(err);
-                        },
-                    });
-                }
-            } else {
-                $(".surgeryBox").find(".noData").show();
-                $(".surgeryBox").find(".dataUl").hide();
-                $(".surgeryBox").find(".surgeryRemarkBox").hide();
-            }
-            layerRender();
-        }
-    }
 
-    // 模糊查询药品 fuzzySearchMedical
-    // searchText 搜索内容
-    // pageNo 第几页
-    // pageSize 每页多少条
-    function fuzzySearchMedical(obj, searchText, pageNo, pageSize) {
-        $.ajax({
-            type: 'POST',
-            url: IP + 'medical/fuzzySearchMedical',
-            dataType: 'json',
-            data: {
-                "name": searchText,
-                "pageNo": pageNo,
-                "pageSize": pageSize,
-            },
-            xhrFields: {
-                withCredentials: true
-            },
-            crossDomain: true,
-            success: function (data) {
-                console.log(data)
-                if (data.code == 1) {
-                    // 成功操作
-                    if (pageNo == 1 && data.data.page == 0) {
-                        layer.msg("未搜到相关药品");
-                        obj.hide();
-                    } else {
-                        obj.siblings("input").focus();
-                        // 渲染数据列表
-                        var tempArr = data.data.medicalList;
-                        var _html = '';
-                        for (var i = 0; i < tempArr.length; i++) {
-                            _html += '<a name="' + tempArr[i].id + '" medicalNameChina="' + tempArr[i].medicalNameChina + '" href="javascript:;">' + tempArr[i].medicalNameChina + '<img src="./search_active.png" alt=""></a>'
-                        }
-                        obj.find(".searchResult").html(_html);
-                        // 渲染数据总条数
-                        obj.find(".searchNum").html(data.data.page);
-                        // 显示结果模块
-                        obj.slideDown();
-                        // 判断是否有下一页
-                        if (data.data.medicalList.length >= pageSize) {
-                            pageFlag = true;
-                            obj.find(".next").removeClass("noClick");
-                        } else {
-                            pageFlag = false;
-                            obj.find(".next").addClass("noClick");
-                        }
-                        // 判断是否有上一页
-                        if (pageNo > 1) {
-                            obj.find(".prev").removeClass("noClick");
-                        } else {
-                            obj.find(".prev").addClass("noClick");
-                        }
-                    }
-                } else if (data.code == 250) {
-                    // 未登录操作
-                    window.location = '/yilaiyiwang/login/login.html';
-                } else {
-                    // 其他操作
-                }
-            },
-            error: function (err) {
-                console.log(err);
-            },
-        });
-    }
-
-    // 模糊搜索诊疗项
-    // searchText 搜索内容
-    // pageNo 第几页
-    // pageSize 每页多少条  
-    function fuzzySearchCheck(obj, searchText, pageNo, pageSize) {
-        $.ajax({
-            type: 'POST',
-            url: IP + 'check/fuzzySearchCheck',
-            dataType: 'json',
-            data: {
-                "name": searchText,
-                "pageNo": pageNo,
-                "pageSize": pageSize,
-            },
-            xhrFields: {
-                withCredentials: true
-            },
-            crossDomain: true,
-            success: function (data) {
-                console.log(data)
-                if (data.code == 1) {
-                    // 成功操作
-                    if (pageNo == 1 && data.data.page == 0) {
-                        layer.msg("未搜到相关诊疗");
-                        obj.hide();
-                    } else {
-                        obj.siblings("input").focus();
-                        // 渲染数据列表
-                        var tempArr = data.data.twxrayCheckList;
-                        var _html = '';
-                        for (var i = 0; i < tempArr.length; i++) {
-                            _html += '<a name="' + tempArr[i].id + '" checkName="' + tempArr[i].checkName + '" href="javascript:;">' + tempArr[i].checkName + '<img src="./search_active.png" alt=""></a>'
-                        }
-                        obj.find(".searchResult").html(_html);
-                        // 渲染数据总条数
-                        obj.find(".searchNum").html(data.data.page);
-                        // 显示结果模块
-                        obj.slideDown();
-                        // 判断是否有下一页
-                        if (data.data.twxrayCheckList.length >= pageSize) {
-                            pageFlag = true;
-                            obj.find(".next").removeClass("noClick");
-                        } else {
-                            pageFlag = false;
-                            obj.find(".next").addClass("noClick");
-                        }
-                        // 判断是否有上一页
-                        if (pageNo > 1) {
-                            obj.find(".prev").removeClass("noClick");
-                        } else {
-                            obj.find(".prev").addClass("noClick");
-                        }
-                    }
-                } else if (data.code == 250) {
-                    // 未登录操作
-                    window.location = '/yilaiyiwang/login/login.html';
-                } else {
-                    // 其他操作
-                }
-            },
-            error: function (err) {
-                console.log(err);
-            },
-        });
-    }
-
-    // 模糊搜索备品
-    // searchText 搜索内容
-    // pageNo 第几页
-    // pageSize 每页多少条  
-    function fuzzySearchConsumables(obj, searchText, pageNo, pageSize) {
-        $.ajax({
-            type: 'POST',
-            url: IP + 'consumables/fuzzySearchConsumables',
-            dataType: 'json',
-            data: {
-                "name": searchText,
-                "pageNo": pageNo,
-                "pageSize": pageSize,
-            },
-            xhrFields: {
-                withCredentials: true
-            },
-            crossDomain: true,
-            success: function (data) {
-                console.log(data)
-                if (data.code == 1) {
-                    // 成功操作
-                    if (pageNo == 1 && data.data.page == 0) {
-                        layer.msg("未搜到相关器械");
-                        obj.hide();
-                    } else {
-                        // 渲染数据列表
-                        var tempArr = data.data.consumablesList;
-                        var _html = '';
-                        for (var i = 0; i < tempArr.length; i++) {
-                            _html += '<a name="' + tempArr[i].id + '" consumablesName="' + tempArr[i].consumablesName + '" href="javascript:;">' + tempArr[i].consumablesName + '<img src="./search_active.png" alt=""></a>'
-                        }
-                        obj.find(".searchResult").html(_html);
-                        // 渲染数据总条数
-                        obj.find(".searchNum").html(data.data.page);
-                        // 显示结果模块
-                        obj.slideDown();
-                        // 判断是否有下一页
-                        if (data.data.consumablesList.length >= pageSize) {
-                            pageFlag = true;
-                            obj.find(".next").removeClass("noClick");
-                        } else {
-                            pageFlag = false;
-                            obj.find(".next").addClass("noClick");
-                        }
-                        // 判断是否有上一页
-                        if (pageNo > 1) {
-                            obj.find(".prev").removeClass("noClick");
-                        } else {
-                            obj.find(".prev").addClass("noClick");
-                        }
-                    }
-                } else if (data.code == 250) {
-                    // 未登录操作
-                    window.location = '/yilaiyiwang/login/login.html';
-                } else {
-                    // 其他操作
-                }
-            },
-            error: function (err) {
-                console.log(err);
-            },
-        });
-    }
-
+    // function render() {
+    //     for (let i = 0; i < data.orderDoctorsList.length; i++) {
+    //         if (data.orderDoctorsList[i].id == localStorage.getItem("userId")) {
+    //             $(".verdictArea").val(data.orderDoctorsList[i].feedBack)
+    //         }
+    //     }
+    //     if (data.orderFormBean.orders) {
+    //         let doctorEnjoinJson = JSON.parse(data.orderFormBean.orders);
+    //         // 长期医嘱
+    //         $(".dataUl").html('');
+    //         if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0) {
+    //             $(".longTimeBox").find(".dataUl").show();
+    //             $(".longTimeBox").find(".remarkBox").show();
+    //             $(".longTimeBox").find(".noData").hide();
+    //             $(".longTimeAreaObj").html(doctorEnjoinJson.longTimeArea);
+    //             $(".longTimeAreaNum").html(doctorEnjoinJson.longTimeArea.length);
+    //             let _html = "";
+    //             for (let i = 0; i < doctorEnjoinJson.longTimeArr.length; i++) {
+    //                 _html += '<li class="dataItem">\
+    //                 <div class="headTopBox">\
+    //                     <span>执行时间</span>\
+    //                     <div class="selectTimeInput selectTimeInputBefore">\
+    //                         <input type="text" readonly class="selectTimeTool mustValue startTimeObj" placeholder="点击选择" value="'+ doctorEnjoinJson.longTimeArr[i].startTime + '"/>\
+    //                     </div>\
+    //                     <span>结束时间</span>\
+    //                     <div class="selectTimeInput selectTimeInputBefore">\
+    //                         <input type="text" readonly class="selectTimeTool mustValue endTimeObj" placeholder="点击选择" value="'+ doctorEnjoinJson.longTimeArr[i].endTime + '" />\
+    //                     </div>\
+    //                 </div>\
+    //                 <p class="divideLine"></p>\
+    //                 <div class="listBottomBox">';
+    //                 let twoLevelArr = doctorEnjoinJson.longTimeArr[i].drugArr;
+    //                 for (let j = 0; j < twoLevelArr.length; j++) {
+    //                     if (j == 0) {
+    //                         _html += '<div class="listItem">\
+    //                         <span class="drugName nameObj">'+ twoLevelArr[j].name + '</span>\
+    //                         <div class="drugRule">\
+    //                             <input type="text" class="mustValue singleNumObj" oninput="value=value.replace(/[^\\d]/g,\'\')" value="'+ twoLevelArr[j].singleNum + '" placeholder="单次计量">&nbsp;&nbsp;/&nbsp;&nbsp;\
+    //                             <div class="layui-input-inline" style="width: 80px;margin-right: 20px;">\
+    //                                 <select class="mustValue unitObj" name="">'
+    //                         for (let z = 0; z < unitArr.length; z++) {
+    //                             if (unitArr[z] == twoLevelArr[j].unit) {
+    //                                 _html += '<option selected value="' + unitArr[z] + '">' + unitArr[z] + '</option>'
+    //                             } else {
+    //                                 _html += '<option value="' + unitArr[z] + '">' + unitArr[z] + '</option>'
+    //                             }
+    //                         }
+    //                         _html += '</select>\
+    //                             </div>\
+    //                             <div class="layui-input-inline" style="width:116px;margin-right: 20px;">\
+    //                                 <select class="mustValue frequencyObj" lay-verify="" lay-search="">\
+    //                                     <option value="">每日用次</option>'
+    //                         for (let z = 0; z < frequencyArr.length; z++) {
+    //                             if (frequencyArr[z] == twoLevelArr[j].frequency) {
+    //                                 _html += '<option selected value="' + frequencyArr[z] + '">' + frequencyArr[z] + '</option>'
+    //                             } else {
+    //                                 _html += '<option value="' + frequencyArr[z] + '">' + frequencyArr[z] + '</option>'
+    //                             }
+    //                         }
+    //                         _html += '</select>\
+    //                             </div>\
+    //                             <div class="layui-input-inline" style="width:116px;margin-right: 20px;">\
+    //                                 <select name="" class="mustValue meansObj" lay-verify="" lay-search="">\
+    //                                     <option value="">给药途径</option>'
+    //                         for (let z = 0; z < wayArr.length; z++) {
+    //                             if (wayArr[z] == twoLevelArr[j].means) {
+    //                                 _html += '<option selected value="' + wayArr[z] + '">' + wayArr[z] + '</option>'
+    //                             } else {
+    //                                 _html += '<option value="' + wayArr[z] + '">' + wayArr[z] + '</option>'
+    //                             }
+    //                         }
+    //                         _html += '</select>\
+    //                             </div>\
+    //                         </div>\
+    //                     </div>'
+    //                     } else {
+    //                         _html += '<p class="divideLine"></p><div class="listItem">\
+    //                         <span class="drugName nameObj">'+ twoLevelArr[j].name + '</span>\
+    //                         <div class="drugRule">\
+    //                             <input type="text" class="mustValue singleNumObj" oninput="value=value.replace(/[^\\d]/g,\'\')" value="'+ twoLevelArr[j].singleNum + '" placeholder="单次计量">&nbsp;&nbsp;/&nbsp;&nbsp;\
+    //                             <div class="layui-input-inline" style="width: 80px;margin-right: 20px;">\
+    //                                 <select class="mustValue unitObj" name="">'
+    //                         for (let z = 0; z < unitArr.length; z++) {
+    //                             if (unitArr[z] == twoLevelArr[j].unit) {
+    //                                 _html += '<option selected value="' + unitArr[z] + '">' + unitArr[z] + '</option>'
+    //                             } else {
+    //                                 _html += '<option value="' + unitArr[z] + '">' + unitArr[z] + '</option>'
+    //                             }
+    //                         }
+    //                         _html += '</select>\
+    //                             </div>\
+    //                         </div>\
+    //                     </div>'
+    //                     }
+    //                 }
+    //                 _html += '</div></li>';
+    //             }
+    //             $(".longTimeBox").find(".dataUl").html(_html);
+    //         } else {
+    //             $(".longTimeBox").find(".noData").show();
+    //             $(".longTimeBox").find(".dataUl").hide();
+    //             $(".longTimeBox").find(".remarkBox").hide();
+    //         }
+    //         // 临时医嘱 药物
+    //         if (doctorEnjoinJson.temporaryDrugArr && doctorEnjoinJson.temporaryDrugArr.length > 0) {
+    //             $(".temporaryDrugBox").find(".dataUl").show();
+    //             $(".temporaryDrugBox").find(".noData").hide();
+    //             let _html = "";
+    //             for (let i = 0; i < doctorEnjoinJson.temporaryDrugArr.length; i++) {
+    //                 _html += '<li class="dataItem">\
+    //                 <div class="headTopBox">\
+    //                     <span>下达时间</span>\
+    //                     <div class="selectTimeInput">\
+    //                         <input type="text" value="'+ getNowTime() + '" class="mustValue arriveTimeObj" readonly placeholder="点击选择" />\
+    //                     </div>\
+    //                 </div>\
+    //                 <p class="divideLine"></p>\
+    //                 <div class="listBottomBox">';
+    //                 let twoLevelArr = doctorEnjoinJson.temporaryDrugArr[i].drugArr;
+    //                 for (let j = 0; j < twoLevelArr.length; j++) {
+    //                     if (j == 0) {
+    //                         _html += '<div class="listItem">\
+    //                             <span class="drugName nameObj">'+ twoLevelArr[j].name + '</span>\
+    //                             <div class="drugRule">\
+    //                                 <input type="text" class="mustValue singleNumObj" oninput="value=value.replace(/[^\\d]/g,\'\')" value="'+ twoLevelArr[j].singleNum + '" placeholder="单次计量">&nbsp;&nbsp;/&nbsp;&nbsp;\
+    //                                 <div class="layui-input-inline" style="width: 80px;margin-right: 20px;">\
+    //                                     <select class="mustValue unitObj" name="">'
+    //                         for (let z = 0; z < unitArr.length; z++) {
+    //                             if (unitArr[z] == twoLevelArr[j].unit) {
+    //                                 _html += '<option selected value="' + unitArr[z] + '">' + unitArr[z] + '</option>'
+    //                             } else {
+    //                                 _html += '<option value="' + unitArr[z] + '">' + unitArr[z] + '</option>'
+    //                             }
+    //                         }
+    //                         _html += '</select>\
+    //                                 </div>\
+    //                                 <div class="layui-input-inline" style="width:116px;margin-right: 20px;">\
+    //                                     <select name="" class="mustValue meansObj" lay-verify="" lay-search="">\
+    //                                         <option value="">给药途径</option>'
+    //                         for (let z = 0; z < wayArr.length; z++) {
+    //                             if (wayArr[z] == twoLevelArr[j].means) {
+    //                                 _html += '<option selected value="' + wayArr[z] + '">' + wayArr[z] + '</option>'
+    //                             } else {
+    //                                 _html += '<option value="' + wayArr[z] + '">' + wayArr[z] + '</option>'
+    //                             }
+    //                         }
+    //                         _html += '</select>\
+    //                                 </div>\
+    //                             </div>\
+    //                         </div>'
+    //                     } else {
+    //                         _html += '<p class="divideLine"></p><div class="listItem">\
+    //                             <span class="drugName nameObj">'+ twoLevelArr[j].name + '</span>\
+    //                             <div class="drugRule">\
+    //                                 <input type="text" class="mustValue singleNumObj" oninput="value=value.replace(/[^\\d]/g,\'\')" value="'+ twoLevelArr[j].singleNum + '" placeholder="单次计量">&nbsp;&nbsp;/&nbsp;&nbsp;\
+    //                                 <div class="layui-input-inline" style="width: 80px;margin-right: 20px;">\
+    //                                     <select class="mustValue unitObj" name="">'
+    //                         for (let z = 0; z < unitArr.length; z++) {
+    //                             if (unitArr[z] == twoLevelArr[j].unit) {
+    //                                 _html += '<option selected value="' + unitArr[z] + '">' + unitArr[z] + '</option>'
+    //                             } else {
+    //                                 _html += '<option value="' + unitArr[z] + '">' + unitArr[z] + '</option>'
+    //                             }
+    //                         }
+    //                         _html += '</select>\
+    //                                 </div>\
+    //                             </div>\
+    //                         </div>'
+    //                     }
+    //                 }
+    //                 _html += '</div>\
+    //             </li>';
+    //             }
+    //             $(".temporaryDrugBox").find(".dataUl").html(_html);
+    //         } else {
+    //             $(".temporaryDrugBox").find(".noData").show();
+    //             $(".temporaryDrugBox").find(".dataUl").hide();
+    //         }
+    //         // 临时医嘱 诊疗
+    //         if (doctorEnjoinJson.temporaryTreatArr && doctorEnjoinJson.temporaryTreatArr.length > 0) {
+    //             $(".temporaryTreatBox").find(".dataUl").show();
+    //             $(".temporaryTreatBox").find(".noData").hide();
+    //             let _html = "";
+    //             for (let i = 0; i < doctorEnjoinJson.temporaryTreatArr.length; i++) {
+    //                 _html += '<li class="dataItem">\
+    //                     <div class="headTopBox">\
+    //                         <span>下达时间</span>\
+    //                         <div class="selectTimeInput">\
+    //                             <input type="text" value="'+ getNowTime() + '" class="mustValue arriveTimeObj" readonly placeholder="点击选择" />\
+    //                         </div>\
+    //                     </div>\
+    //                     <p class="divideLine"></p>\
+    //                     <div class="listBottomBox">\
+    //                         <div class="listItem">\
+    //                             <span class="drugName nameObj">'+ doctorEnjoinJson.temporaryTreatArr[i].name + '</span>\
+    //                         </div>\
+    //                     </div>\
+    //                 </li>'
+    //             }
+    //             $(".temporaryTreatBox .dataUl").html(_html);
+    //         } else {
+    //             $(".temporaryTreatBox").find(".noData").show();
+    //             $(".temporaryTreatBox").find(".dataUl").hide();
+    //         }
+    //         if (doctorEnjoinJson.temporaryDrugArr || doctorEnjoinJson.temporaryTreatArr) {
+    //             if (doctorEnjoinJson.temporaryDrugArr && doctorEnjoinJson.temporaryDrugArr.length > 0 || doctorEnjoinJson.temporaryTreatArr && doctorEnjoinJson.temporaryTreatArr.length > 0) {
+    //                 $(".temporaryTreatBox").find(".remarkBox").show();
+    //                 $(".temporaryAreaObj").html(doctorEnjoinJson.temporaryArea);
+    //                 $(".temporaryAreaNum").html(doctorEnjoinJson.temporaryArea.length);
+    //             } else {
+    //                 $(".temporaryTreatBox").find(".remarkBox").hide();
+    //             }
+    //         }
+    //         if (doctorEnjoinJson.surgeryArr && doctorEnjoinJson.surgeryArr.length > 0) {
+    //             $(".surgeryBox").find(".dataUl").show();
+    //             $(".surgeryBox").find(".remarkBox").show();
+    //             $(".surgeryBox").find(".noData").hide();
+    //             $(".surgeryAreaObj").html(doctorEnjoinJson.surgeryArea);
+    //             $(".surgeryAreaNum").html(doctorEnjoinJson.surgeryArea.length);
+    //             let _html = '';
+    //             for (let x = 0; x < doctorEnjoinJson.surgeryArr.length; x++) {
+    //                 let tempObj = doctorEnjoinJson.surgeryArr[x];
+    //                 $.ajax({
+    //                     type: 'POST',
+    //                     url: IP + 'consumables/findSpecificationsById',
+    //                     dataType: 'json',
+    //                     data: {
+    //                         "id": doctorEnjoinJson.surgeryArr[x].surgeryId,
+    //                     },
+    //                     async: false,
+    //                     xhrFields: {
+    //                         withCredentials: true
+    //                     },
+    //                     crossDomain: true,
+    //                     success: function (data) {
+    //                         console.log(data)
+    //                         if (data.code == 1) {
+    //                             if (data.data.length > 0) {
+    //                                 let _html = '<option value=""></option>';
+    //                                 for (let i = 0; i < data.data.length; i++) {
+    //                                     if (tempObj.surgerySize == data.data[i].specificationsName) {
+    //                                         _html += '<option selected value="' + data.data[i].specificationsName + '">' + data.data[i].specificationsName + '</option>'
+    //                                     } else {
+    //                                         _html += '<option value="' + data.data[i].specificationsName + '">' + data.data[i].specificationsName + '</option>'
+    //                                     }
+    //                                 }
+    //                                 let tempHtml = '<li class="dataItem">\
+    //                                         <div class="listBottomBox">\
+    //                                             <div class="listItem">\
+    //                                                 <span class="drugName surgeryNameObj" name="'+ tempObj.surgeryId + '">' + tempObj.surgeryName + '</span>\
+    //                                                 <div class="drugRule">\
+    //                                                     <div class="layui-input-inline" style="width: 300px;">\
+    //                                                         <select class="mustValue surgerySizeObj" name="">'+ _html + '</select>\
+    //                                                     </div>\
+    //                                                     <input type="text" class="mustValue surgeryNumObj" value="'+ tempObj.surgeryNum + '" oninput="value=value.replace(/[^\\d]/g,\'\')" placeholder="数量" style="margin-right: 20px;">\
+    //                                                 </div>\
+    //                                             </div>\
+    //                                         </div>\
+    //                                     </li>';
+    //                             } else {
+    //                                 let tempHtml = '<li class="dataItem">\
+    //                                 <div class="listBottomBox">\
+    //                                     <div class="listItem">\
+    //                                         <span class="drugName surgeryNameObj" name="'+ tempObj.surgeryId + '">' + tempObj.surgeryName + '</span>\
+    //                                         <div class="drugRule">\
+    //                                             <div class="layui-input-inline" style="width: 300px;">\
+    //                                                 <select class="mustValue surgerySizeObj" name=""><option value="--">--</option></select>\
+    //                                             </div>\
+    //                                             <input type="text" class="mustValue surgeryNumObj" value="'+ tempObj.surgeryNum + '" oninput="value=value.replace(/[^\\d]/g,\'\')" placeholder="数量" style="margin-right: 20px;">\
+    //                                         </div>\
+    //                                     </div>\
+    //                                 </div>\
+    //                             </li>';
+    //                             }
+    //                             $(".surgeryBox").find(".dataUl").append(tempHtml);
+    //                             $(".surgerySearchContent").hide();
+    //                             layerRender();
+    //                         } else if (data.code == 250) {
+    //                             // 未登录操作
+    //                             window.location = '/yilaiyiwang/login/login.html';
+    //                         } else {
+    //                             // 其他操作
+    //                         }
+    //                     },
+    //                     error: function (err) {
+    //                         console.log(err);
+    //                     },
+    //                 });
+    //             }
+    //         } else {
+    //             $(".surgeryBox").find(".noData").show();
+    //             $(".surgeryBox").find(".dataUl").hide();
+    //             $(".surgeryBox").find(".surgeryRemarkBox").hide();
+    //         }
+    //         layerRender();
+    //     }
+    // }
 
     // 长期医嘱 药物搜索按钮
     $(".longDrugBtn").click(function () {
@@ -612,7 +584,7 @@ $(function () {
                 <p class="divideLine"></p>\
                 <div class="listBottomBox">\
                     <div class="listItem">\
-                        <span class="drugName nameObj">'+ $(this).attr("medicalnamechina") + '</span>\
+                        <span class="drugName nameObj">' + $(this).attr("medicalnamechina") + '</span>\
                         <div class="drugRule">\
                             <input type="text" class="mustValue singleNumObj" oninput="value=value.replace(/[^\\d]/g,\'\')" placeholder="单次计量">&nbsp;&nbsp;/&nbsp;&nbsp;\
                             <div class="layui-input-inline" style="width: 80px;margin-right: 20px;">\
@@ -690,7 +662,6 @@ $(function () {
         layerRender();
     })
 
-
     // 临时医嘱 药物搜索
     $(".temporaryDrugBtn").click(function () {
         pageNo = 1;
@@ -719,13 +690,13 @@ $(function () {
                         <div class="headTopBox">\
                             <span>下达时间</span>\
                             <div class="selectTimeInput">\
-                                <input type="text" class="mustValue arriveTimeObj" readonly value="'+ getNowTime() + '" placeholder="点击选择" />\
+                                <input type="text" class="mustValue arriveTimeObj" readonly value="' + getNowTime() + '" placeholder="点击选择" />\
                             </div>\
                         </div>\
                         <p class="divideLine"></p>\
                         <div class="listBottomBox">\
                             <div class="listItem">\
-                                <span class="drugName nameObj">'+ $(this).attr("medicalnamechina") + '</span>\
+                                <span class="drugName nameObj">' + $(this).attr("medicalnamechina") + '</span>\
                                 <div class="drugRule">\
                                     <input type="text" class="mustValue singleNumObj" oninput="value=value.replace(/[^\\d]/g,\'\')" placeholder="单次计量">&nbsp;&nbsp;/&nbsp;&nbsp;\
                                     <div class="layui-input-inline" style="width: 80px;margin-right: 20px;">\
@@ -789,13 +760,13 @@ $(function () {
             <div class="headTopBox">\
                 <span>下达时间</span>\
                 <div class="selectTimeInput">\
-                    <input type="text" class="mustValue arriveTimeObj" readonly value="'+ getNowTime() + '" placeholder="点击选择" />\
+                    <input type="text" class="mustValue arriveTimeObj" readonly value="' + getNowTime() + '" placeholder="点击选择" />\
                 </div>\
             </div>\
             <p class="divideLine"></p>\
             <div class="listBottomBox">\
                 <div class="listItem">\
-                    <span class="drugName nameObj">'+ $(this).attr("checkname") + '</span>\
+                    <span class="drugName nameObj">' + $(this).attr("checkname") + '</span>\
                 </div>\
             </div>\
         </li>');
@@ -827,7 +798,7 @@ $(function () {
         $(".surgeryBox").find(".dataUl").show();
         $(".surgeryBox").find(".remarkBox").show();
         $(".surgeryBox").find(".noData").hide();
-        var _obj = $(this);
+        let _obj = $(this);
         $.ajax({
             type: 'POST',
             url: IP + 'consumables/findSpecificationsById',
@@ -843,17 +814,17 @@ $(function () {
                 console.log(data)
                 if (data.code == 1) {
                     if (data.data.length > 0) {
-                        var _html = '<option value=""></option>';
-                        for (var i = 0; i < data.data.length; i++) {
+                        let _html = '<option value=""></option>';
+                        for (let i = 0; i < data.data.length; i++) {
                             _html += '<option value="' + data.data[i].specificationsName + '">' + data.data[i].specificationsName + '</option>'
                         }
-                        var tempHtml = '<li class="dataItem">\
+                        let tempHtml = '<li class="dataItem">\
                                 <div class="listBottomBox">\
                                     <div class="listItem">\
-                                        <span class="drugName surgeryNameObj" name="'+ _obj.attr("name") + '">' + _obj.attr("consumablesname") + '</span>\
+                                        <span class="drugName surgeryNameObj" name="' + _obj.attr("name") + '">' + _obj.attr("consumablesname") + '</span>\
                                         <div class="drugRule">\
                                             <div class="layui-input-inline" style="width: 300px;">\
-                                                <select class="mustValue surgerySizeObj" name="">'+ _html + '</select>\
+                                                <select class="mustValue surgerySizeObj" name="">' + _html + '</select>\
                                             </div>\
                                             <input type="text" class="mustValue surgeryNumObj" oninput="value=value.replace(/[^\\d]/g,\'\')" placeholder="数量" style="margin-right: 20px;">\
                                         </div>\
@@ -861,10 +832,10 @@ $(function () {
                                 </div>\
                             </li>';
                     } else {
-                        var tempHtml = '<li class="dataItem">\
+                        let tempHtml = '<li class="dataItem">\
                         <div class="listBottomBox">\
                             <div class="listItem">\
-                                <span class="drugName surgeryNameObj" name="'+ _obj.attr("name") + '">' + _obj.attr("consumablesname") + '</span>\
+                                <span class="drugName surgeryNameObj" name="' + _obj.attr("name") + '">' + _obj.attr("consumablesname") + '</span>\
                                 <div class="drugRule">\
                                     <div class="layui-input-inline" style="width: 300px;">\
                                         <select class="mustValue surgerySizeObj" name=""><option value="--">--</option></select>\
@@ -891,14 +862,16 @@ $(function () {
         });
     })
 
+    let userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     // 医生签名
-    $(".navDoctorInfo").html("医生签名：" + localStorage.getItem("name"));
+    $(".navDoctorInfo").html("医生签名：" + userInfo.userName);
 
     // 导航切换 - start
     $(".deleteBtn,.cancelBtn,.setBtn,.submitBtn").hide();
     $(".navBox > a").click(function () {
         navSwitc($(this).index());
     });
+
     function navSwitc(_index) {
         $(".navBox > a").eq(_index).addClass("active").siblings("a").removeClass("active");
         $(".bodyContent > div").removeClass("active").eq(_index).addClass("active");
@@ -910,6 +883,7 @@ $(function () {
             $(".nextBtn").hide();
         }
     }
+
     // 后退
     $(".goBackBtn").click(function () {
         window.history.back();
@@ -918,7 +892,6 @@ $(function () {
         navSwitc(1);
     })
     // 导航切换 - end
-
 
     // 器械备注 输入高度自适应 - start
     $(".longTimeAreaObj")[0].oninput = function () {
@@ -1046,8 +1019,8 @@ $(function () {
     // 设置子医嘱 事件
     $(".setBtn").click(function () {
         if (!$(this).hasClass("noClick")) {
-            var objHtml = '<p class="divideLine"></p><div class="listItem">\
-                <span class="drugName nameObj">'+ $(".listItem.active .drugName").html() + '</span>\
+            let objHtml = '<p class="divideLine"></p><div class="listItem">\
+                <span class="drugName nameObj">' + $(".listItem.active .drugName").html() + '</span>\
                 <div class="drugRule">\
                     <input type="text" class="mustValue singleNumObj" oninput="value=value.replace(/[^\\d]/g,\'\')" placeholder="单次计量">&nbsp;&nbsp;/&nbsp;&nbsp;\
                     <div class="layui-input-inline" style="width: 80px;margin-right: 20px;">\
@@ -1085,7 +1058,7 @@ $(function () {
                     </div>\
                     <div class="listBottomBox">\
                         <div class="listItem">\
-                            <span class="drugName nameObj">'+ $(".listItem.active .drugName").html() + '</span>\
+                            <span class="drugName nameObj">' + $(".listItem.active .drugName").html() + '</span>\
                             <div class="drugRule">\
                                 <input type="text" class="mustValue singleNumObj" oninput="value=value.replace(/[^\\d]/g,\'\')" placeholder="单次计量">&nbsp;&nbsp;/&nbsp;&nbsp;\
                                 <div class="layui-input-inline" style="width: 80px;margin-right: 20px;">\
@@ -1169,14 +1142,14 @@ $(function () {
                 <div class="headTopBox">\
                     <span>下达时间</span>\
                     <div class="selectTimeInput">\
-                        <input type="text" class="mustValue arriveTimeObj" value="'+ getNowTime() + '" readonly placeholder="点击选择" />\
+                        <input type="text" class="mustValue arriveTimeObj" value="' + getNowTime() + '" readonly placeholder="点击选择" />\
                     </div>\
                 </div>\
                 <div class="divideLine">\
                 </div>\
                 <div class="listBottomBox">\
                     <div class="listItem">\
-                        <span class="drugName nameObj">'+ $(".listItem.active .drugName").html() + '</span>\
+                        <span class="drugName nameObj">' + $(".listItem.active .drugName").html() + '</span>\
                         <div class="drugRule">\
                             <input type="text" class="mustValue singleNum" oninput="value=value.replace(/[^\\d]/g,\'\')" placeholder="单次计量">&nbsp;&nbsp;/&nbsp;&nbsp;\
                             <div class="layui-input-inline" style="width: 80px;margin-right: 20px;">\
@@ -1221,7 +1194,7 @@ $(function () {
         if ($(".verdictArea").val() == '') {
             layer.msg("请填写会诊报告");
         } else {
-            var dataJson = {
+            let dataJson = {
                 // "doctor": '',// 医生姓名
                 // "longTimeArea": "",// 长期医嘱备注
                 // "temporaryArea": "",// 短期医嘱备注
@@ -1258,12 +1231,12 @@ $(function () {
                 // }],// 器械
             };
             if ($(".longTimeBox .dataUl > li").length > 0) {
-                var oneTempArr = [];
-                var twoTempArr = [];
-                var oneLevel = $(".longTimeBox .dataUl > li.dataItem");
-                for (var i = 0; i < oneLevel.length; i++) {
-                    var twoLevel = oneLevel.eq(i).find(".listBottomBox > .listItem");
-                    for (var j = 0; j < twoLevel.length; j++) {
+                let oneTempArr = [];
+                let twoTempArr = [];
+                let oneLevel = $(".longTimeBox .dataUl > li.dataItem");
+                for (let i = 0; i < oneLevel.length; i++) {
+                    let twoLevel = oneLevel.eq(i).find(".listBottomBox > .listItem");
+                    for (let j = 0; j < twoLevel.length; j++) {
                         twoTempArr.push({
                             "name": twoLevel.eq(j).find(".nameObj").html(),// 药物名字
                             "singleNum": twoLevel.eq(j).find(".singleNumObj").val(),// 单次计量
@@ -1292,12 +1265,12 @@ $(function () {
                 }
             }
             if ($(".temporaryDrugBox .dataUl > li").length > 0) {
-                var oneTempArr = [];
-                var twoTempArr = [];
-                var oneLevel = $(".temporaryDrugBox .dataUl > li");
-                for (var i = 0; i < oneLevel.length; i++) {
-                    var twoLevel = oneLevel.eq(i).find(".listBottomBox .listItem");
-                    for (var j = 0; j < twoLevel.length; j++) {
+                let oneTempArr = [];
+                let twoTempArr = [];
+                let oneLevel = $(".temporaryDrugBox .dataUl > li");
+                for (let i = 0; i < oneLevel.length; i++) {
+                    let twoLevel = oneLevel.eq(i).find(".listBottomBox .listItem");
+                    for (let j = 0; j < twoLevel.length; j++) {
                         twoTempArr.push({
                             "name": twoLevel.eq(j).find(".nameObj").html(),// 药物名字
                             "singleNum": twoLevel.eq(j).find(".singleNumObj").val(),// 单次计量
@@ -1314,9 +1287,9 @@ $(function () {
                 dataJson["temporaryDrugArr"] = oneTempArr;
             }
             if ($(".temporaryTreatBox .dataUl > li").length > 0) {
-                var oneTempArr = [];
-                var oneLevel = $(".temporaryTreatBox .dataUl > li");
-                for (var i = 0; i < oneLevel.length; i++) {
+                let oneTempArr = [];
+                let oneLevel = $(".temporaryTreatBox .dataUl > li");
+                for (let i = 0; i < oneLevel.length; i++) {
                     oneTempArr.push({
                         "arriveTime": oneLevel.eq(i).find(".arriveTimeObj").val(),
                         "name": oneLevel.eq(i).find(".nameObj").html(),
@@ -1331,9 +1304,9 @@ $(function () {
                 return false;
             }
             if ($(".surgeryBox .dataUl > li").length > 0) {
-                var oneTempArr = [];
-                var oneLevel = $(".surgeryBox .dataUl > li");
-                for (var i = 0; i < oneLevel.length; i++) {
+                let oneTempArr = [];
+                let oneLevel = $(".surgeryBox .dataUl > li");
+                for (let i = 0; i < oneLevel.length; i++) {
                     oneTempArr.push({
                         "surgeryName": oneLevel.eq(i).find(".surgeryNameObj").html(),// 器械名称
                         "surgerySize": oneLevel.eq(i).find(".surgerySizeObj").val(),// 器械规格
@@ -1367,7 +1340,7 @@ $(function () {
                 },
                 crossDomain: true,
                 success: function (data) {
-                    var $ = layui.jquery;
+                    let $ = layui.jquery;
                     console.log(data)
                     if (data.status == 202) {
                         layer.open({
@@ -1445,13 +1418,13 @@ $(function () {
     })
     // 提交按钮
     $(".submitBtn").click(function () {
-        for (var i = 0; i < $(".mustValue").length; i++) {
+        for (let i = 0; i < $(".mustValue").length; i++) {
             if ($(".mustValue").eq(i).val() == '') {
                 layer.msg("信息不完整");
                 return false;
             }
         }
-        var dataJson = {
+        let dataJson = {
             // "doctor": '',// 医生姓名
             // "longTimeArea": "",// 长期医嘱备注
             // "temporaryArea": "",// 短期医嘱备注
@@ -1488,12 +1461,12 @@ $(function () {
             // }],// 器械
         };
         if ($(".longTimeBox .dataUl > li").length > 0) {
-            var oneTempArr = [];
-            var twoTempArr = [];
-            var oneLevel = $(".longTimeBox .dataUl > li.dataItem");
-            for (var i = 0; i < oneLevel.length; i++) {
-                var twoLevel = oneLevel.eq(i).find(".listBottomBox > .listItem");
-                for (var j = 0; j < twoLevel.length; j++) {
+            let oneTempArr = [];
+            let twoTempArr = [];
+            let oneLevel = $(".longTimeBox .dataUl > li.dataItem");
+            for (let i = 0; i < oneLevel.length; i++) {
+                let twoLevel = oneLevel.eq(i).find(".listBottomBox > .listItem");
+                for (let j = 0; j < twoLevel.length; j++) {
                     twoTempArr.push({
                         "name": twoLevel.eq(j).find(".nameObj").html(),// 药物名字
                         "singleNum": twoLevel.eq(j).find(".singleNumObj").val(),// 单次计量
@@ -1518,12 +1491,12 @@ $(function () {
             }
         }
         if ($(".temporaryDrugBox .dataUl > li").length > 0) {
-            var oneTempArr = [];
-            var twoTempArr = [];
-            var oneLevel = $(".temporaryDrugBox .dataUl > li");
-            for (var i = 0; i < oneLevel.length; i++) {
-                var twoLevel = oneLevel.eq(i).find(".listBottomBox .listItem");
-                for (var j = 0; j < twoLevel.length; j++) {
+            let oneTempArr = [];
+            let twoTempArr = [];
+            let oneLevel = $(".temporaryDrugBox .dataUl > li");
+            for (let i = 0; i < oneLevel.length; i++) {
+                let twoLevel = oneLevel.eq(i).find(".listBottomBox .listItem");
+                for (let j = 0; j < twoLevel.length; j++) {
                     twoTempArr.push({
                         "name": twoLevel.eq(j).find(".nameObj").html(),// 药物名字
                         "singleNum": twoLevel.eq(j).find(".singleNumObj").val(),// 单次计量
@@ -1540,9 +1513,9 @@ $(function () {
             dataJson["temporaryDrugArr"] = oneTempArr;
         }
         if ($(".temporaryTreatBox .dataUl > li").length > 0) {
-            var oneTempArr = [];
-            var oneLevel = $(".temporaryTreatBox .dataUl > li");
-            for (var i = 0; i < oneLevel.length; i++) {
+            let oneTempArr = [];
+            let oneLevel = $(".temporaryTreatBox .dataUl > li");
+            for (let i = 0; i < oneLevel.length; i++) {
                 oneTempArr.push({
                     "arriveTime": oneLevel.eq(i).find(".arriveTimeObj").val(),
                     "name": oneLevel.eq(i).find(".nameObj").html(),
@@ -1557,9 +1530,9 @@ $(function () {
             return false;
         }
         if ($(".surgeryBox .dataUl > li").length > 0) {
-            var oneTempArr = [];
-            var oneLevel = $(".surgeryBox .dataUl > li");
-            for (var i = 0; i < oneLevel.length; i++) {
+            let oneTempArr = [];
+            let oneLevel = $(".surgeryBox .dataUl > li");
+            for (let i = 0; i < oneLevel.length; i++) {
                 oneTempArr.push({
                     "surgeryName": oneLevel.eq(i).find(".surgeryNameObj").html(),// 器械名称
                     "surgerySize": oneLevel.eq(i).find(".surgerySizeObj").val(),// 器械规格
@@ -1593,7 +1566,7 @@ $(function () {
             },
             crossDomain: true,
             success: function (data) {
-                var $ = layui.jquery;
+                let $ = layui.jquery;
                 console.log(data)
                 document.documentElement.style.overflow = "scroll";
                 if (data.status == 200) {
