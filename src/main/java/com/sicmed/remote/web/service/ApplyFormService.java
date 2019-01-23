@@ -10,6 +10,8 @@ import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.CaseRecord;
 import com.sicmed.remote.web.mapper.ApplyFormMapper;
 import com.sicmed.remote.web.mapper.CaseConsultantMapper;
+import com.sicmed.remote.web.mapper.CaseContentMapper;
+import com.sicmed.remote.web.mapper.CaseRecordMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,25 +26,20 @@ import java.util.List;
 public class ApplyFormService implements BaseService<ApplyForm> {
 
     @Autowired
-    private ApplyFormMapper applyFormMapper;
-
-    @Autowired
-    private CasePatientService casePatientService;
-
-    @Autowired
-    private CaseRecordService caseRecordService;
-
-    @Autowired
-    private CaseContentService caseContentService;
-
-    @Autowired
     private ApplyFormService applyFormService;
 
     @Autowired
-    private CaseConsultantService caseConsultantService;
+    private ApplyFormMapper applyFormMapper;
+
+    @Autowired
+    private CaseRecordMapper caseRecordMapper;
+
+    @Autowired
+    private CaseContentMapper caseContentMapper;
 
     @Autowired
     private CaseConsultantMapper caseConsultantMapper;
+
 
     // 更新applyForm表单apply_status状态
     public int updateStatus(ApplyForm applyForm, String applyStatus, String userId) {
@@ -147,10 +144,10 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         String caseRecordId = applyForm.getCaseRecordId();
         // 删除caseRecordId相关的病例信息
         if (StringUtils.isNotBlank(caseRecordId)) {
-            caseContentService.deleteByCaseRecordId(caseRecordId);
-            caseRecordService.deleteByPrimaryKey(caseRecordId);
+            caseContentMapper.deleteByCaseRecordId(caseRecordId);
+            caseRecordMapper.deleteByPrimaryKey(caseRecordId);
         }
-        caseConsultantService.deleteByPrimaryKey(applyFormId);
+        caseConsultantMapper.deleteByPrimaryKey(applyFormId);
         return applyFormMapper.deleteByPrimaryKey(applyForm.getId());
     }
 

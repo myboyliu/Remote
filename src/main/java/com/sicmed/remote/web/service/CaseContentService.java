@@ -5,6 +5,8 @@ import com.sicmed.remote.web.entity.CaseContent;
 import com.sicmed.remote.web.entity.CasePatient;
 import com.sicmed.remote.web.entity.CaseRecord;
 import com.sicmed.remote.web.mapper.CaseContentMapper;
+import com.sicmed.remote.web.mapper.CasePatientMapper;
+import com.sicmed.remote.web.mapper.CaseRecordMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,28 +22,28 @@ public class CaseContentService implements BaseService<CaseContent> {
     private CaseContentMapper caseContentMapper;
 
     @Autowired
-    private CasePatientService casePatientService;
+    private CasePatientMapper casePatientMapper;
 
     @Autowired
-    private CaseRecordService caseRecordService;
+    private CaseRecordMapper caseRecordMapper;
 
     // 创建病例
     @Transactional
     public int insertByMap(CaseContentBean caseContentBean) {
 
         caseContentBean.getCasePatient().setCreateUser(caseContentBean.getCreateUser());
-        CasePatient rel = casePatientService.selectByCard(caseContentBean.getCasePatient().getPatientCard());
+        CasePatient rel = casePatientMapper.selectByCard(caseContentBean.getCasePatient().getPatientCard());
         if (rel == null) {
-            casePatientService.insertSelective(caseContentBean.getCasePatient());
+            casePatientMapper.insertSelective(caseContentBean.getCasePatient());
         }
         if (rel != null) {
             caseContentBean.getCasePatient().setId(rel.getId());
-            casePatientService.updateByCard(caseContentBean.getCasePatient());
+            casePatientMapper.updateByCard(caseContentBean.getCasePatient());
         }
 
         caseContentBean.getCaseRecord().setCreateUser(caseContentBean.getCreateUser());
         caseContentBean.getCaseRecord().setPatientId(caseContentBean.getCasePatient().getId());
-        caseRecordService.insertSelective(caseContentBean.getCaseRecord());
+        caseRecordMapper.insertSelective(caseContentBean.getCaseRecord());
 
         caseContentBean.setRecordId(caseContentBean.getCaseRecord().getId());
 
@@ -54,11 +56,11 @@ public class CaseContentService implements BaseService<CaseContent> {
                                    List<CaseContent> resultList, String userId) {
         casePatient.setId(casePatientId);
         casePatient.setUpdateUser(userId);
-        casePatientService.updateByPrimaryKeySelective(casePatient);
+        casePatientMapper.updateByPrimaryKeySelective(casePatient);
 
         caseRecord.setId(caseRecordId);
         caseRecord.setUpdateUser(userId);
-        caseRecordService.updateByPrimaryKeySelective(caseRecord);
+        caseRecordMapper.updateByPrimaryKeySelective(caseRecord);
 
         caseContentMapper.deleteByCaseRecordId(caseRecordId);
 
