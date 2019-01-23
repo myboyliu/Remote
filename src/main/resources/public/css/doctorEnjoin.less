@@ -1,0 +1,588 @@
+body {
+    background: #efefef;
+}
+// 导航 - start
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    width: 100%;
+    height: 70px;
+    background: #ffffff;
+    box-shadow: 0 0 10px 0 #666666;
+    min-width: 1200px;
+    .infoArea {
+        margin: 0 30px;
+        position: relative;
+        .logo {
+            float: left;
+            > a {
+                position: relative;
+                z-index: 5;
+                display: block;
+                height: 70px;
+                > img {
+                    display: block;
+                    margin: 19px 0 0 0;
+                }
+            }
+        }
+        .topInfoArea {
+            position: relative;
+            margin: 19px 0 0;
+            float: right;
+            line-height: 32px;
+
+            > a {
+                float: left;
+                display: block;
+            }
+
+            .personal {
+                float: left;
+                position: relative;
+                z-index: 99;
+                margin-right: 40px;
+                padding-bottom: 15px;
+               
+
+                > span {
+                    display: block;
+                    padding: 0 0 0 30px;
+                    background: url("../images/set.png") no-repeat left center;
+                }
+                > ul {
+                    display: none;
+                    position: absolute;
+                    top: 40px;
+                    left: -60px;
+                    z-index: 100;
+                    box-sizing: border-box;
+                    border: 1px solid #dbdbdb;
+                    border-radius: 10px;
+                    background: #efefef;
+                    padding: 12px 0;
+
+                    &:before {
+                        content: ' ';
+                        position: absolute;
+                        top: -9px;
+                        left: 93px;
+                        width: 14px;
+                        height: 9px;
+                        background: url("../images/personal_top.png") no-repeat;
+                    }
+
+                    > li {
+                        > a {
+                            display: block;
+                            font-size: 14px;
+                            color: #101010;
+                            line-height: 40px;
+                            width: 200px;
+                            text-align: center;
+                             &:hover {
+                                background: #475bc8;
+                                color: #fff;
+                            }
+                        }
+                    }
+                }
+                .personalCenter{
+                    width: 200px;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                }
+            }
+
+            .news {
+                position: relative;
+                margin: 0 40px 0 0;
+                padding: 0 0 0 30px;
+                background: url("../images/mail.png") no-repeat left center;
+            }
+
+            .newNews {
+                &:before {
+                    content: ' ';
+                    position: absolute;
+                    top: 13px;
+                    right: -8px;
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background: #e43d2a;
+                }
+            }
+
+            .searchBox {
+                float: left;
+                position: relative;
+
+                .searchInput {
+                    box-sizing: border-box;
+                    width: 310px;
+                    height: 32px;
+                    border: 1px solid #dbdbdb;
+                    border-radius: 16px;
+                    line-height: 32px;
+                    color: #101010;
+                    font-size: 14px;
+                    padding: 0 20px;
+                    background: #efefef;
+                    cursor: text;
+                }
+
+                img {
+                    position: absolute;
+                    top: 6px;
+                    right: 15px;
+                    z-index: 5;
+                }
+            }
+        }
+    }
+}
+// 导航 - end
+
+// 主体部分 - start
+.main {
+    width: 1200px;
+    margin: 70px auto 0;
+    background: #fff;
+    // 主体导航部分
+    .navContent {
+        position: relative;
+        width: 100%;
+        height: 70px;
+        background: #eef1fb;
+        padding-top: 20px;
+        // 导航左侧tab
+        .navBox {
+            margin-left: 10px;
+            > a {
+                display: inline-block;
+                line-height: 50px;
+                height: 50px;
+                text-align: center;
+                border-radius: 20px 20px 0 0;
+                color: #101010;
+                font-size: 16px;
+                padding: 0 40px;
+                &.active {
+                    color: #1937bc;
+                    background: #fff;
+                    > img {
+                        display: inline-block;
+                    }
+                }
+                > img{
+                    display: none;
+                    margin-right: 10px;
+                }
+            }
+        }
+        // 导航右侧医生信息
+        .navDoctorInfo {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            line-height: 50px;
+            color: #101010;
+            font-size: 16px;
+            padding: 0 20px;
+            font-weight: bold;
+        }
+    }
+    // 主体内容部分
+    .bodyContent {
+        background: #fff;
+        .bodyItem {
+            display: none;
+            &.active {
+                display: block;
+            }
+            // 会诊报告 - start
+            &.verdictBox{
+                padding: 48px 40px;
+            }
+            .verdictArea {
+                width: 100%;
+                min-height: 450px;
+                font-size: 14px;
+                color: #666666;
+                line-height: 24px;
+            }
+            // 会诊报告 - end
+            // 医嘱 - start
+            &.enjoinBox {
+                padding: 0 10px 50px;
+                // 三大块
+                .itemBox {
+                    // head行
+                    .headBox {
+                        position: relative;
+                        height: 70px;
+                        padding: 20px 0;
+                        > span {
+                            position: absolute;
+                            top: 20px;
+                            left: 0;
+                            width: 30px;
+                            height: 30px;
+                            background: #516dcf;
+                            text-align: center;
+                            line-height: 30px;
+                            color: #fff;
+                            font-size: 16px;
+                        }
+                        .headTitle {
+                            position: absolute;
+                            top: 20px;
+                            left: 30px;
+                            padding: 0 20px 0 10px;
+                            line-height: 30px;
+                            background: #fff;
+                            font-size: 16px;
+                            color: #101010;;
+                            font-weight: 500;
+                        }
+                        .hearLine {
+                            height: 1px;
+                            background: #efefef;
+                            margin-top: 15px;
+                        }
+                    }
+                    // 搜索行
+                    .searchBox {
+                        position: relative;
+                        line-height: 40px;
+                        margin-bottom: 20px;
+                        > span {
+                            display: inline-block;
+                            font-size: 16px;
+                            color: #101010;
+                            padding: 0 10px 0 20px;
+                        }
+                        > input {
+                            width: 700px;
+                            box-sizing: border-box;
+                            font-size: 14px;
+                            color: #101010;
+                            border: 1px solid #dbdbdb;
+                            background: #f4f4f4;
+                            border-radius: 20px;
+                            line-height: 40px;
+                            height: 40px;
+                            padding: 0 20px;
+                            &:focus {
+                                background: #fff;
+                                border: 1px solid #516dcf;
+                            }
+                            &.focus {
+                                background: #fff;
+                                border: 1px solid #516dcf;
+                            }
+                        }
+                        > a {
+                            box-sizing: border-box;
+                            display: inline-block;
+                            width: 100px;
+                            height: 40px;
+                            border: 1px solid #516dcf;
+                            border-radius: 20px;
+                            text-align: center;
+                            line-height: 40px;
+                            font-size: 14px;
+                            color: #516dcf;
+                            > img {
+                                margin-right: 6px;
+                            }
+                        }
+                        // 搜索结果
+                        .searchContent {
+                            display: none;
+                            box-sizing: border-box;
+                            position: absolute;
+                            top: 41px;
+                            left: 94px;
+                            z-index: 10;
+                            width: 700px;
+                            background: #f4f4f4;
+                            border: 1px solid #dbdbdb;
+                            // 搜索数据列表
+                            .searchResult {
+                                > a {
+                                    display: block;
+                                    line-height: 27px;
+                                    padding: 0 20px;
+                                    font-size: 16px;
+                                    &:hover {
+                                        background: #dbdbdb;
+                                        color: #1937bc;
+                                        > img {
+                                            display: inline-block;
+                                            margin-left: 6px;
+                                        }
+                                    }
+                                    > img {
+                                        display: none;
+                                    }
+                                }
+                            }
+                            // 搜索数据底部信息
+                            .searchBottomBox {
+                                position: relative;
+                                padding: 14px 20px 0;
+                                > span {
+                                    font-size: 14px;
+                                    color: #999999; 
+                                    line-height: 30px;
+                                }
+                                .paging {
+                                    position: absolute;
+                                    bottom: 0;
+                                    right: 20px;
+                                    z-index: 1;
+                                    > a {
+                                        font-size: 14px;
+                                        color: #101010;
+                                        &.noClick {
+                                            color: #999999;
+                                            cursor: default;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // 没数据
+                    .noData {
+                        padding-top: 10px;
+                        font-size: 14px;
+                        color: #101010;
+                        line-height: 34px;
+                        text-align: center;
+                    }
+                    // 有数据
+                    .dataUl {
+                        li {
+                            margin-bottom: 9px;
+                            box-shadow: 0 0 6px rgba(0,0,0,.2);
+                            border: 1px solid #f1f1f1; 
+                            background: #fff;
+                            &.active {
+                                border: 1px solid #516dcf; 
+                                background: #eef1fb;
+                            }
+                            // 列表头部
+                            .headTopBox {
+                                box-sizing: border-box;
+                                > span {
+                                    padding: 0 10px 0 20px;
+                                    line-height: 60px;
+                                    font-size: 16px;
+                                }
+                                .remarkInput {
+                                    font-size: 16px;
+                                    color: #101010;
+                                    background: #fff;
+                                    line-height: 40px;
+                                    min-width: 500px;
+                                }
+                                .selectTimeInput {
+                                    position: relative;
+                                    display: inline-block;
+                                    box-sizing: border-box;
+                                    width: 180px;
+                                    height: 36px;
+                                    line-height: 36px;
+                                    border: 1px solid #dbdbdb;
+                                    padding: 0 23px;
+                                    background: #fff;
+                                    > input {
+                                        background: transparent;
+                                    }
+                                }
+                                .selectTimeInputBefore {
+                                    &:before {
+                                        content: ' ';
+                                        position: absolute;
+                                        top: 14px;
+                                        right: 24px;
+                                        width: 0;
+                                        height: 0;
+                                        border: 6px solid transparent;
+                                        border-top: 6px solid #999999;
+                                        border-bottom: none;
+                                        z-index: 1;
+                                    }
+                                }
+                            }
+                            // 列表主体
+                            .listBottomBox {
+                                // 列表item
+                                .listItem {
+                                    border: 1px solid transparent;
+                                    &.active {
+                                        border: 1px solid #516dcf;
+                                        background: #eef1fb;
+                                    }
+                                    .drugName {
+                                        position: relative;
+                                        line-height: 60px;
+                                        margin-left: 20px;
+                                        font-size: 16px;
+                                        color: #101010;
+                                        font-weight: 500;
+                                    }
+                                    .drugRule {
+                                        float: right;
+                                        padding-top: 12px;
+                                        > input {
+                                            font-size: 14px;
+                                            width: 90px;
+                                            height: 36px;
+                                            border: 1px solid #dbdbdb;
+                                            padding: 0 14px;
+                                            font-size: 14px;
+                                            color: #101010;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // 医嘱 - end
+        }
+    }
+}
+// 备注
+.remarkBox {
+    position: relative;
+    box-shadow: 0 0 6px rgba(0,0,0,.2);
+    display: none;
+    box-sizing: border-box;
+    padding: 0 20px;
+    color: #101010;
+    &.noLength {
+        color: #e43d2a;
+    }
+    > span {
+        display: inline-block;
+        font-size: 16px;
+        text-align: right;
+        line-height: 40px;
+        > i {
+            font-style: normal;
+        }
+    }
+    .remarkArea {
+        display: inline-block;
+        outline: none;
+        line-height: 40px;
+        font-size: 16px;
+        min-height: 40px;
+        min-width: 1000px;
+    }
+}
+// 分隔线
+.divideLine {
+    margin: 0 10px;
+    height: 1px;
+    background: #dbdbdb;
+}
+// 主体部分 - end
+
+// 底部按钮
+.footerNav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: rgba(50,73,194,.8);
+    text-align: right;
+    padding-right: 40px;
+    > a {
+        margin-top: 10px;
+        box-sizing: border-box;
+        display: inline-block;
+        font-size: 14px;
+        color: #101010;
+        border: 1px solid #3249c2;
+        border-radius: 10px;
+        line-height: 40px;
+        padding: 0 25px;
+        min-width: 120px;
+        background: #fff;
+        text-align: center;
+        &.noClick {
+            color: #999999;
+            cursor: default;
+            background: #efefef;
+        }
+        &.submitBtn,&.nextBtn {
+            background: #f6c567;
+        }
+    }
+}
+
+// 底部版权 - start
+.footer {
+    overflow: hidden;
+    box-sizing: border-box;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    color: #999999;
+    padding: 30px 0 20px;
+    margin-bottom: 60px;
+}
+// 底部版权 - end
+
+.returned {
+    width: 500px;
+    height: 200px;
+    border-radius: 10px;
+    box-shadow: 0,0,0,0.1;
+    background-color: #fff;
+    box-shadow: 0 0 10px 0 #666666;
+    text-align: center; //  position: absolute;
+    //  top:215px;
+    //  left:280px;
+    display: none;
+}
+
+.returned p {
+    font-size: 18px;
+    font-weight: bold;
+    padding-top: 60px;
+}
+
+.returned input {
+    width: 198px;
+    height: 38px;
+    border: 1px solid #3249c2;
+    letter-spacing: 1px;
+    color: #fff;
+    font-size: 14px;
+    border-radius: 10px;
+    background-color: #516dcf;
+    margin-top: 54px;
+}
+
+.returned input:hover {
+    background-color: #1937bc;
+}
+.working{
+    width: 500px;
+    height: 200px;
+    line-height: 200px;
+    font-size: 20px;
+    font-weight: bold;
+}

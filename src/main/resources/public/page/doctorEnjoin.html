@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="../favicon.ico" rel="shortcut icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>会诊报告-远程会诊平台</title>
+    <link rel="stylesheet" href="../common/css/reset.css">
+    <link rel="stylesheet" href="../common/layui/css/layui.css">
+    <link rel="stylesheet/less" href="../css/doctorEnjoin.less">
+    <script src="../common/js/jquery.js"></script>
+    <!-- <script src="/yilaiyiwang/layui/layui.all.js"></script> -->
+    <script src="../common/js/less.js"></script>
+    <script src="../common/js/PDFObject.min.js"></script>
+    <script src="../common/js/root.js"></script>
+    <script src="../common/js/jquery-ui.min.js" charset="utf-8"></script>
+    <script src="../common/js/imgFileupload.js"></script>
+    <script src="../js/doctorEnjoin.js"></script>
+    <!--[if lt IE9]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="header">
+        <div class="infoArea clearfix">
+            <h1 class="logo">
+                <a href="javascript:;">
+                    <img src="../images/logo.png" alt="logo" />
+                </a>
+            </h1>
+            <div class="topInfoArea clearfix">
+                <div class="personal" href="javascript:;">
+                    <span class="personalCenter"><span class="name"></span>/<span class="occupationName"></span>/<span
+                            class="deptName"></span>/<span class="hospitalName"></span>/</span>
+                    <ul>
+                        <li>
+                            <a href="../page/center.html">个人中心</a>
+                        </li>
+                        <li>
+                            <a class="loginOut" href="javascript:;">退出登录</a>
+                        </li>
+                    </ul>
+                </div>
+                <a class="news" href="../page/newInformation.html">新信息</a>
+                <div class="searchBox"><input class="searchInput" type="text" placeholder="请在这里搜索已结束的订单">
+                    <img class="searchBtn" src="../images/images/search.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main">
+        <div class="navContent">
+            <div class="navBox">
+                <a class="navItem active" href="javascript:;"><img src="../images/nav_active.png" alt="">第1步-会诊报告</a>
+                <a class="navItem" href="javascript:;"><img src="../images/nav_active.png" alt="">第2步-医嘱与手术备品(可不写)</a>
+            </div>
+            <p class="navDoctorInfo">医生签名：</p>
+        </div>
+        <div class="bodyContent">
+            <div class="bodyItem verdictBox active">
+                <textarea class="verdictArea" name="" placeholder="请填写会诊报告..."></textarea>
+            </div>
+            <div class="bodyItem enjoinBox layui-form">
+                <div class="itemBox">
+                    <div class="headBox">
+                        <span>01</span>
+                        <p class="headTitle">长期医嘱</p>
+                        <div class="hearLine"></div>
+                    </div>
+                    <div class="searchBox">
+                        <span>药物名称</span>
+                        <input class="longDrugInput" type="text" placeholder="搜索关键词...">
+                        <a class="longDrugBtn" href="javascript:;"><img src="../images/search.png" alt="">搜索</a>
+                        <div class="searchContent longDrugSearchContent">
+                            <div class="searchResult">
+                                <!-- <a href="javascript:;">搜索结果项<img src="../images/search_active.png" alt=""></a> -->
+                            </div>
+                            <div class="searchBottomBox">
+                                <span>共<b class="searchNum">0</b>条结果</span>
+                                <p class="paging">
+                                    <a class="prev noClick" href="javascript:;">上一页</a>
+                                    <a class="next" href="javascript:;">下一页</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 长期医嘱数据 -->
+                    <div class="longTimeBox">
+                        <p class="noData">1.先搜索；2.在搜索结果中点击药物名称添加至医嘱</p>
+                        <ul class="dataUl">
+                            <!-- <li class="dataItem">
+                                <div class="headTopBox">
+                                    <span>执行时间</span>
+                                    <div class="selectTimeInput">
+                                        <input type="text" readonly class="executeStartTime" placeholder="点击选择" />
+                                    </div>
+
+                                    <span>结束时间</span>
+                                    <div class="selectTimeInput">
+                                        <input type="text" readonly class="executeEndTime" placeholder="点击选择" />
+                                    </div>
+                                    <span>备注：</span><input class="remarkInput" type="text" placeholder="限34个字">
+                                </div>
+                                <div class="divideLine">
+                                </div>
+                                <div class="listBottomBox">
+                                    <div class="listItem">
+                                        <span class="drugName">药物名称</span>
+                                        <div class="drugRule">
+                                            <input type="text" oninput="value=value.replace(/[^\d]/g,'')" placeholder="单次计量">&nbsp;&nbsp;/&nbsp;&nbsp;
+                                            <div class="layui-input-inline" style="width: 80px;margin-right: 20px;">
+                                                <select class="" name="">
+                                                    <option value="g">g</option>
+                                                    <option value="mg">mg</option>
+                                                    <option value="ug">ug</option>
+                                                    <option value="ml">ml</option>
+                                                </select>
+                                            </div>
+                                            <div class="layui-input-inline" style="width:116px;margin-right: 20px;">
+                                                <select name="" lay-verify="" lay-search="">
+                                                    <option value="">选择或搜索</option>
+                                                    <option value="q.1/2h">q.1/2h</option>
+                                                    <option value="q.h">q.h</option>
+                                                    <option value="q.2h">q.2h</option>
+                                                    <option value="q.3h">q.3h</option>
+                                                    <option value="q.4h">q.4h</option>
+                                                    <option value="q.6h">q.6h</option>
+                                                    <option value="q.8h">q.8h</option>
+                                                    <option value="q.12h">q.12h</option>
+                                                    <option value="q.72h.">q.72h.</option>
+                                                    <option value="q.d.">q.d.</option>
+                                                    <option value="b.i.d.">b.i.d.</option>
+                                                    <option value="t.i.d.">t.i.d.</option>
+                                                    <option value="q.i.d.">q.i.d.</option>
+                                                    <option value="Quingid">Quingid</option> 
+                                                    <option value="q.n.">q.n.</option> 
+                                                    <option value="q.o.d.">q.o.d.</option> 
+                                                    <option value="q.3d">q.3d</option> 
+                                                    <option value="q.w.">q.w.</option> 
+                                                    <option value="Biw">Biw</option> 
+                                                    <option value="Tiw">Tiw</option> 
+                                                    <option value="q.o.w.">q.o.w.</option> 
+                                                    <option value="2W">2W</option> 
+                                                    <option value="3W">3W</option> 
+                                                    <option value="4W">4W</option> 
+                                                    <option value="q.m.">q.m.</option> 
+                                                    <option value="b.i.m.">b.i.m.</option> 
+                                                    <option value="once">once</option> 
+                                                    <option value="St.">St.</option> 
+                                                    <option value="p.r.n.">p.r.n.</option> 
+                                                    <option value="s.o.s.">s.o.s.</option> 
+                                                    <option value="DC">DC</option> 
+                                                    <option value="12n">12n</option> 
+                                                    <option value="12mn">12mn</option> 
+                                                    <option value="a.c.">a.c.</option> 
+                                                    <option value="p.c.">p.c.</option> 
+                                                    <option value="t.i.d. a.c.">t.i.d. a.c.</option> 
+                                                    <option value="hs">hs</option>
+                                                </select>
+                                            </div>
+                                            <div class="layui-input-inline" style="width:116px;margin-right: 20px;">
+                                                <select name="modules" lay-verify="" lay-search="">
+                                                    <option value="">选择或搜索</option>
+                                                    <option value="gtt">gtt</option>
+                                                    <option value="id">id</option>
+                                                    <option value="ih">ih</option>
+                                                    <option value="im/m.">im/m.</option>
+                                                    <option value="iv">iv</option>
+                                                    <option value="ip">ip</option>
+                                                    <option value="ivgtt">ivgtt</option>
+                                                    <option value="p.o.">p.o.</option>
+                                                    <option value="ad us.int.">ad us.int.</option>
+                                                    <option value="ad us.ext.">ad us.ext.</option>
+                                                    <option value="lnhal">lnhal</option>
+                                                    <option value="ig">ig</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li> -->
+                        </ul>
+                        <div class="remarkBox">
+                            <span>备注（<i class="longTimeAreaNum">0</i>/200）：</span>
+                            <div contenteditable="true" class="remarkArea longTimeAreaObj"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="itemBox">
+                    <div class="headBox">
+                        <span>02</span>
+                        <p class="headTitle">临时医嘱</p>
+                        <div class="hearLine"></div>
+                    </div>
+                    <div class="searchBox">
+                        <span>药物名称</span>
+                        <input class="temporaryDrugInput" type="text" placeholder="搜索关键词...">
+                        <a class="temporaryDrugBtn" href="javascript:;"><img src="../images/search.png" alt="">搜索</a>
+                        <div class="searchContent temporaryDrugSearchContent">
+                            <div class="searchResult">
+                                <!-- <a href="javascript:;">搜索结果项<img src="../images/search_active.png" alt=""></a> -->
+                            </div>
+                            <div class="searchBottomBox">
+                                <span>共<b class="searchNum">0</b>条结果</span>
+                                <p class="paging">
+                                    <a class="prev noClick" href="javascript:;">上一页</a>
+                                    <a class="next" href="javascript:;">下一页</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 临时药物 -->
+                    <div class="temporaryDrugBox">
+                        <p class="noData">1.先搜索；2.在搜索结果中点击药物名称添加至医嘱</p>
+                        <ul class="dataUl">
+                            <!-- <li class="dataItem">
+                                <div class="headTopBox">
+                                    <span>下达时间</span>
+                                    <div class="selectTimeInput">
+                                        <input type="text" readonly placeholder="点击选择" />
+                                    </div>
+                                    <span>备注：</span><input class="remarkInput" type="text" placeholder="限50个字">
+                                </div>
+                                <div class="divideLine">
+                                </div>
+                                <div class="listBottomBox">
+                                    <div class="listItem">
+                                        <span class="drugName">药物名称</span>
+                                        <div class="drugRule">
+                                            <input type="text" oninput="value=value.replace(/[^\d]/g,'')" placeholder="单次计量">&nbsp;&nbsp;/&nbsp;&nbsp;
+                                            <div class="layui-input-inline" style="width: 80px;margin-right: 20px;">
+                                                <select class="layui-input-inline" name="">
+                                                    <option value="g">g</option>
+                                                    <option value="mg">mg</option>
+                                                    <option value="ug">ug</option>
+                                                    <option value="ml">ml</option>
+                                                </select>
+                                            </div>
+                                            <div class="layui-input-inline" style="width:116px;margin-right: 20px;">
+                                                <select name="modules" lay-verify="" lay-search="">
+                                                    <option value="">选择或搜索</option>
+                                                    <option value="gtt">gtt</option>
+                                                    <option value="id">id</option>
+                                                    <option value="ih">ih</option>
+                                                    <option value="im/m.">im/m.</option>
+                                                    <option value="iv">iv</option>
+                                                    <option value="ip">ip</option>
+                                                    <option value="ivgtt">ivgtt</option>
+                                                    <option value="p.o.">p.o.</option>
+                                                    <option value="ad us.int.">ad us.int.</option>
+                                                    <option value="ad us.ext.">ad us.ext.</option>
+                                                    <option value="lnhal">lnhal</option>
+                                                    <option value="ig">ig</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li> -->
+                        </ul>
+                    </div>
+                    <div class="searchBox">
+                        <span>诊疗名称</span>
+                        <input class="temporaryTreatInput" type="text" placeholder="搜索关键词...">
+                        <a class="temporaryTreatBtn" href="javascript:;"><img src="../images/search.png" alt="">搜索</a>
+                        <div class="searchContent temporaryTreatSearchContent">
+                            <div class="searchResult">
+                                <!-- <a href="javascript:;">搜索结果项<img src="../images/search_active.png" alt=""></a> -->
+                            </div>
+                            <div class="searchBottomBox">
+                                <span>共<b class="searchNum">0</b>条结果</span>
+                                <p class="paging">
+                                    <a class="prev noClick" href="javascript:;">上一页</a>
+                                    <a class="next" href="javascript:;">下一页</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 临时诊疗 -->
+                    <div class="temporaryTreatBox">
+                        <p class="noData">1.先搜索；2.在搜索结果中点击药物名称添加至医嘱</p>
+                        <ul class="dataUl">
+                            <!-- <li class="dataItem">
+                                <div class="headTopBox">
+                                    <span>下达时间</span>
+                                    <div class="selectTimeInput">
+                                        <input type="text" readonly id="" placeholder="点击选择" />
+                                    </div>
+                                    <span>备注：</span><input class="remarkInput" type="text" placeholder="限50个字">
+                                </div>
+                                <div class="divideLine"></div>
+                                <div class="listBottomBox">
+                                    <div class="listItem">
+                                        <span class="drugName">药物名称</span>
+                                    </div>
+                                </div>
+                            </li> -->
+                        </ul>
+                        <div class="remarkBox">
+                            <span>备注（<i class="temporaryAreaNum">0</i>/200）：</span>
+                            <div contenteditable="true" class="remarkArea temporaryAreaObj" name=""></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="itemBox">
+                    <div class="headBox">
+                        <span>03</span>
+                        <p class="headTitle">手术备品</p>
+                        <div class="hearLine"></div>
+                    </div>
+                    <div class="searchBox">
+                        <span>器械名称</span>
+                        <input class="surgeryInput" type="text" placeholder="搜索关键词...">
+                        <a class="surgeryBtn" href="javascript:;"><img src="../images/search.png" alt="">搜索</a>
+                        <div class="searchContent surgerySearchContent">
+                            <div class="searchResult">
+                                <!-- <a href="javascript:;">搜索结果项<img src="../images/search_active.png" alt=""></a> -->
+                            </div>
+                            <div class="searchBottomBox">
+                                <span>共<b class="searchNum">0</b>条结果</span>
+                                <p class="paging">
+                                    <a class="prev noClick" href="javascript:;">上一页</a>
+                                    <a class="next" href="javascript:;">下一页</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 手术数据 -->
+                    <div class="surgeryBox">
+                        <p class="noData">1.先搜索；2.在搜索结果中点击药物名称添加至医嘱</p>
+                        <ul class="dataUl">
+                            <!-- <li class="dataItem">
+                                <div class="listBottomBox">
+                                    <div class="listItem">
+                                        <span class="drugName">器械</span>
+                                        <div class="drugRule">
+                                            <div class="layui-input-inline" style="width: 300px;">
+                                                <select name="">
+                                                    <option value=""></option>
+                                                    <option value="1">每日用次</option>
+                                                </select>
+                                            </div>
+                                            <input type="text" oninput="value=value.replace(/[^\d]/g,'')" placeholder="数量"
+                                                style="margin-right: 20px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li> -->
+                        </ul>
+                        <div class="remarkBox">
+                            <span>备注（<i class="surgeryAreaNum">0</i>/200）：</span>
+                            <div contenteditable="true" class="remarkArea surgeryAreaObj" name=""></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footerNav">
+        <a class="goBackBtn" href="javascript:;">返回</a>
+        <a class="deleteBtn noClick" href="javascript:;">删除</a>
+        <a class="cancelBtn noClick" href="javascript:;">取消子医嘱</a>
+        <a class="setBtn noClick" href="javascript:;">设为子医嘱</a>
+        <a class="saveBtn" href="javascript:;">暂存</a>
+        <a class="nextBtn" href="javascript:;">下一步</a>
+        <a class="submitBtn" href="javascript:;">提交</a>
+    </div>
+    <div class="footer">
+        Copyright © 2018 医来医往(北京)科技有限公司
+    </div>
+
+
+    <div class="returned working">
+        <p class="alertText">暂存成功</p>
+        <!-- <input type="button" value="确定" class="getBack"> -->
+    </div>
+    <div class="returned promptText">
+        <p>主会诊医师需要等待所有医师提交会诊报告后，方可提交</p>
+    </div>
+    <script src="../common/layui/layui.all.js"></script>
+</body>
+
+</html>

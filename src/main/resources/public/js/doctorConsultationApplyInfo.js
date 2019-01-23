@@ -1,28 +1,31 @@
 $(function () {
     /** 编辑会诊报告 */
     $('.compileReport').click(function () {
-        for (let item of consultantReport) {
-            if (item.doctorId === userInfo.id) {
-                if (item.reportStatus === "0") {
-                    $('.hold').attr('disabled', true);
-                    $('.refer').attr('disabled', true);
-                    $('.hold').addClass('disabled');
-                    $('.refer').addClass('disabled');
-                    $('#textarea').attr('disabled', 'disabled');
+        if(isMainDoctor){
+            window.location = "../page/doctorEnjoin.html"
+        }else{
+            for (let item of consultantReport) {
+                if (item.doctorId === userInfo.id) {
+                    if (item.reportStatus === "0") {
+                        $('.hold').attr('disabled', true);
+                        $('.refer').attr('disabled', true);
+                        $('.hold').addClass('disabled');
+                        $('.refer').addClass('disabled');
+                        $('#textarea').attr('disabled', 'disabled');
+                    }
+                    $('#textarea').val(item.report);
                 }
-                $('#textarea').val(item.report);
             }
+            layer.open({
+                type: 1,
+                title: '',
+                area: ['1060px', '480px'],
+                closeBtn: false,
+                shade: [0.7, '#000000'],
+                shadeClose: false,
+                content: _$('#consultantReportIframe')
+            });
         }
-        layer.open({
-            type: 1,
-            title: '',
-            area: ['1060px', '480px'],
-            closeBtn: false,
-            shade: [0.7, '#000000'],
-            shadeClose: false,
-            content: _$('#consultantReportIframe')
-        });
-
     })
     /* 编辑会诊报告提交按钮 */
     $('.refer').click(function () {

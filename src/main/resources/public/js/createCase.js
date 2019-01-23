@@ -192,6 +192,8 @@ function getDoctorByBranchId(deptId) {
     const data = {"branchId": deptId};
     ajaxRequest("GET", getDoctorListByBranchIdUrl, data, true, "application/json", false, renderDoctorList, null, null);
 }
+
+/** 修改草稿病历 */
 function updateDraftCaseData(successCallBack){
     let data = new FormData();
     let caseContentArray = [];
