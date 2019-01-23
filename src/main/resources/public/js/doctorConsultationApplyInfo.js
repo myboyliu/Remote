@@ -186,6 +186,7 @@ $(function () {
     })
 
     function doctorSendFeedbackReportSuccess(result) {
+        layer.closeAll();
         $('#alertText').html('提交成功');
         alertMessage();
         setTimeout(function () {
@@ -200,14 +201,12 @@ $(function () {
     }
 
     function doctorSendFeedbackReportMomentSuccess(result) {
+        layer.closeAll();
         $('#alertText').html('保存成功');
         alertMessage();
         setTimeout(function () {
-            $('.background').css('display', 'none');
-            $('.rejectionLayer').css('display', 'none');
             $('.alertBox').hide();
         }, 2000);
-        document.documentElement.style.overflow = "scroll";
         getApplyInfo();
     }
 
