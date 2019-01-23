@@ -121,6 +121,7 @@ const doctorSendFeedbackReport = "/apply/dispose/doctorSendFeedbackReport";     
 const doctorReceiveReject = "/apply/dispose/doctor";                                    //会诊中状态以及会诊中状态之前状态申请 拒收
 /** 主会诊医生 操作接口 */
 const mainDoctorAccede = "/apply/dispose/mainDoctorAccede";
+const mainDoctorAccedePicture = "/apply/dispose/mainDoctorAccedePicture";
 const allocationDoctorTime = "/apply/dispose/allocationDoctorTime";
 const allocationDoctorTimePicture = "/apply/dispose/allocationDoctorTimePicture";
 /** 受邀同科室医生操作接口 */

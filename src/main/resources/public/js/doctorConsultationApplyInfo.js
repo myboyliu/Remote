@@ -1,9 +1,10 @@
 $(function () {
     /** 编辑会诊报告 */
     $('.compileReport').click(function () {
-        if(isMainDoctor){
+        if (isMainDoctor) {
+            sessionStorage.setItem("enjoinId", applyInfo.caseRecordId)
             window.location = "../page/doctorEnjoin.html"
-        }else{
+        } else {
             for (let item of consultantReport) {
                 if (item.doctorId === userInfo.id) {
                     if (item.reportStatus === "0") {
@@ -307,7 +308,13 @@ $(function () {
         }
     })
     $("#receiveConsultationBoxYesBtn").click(function () {
-        
+        let data = new FormData();
+        data.append("applyFormId", applyFormId);
+        if (isMainDoctor) {
+            ajaxRequest("POST", mainDoctorAccedePicture, data, false, false, true, sirUpdateDateSuccess, null, null)
+        } else if (isBranchDoctor) {
+            ajaxRequest("POST", doctorAcceptOther, data, false, false, true, sirUpdateDateSuccess, null, null)
+        }
     })
     $("#receiveConsultationTimeBoxYesBtn").click(function () {
         dateList = [];
@@ -339,13 +346,14 @@ $(function () {
             ajaxRequest("POST", doctorAcceptOther, data, false, false, true, sirUpdateDateSuccess, null, null)
         }
 
-        function sirUpdateDateSuccess(result) {
-            $("#alertText").html("接收成功");
-            alertMessage();
-            setTimeout(function () {
-                window.location = '../page/morkbench.html'
-            }, 2000);
-            return false;
-        }
     })
+
+    function sirUpdateDateSuccess(result) {
+        $("#alertText").html("接收成功");
+        alertMessage();
+        setTimeout(function () {
+            window.location = '../page/morkbench.html'
+        }, 2000);
+        return false;
+    }
 });
