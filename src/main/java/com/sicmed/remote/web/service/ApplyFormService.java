@@ -9,6 +9,7 @@ import com.sicmed.remote.web.bean.InquiryStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.CaseRecord;
 import com.sicmed.remote.web.mapper.ApplyFormMapper;
+import com.sicmed.remote.web.mapper.CaseConsultantMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class ApplyFormService implements BaseService<ApplyForm> {
 
     @Autowired
     private CaseConsultantService caseConsultantService;
+
+    @Autowired
+    private CaseConsultantMapper caseConsultantMapper;
 
     // 更新applyForm表单apply_status状态
     public int updateStatus(ApplyForm applyForm, String applyStatus, String userId) {
@@ -150,6 +154,12 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         return applyFormMapper.deleteByPrimaryKey(applyForm.getId());
     }
 
+    // 草稿创建会转诊删除原表单
+    public int deleteApplyFormDraft(String draftId) {
+        caseConsultantMapper.deleteByPrimaryKey(draftId);
+        return applyFormMapper.deleteByPrimaryKey(draftId);
+    }
+
     @Override
     public int insertSelective(ApplyForm applyForm) {
         return applyFormMapper.insertSelective(applyForm);
@@ -157,7 +167,7 @@ public class ApplyFormService implements BaseService<ApplyForm> {
 
     @Override
     public int deleteByPrimaryKey(String id) {
-        return 0;
+        return applyFormMapper.deleteByPrimaryKey(id);
     }
 
     @Override
