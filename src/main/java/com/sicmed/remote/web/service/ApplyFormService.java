@@ -143,9 +143,6 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         String caseRecordId = applyForm.getCaseRecordId();
         // 删除caseRecordId相关的病例信息
         if (StringUtils.isNotBlank(caseRecordId)) {
-            CaseRecord caseRecord = caseRecordService.getByPrimaryKey(caseRecordId);
-            String casePatientId = caseRecord.getPatientId();
-            casePatientService.deleteByPrimaryKey(casePatientId);
             caseContentService.deleteByCaseRecordId(caseRecordId);
             caseRecordService.deleteByPrimaryKey(caseRecordId);
         }
