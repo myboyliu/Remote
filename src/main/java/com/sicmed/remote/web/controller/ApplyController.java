@@ -41,15 +41,6 @@ public class ApplyController extends BaseController {
     private ApplyFormService applyFormService;
 
     @Autowired
-    private CasePatientService casePatientService;
-
-    @Autowired
-    private CaseRecordService caseRecordService;
-
-    @Autowired
-    private CaseContentService caseContentService;
-
-    @Autowired
     private ApplyTimeService applyTimeService;
 
     @Autowired
@@ -59,58 +50,23 @@ public class ApplyController extends BaseController {
     private ApplyNodeService applyNodeService;
 
     /**
-     * 添加草稿,草稿至少含有患者姓名,身份证,病例文件三种数据,否则无法创建,
+     * 添加草稿
      *
-     * @param casePatient
-     * @param caseRecord
-     * @param weightPathTypeId
      * @param applyForm
      */
     @Transactional
     @PostMapping(value = "draft")
-    public Map draft(CasePatient casePatient, CaseRecord caseRecord, String weightPathTypeId, ApplyForm applyForm,
-                     String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport) {
+    public Map draft(ApplyForm applyForm, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport) {
 
-        if (StringUtils.isBlank(casePatient.getPatientName()) || StringUtils.isBlank(casePatient.getPatientCard())
-                || StringUtils.isBlank(weightPathTypeId)) {
-            return badRequestOfArguments("数据不全,无法创建草稿");
-        }
-
-        if (!IdentityCardUtil.validateCard(casePatient.getPatientCard())) {
-            return badRequestOfArguments("身份证输入有误");
-        }
 
         String userId = getRequestToken();
-        if (StringUtils.isBlank(userId)) {
-            return badRequestOfArguments("未能获取登录用户Id");
-        }
-
-        // 添加病例所需文件 文件路径 与 病例文件id map解析
-        List<CaseContent> resultList;
-        try {
-            resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList>() {
-            }, Feature.OrderedField);
-        } catch (Exception e) {
-            return badRequestOfArguments("pathWeightTypeId 填写错误");
-        }
-
-        CaseContentBean caseContentBean = new CaseContentBean();
-        caseContentBean.setCasePatient(casePatient);
-        caseContentBean.setCaseRecord(caseRecord);
-        caseContentBean.setCreateUser(userId);
-        caseContentBean.setWeightPathTypeId(resultList);
-        int k = caseContentService.insertByMap(caseContentBean);
-        if (k < 0) {
-            return badRequestOfInsert("添加CaseContent失败");
-        }
-
         // 添加applyForm,applyStatus申请状态为草稿
         CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
         if (currentUserBean == null) {
             return badRequestOfArguments("获取医生详细信息失败");
         }
 
-        applyForm.setCaseRecordId(caseRecord.getId());
+        applyForm.setCaseRecordId(applyForm.getCaseRecordId());
         applyForm.setApplyHospitalId(currentUserBean.getHospitalId());
         applyForm.setApplyBranchId(currentUserBean.getBranchId());
         applyForm.setApplyUserId(userId);
@@ -136,7 +92,7 @@ public class ApplyController extends BaseController {
         if (a < 1) {
             return badRequestOfArguments("添加失败");
         }
-        return succeedRequest(casePatient);
+        return succeedRequest(applyForm);
     }
 
     /**

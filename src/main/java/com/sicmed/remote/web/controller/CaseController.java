@@ -56,7 +56,7 @@ public class CaseController extends BaseController {
     private ApplyFormService applyFormService;
 
     /**
-     * 创建病例
+     * 创建完整的病例
      *
      * @param casePatient
      * @param casePatientBr
@@ -135,6 +135,44 @@ public class CaseController extends BaseController {
     }
 
     /**
+     * 创建病例,至少含有患者姓名,身份证,病例文件三种数据,否则无法创建
+     */
+    @PostMapping(value = "insertHalfCase")
+    public Map insertHalfCase(CasePatient casePatient, CaseRecord caseRecord, String weightPathTypeId) {
+        if (StringUtils.isBlank(casePatient.getPatientName()) || StringUtils.isBlank(casePatient.getPatientCard())
+                || StringUtils.isBlank(weightPathTypeId)) {
+            return badRequestOfArguments("数据不全,无法创建草稿");
+        }
+
+        if (!IdentityCardUtil.validateCard(casePatient.getPatientCard())) {
+            return badRequestOfArguments("身份证输入有误");
+        }
+
+        String userId = getRequestToken();
+
+        // 添加病例所需文件 文件路径 与 病例文件id map解析
+        List<CaseContent> resultList;
+        try {
+            resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList>() {
+            }, Feature.OrderedField);
+        } catch (Exception e) {
+            return badRequestOfArguments("pathWeightTypeId 填写错误");
+        }
+
+        CaseContentBean caseContentBean = new CaseContentBean();
+        caseContentBean.setCasePatient(casePatient);
+        caseContentBean.setCaseRecord(caseRecord);
+        caseContentBean.setCreateUser(userId);
+        caseContentBean.setWeightPathTypeId(resultList);
+        int k = caseContentService.insertByMap(caseContentBean);
+        if (k < 0) {
+            return badRequestOfInsert("添加CaseContent失败");
+        }
+
+        return succeedRequest(caseRecord);
+    }
+
+    /**
      * 修改CaseRecord
      *
      * @param caseRecord
@@ -204,7 +242,8 @@ public class CaseController extends BaseController {
         caseContentService.deleteByCaseRecordId(caseRecordId);
 
         // 添加修改后的病例附件
-        List<CaseContent> resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList<CaseContent>>() {}, Feature.OrderedField);
+        List<CaseContent> resultList = JSON.parseObject(weightPathTypeId, new TypeReference<LinkedList<CaseContent>>() {
+        }, Feature.OrderedField);
         CaseContentBean caseContentBean = new CaseContentBean();
         caseContentBean.setCasePatient(casePatient);
         caseContentBean.setCaseRecord(caseRecord);
@@ -226,7 +265,11 @@ public class CaseController extends BaseController {
         return succeedRequest("ok");
     }
 
-    // 删除病例中的图片
+    /**
+     * 删除病例需求文件
+     *
+     * @param id
+     */
     @PostMapping(value = "softDelPicture")
     public Map softDelPicture(String id) {
 
