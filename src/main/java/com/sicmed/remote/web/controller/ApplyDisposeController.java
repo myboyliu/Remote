@@ -348,9 +348,6 @@ public class ApplyDisposeController extends BaseController {
             return badRequestOfArguments("删除applyTime失败");
         }
 
-        // 删除CaseConsultant表对应字段
-        caseConsultantService.deleteByPrimaryKey(applyFormId);
-
         // 设置applyForm类型为草稿
         ApplyForm applyForm = new ApplyForm();
         String userId = getRequestToken();
