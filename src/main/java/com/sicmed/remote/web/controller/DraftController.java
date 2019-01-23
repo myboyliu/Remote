@@ -166,7 +166,7 @@ public class DraftController extends BaseController {
         if (i < 1) {
             return badRequestOfArguments("创建病例失败");
         }
-        return succeedRequest("创建病例成功");
+        return succeedRequest(caseRecord);
     }
 
 }
