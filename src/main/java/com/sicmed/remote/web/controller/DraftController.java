@@ -169,27 +169,4 @@ public class DraftController extends BaseController {
         return succeedRequest("创建病例成功");
     }
 
-    /**
-     * 草稿,转诊
-     */
-    @PostMapping(value = "draftTransfer")
-    public Map draftTransfer(@Validated ApplyForm applyForm, BindingResult applyFormBr, String startEndTime, String applyFormId) {
-        return null;
-    }
-
-    /**
-     * 草稿,图文会诊
-     */
-    @PostMapping(value = "draftImage")
-    public Map draftImage(String applyFormId) {
-        return null;
-    }
-
-    /**
-     * 草稿,视频会诊
-     */
-    @PostMapping(value = "draftVideo")
-    public Map draftVideo(String applyFormId) {
-        return null;
-    }
 }

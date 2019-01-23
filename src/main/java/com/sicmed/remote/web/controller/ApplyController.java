@@ -157,12 +157,15 @@ public class ApplyController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "transfer")
-    public Map transferTreatment(@Validated ApplyForm applyForm, BindingResult applyFormBr, String startEndTime) {
+    public Map transferTreatment(@Validated ApplyForm applyForm, BindingResult applyFormBr, String startEndTime, String draftId) {
 
         if (applyFormBr.hasErrors()) {
             return fieldErrorsBuilder(applyFormBr);
         }
 
+        if (StringUtils.isNotBlank(draftId)) {
+            applyFormService.deleteApplyFormDraft(draftId);
+        }
         String userId = getRequestToken();
         CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
         String applySummary = getApplySummary(userId);
@@ -227,10 +230,15 @@ public class ApplyController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "video")
-    public Map videoConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String startEndTime, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport) {
+    public Map videoConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String startEndTime, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport
+            , String draftId) {
 
         if (applyFormBr.hasErrors()) {
             return fieldErrorsBuilder(applyFormBr);
+        }
+
+        if (StringUtils.isNotBlank(draftId)) {
+            applyFormService.deleteApplyFormDraft(draftId);
         }
 
         String userId = getRequestToken();
@@ -305,12 +313,16 @@ public class ApplyController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "picture")
-    public Map pictureConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport) {
+    public Map pictureConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport,
+                                   String draftId) {
 
         if (applyFormBr.hasErrors()) {
             return fieldErrorsBuilder(applyFormBr);
         }
 
+        if (StringUtils.isNotBlank(draftId)) {
+            applyFormService.deleteApplyFormDraft(draftId);
+        }
 
         String userId = getRequestToken();
         CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
