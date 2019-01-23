@@ -318,14 +318,17 @@ public class UserController extends BaseController {
 
         UserDetail userDetail = new UserDetail();
         userDetail.setId(userId);
+
         if (StringUtils.isNotBlank(phoneNumber)) {
             // 更新用户电话
             userDetail.setTelephone(phoneNumber);
         }
+
         if (StringUtils.isNotBlank(userStrong)) {
             // 更新擅长
             userDetail.setUserStrong(userStrong);
         }
+
         if (StringUtils.isNotBlank(idTypeName)) {
             try {
                 resultMap = JSON.parseObject(idTypeName, new TypeReference<LinkedHashMap<String, String>>() {
@@ -333,32 +336,30 @@ public class UserController extends BaseController {
             } catch (Exception e) {
                 return badRequestOfArguments("idTypeName 格式错误");
             }
-        }
+            // 病例类型名称集合
+            StringBuffer stringBuffer = new StringBuffer();
+            for (Map.Entry<String, String> m : resultMap.entrySet()) {
+                idList.add(m.getKey());
+                stringBuffer.append(m.getValue() + "、");
+            }
+            stringBuffer.deleteCharAt(stringBuffer.length() - 1);
+            String typeName = stringBuffer.toString();
+            userDetail.setNeedCaseType(typeName);
 
+            // 删除原userId对应的UserCaseType字段,并添加新的 UserCaseType
+            int i = userCaseTypeService.deleteByUserId(userId);
+            if (i < 0) {
+                return badRequestOfDelete("删除原UserCaseType失败");
+            }
 
-        // 病例类型名称集合
-        StringBuffer stringBuffer = new StringBuffer();
-        for (Map.Entry<String, String> m : resultMap.entrySet()) {
-            idList.add(m.getKey());
-            stringBuffer.append(m.getValue() + "、");
-        }
-        stringBuffer.deleteCharAt(stringBuffer.length() - 1);
-        String typeName = stringBuffer.toString();
-        userDetail.setNeedCaseType(typeName);
-
-        // 删除原userId对应的UserCaseType字段,并添加新的 UserCaseType
-        int i = userCaseTypeService.deleteByUserId(userId);
-        if (i < 0) {
-            return badRequestOfDelete("删除原UserCaseType失败");
-        }
-
-        Map<String, String> userCaseTypeMap = new LinkedHashMap<>();
-        for (String id : idList) {
-            userCaseTypeMap.put(id, userId);
-        }
-        int k = userCaseTypeService.insertMulitple(userCaseTypeMap);
-        if (k < 0) {
-            return badRequestOfInsert("添加UserCaseType失败");
+            Map<String, String> userCaseTypeMap = new LinkedHashMap<>();
+            for (String id : idList) {
+                userCaseTypeMap.put(id, userId);
+            }
+            int k = userCaseTypeService.insertMulitple(userCaseTypeMap);
+            if (k < 0) {
+                return badRequestOfInsert("添加UserCaseType失败");
+            }
         }
 
         // 修改UserSing
