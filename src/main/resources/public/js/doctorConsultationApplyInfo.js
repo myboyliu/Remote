@@ -42,7 +42,7 @@ $(function () {
                     shadeClose: false,
                     zIndex: layer.zIndex,
                     time: 1000,
-                    content: $('.promptText')
+                    content: _$('.promptText')
                 });
                 setTimeout(function () {
                     $('.promptText').hide();
@@ -75,7 +75,7 @@ $(function () {
                 shadeClose: false,
                 zIndex: layer.zIndex,
                 time: 2000,
-                content: $('.working')
+                content: _$('.working')
             });
             $('.working').html('提交成功')
             setTimeout(function () {
@@ -94,7 +94,7 @@ $(function () {
                 shadeClose: false,
                 zIndex: layer.zIndex,
                 time: 2000,
-                content: $('.working')
+                content: _$('.working')
             });
             $('.working').html('提交失败')
         }
@@ -113,26 +113,21 @@ $(function () {
         console.log(consultantReport);
 
         function success() {
+            $('.working').html('暂存成功')
             layer.open({
                 type: 1,
                 title: '',
                 area: ['500px', '200px'],
                 closeBtn: false,
-                //   shade: [0.7, '#000000'],
+                // shade: [0.7, '#000000'],
                 shadeClose: false,
                 zIndex: layer.zIndex,
-                // time: 2000,
-                content: $('.working')
+                time: 2000,
+                content: _$('.working')
             });
-            $('.working').html('暂存成功')
             setTimeout(function () {
                 layer.closeAll();
-                $('.working').hide();
-                $('.background').hide();
-                $('.rejectionLayer').hide();
-
-            }, 2000);
-            document.documentElement.style.overflow = "scroll";
+            }, 2200);
         }
 
         function failed() {
@@ -146,7 +141,7 @@ $(function () {
                 shadeClose: false,
                 zIndex: layer.zIndex,
                 time: 2000,
-                content: $('.working')
+                content: _$('.working')
             });
             $('.working').html('暂存失败')
         }
@@ -260,10 +255,10 @@ $(function () {
         viewText = '其他原因:';
     })
     /* 弹层关闭按钮 */
-    $('.refuseBtn').click(function () {
-        $('.background').css('display', 'none');
-        document.documentElement.style.overflow = "scroll";
-    })
+    // $('.refuseBtn').click(function () {
+    //     $('.background').css('display', 'none');
+    //     document.documentElement.style.overflow = "scroll";
+    // })
 // 拒绝确定按钮
     $('.confirm').click(function () {
         if ($('.refuseReason').val() == '') {
