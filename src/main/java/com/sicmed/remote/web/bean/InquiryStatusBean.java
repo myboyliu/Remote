@@ -13,6 +13,7 @@ public class InquiryStatusBean {
 
     private String inquirySlaveAccede;
 
+    // 待收诊
     private String inquirySlaveAccedeTwo;
 
     private String inquirySlaveReject;

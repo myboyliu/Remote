@@ -65,7 +65,7 @@ public class ApplyTransferController extends BaseController {
     }
 
     /**
-     * 医生 转诊 待收诊
+     * 医生 转诊 待收诊 发出方两种状态,接收方无INQUIRY_SLAVE_ACCEDE
      */
     @GetMapping(value = "inquiryApplyAccede")
     public Map inquiryApplyAccede() {
@@ -80,10 +80,11 @@ public class ApplyTransferController extends BaseController {
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setConsultationTypeList(consultationTypeListInquiry);
         applyFormBean.setConsultationStatusList(consultationStatusList);
+        applyFormBean.setInviteUserId(userId);
         applyFormBean.setApplyUserId(userId);
         applyFormBean.setBeginNo(getPageEntity().getBeginNo());
         applyFormBean.setPageSize(getPageEntity().getPageSize());
-        List<ApplyForm> applyFormList = applyFormService.selectApplyInquiry(applyFormBean);
+        List<ApplyForm> applyFormList = applyFormService.selectInquiryDai(applyFormBean);
         if (applyFormList != null && applyFormList.size() == 0) {
             return succeedRequest(applyFormList);
         }

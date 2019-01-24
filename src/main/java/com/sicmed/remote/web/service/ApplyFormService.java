@@ -53,6 +53,11 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         return applyFormMapper.selectApplyInquiry(applyFormBean);
     }
 
+    // 转诊待收诊
+    public List<ApplyForm> selectInquiryDai(ApplyFormBean applyFormBean) {
+        return applyFormMapper.selectInquiryDai(applyFormBean);
+    }
+
     // 会诊查询
     public List<ApplyForm> selectApplyInquiryDate(ApplyFormBean applyFormBean) {
         return applyFormMapper.selectApplyInquiryDate(applyFormBean);

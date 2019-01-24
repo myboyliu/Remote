@@ -609,7 +609,9 @@ public class ApplyConsultationController extends BaseController {
         CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
         ConsultationStatusBean consultationStatusBean = caseConsultantService.receiveSelectAllCount(userId, userDetail.getBranchId(), null, consultantTypeList);
-
+        ConsultationStatusBean halfMsg = caseConsultantService.receiveSelectHalfCount(userId, consultantTypeList);
+        consultationStatusBean.setConsultationMasterReject(halfMsg.getConsultationMasterReject());
+        consultationStatusBean.setConsultationSlaveReject(halfMsg.getConsultationSlaveReject());
         return succeedRequest(consultationStatusBean);
     }
 
@@ -623,9 +625,6 @@ public class ApplyConsultationController extends BaseController {
         CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
         ConsultationStatusBean consultationStatusBean = caseConsultantService.receiveSelectAllCountSir(userDetail.getHospitalId(), consultantTypeList);
-        ConsultationStatusBean halfMsg = caseConsultantService.receiveSelectHalfCount(userId, consultantTypeList);
-        consultationStatusBean.setConsultationMasterReject(halfMsg.getConsultationMasterReject());
-        consultationStatusBean.setConsultationSlaveReject(halfMsg.getConsultationSlaveReject());
         return succeedRequest(consultationStatusBean);
     }
 
