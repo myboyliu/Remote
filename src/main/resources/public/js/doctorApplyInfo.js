@@ -233,12 +233,12 @@ function renderViewByRole() {
             applyRecordNavigationShow = true;
             consultantFeedbackNavigationShow = true;
         } else if (applyStatus === "CONSULTATION_MASTER_REJECT" || applyInfo.applyStatus === "CONSULTATION_SLAVE_REJECT") {
-            //会诊医政已拒绝
+            //已拒绝
             applyRefuseNavigationShow = true;
             $('#refuseReasonBox').show();
             $('.progressBar').empty();
-            $('.progressBar').html('<li>' + statusArr[0] + '</li>');
-            $(".progressBar li:nth-child(1)").addClass("libg");
+            $('.progressBar').html('<li class="libg">' + statusArr[0] + '</li>');
+            // $(".progressBar li:nth-child(1)").addClass("libg");
         }
     } else if (isConsultation) {
         $(".progressBar li:nth-child(1)").addClass("libg");
@@ -250,7 +250,7 @@ function renderViewByRole() {
             applyRefuseNavigationShow = true;
             $('#refuseReasonBox').show();
             $('.progressBar').empty();
-            $('.progressBar').html('<li>' + statusArr[0] + '</li>');
+            $('.progressBar').html('<li class="libg">' + statusArr[0] + '</li>');
         } else if (applyStatus === "CONSULTATION_DATETIME_LOCKED") {
             //已排期
             $(".progressBar li:nth-child(2)").addClass("libg");

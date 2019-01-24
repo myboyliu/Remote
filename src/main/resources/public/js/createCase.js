@@ -387,8 +387,8 @@ function buildCaseData(successCallBack) {
 
     function failedParam(data) {
         layer.closeAll();
-
-        layer.msg(data.result.patientWeight);
+        layer.msg("病历信息错误!");
+        console.log(data.result);
     }
 
     function createCaseSuccess(result) {

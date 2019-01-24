@@ -139,6 +139,7 @@ $(function () {
             }
             if (isOnly) {
                 dateTempList = [];
+                newDateTimeList = [];
                 dateTempList.push({
                     "date": dateStr,
                     "startIndex": startIndex,

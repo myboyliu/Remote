@@ -49,10 +49,13 @@ $(function () {
         ajaxRequest("POST", sirSendCheckAccede, data, false, false, true, sirSendCheckAccedeSuccess, null, null);
 
         function sirSendCheckAccedeSuccess(result) {
+            layer.closeAll();
             $("#alertText").html("发布成功");
             alertMessage();
-            $('.succeed').hide();
-            window.location = "../page/administrator.html";
+            setTimeout(function () {
+                $('.returned').hide();
+                window.location = '../page/administrator.html';
+            }, 2000)
         }
     });
     /** 会诊医政接收弹窗*/

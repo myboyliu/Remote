@@ -449,7 +449,7 @@ function currentInviteCount() {
     $("#INVITE_DATETIME").html(Number(countObject.consultationDatetimeLocked))
     $("#INVITE_ONGOING").html(Number(countObject.consultationBegin))
     $("#INVITE_FEEDBACK").html(Number(countObject.consultationReportSubmitted))
-    $("#INVITE_REJECT").html(Number(countObject.consultationMasterReject) + Number(countObject.consultationSlaveReject))
+    $("#INVITE_REJECT").html(Number(countObject.consultationMasterReject))
     $("#INVITE_DONE").html(Number(countObject.consultationEn))
 }
 
@@ -466,6 +466,8 @@ function getReferralCount() {
 
 /** 渲染转诊导航列表记录数*/
 function currentReferralCount() {
+    console.log("医政转诊数量")
+    console.log(countObject)
     $("#WAITING_AUDIT").html(Number(countObject.inquiryApplyCreateSuccess))
     $("#WAITING_ACCEDE").html(Number(countObject.inquiryApplyAccede))
     $("#DATETIME_AUDIT").html(Number(countObject.inquirySlaveAccede))

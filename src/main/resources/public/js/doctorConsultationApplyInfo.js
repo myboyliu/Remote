@@ -314,16 +314,16 @@ $(function () {
     })
     $("#receiveConsultationTimeBoxYesBtn").click(function () {
         dateList = [];
-        for (let i = 0; i < newDateTimeList.length; i++) {
-            if (newDateTimeList[i].startIndex <= newDateTimeList[i].endIndex) {
+        for (let i = 0; i < dateTempList.length; i++) {
+            if (dateTempList[i].startIndex <= dateTempList[i].endIndex) {
                 dateList.push({
-                    'startTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].startIndex).html() + ':00',
-                    'endTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].endIndex).attr('enddate') + ':00'
+                    'startTime': dateTempList[i].date + ' ' + $('#timeUl > li').eq(dateTempList[i].startIndex).html() + ':00',
+                    'endTime': dateTempList[i].date + ' ' + $('#timeUl > li').eq(dateTempList[i].endIndex).attr('enddate') + ':00'
                 });
             } else {
                 dateList.push({
-                    'startTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].endIndex).html() + ':00',
-                    'endTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].startIndex).attr('enddate') + ':00'
+                    'startTime': dateTempList[i].date + ' ' + $('#timeUl > li').eq(dateTempList[i].endIndex).html() + ':00',
+                    'endTime': dateTempList[i].date + ' ' + $('#timeUl > li').eq(dateTempList[i].startIndex).attr('enddate') + ':00'
                 });
             }
 

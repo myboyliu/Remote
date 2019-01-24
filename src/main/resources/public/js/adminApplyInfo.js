@@ -540,7 +540,6 @@ $(function () {
         } else{
             isOnly = false;
         }
-
         showTimeView(applyTimeList);
     });
 

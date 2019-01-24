@@ -133,7 +133,7 @@ function renderApplyListView(data) {
         const _day = timeStr.split('-')[2];
         if (data[i].applyUrgent == 0) {
             // 未读
-            _html += '<tr class="unread" applyFlag="' + data[i].applyUrgent + '" type="2" name="' + data[i].id + '">\
+            _html += '<tr class="read" applyFlag="' + data[i].applyUrgent + '" type="2" name="' + data[i].id + '">\
                             <td>';
         } else {
             // 已读
@@ -347,6 +347,8 @@ function getApplyCount() {
 
 /** 渲染申请导航列表记录数*/
 function currentApplyCount() {
+    console.log("发出会诊导航数量:")
+    console.log(countObject)
     let applyAcceptCount = 0
     applyAcceptCount += Number(countObject.consultationApplyAccede);
     applyAcceptCount += Number(countObject.consultationDoctorLocked);
@@ -373,12 +375,14 @@ function getInviteCount() {
 
 /** 渲染受邀导航列表记录数*/
 function currentInviteCount() {
+    console.log("受邀会诊导航数量:")
+    console.log(countObject)
     $("#INVITE_ACCEPT").html(Number(countObject.consultationApplyAccede))
     $("#INVITE_REVIEW").html(Number(countObject.consultationSlaveAccede))
     $("#INVITE_DATETIME").html(Number(countObject.consultationDatetimeLocked))
     $("#INVITE_ONGOING").html(Number(countObject.consultationBegin))
     $("#INVITE_FEEDBACK").html(Number(countObject.consultationReportSubmitted))
-    $("#INVITE_REJECT").html(Number(countObject.consultationMasterReject))
+    $("#INVITE_REJECT").html(Number(countObject.consultationMasterReject)+Number(countObject.consultationSlaveReject))
     $("#INVITE_DONE").html(Number(countObject.consultationEn))
 }
 
@@ -394,8 +398,9 @@ function getReferralCount() {
 
 /** 渲染转诊导航列表记录数*/
 function currentReferralCount() {
+    console.log(countObject);
     $("#WAITING_AUDIT").html(Number(countObject.inquiryApplyCreateSuccess))
-    $("#WAITING_ACCEDE").html(Number(countObject.inquiryApplyAccede))
+    $("#WAITING_ACCEDE").html(Number(countObject.inquiryApplyAccede)+Number(countObject.inquirySlaveAccedeTwo))
     $("#DATETIME_AUDIT").html(Number(countObject.inquirySlaveAccede))
     $("#DATETIME_LOCKED").html(Number(countObject.inquiryDatetimeLocked))
     $("#HAS_REJECT").html(Number(countObject.inquiryMasterReject) + Number(countObject.inquirySlaveReject))
