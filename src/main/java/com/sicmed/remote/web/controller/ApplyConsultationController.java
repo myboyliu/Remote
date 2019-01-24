@@ -9,6 +9,7 @@ import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.service.ApplyFormService;
 import com.sicmed.remote.web.service.CaseConsultantService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -638,5 +639,17 @@ public class ApplyConsultationController extends BaseController {
         ConsultationStatusBean consultationStatusBean = caseConsultantService.ceshi(userId, userDetail.getBranchId(), null, consultantTypeList);
 
         return succeedRequest(consultationStatusBean);
+    }
+
+    /**
+     * 查询会诊报告
+     */
+    @GetMapping(value = "selectReport")
+    public Map selectReport(String applyFormId) {
+        if (StringUtils.isBlank(applyFormId)) {
+            return badRequestOfArguments("applyFormId is null");
+        }
+        String resReport = caseConsultantService.selectReport(applyFormId);
+        return succeedRequest(resReport);
     }
 }
