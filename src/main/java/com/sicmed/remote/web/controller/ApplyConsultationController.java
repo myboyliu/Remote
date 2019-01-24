@@ -623,21 +623,9 @@ public class ApplyConsultationController extends BaseController {
         CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
         ConsultationStatusBean consultationStatusBean = caseConsultantService.receiveSelectAllCountSir(userDetail.getHospitalId(), consultantTypeList);
-
-        return succeedRequest(consultationStatusBean);
-    }
-
-    /**
-     * 受邀会诊 医生 所有数目查询 主会诊 辅助会诊 分别查询
-     */
-    @GetMapping(value = "ceshi")
-    public Map ceshi() {
-
-        String userId = getRequestToken();
-        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
-
-        ConsultationStatusBean consultationStatusBean = caseConsultantService.ceshi(userId, userDetail.getBranchId(), null, consultantTypeList);
-
+        ConsultationStatusBean halfMsg = caseConsultantService.receiveSelectHalfCount(userId, consultantTypeList);
+        consultationStatusBean.setConsultationMasterReject(halfMsg.getConsultationMasterReject());
+        consultationStatusBean.setConsultationSlaveReject(halfMsg.getConsultationSlaveReject());
         return succeedRequest(consultationStatusBean);
     }
 
