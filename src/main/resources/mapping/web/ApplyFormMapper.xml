@@ -684,6 +684,7 @@
         <result column="cmr" jdbcType="VARCHAR" property="inquiryMasterReject"/>
         <result column="cdrl" jdbcType="VARCHAR" property="inquiryDatetimeLocked"/>
         <result column="crs" jdbcType="VARCHAR" property="inquiryEnd"/>
+        <result column="csatwo" jdbcType="VARCHAR" property="inquirySlaveAccedeTwo"/>
     </resultMap>
 
     <!--转诊 医生 各状态数目查询-->
@@ -699,7 +700,8 @@
         count(apply_status="INQUIRY_MASTER_ACCEDE" or NULL) cma,
         count(apply_status="INQUIRY_MASTER_REJECT" or NULL) cmr,
         count(apply_status="INQUIRY_DATETIME_LOCKED" or NULL) cdrl,
-        count(apply_status="INQUIRY_END" or NULL) crs
+        count(apply_status="INQUIRY_END" or NULL) crs,
+        count(apply_status="INQUIRY_SLAVE_ACCEDE" and invite_user_id != #{applyUserId} or NULL) csatwo
         from apply_form
         <where>
             del_flag = "0"

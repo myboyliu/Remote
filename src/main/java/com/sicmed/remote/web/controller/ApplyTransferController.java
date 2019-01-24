@@ -71,12 +71,23 @@ public class ApplyTransferController extends BaseController {
     public Map inquiryApplyAccede() {
 
         List<String> consultationStatusList = new ArrayList<>();
-        String inquiryStatus = String.valueOf(InquiryStatus.INQUIRY_APPLY_ACCEDE);
-        consultationStatusList.add(inquiryStatus);
+        String inquiryStatus1 = String.valueOf(InquiryStatus.INQUIRY_APPLY_ACCEDE);
+        String inquiryStatus2 = String.valueOf(InquiryStatus.INQUIRY_SLAVE_ACCEDE);
+        consultationStatusList.add(inquiryStatus1);
+        consultationStatusList.add(inquiryStatus2);
 
-        String msg = "无待收诊";
-
-        return inquirySelect(consultationStatusList, msg);
+        String userId = getRequestToken();
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setConsultationTypeList(consultationTypeListInquiry);
+        applyFormBean.setConsultationStatusList(consultationStatusList);
+        applyFormBean.setApplyUserId(userId);
+        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
+        applyFormBean.setPageSize(getPageEntity().getPageSize());
+        List<ApplyForm> applyFormList = applyFormService.selectApplyInquiry(applyFormBean);
+        if (applyFormList != null && applyFormList.size() == 0) {
+            return succeedRequest(applyFormList);
+        }
+        return succeedRequest(applyFormList);
     }
 
     /**

@@ -13,6 +13,8 @@ public class InquiryStatusBean {
 
     private String inquirySlaveAccede;
 
+    private String inquirySlaveAccedeTwo;
+
     private String inquirySlaveReject;
 
     private String inquiryMasterAccede;
