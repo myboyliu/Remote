@@ -214,9 +214,15 @@ $(function () {
     /** 拒收 申请 操作 事件 */
     $('.rejection').click(function () {
         if (isInvite) {
-            $('#rejectIframe').css('display', 'block');
-            $('#rejectView').css('display', 'block');
-            document.documentElement.style.overflow = "hidden";
+            layer.open({
+                type: 1,
+                title: '',
+                area: ['1060px', '480px'],
+                closeBtn: false,
+                shade: [0.7, '#000000'],
+                shadeClose: false,
+                content: _$('#rejectIframe')
+            });
         } else {
             layer.msg('只有主会诊医生才能进行此操作');
         }
@@ -254,19 +260,14 @@ $(function () {
         $('.suggest').removeAttr('style');
         viewText = '其他原因:';
     })
-    /* 弹层关闭按钮 */
-    // $('.refuseBtn').click(function () {
-    //     $('.background').css('display', 'none');
-    //     document.documentElement.style.overflow = "scroll";
-    // })
-// 拒绝确定按钮
-    $('.confirm').click(function () {
+    // 拒绝确定按钮
+    $('#rejectBoxYesBtn').click(function () {
         if ($('.refuseReason').val() == '') {
             $("#alertText").html("请填写拒收原因");
             alertMessage();
         } else {
             let data = new FormData();
-            data.append("id", applyFormId);
+            data.append("applyFormId", applyFormId);
             data.append("report", viewText + $('.refuseReason').val());
             ajaxRequest("POST", doctorReceiveReject, data, false, false, true, doctorReceiveRejectSuccess, null, null)
 
@@ -280,7 +281,7 @@ $(function () {
         }
     })
 
-// MDT协调按钮     MDTBtn
+    // MDT协调按钮     MDTBtn
     $('.MDTBtn').click(function () {
         window.location = '../page/MTD.html';
     })
@@ -351,4 +352,8 @@ $(function () {
         }, 2000);
         return false;
     }
+
+    $(".closeBtn").click(function () {
+        layer.closeAll();
+    })
 });
