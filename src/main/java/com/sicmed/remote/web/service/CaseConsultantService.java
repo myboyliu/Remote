@@ -55,6 +55,11 @@ public class CaseConsultantService implements BaseService<CaseConsultant> {
         return caseConsultantMapper.ceshi(applyFormBean);
     }
 
+    // 查询会诊报告
+    public String selectReport(String applyFormId) {
+        return caseConsultantMapper.selectReport(applyFormId);
+    }
+
     @Override
     public int insertSelective(CaseConsultant caseConsultant) {
         return caseConsultantMapper.insertSelective(caseConsultant);

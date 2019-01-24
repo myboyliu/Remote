@@ -30,4 +30,6 @@ public interface CaseConsultantMapper {
 
     ConsultationStatusBean ceshi(ApplyFormBean applyFormBean);
 
+    String selectReport(String applyFormId);
+
 }

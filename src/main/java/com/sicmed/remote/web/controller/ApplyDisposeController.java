@@ -102,6 +102,12 @@ public class ApplyDisposeController extends BaseController {
 
         String userId = getRequestToken();
 
+        CaseConsultant caseConsultant = new CaseConsultant();
+        caseConsultant.setConsultantStartTime(applyTime.getEventStartTime());
+        caseConsultant.setConsultantEndTime(applyTime.getEventEndTime());
+        caseConsultant.setId(applyTime.getApplyFormId());
+        caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
+
         applyTime.setCreateUser(userId);
         int k = applyTimeService.insertSelective(applyTime);
         if (k < 1) {
@@ -913,9 +919,9 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "mainDoctorAccedePicture")
-    public Map mainDoctorAccedePicture(String applyFormId, String startEndTime) {
-        if (StringUtils.isBlank(applyFormId) || StringUtils.isBlank(startEndTime)) {
-            return badRequestOfArguments("applyFormId or startEndTime is null");
+    public Map mainDoctorAccedePicture(String applyFormId) {
+        if (StringUtils.isBlank(applyFormId)) {
+            return badRequestOfArguments("applyFormId is null");
         }
 
 
