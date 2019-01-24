@@ -20,7 +20,7 @@ var RegExpObj = {
     Reg_address: /^[A-Za-z0-9\u4e00-\u9fa5]+$/, //验证城市 中英数
     RegExp_File: /\(|\)|【|】/g //匹配文件名
 };
-
+let currentUserInfo = {};
 function double(num) {
     var str = Number(num) < 10 ? '0' + num : '' + num;
     return str;
@@ -45,6 +45,7 @@ $(function () {
     // $('.deptName').html(localStorage.getItem('deptName'))
     // $('.hospitalName').html(localStorage.getItem('hospitalName'))
     let userInfo =  JSON.parse(sessionStorage.getItem('userInfo'));
+    currentUserInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     // console.log(userInfo);
     $('.personalCenter').html(userInfo.userName + '/' +userInfo.hospitalName);
     $('div.personal').mouseenter(function () {

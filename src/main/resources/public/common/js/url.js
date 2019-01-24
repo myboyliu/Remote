@@ -7,8 +7,6 @@ const baseUrl = "http://192.168.0.222"; //服务地址
  * 公共接口
  */
 
-
-
 /** 个人中心接口 */
 const getPersonalInfoUrl = "/user/dorPersonalCenter";                           //查询医生详细信息
 const modifyPassword = "/user/modifyPassword";                                  //跟据旧密码修改密码
@@ -188,5 +186,11 @@ const receiveSelectAllCountSir = "/apply/consultation/receiveSelectAllCountSir";
 const inquiryCsAllCountDr = "/apply/transfer/inquiryCsAllCountDr";                      //转诊医生列表
 const inquiryCsAllCountSir = "/apply/transfer/inquiryCsAllCountSir";                    //转诊医政列表
 
+/** 医嘱 模块 接口 */
+const fuzzySearchMedicalApi = "/medical/fuzzySearchMedical";                               //糊查询药品(通过药品名和药品简称)
+const fuzzySearchCheckApi = "/check/fuzzySearchCheck";                                     //模糊搜索诊疗
+const fuzzySearchConsumablesApi = "/consumables/fuzzySearchConsumables";                   //手术备品模糊搜索
+const findSpecificationsByIdApi = "/consumables/findSpecificationsById";                   //通过手术备品id查询手术备品对应型号
 
+const selectReport = "/apply/consultation/selectReport";                                    //查询会诊报告 + 医嘱
 

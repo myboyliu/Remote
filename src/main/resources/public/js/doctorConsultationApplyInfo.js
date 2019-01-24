@@ -1,7 +1,7 @@
 $(function () {
     /** 编辑会诊报告 */
     $('.compileReport').click(function () {
-        if (false) {
+        if (isMainDoctor) {
             sessionStorage.setItem("enjoinId", applyInfo.caseRecordId)
             window.location = "../page/doctorEnjoin.html"
         } else {
