@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sicmed.remote.web.mapper.TwxrayCheckMapper" >
+  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.TwxrayCheck" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="check_name" property="checkName" jdbcType="VARCHAR" />
+    <result column="check_name_py" property="checkNamePy" jdbcType="VARCHAR" />
+    <result column="check_class_id" property="checkClassId" jdbcType="VARCHAR" />
+    <result column="check_detail" property="checkDetail" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="del_flag" property="delFlag" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, check_name, check_name_py, check_class_id, check_detail, create_date, create_user, 
+    update_date, update_user, del_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sicmed_twxray_check
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 模糊搜索检查项 -->
+  <resultMap id="CheckMap" type="com.sicmed.remote.web.entity.TwxrayCheck" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="check_name" property="checkName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Check_List" >
+    id, check_name
+  </sql>
+  <select id="fuzzySearchCheck" resultMap="CheckMap" parameterType="com.sicmed.remote.web.bean.FuzzySearchBean" >
+    select
+    <include refid="Check_List" />
+    from sicmed_twxray_check
+    where check_name LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%') OR check_name_py LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%')
+    limit #{beginNo},#{pageSize}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sicmed_twxray_check
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sicmed.remote.web.entity.TwxrayCheck" >
+    insert into sicmed_twxray_check (id, check_name, check_name_py, 
+      check_class_id, check_detail, create_date, 
+      create_user, update_date, update_user, 
+      del_flag)
+    values (#{id,jdbcType=VARCHAR}, #{checkName,jdbcType=VARCHAR}, #{checkNamePy,jdbcType=VARCHAR}, 
+      #{checkClassId,jdbcType=VARCHAR}, #{checkDetail,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{createUser,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+      #{delFlag,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.TwxrayCheck" >
+    insert into sicmed_twxray_check
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="checkName != null" >
+        check_name,
+      </if>
+      <if test="checkNamePy != null" >
+        check_name_py,
+      </if>
+      <if test="checkClassId != null" >
+        check_class_id,
+      </if>
+      <if test="checkDetail != null" >
+        check_detail,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="checkName != null" >
+        #{checkName,jdbcType=VARCHAR},
+      </if>
+      <if test="checkNamePy != null" >
+        #{checkNamePy,jdbcType=VARCHAR},
+      </if>
+      <if test="checkClassId != null" >
+        #{checkClassId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkDetail != null" >
+        #{checkDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.TwxrayCheck" >
+    update sicmed_twxray_check
+    <set >
+      <if test="checkName != null" >
+        check_name = #{checkName,jdbcType=VARCHAR},
+      </if>
+      <if test="checkNamePy != null" >
+        check_name_py = #{checkNamePy,jdbcType=VARCHAR},
+      </if>
+      <if test="checkClassId != null" >
+        check_class_id = #{checkClassId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkDetail != null" >
+        check_detail = #{checkDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.TwxrayCheck" >
+    update sicmed_twxray_check
+    set check_name = #{checkName,jdbcType=VARCHAR},
+      check_name_py = #{checkNamePy,jdbcType=VARCHAR},
+      check_class_id = #{checkClassId,jdbcType=VARCHAR},
+      check_detail = #{checkDetail,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=CHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

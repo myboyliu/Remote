@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sicmed.remote.web.mapper.MedicalMapper" >
+  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.Medical" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="medical_num" property="medicalNum" jdbcType="VARCHAR" />
+    <result column="medical_name_china" property="medicalNameChina" jdbcType="VARCHAR" />
+    <result column="medical_name_pinyin" property="medicalNamePinyin" jdbcType="VARCHAR" />
+    <result column="medical_name_english" property="medicalNameEnglish" jdbcType="VARCHAR" />
+    <result column="medical_use_number" property="medicalUseNumber" jdbcType="VARCHAR" />
+    <result column="medical_measure" property="medicalMeasure" jdbcType="VARCHAR" />
+    <result column="medical_use" property="medicalUse" jdbcType="VARCHAR" />
+    <result column="medical_detail" property="medicalDetail" jdbcType="VARCHAR" />
+    <result column="medical_stand" property="medicalStand" jdbcType="VARCHAR" />
+    <result column="unit1" property="unit1" jdbcType="VARCHAR" />
+    <result column="unit2" property="unit2" jdbcType="VARCHAR" />
+    <result column="medical_precautions" property="medicalPrecautions" jdbcType="VARCHAR" />
+    <result column="medical_dosage_usage" property="medicalDosageUsage" jdbcType="VARCHAR" />
+    <result column="medical_class_one_id" property="medicalClassOneId" jdbcType="VARCHAR" />
+    <result column="medical_class_two_id" property="medicalClassTwoId" jdbcType="VARCHAR" />
+    <result column="medical_class_three_id" property="medicalClassThreeId" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="del_flag" property="delFlag" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, medical_num, medical_name_china, medical_name_pinyin, medical_name_english, medical_use_number, 
+    medical_measure, medical_use, medical_detail, medical_stand, unit1, unit2, medical_precautions, 
+    medical_dosage_usage, medical_class_one_id, medical_class_two_id, medical_class_three_id, 
+    create_date, create_user, update_date, update_user, del_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sicmed_medical
+
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <!-- 药品模糊搜索 -->
+  <resultMap id="MedicalMap" type="com.sicmed.remote.web.entity.Medical" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="medical_name_china" property="medicalNameChina" jdbcType="VARCHAR" />
+    <result column="medical_use_number" property="medicalUseNumber" jdbcType="VARCHAR" />
+    <result column="medical_measure" property="medicalMeasure" jdbcType="VARCHAR" />
+    <result column="medical_use" property="medicalUse" jdbcType="VARCHAR" />
+    <result column="unit1" property="unit1" jdbcType="VARCHAR" />
+    <result column="unit2" property="unit2" jdbcType="VARCHAR" />
+    <result column="medical_class_one_id" property="medicalClassOneId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Medical_List" >
+    id,medical_name_china, medical_use_number,medical_measure, medical_use, unit1, unit2
+  </sql>
+  <select id="fuzzySearchMedical" resultMap="MedicalMap" parameterType="com.sicmed.remote.web.bean.FuzzySearchBean" >
+    select
+    <include refid="Medical_List" />
+    from sicmed_medical
+    where del_flag = 0 
+    AND (medical_name_china LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%') OR medical_name_english LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%'))
+    limit #{beginNo},#{pageSize}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sicmed_medical
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sicmed.remote.web.entity.Medical" >
+    insert into sicmed_medical (id, medical_num, medical_name_china, 
+      medical_name_pinyin, medical_name_english, 
+      medical_use_number, medical_measure, medical_use, 
+      medical_detail, medical_stand, unit1, 
+      unit2, medical_precautions, medical_dosage_usage, 
+      medical_class_one_id, medical_class_two_id, medical_class_three_id, 
+      create_date, create_user, update_date, 
+      update_user, del_flag)
+    values (#{id,jdbcType=VARCHAR}, #{medicalNum,jdbcType=VARCHAR}, #{medicalNameChina,jdbcType=VARCHAR}, 
+      #{medicalNamePinyin,jdbcType=VARCHAR}, #{medicalNameEnglish,jdbcType=VARCHAR}, 
+      #{medicalUseNumber,jdbcType=VARCHAR}, #{medicalMeasure,jdbcType=VARCHAR}, #{medicalUse,jdbcType=VARCHAR}, 
+      #{medicalDetail,jdbcType=VARCHAR}, #{medicalStand,jdbcType=VARCHAR}, #{unit1,jdbcType=VARCHAR}, 
+      #{unit2,jdbcType=VARCHAR}, #{medicalPrecautions,jdbcType=VARCHAR}, #{medicalDosageUsage,jdbcType=VARCHAR}, 
+      #{medicalClassOneId,jdbcType=VARCHAR}, #{medicalClassTwoId,jdbcType=VARCHAR}, #{medicalClassThreeId,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR}, #{delFlag,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.Medical" >
+    insert into sicmed_medical
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="medicalNum != null" >
+        medical_num,
+      </if>
+      <if test="medicalNameChina != null" >
+        medical_name_china,
+      </if>
+      <if test="medicalNamePinyin != null" >
+        medical_name_pinyin,
+      </if>
+      <if test="medicalNameEnglish != null" >
+        medical_name_english,
+      </if>
+      <if test="medicalUseNumber != null" >
+        medical_use_number,
+      </if>
+      <if test="medicalMeasure != null" >
+        medical_measure,
+      </if>
+      <if test="medicalUse != null" >
+        medical_use,
+      </if>
+      <if test="medicalDetail != null" >
+        medical_detail,
+      </if>
+      <if test="medicalStand != null" >
+        medical_stand,
+      </if>
+      <if test="unit1 != null" >
+        unit1,
+      </if>
+      <if test="unit2 != null" >
+        unit2,
+      </if>
+      <if test="medicalPrecautions != null" >
+        medical_precautions,
+      </if>
+      <if test="medicalDosageUsage != null" >
+        medical_dosage_usage,
+      </if>
+      <if test="medicalClassOneId != null" >
+        medical_class_one_id,
+      </if>
+      <if test="medicalClassTwoId != null" >
+        medical_class_two_id,
+      </if>
+      <if test="medicalClassThreeId != null" >
+        medical_class_three_id,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalNum != null" >
+        #{medicalNum,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalNameChina != null" >
+        #{medicalNameChina,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalNamePinyin != null" >
+        #{medicalNamePinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalNameEnglish != null" >
+        #{medicalNameEnglish,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalUseNumber != null" >
+        #{medicalUseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalMeasure != null" >
+        #{medicalMeasure,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalUse != null" >
+        #{medicalUse,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalDetail != null" >
+        #{medicalDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalStand != null" >
+        #{medicalStand,jdbcType=VARCHAR},
+      </if>
+      <if test="unit1 != null" >
+        #{unit1,jdbcType=VARCHAR},
+      </if>
+      <if test="unit2 != null" >
+        #{unit2,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalPrecautions != null" >
+        #{medicalPrecautions,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalDosageUsage != null" >
+        #{medicalDosageUsage,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalClassOneId != null" >
+        #{medicalClassOneId,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalClassTwoId != null" >
+        #{medicalClassTwoId,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalClassThreeId != null" >
+        #{medicalClassThreeId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.Medical" >
+    update sicmed_medical
+    <set >
+      <if test="medicalNum != null" >
+        medical_num = #{medicalNum,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalNameChina != null" >
+        medical_name_china = #{medicalNameChina,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalNamePinyin != null" >
+        medical_name_pinyin = #{medicalNamePinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalNameEnglish != null" >
+        medical_name_english = #{medicalNameEnglish,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalUseNumber != null" >
+        medical_use_number = #{medicalUseNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalMeasure != null" >
+        medical_measure = #{medicalMeasure,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalUse != null" >
+        medical_use = #{medicalUse,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalDetail != null" >
+        medical_detail = #{medicalDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalStand != null" >
+        medical_stand = #{medicalStand,jdbcType=VARCHAR},
+      </if>
+      <if test="unit1 != null" >
+        unit1 = #{unit1,jdbcType=VARCHAR},
+      </if>
+      <if test="unit2 != null" >
+        unit2 = #{unit2,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalPrecautions != null" >
+        medical_precautions = #{medicalPrecautions,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalDosageUsage != null" >
+        medical_dosage_usage = #{medicalDosageUsage,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalClassOneId != null" >
+        medical_class_one_id = #{medicalClassOneId,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalClassTwoId != null" >
+        medical_class_two_id = #{medicalClassTwoId,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalClassThreeId != null" >
+        medical_class_three_id = #{medicalClassThreeId,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.Medical" >
+    update sicmed_medical
+    set medical_num = #{medicalNum,jdbcType=VARCHAR},
+      medical_name_china = #{medicalNameChina,jdbcType=VARCHAR},
+      medical_name_pinyin = #{medicalNamePinyin,jdbcType=VARCHAR},
+      medical_name_english = #{medicalNameEnglish,jdbcType=VARCHAR},
+      medical_use_number = #{medicalUseNumber,jdbcType=VARCHAR},
+      medical_measure = #{medicalMeasure,jdbcType=VARCHAR},
+      medical_use = #{medicalUse,jdbcType=VARCHAR},
+      medical_detail = #{medicalDetail,jdbcType=VARCHAR},
+      medical_stand = #{medicalStand,jdbcType=VARCHAR},
+      unit1 = #{unit1,jdbcType=VARCHAR},
+      unit2 = #{unit2,jdbcType=VARCHAR},
+      medical_precautions = #{medicalPrecautions,jdbcType=VARCHAR},
+      medical_dosage_usage = #{medicalDosageUsage,jdbcType=VARCHAR},
+      medical_class_one_id = #{medicalClassOneId,jdbcType=VARCHAR},
+      medical_class_two_id = #{medicalClassTwoId,jdbcType=VARCHAR},
+      medical_class_three_id = #{medicalClassThreeId,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=CHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

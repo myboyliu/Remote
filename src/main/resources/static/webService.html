@@ -6,8 +6,9 @@
 </head>
 
 <body>
-Welcome<br/><input id="text" type="text" />
+Welcome<br/><input id="text" type="text"/>
 <button onclick="send()">发送消息</button>
+<!-- 消息订阅,写一个定时器定时执行 -->
 <button onclick="subscribe2()">订阅消息/topic/sendTest</button>
 <button onclick="subscribe1()">订阅消息/topic/subscribeTest</button>
 <hr/>
@@ -20,7 +21,7 @@ Welcome<br/><input id="text" type="text" />
 <script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>
 <script type="text/javascript">
     // 建立连接对象（还未发起连接）
-    var socket = new SockJS("http://localhost:8088/webSocketServer");
+    var socket = new SockJS("http://localhost/webSocketServer");
 
     // 获取 STOMP 子协议的客户端对象
     var stompClient = Stomp.over(socket);
@@ -46,7 +47,7 @@ Welcome<br/><input id="text" type="text" />
     //发送消息
     function send() {
         var message = document.getElementById('text').value;
-        var messageJson = JSON.stringify({ "name": message });
+        var messageJson = JSON.stringify({"name": message});
         stompClient.send("/app/sendTest", {}, messageJson);
         setMessageInnerHTML("/app/sendTest 你发送的消息:" + message);
     }

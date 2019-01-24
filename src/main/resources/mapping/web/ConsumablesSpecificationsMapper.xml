@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sicmed.remote.web.mapper.ConsumablesSpecificationsMapper" >
+  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.ConsumablesSpecifications" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="consumables_id" property="consumablesId" jdbcType="VARCHAR" />
+    <result column="specifications_name" property="specificationsName" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="del_flag" property="delFlag" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, consumables_id, specifications_name, create_date, create_user, update_date, update_user, 
+    del_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from sicmed_consumables_specifications
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 通过备品id查询备品型号 -->
+  <resultMap id="SpecificationsMap" type="com.sicmed.remote.web.entity.ConsumablesSpecifications" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="specifications_name" property="specificationsName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Specifications_List" >
+    id, specifications_name
+  </sql>
+  <select id="findSpecificationsById" resultMap="SpecificationsMap" parameterType="java.lang.String" >
+    select
+    <include refid="Specifications_List" />
+    from sicmed_consumables_specifications
+    where consumables_id = #{id,jdbcType=VARCHAR}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from sicmed_consumables_specifications
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sicmed.remote.web.entity.ConsumablesSpecifications" >
+    insert into sicmed_consumables_specifications (id, consumables_id, specifications_name, 
+      create_date, create_user, update_date, 
+      update_user, del_flag)
+    values (#{id,jdbcType=VARCHAR}, #{consumablesId,jdbcType=VARCHAR}, #{specificationsName,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR}, #{delFlag,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.ConsumablesSpecifications" >
+    insert into sicmed_consumables_specifications
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="consumablesId != null" >
+        consumables_id,
+      </if>
+      <if test="specificationsName != null" >
+        specifications_name,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="consumablesId != null" >
+        #{consumablesId,jdbcType=VARCHAR},
+      </if>
+      <if test="specificationsName != null" >
+        #{specificationsName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.ConsumablesSpecifications" >
+    update sicmed_consumables_specifications
+    <set >
+      <if test="consumablesId != null" >
+        consumables_id = #{consumablesId,jdbcType=VARCHAR},
+      </if>
+      <if test="specificationsName != null" >
+        specifications_name = #{specificationsName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null" >
+        del_flag = #{delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.ConsumablesSpecifications" >
+    update sicmed_consumables_specifications
+    set consumables_id = #{consumablesId,jdbcType=VARCHAR},
+      specifications_name = #{specificationsName,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      del_flag = #{delFlag,jdbcType=CHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
