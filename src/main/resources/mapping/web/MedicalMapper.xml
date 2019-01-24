@@ -61,6 +61,14 @@
     limit #{beginNo},#{pageSize}
   </select>
 
+  <select id="fuzzySearchMedicalSize" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    select
+    count(id)
+    from sicmed_medical
+    where del_flag = 0
+    AND (medical_name_china LIKE CONCAT(CONCAT('%',#{id,jdbcType=VARCHAR}),'%') OR medical_name_english LIKE CONCAT(CONCAT('%',#{id,jdbcType=VARCHAR}),'%'))
+  </select>
+
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from sicmed_medical

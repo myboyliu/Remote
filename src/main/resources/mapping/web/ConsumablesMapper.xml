@@ -44,6 +44,13 @@
     limit #{beginNo},#{pageSize}
   </select>
 
+  <select id="fuzzySearchConsumablesSize" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    select
+    count(id)
+    from sicmed_consumables
+    where del_flag = 0 AND (consumables_name LIKE CONCAT(CONCAT('%',#{id,jdbcType=VARCHAR}),'%') OR consumables_english LIKE CONCAT(CONCAT('%',#{id,jdbcType=VARCHAR}),'%'))
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from sicmed_consumables
     where id = #{id,jdbcType=VARCHAR}

@@ -74,4 +74,7 @@ public class Medical extends BaseEntity {
     /** 删除标记 */
     private String delFlag;
 
+    /** 总条数 */
+    private String pageTotal;
+
 }

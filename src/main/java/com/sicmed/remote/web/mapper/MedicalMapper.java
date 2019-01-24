@@ -22,4 +22,6 @@ public interface MedicalMapper{
     int updateByPrimaryKey(Medical record);
 
     List<Medical> fuzzySearchMedical(FuzzySearchBean fuzzySearchBean);
+
+    int fuzzySearchMedicalSize(String fuzzyName);
 }

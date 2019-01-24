@@ -45,8 +45,10 @@ public class ConsumablesController extends BaseController{
             return fieldErrorsBuilder(fuzzySearch);
         }
         fuzzySearchBean.setParam(fuzzySearchBean.getParam().trim());
+        int pageTotal = consumablesService.fuzzySearchConsumablesSize(fuzzySearchBean.getParam());
         List<Consumables> consumablesList = consumablesService.fuzzySearchConsumables(fuzzySearchBean);
         Map map = new LinkedHashMap();
+        map.put("pageTotal",pageTotal);
         map.put("consumablesList",consumablesList);
         return succeedRequest(map);
     }

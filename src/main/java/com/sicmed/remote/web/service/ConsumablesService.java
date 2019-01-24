@@ -45,9 +45,10 @@ public class ConsumablesService implements BaseService<Consumables>{
     }
 
     public List<Consumables> fuzzySearchConsumables(FuzzySearchBean fuzzySearchBean) {
-
-        List<Consumables> consumablesList = consumablesMapper.fuzzySearchConsumables(fuzzySearchBean);
-        return consumablesList;
+        return consumablesMapper.fuzzySearchConsumables(fuzzySearchBean);
     }
 
+    public int fuzzySearchConsumablesSize(String param) {
+        return consumablesMapper.fuzzySearchConsumablesSize(param);
+    }
 }

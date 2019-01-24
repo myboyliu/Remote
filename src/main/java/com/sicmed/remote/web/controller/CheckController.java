@@ -38,8 +38,10 @@ public class CheckController extends BaseController{
             return fieldErrorsBuilder(fuzzySearch);
         }
         fuzzySearchBean.setParam(fuzzySearchBean.getParam().trim());
+        int pageTotal = checkService.fuzzySearchCheckSize(fuzzySearchBean.getParam());
         List<TwxrayCheck> twxrayCheckList = checkService.fuzzySearchCheck(fuzzySearchBean);
         Map map = new HashMap();
+        map.put("pageTotal",pageTotal);
         map.put("twxrayCheckList",twxrayCheckList);
         return succeedRequest(map);
     }

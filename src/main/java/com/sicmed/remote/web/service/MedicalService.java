@@ -64,4 +64,8 @@ public class MedicalService implements BaseService<Medical>{
     public Medical findMedicalById(String medicalId) {
         return medicalMapper.selectByPrimaryKey(medicalId);
     }
+
+    public int fuzzySearchMedicalSize(String fuzzyName) {
+       return medicalMapper.fuzzySearchMedicalSize(fuzzyName);
+    }
 }

@@ -52,4 +52,8 @@ public class CheckService implements BaseService<TwxrayCheck>{
     public List <TwxrayCheck> fuzzySearchCheck(FuzzySearchBean fuzzySearchBean) {
         return twxrayCheckMapper.fuzzySearchCheck(fuzzySearchBean);
     }
+
+    public int fuzzySearchCheckSize(String param) {
+        return twxrayCheckMapper.fuzzySearchCheckSize(param);
+    }
 }

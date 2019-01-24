@@ -24,4 +24,6 @@ public interface TwxrayCheckMapper {
     List<TwxrayCheck> findCheckByClassId(String id);
 
     List<TwxrayCheck> fuzzySearchCheck(FuzzySearchBean fuzzySearchBean);
+
+    int fuzzySearchCheckSize(String param);
 }

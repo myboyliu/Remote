@@ -22,4 +22,6 @@ public interface ConsumablesMapper {
     int updateByPrimaryKey(Consumables record);
 
     List<Consumables> fuzzySearchConsumables(FuzzySearchBean fuzzySearchBean);
+
+    int fuzzySearchConsumablesSize(String param);
 }

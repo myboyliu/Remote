@@ -40,6 +40,13 @@
     limit #{beginNo},#{pageSize}
   </select>
 
+  <select id="fuzzySearchCheckSize" resultType="java.lang.Integer" parameterType="java.lang.String" >
+    select
+    count(id)
+    from sicmed_twxray_check
+    where check_name LIKE CONCAT(CONCAT('%',#{id,jdbcType=VARCHAR}),'%') OR check_name_py LIKE CONCAT(CONCAT('%',#{id,jdbcType=VARCHAR}),'%')
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from sicmed_twxray_check
     where id = #{id,jdbcType=VARCHAR}

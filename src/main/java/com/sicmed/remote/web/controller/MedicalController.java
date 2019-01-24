@@ -40,10 +40,12 @@ public class MedicalController extends BaseController{
             return fieldErrorsBuilder(fuzzySearch);
         }
         fuzzySearchBean.setParam(fuzzySearchBean.getParam().trim());
+        int pageTotal = medicalService.fuzzySearchMedicalSize(fuzzySearchBean.getParam());
         List<Medical> medicalList = medicalService.fuzzySearchMedical(fuzzySearchBean);
         Map map = new LinkedHashMap();
+        map.put("pageTotal",pageTotal);
         map.put("medicalList",medicalList);
-        return succeedRequest(medicalList);
+        return succeedRequest(map);
     }
 
     /**
