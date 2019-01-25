@@ -612,6 +612,7 @@ public class ApplyConsultationController extends BaseController {
         ConsultationStatusBean halfMsg = caseConsultantService.receiveSelectHalfCount(userId, consultantTypeList);
         consultationStatusBean.setConsultationMasterReject(halfMsg.getConsultationMasterReject());
         consultationStatusBean.setConsultationSlaveReject(halfMsg.getConsultationSlaveReject());
+        consultationStatusBean.setConsultationSlaveAccede(halfMsg.getConsultationSlaveAccede());
         return succeedRequest(consultationStatusBean);
     }
 

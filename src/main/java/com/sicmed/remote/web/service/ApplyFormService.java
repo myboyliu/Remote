@@ -168,6 +168,11 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         return applyFormMapper.deleteByPrimaryKey(draftId);
     }
 
+    // 医生 受邀会诊 待收诊  同意
+    public int inviteeConsent(ApplyForm applyForm) {
+        return applyFormMapper.inviteeConsent(applyForm);
+    }
+
     @Override
     public int insertSelective(ApplyForm applyForm) {
         return applyFormMapper.insertSelective(applyForm);
