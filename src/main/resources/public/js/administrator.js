@@ -469,7 +469,7 @@ function currentReferralCount() {
     console.log("医政转诊数量")
     console.log(countObject)
     $("#WAITING_AUDIT").html(Number(countObject.inquiryApplyCreateSuccess))
-    $("#WAITING_ACCEDE").html(Number(countObject.inquiryApplyAccede))
+    $("#WAITING_ACCEDE").html(Number(countObject.inquiryApplyAccede) + Number(countObject.inquirySlaveAccedeTwo));
     $("#DATETIME_AUDIT").html(Number(countObject.inquirySlaveAccede))
     $("#DATETIME_LOCKED").html(Number(countObject.inquiryDatetimeLocked))
     $("#HAS_REJECT").html(Number(countObject.inquiryMasterReject) + Number(countObject.inquirySlaveReject))

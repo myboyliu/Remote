@@ -307,9 +307,9 @@ $(function () {
         let data = new FormData();
         data.append("applyFormId", applyFormId);
         if (isMainDoctor) {
-            ajaxRequest("POST", mainDoctorAccedePicture, data, false, false, true, sirUpdateDateSuccess, null, null)
+            ajaxRequest("POST", mainDoctorAccedePicture, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
         } else if (isBranchDoctor) {
-            ajaxRequest("POST", doctorAcceptOther, data, false, false, true, sirUpdateDateSuccess, null, null)
+            ajaxRequest("POST", doctorAcceptOther, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
         }
     })
     $("#receiveConsultationTimeBoxYesBtn").click(function () {
@@ -337,12 +337,21 @@ $(function () {
         data.append("applyFormId", applyFormId);
         data.append("startEndTime", JSON.stringify(dateList));
         if (isMainDoctor) {
-            ajaxRequest("POST", mainDoctorAccede, data, false, false, true, sirUpdateDateSuccess, null, null)
+            ajaxRequest("POST", mainDoctorAccede, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
         } else if (isBranchDoctor) {
-            ajaxRequest("POST", doctorAcceptOther, data, false, false, true, sirUpdateDateSuccess, null, null)
+            ajaxRequest("POST", doctorAcceptOther, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
         }
 
     })
+
+    function operationFailid(data) {
+        console.log(data.result);
+        $("#alertText").html("订单状态已改变!");
+        alertMessage();
+        setTimeout(function () {
+            window.location = '../page/morkbench.html'
+        }, 2000);
+    }
 
     function sirUpdateDateSuccess(result) {
         $("#alertText").html("接收成功");
