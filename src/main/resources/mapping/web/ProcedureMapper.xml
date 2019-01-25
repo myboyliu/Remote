@@ -4,4 +4,7 @@
     <select id="applyChecked" statementType="CALLABLE">
         CALL apply_checked()
     </select>
+    <select id="referralChecked" statementType="CALLABLE">
+        CALL referral_checked()
+    </select>
 </mapper>

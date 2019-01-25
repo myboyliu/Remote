@@ -13,4 +13,7 @@ public class ProcedureService {
     public void applyChecked(){
         procedureMapper.applyChecked();
     }
+    public void referralChecked(){
+        procedureMapper.referralChecked();
+    }
 }
