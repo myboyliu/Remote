@@ -207,6 +207,16 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         return applyFormMapper.sirSelectInquiry(applyFormBean);
     }
 
+    // 医政 转诊 待收诊 查询
+    public List<ApplyForm> sirSelectInquiryDai(ApplyFormBean applyFormBean) {
+        return applyFormMapper.sirSelectInquiryDai(applyFormBean);
+    }
+
+    // 医政 转诊 已拒收 查询
+    public List<ApplyForm> sirSelectInquiryJuShou(ApplyFormBean applyFormBean) {
+        return applyFormMapper.sirSelectInquiryJuShou(applyFormBean);
+    }
+
     public int updateInviteDoctorByPrimaryKeySelective(ApplyForm applyForm) {
         return applyFormMapper.updateInviteDoctorByPrimaryKeySelective(applyForm);
     }

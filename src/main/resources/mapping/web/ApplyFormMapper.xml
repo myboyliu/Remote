@@ -121,6 +121,55 @@
         limit #{beginNo},#{pageSize}
     </select>
 
+    <!--转诊医政待收诊-->
+    <select id="sirSelectInquiryDai" parameterType="com.sicmed.remote.web.bean.ApplyFormBean" resultMap="BaseResultMap">
+        select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
+        apply_type, apply_remark,apply_urgent, create_time,update_time
+        from apply_form
+        <where>
+            del_flag = "0"
+            <if test="consultationTypeList != null">
+                AND apply_type IN
+                <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            and ((apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
+            AND apply_status IN
+            <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
+                #{item,jdbcType=VARCHAR}
+            </foreach>)
+            or (invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR} and apply_status = 'INQUIRY_APPLY_ACCEDE' ))
+        </where>
+        order by apply_urgent desc,update_time,create_time
+        limit #{beginNo},#{pageSize}
+    </select>
+
+    <!--转诊医政待收诊-->
+    <select id="sirSelectInquiryJuShou" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
+            resultMap="BaseResultMap">
+        select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
+        apply_type, apply_remark,apply_urgent, create_time,update_time
+        from apply_form
+        <where>
+            del_flag = "0"
+            <if test="consultationTypeList != null">
+                AND apply_type IN
+                <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            and ((invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR}
+            AND apply_status IN
+            <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
+                #{item,jdbcType=VARCHAR}
+            </foreach>)
+            or (apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR} and apply_status = 'INQUIRY_MASTER_REJECT' ))
+        </where>
+        order by apply_urgent desc,update_time,create_time
+        limit #{beginNo},#{pageSize}
+    </select>
+
     <!--转诊医政查询-->
     <select id="sirSelectInquiry" parameterType="com.sicmed.remote.web.bean.ApplyFormBean" resultMap="BaseResultMap">
         select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
@@ -746,11 +795,11 @@
     <select id="inquiryCreateSuccessAllCountSir" parameterType="com.sicmed.remote.web.bean.InquiryStatusBean"
             resultMap="InquiryStatusBeanResultMap">
         select
-        count(apply_status="INQUIRY_APPLY_CREATE_SUCCESS" and invite_hospital_id != #{applyHospitalId} or NULL)
+        count(apply_status="INQUIRY_APPLY_CREATE_SUCCESS" and apply_hospital_id = #{applyHospitalId} or NULL)
         cacs,
         count(apply_status="INQUIRY_APPLY_ACCEDE" or NULL) caa,
         count(apply_status="INQUIRY_APPLY_REJECT" or NULL) car,
-        count(apply_status="INQUIRY_SLAVE_ACCEDE" and apply_hospital_id != #{applyHospitalId} or NULL) csa,
+        count(apply_status="INQUIRY_SLAVE_ACCEDE" and invite_hospital_id = #{applyHospitalId} or NULL) csa,
         count(apply_status="INQUIRY_SLAVE_REJECT" or NULL) csr,
         count(apply_status="INQUIRY_MASTER_ACCEDE" or NULL) cma,
         count(apply_status="INQUIRY_MASTER_REJECT" or NULL) cmr,

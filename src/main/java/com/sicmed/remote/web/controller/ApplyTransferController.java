@@ -235,7 +235,7 @@ public class ApplyTransferController extends BaseController {
     }
 
     /**
-     * 医政 转诊 待接收
+     * 医政 转诊 待收诊
      */
     @GetMapping(value = "sirInquiryAccept")
     public Map sirInquiryAccept() {
@@ -246,15 +246,20 @@ public class ApplyTransferController extends BaseController {
 
         List<String> consultationStatusList = new ArrayList<>();
         String inquiryStatus = String.valueOf(InquiryStatus.INQUIRY_APPLY_ACCEDE);
+        String inquiryStatus1 = String.valueOf(InquiryStatus.INQUIRY_SLAVE_REJECT);
         consultationStatusList.add(inquiryStatus);
+        consultationStatusList.add(inquiryStatus1);
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setApplyHospitalId(hospitalId);
         applyFormBean.setInviteHospitalId(hospitalId);
+        applyFormBean.setConsultationStatusList(consultationStatusList);
+        applyFormBean.setConsultationTypeList(consultationTypeListInquiry);
+        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
+        applyFormBean.setPageSize(getPageEntity().getPageSize());
 
-        String msg = "无待接收";
-
-        return sirInquirySelect(applyFormBean, consultationStatusList, msg);
+        List<ApplyForm> applyFormList = applyFormService.sirSelectInquiryDai(applyFormBean);
+        return succeedRequest(applyFormList);
     }
 
     /**
@@ -274,7 +279,6 @@ public class ApplyTransferController extends BaseController {
         consultationStatusList.add(inquiryStatus2);
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
-        applyFormBean.setApplyHospitalId(hospitalId);
         applyFormBean.setInviteHospitalId(hospitalId);
 
         String msg = "无排期审核";
@@ -322,10 +326,14 @@ public class ApplyTransferController extends BaseController {
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setApplyHospitalId(hospitalId);
         applyFormBean.setInviteHospitalId(hospitalId);
+        applyFormBean.setConsultationTypeList(consultationTypeListInquiry);
+        applyFormBean.setConsultationStatusList(consultationStatusList);
+        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
+        applyFormBean.setPageSize(getPageEntity().getPageSize());
 
-        String msg = "无已拒收";
+        List<ApplyForm> applyFormList = applyFormService.sirSelectInquiryJuShou(applyFormBean);
 
-        return sirInquirySelect(applyFormBean, consultationStatusList, msg);
+        return succeedRequest(applyFormList);
     }
 
     /**
