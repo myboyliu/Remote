@@ -241,7 +241,7 @@ $(function () {
         $(this).hide();
         $('textarea').focus();
     })
-    let viewText;
+    let viewText = '建议多学科会诊:';
     /* 建议多学科会诊按钮点击事件  */
     $('.suggest').click(function () {
         $(this).css({
