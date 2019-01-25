@@ -155,8 +155,8 @@ function renderApplyListView(data) {
     const day = double(myDate.getDate()); //获取当前日(1-31)
     let _html = '';
     for (let i = 0; i < data.length; i++) {
-        const timeStr = data[i].consultantApplyTime.split(' ')[0];
-        const time = data[i].consultantApplyTime.split(' ')[1];
+        const timeStr = data[i].updateTime.split(' ')[0];
+        const time = data[i].updateTime.split(' ')[1];
         const _year = timeStr.split('-')[0];
         const _month = timeStr.split('-')[1];
         const _day = timeStr.split('-')[2];
@@ -190,7 +190,7 @@ function renderApplyListView(data) {
         if (year == _year && month == _month && day == _day) {
             _html += '<td class="tl2em">今天' + time + '</td>'
         } else {
-            _html += '<td class="tl2em">' + data[i].consultantApplyTime + '</td>'
+            _html += '<td class="tl2em">' + data[i].updateTime + '</td>'
         }
         _html += '</tr>'
     }
@@ -204,8 +204,8 @@ function renderApplyInquiryListView(data) {
     const day = double(myDate.getDate()); //获取当前日(1-31)
     let _html = '';
     for (let i = 0; i < data.length; i++) {
-        const timeStr = data[i].consultantApplyTime.split(' ')[0];
-        const time = data[i].consultantApplyTime.split(' ')[1];
+        const timeStr = data[i].updateTime.split(' ')[0];
+        const time = data[i].updateTime.split(' ')[1];
         const _year = timeStr.split('-')[0];
         const _month = timeStr.split('-')[1];
         const _day = timeStr.split('-')[2];
@@ -228,7 +228,7 @@ function renderApplyInquiryListView(data) {
         if (year == _year && month == _month && day == _day) {
             _html += '<td class="tl2em">今天' + time + '</td>'
         } else {
-            _html += '<td class="tl2em">' + data[i].consultantApplyTime + '</td>'
+            _html += '<td class="tl2em">' + data[i].updateTime + '</td>'
         }
         _html += '</tr>'
     }

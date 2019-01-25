@@ -387,8 +387,14 @@ function buildCaseData(successCallBack) {
 
     function failedParam(data) {
         layer.closeAll();
-        layer.msg("病历信息错误!");
-        console.log(data.result);
+        let errorMsg = data.result;
+        console.log(errorMsg);
+        if(errorMsg.patientName){
+            layer.msg("患者姓名错误!");
+        }else{
+            layer.msg(errorMsg);
+        }
+
     }
 
     function createCaseSuccess(result) {
@@ -638,6 +644,9 @@ function checkCaseInfo() {
 
 /** 校验病历是否正确 */
 function checkCase() {
+    if(!RegExpObj.Reg_Name.test($('#username').val())){
+
+    }
     if (!RegExpObj.Reg_Name.test($('#username').val()) || !RegExpObj.Reg_IDCardNo.test($('#idCard').val()) || !RegExpObj.Reg_age.test($('#age').val()) || !RegExpObj.Reg_hight.test($('#high').val()) || !RegExpObj.Reg_weight.test($('#weight').val()) || !RegExpObj.Reg_mobilePhone.test($('#phone').val()) || !RegExpObj.Reg_address.test($('#address').val()) || $('#createCase_textDiagnose').val() === '' || $('#createCase_textGola').val() === '') {
         layer.open({
             type: 1,
@@ -649,9 +658,6 @@ function checkCase() {
             time: 2000,
             content: _$('.modifier'),
         });
-        setTimeout(function () {
-            $('.modifier').hide();
-        }, 2000);
         return true;
     }
     return false;
