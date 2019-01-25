@@ -65,11 +65,11 @@
             AND (apply_user_id = #{applyUserId,jdbcType=VARCHAR}
             or invite_user_id = #{inviteUserId,jdbcType=VARCHAR})
         </where>
-        order by apply_urgent desc,update_time,create_time
+        order by apply_urgent desc ,update_time desc
         limit #{beginNo},#{pageSize}
     </select>
 
-    <!--转诊医生已拒收-->
+    <!--转诊医生已拒收查询-->
     <select id="dorSelectInquiryJuShou" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
             resultMap="BaseResultMap">
         select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
@@ -93,11 +93,11 @@
             </if>
             ))
         </where>
-        order by apply_urgent desc,update_time,create_time
+        order by apply_urgent desc ,update_time desc
         limit #{beginNo},#{pageSize}
     </select>
 
-    <!--转诊医生待收诊-->
+    <!--转诊医生待收诊查询-->
     <select id="selectInquiryDai" parameterType="com.sicmed.remote.web.bean.ApplyFormBean" resultMap="BaseResultMap">
         select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
         apply_type, apply_remark,apply_urgent, create_time,update_time
@@ -117,7 +117,7 @@
             </foreach>)
             or (invite_user_id = #{inviteUserId,jdbcType=VARCHAR} and apply_status = 'INQUIRY_APPLY_ACCEDE' ))
         </where>
-        order by apply_urgent desc,update_time,create_time
+        order by apply_urgent desc ,update_time desc
         limit #{beginNo},#{pageSize}
     </select>
 
@@ -145,11 +145,11 @@
                 AND invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
             </if>
         </where>
-        order by apply_urgent desc,update_time,create_time
+        order by apply_urgent desc ,update_time desc
         limit #{beginNo},#{pageSize}
     </select>
 
-    <!--转诊医政待收诊-->
+    <!--转诊医政待收诊查询-->
     <select id="sirSelectInquiryDai" parameterType="com.sicmed.remote.web.bean.ApplyFormBean" resultMap="BaseResultMap">
         select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
         apply_type, apply_remark,apply_urgent, create_time,update_time
@@ -169,11 +169,11 @@
             </foreach>)
             or (invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR} and apply_status = 'INQUIRY_APPLY_ACCEDE' ))
         </where>
-        order by apply_urgent desc,update_time,create_time
+        order by apply_urgent desc ,update_time desc
         limit #{beginNo},#{pageSize}
     </select>
 
-    <!--转诊医政待收诊-->
+    <!--转诊医政待收诊查询-->
     <select id="sirSelectInquiryJuShou" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
             resultMap="BaseResultMap">
         select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
@@ -194,7 +194,7 @@
             </foreach>)
             or (apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR} and apply_status = 'INQUIRY_MASTER_REJECT' ))
         </where>
-        order by apply_urgent desc,update_time,create_time
+        order by apply_urgent desc ,update_time desc
         limit #{beginNo},#{pageSize}
     </select>
 
@@ -220,7 +220,7 @@
             AND (apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR}
             or invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR})
         </where>
-        order by apply_urgent desc,update_time,create_time
+        order by apply_urgent desc ,update_time desc
         limit #{beginNo},#{pageSize}
     </select>
 
@@ -720,7 +720,7 @@
                 </foreach>
             </if>
         </where>
-        order by apply_urgent desc ,consultant_apply_time,update_time,create_time
+        order by apply_urgent desc ,update_time desc
         limit #{beginNo},#{pageSize}
     </select>
 
@@ -877,7 +877,7 @@
             </if>
 
         </where>
-        order by apply_urgent desc,consultant_apply_time,update_time,create_time
+        order by apply_urgent desc ,update_time desc
         limit #{beginNo},#{pageSize}
     </select>
 
