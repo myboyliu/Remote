@@ -793,7 +793,7 @@ public class ApplyDisposeController extends BaseController {
             applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
         }
         applyForm.setUpdateUser(userId);
-        int i = applyFormService.updateByPrimaryKeySelective(applyForm);
+        int i = applyFormService.inviteeConsent(applyForm);
         if (i < 1) {
             return badRequestOfArguments("更新form失败");
         }
@@ -894,7 +894,7 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setId(applyFormId);
         applyForm.setApplyStatus(applyStatus);
         applyForm.setUpdateUser(userId);
-        int k = applyFormService.updateByPrimaryKeySelective(applyForm);
+        int k = applyFormService.inviteeConsent(applyForm);
         if (k < 1) {
             return badRequestOfArguments("修改applyForm失败");
         }
@@ -933,7 +933,7 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setId(applyFormId);
         applyForm.setApplyStatus(applyStatus);
         applyForm.setUpdateUser(userId);
-        int k = applyFormService.updateByPrimaryKeySelective(applyForm);
+        int k = applyFormService.inviteeConsent(applyForm);
         if (k < 1) {
             return badRequestOfArguments("修改applyForm失败");
         }
@@ -962,7 +962,7 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setUpdateUser(userId);
         applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
         applyForm.setInviteSummary(inviteSummary);
-        int i = applyFormService.updateByPrimaryKeySelective(applyForm);
+        int i = applyFormService.inviteeConsent(applyForm);
         if (i < 1) {
             return badRequestOfArguments("修改applyForm失败");
         }
@@ -992,7 +992,6 @@ public class ApplyDisposeController extends BaseController {
         caseConsultant.setId(applyForm.getId());
         caseConsultant.setConsultantUserList(consultantUserList);
         caseConsultant.setConsultantPrice(consultantPrice);
-        caseConsultant.setInviteUserId(applyForm.getInviteUserId());
         caseConsultant.setConsultantReport(consultantReport);
         caseConsultant.setUpdateUser(userId);
 
@@ -1021,7 +1020,7 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setUpdateUser(userId);
         applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_BEGIN.toString());
         applyForm.setInviteSummary(inviteSummary);
-        int i = applyFormService.updateByPrimaryKeySelective(applyForm);
+        int i = applyFormService.inviteeConsent(applyForm);
         if (i < 1) {
             return badRequestOfArguments("修改applyForm失败");
         }
@@ -1030,7 +1029,6 @@ public class ApplyDisposeController extends BaseController {
         caseConsultant.setId(applyForm.getId());
         caseConsultant.setConsultantUserList(consultantUserList);
         caseConsultant.setConsultantPrice(consultantPrice);
-        caseConsultant.setInviteUserId(applyForm.getInviteUserId());
         caseConsultant.setConsultantReport(consultantReport);
         caseConsultant.setUpdateUser(userId);
 
