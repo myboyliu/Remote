@@ -60,6 +60,7 @@ function getPersonalInfo() {
 
     function getPersonalInfoSuccess(personalInfo) {
         userInfo = personalInfo;
+
     }
 
     function getPersonalInfoFailed(personalInfo) {

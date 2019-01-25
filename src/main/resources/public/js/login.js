@@ -39,7 +39,7 @@ $(function () {
                 sessionStorage.setItem('token', responseJson.id);
                 layer.close(index);
                 if (responseJson.telephone === "18888888888" || responseJson.telephone === "17777777777") {
-                    sessionStorage.setItem('rolesName', "医生");
+                    sessionStorage.setItem('rolesName', "医政");
                     window.location.href = '/page/administrator.html';
                 } else {
                     sessionStorage.setItem('rolesName', "医生");
