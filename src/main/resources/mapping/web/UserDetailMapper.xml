@@ -431,6 +431,16 @@ where ud.id = #{userId} and ud.del_flag = "0"
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
+
+    <update id="updateUserPrice" parameterType="com.sicmed.remote.web.entity.UserDetail">
+        update user_detail
+        set
+          consultation_picture_price = #{consultationPicturePrice,jdbcType=VARCHAR},
+          consultation_video_price = #{consultationVideoPrice,jdbcType=VARCHAR}
+        where
+        specialist_type_id = #{specialistTypeId,jdbcType=VARCHAR}
+        AND del_flag = "0"
+    </update>
     <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.UserDetail">
     update user_detail
     set user_name = #{userName,jdbcType=VARCHAR},

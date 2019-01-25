@@ -30,4 +30,6 @@ public interface UserDetailMapper {
     List<UserBean> selectByBranchId(String branchId);
 
     CurrentUserBean selectCurrentUser(String userId);
+
+    int updateUserPrice(UserDetail userDetail);
 }

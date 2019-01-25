@@ -6,11 +6,14 @@ import com.sicmed.remote.common.validation.Update;
 import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.SpecialistType;
 import com.sicmed.remote.web.entity.UserDetail;
+import com.sicmed.remote.web.mapper.UserDetailMapper;
 import com.sicmed.remote.web.service.SpecialistTypeService;
 import com.sicmed.remote.web.service.SpecialistTypeService;
+import com.sicmed.remote.web.service.UserDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -32,6 +35,8 @@ public class SpecialistTypeController extends BaseController {
 
     @Autowired
     private SpecialistTypeService specialistTypeService;
+    @Autowired
+    private UserDetailService userDetailService;
 
     /**
      * 添加专家类型信息接口
@@ -83,6 +88,7 @@ public class SpecialistTypeController extends BaseController {
      * @param specialistType
      * @return
      */
+    @Transactional
     @PostMapping(value = "update")
     public Object updateSpecialistType(@Validated(Update.class) SpecialistType specialistType, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -91,6 +97,12 @@ public class SpecialistTypeController extends BaseController {
         int i = specialistTypeService.updateByPrimaryKeySelective(specialistType);
 
         if (i > 0) {
+            UserDetail userDetail = new UserDetail();
+            userDetail.setConsultationPicturePrice(specialistType.getConsultationPicturePrice().toString());
+            userDetail.setConsultationVideoPrice(specialistType.getConsultationVideoPrice().toString());
+            userDetail.setHospitalId(specialistType.getHospitalId());
+            userDetail.setSpecialistTypeId(specialistType.getId());
+            userDetailService.updateUserPrice(userDetail);
             return succeedRequestOfUpdate(specialistType);
         }
         return badRequestOfUpdate(specialistType);

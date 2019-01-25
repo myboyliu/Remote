@@ -69,4 +69,8 @@ public class UserDetailService implements BaseService<UserDetail> {
     public CurrentUserBean selectCurrentUser(String userId) {
         return userDetailMapper.selectCurrentUser(userId);
     }
+
+    public int updateUserPrice(UserDetail userDetail) {
+       return userDetailMapper.updateUserPrice(userDetail);
+    }
 }
