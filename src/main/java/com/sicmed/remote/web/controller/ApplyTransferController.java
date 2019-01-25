@@ -42,7 +42,7 @@ public class ApplyTransferController extends BaseController {
     /**
      * 医生 转诊 查询
      */
-    public Map inquirySelect(List<String> consultationStatusList, String msg) {
+    public Map inquirySelect(List<String> consultationStatusList) {
 
         String userId = getRequestToken();
         if (StringUtils.isBlank(userId)) {
@@ -57,15 +57,12 @@ public class ApplyTransferController extends BaseController {
         applyFormBean.setBeginNo(getPageEntity().getBeginNo());
         applyFormBean.setPageSize(getPageEntity().getPageSize());
         List<ApplyForm> applyFormList = applyFormService.selectApplyInquiry(applyFormBean);
-        if (applyFormList != null && applyFormList.size() == 0) {
-            return succeedRequest(applyFormList);
-        }
 
         return succeedRequest(applyFormList);
     }
 
     /**
-     * 医生 转诊 待收诊 发出方两种状态,接收方无INQUIRY_SLAVE_ACCEDE
+     * 医生 转诊 待收诊
      */
     @GetMapping(value = "inquiryApplyAccede")
     public Map inquiryApplyAccede() {
@@ -85,9 +82,7 @@ public class ApplyTransferController extends BaseController {
         applyFormBean.setBeginNo(getPageEntity().getBeginNo());
         applyFormBean.setPageSize(getPageEntity().getPageSize());
         List<ApplyForm> applyFormList = applyFormService.selectInquiryDai(applyFormBean);
-        if (applyFormList != null && applyFormList.size() == 0) {
-            return succeedRequest(applyFormList);
-        }
+
         return succeedRequest(applyFormList);
     }
 
@@ -103,18 +98,11 @@ public class ApplyTransferController extends BaseController {
         consultationStatusList.add(inquiryStatus1);
         consultationStatusList.add(inquiryStatus2);
 
-        String userId = getRequestToken();
         ApplyFormBean applyFormBean = new ApplyFormBean();
-        applyFormBean.setConsultationTypeList(consultationTypeListInquiry);
         applyFormBean.setConsultationStatusList(consultationStatusList);
-        applyFormBean.setApplyUserId(userId);
-        applyFormBean.setInviteUserId(userId);
-        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
-        applyFormBean.setPageSize(getPageEntity().getPageSize());
 
-        List<ApplyForm> applyFormList = applyFormService.dorSelectInquiryJuShou(applyFormBean);
 
-        return succeedRequest(applyFormList);
+        return inquirySelect(consultationStatusList);
     }
 
     /**
@@ -127,9 +115,7 @@ public class ApplyTransferController extends BaseController {
         String inquiryStatus1 = String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED);
         consultationStatusList.add(inquiryStatus1);
 
-        String msg = "无已排期";
-
-        return inquirySelect(consultationStatusList, msg);
+        return inquirySelect(consultationStatusList);
     }
 
     /**
@@ -142,9 +128,7 @@ public class ApplyTransferController extends BaseController {
         String inquiryStatus1 = String.valueOf(InquiryStatus.INQUIRY_END);
         consultationStatusList.add(inquiryStatus1);
 
-        String msg = "无已结束";
-
-        return inquirySelect(consultationStatusList, msg);
+        return inquirySelect(consultationStatusList);
     }
 
     /**
@@ -168,9 +152,7 @@ public class ApplyTransferController extends BaseController {
         applyFormBean.setBeginNo(getPageEntity().getBeginNo());
         applyFormBean.setPageSize(getPageEntity().getPageSize());
         List<ApplyForm> applyFormList = applyFormService.selectApplyInquiryDate(applyFormBean);
-        if (applyFormList != null && applyFormList.size() == 0) {
-            return succeedRequest(applyFormList);
-        }
+
         return succeedRequest(applyFormList);
     }
 
@@ -193,16 +175,14 @@ public class ApplyTransferController extends BaseController {
         applyFormBean.setBeginNo(getPageEntity().getBeginNo());
         applyFormBean.setPageSize(getPageEntity().getPageSize());
         List<ApplyForm> applyFormList = applyFormService.getByApplyFormBean(applyFormBean);
-        if (applyFormList != null && applyFormList.size() == 0) {
-            return succeedRequest(applyFormList);
-        }
+
         return succeedRequest(applyFormList);
     }
 
     /**
      * 医政 转诊 查询
      */
-    public Map sirInquirySelect(ApplyFormBean applyFormBean, List<String> consultationStatusList, String msg) {
+    public Map sirInquirySelect(ApplyFormBean applyFormBean, List<String> consultationStatusList) {
 
         if (StringUtils.isBlank(applyFormBean.getApplyHospitalId()) && StringUtils.isBlank(applyFormBean.getInviteHospitalId())) {
             return badRequestOfArguments("传入hospitalId为空");
@@ -214,9 +194,6 @@ public class ApplyTransferController extends BaseController {
         applyFormBean.setPageSize(getPageEntity().getPageSize());
 
         List<ApplyForm> applyFormList = applyFormService.sirSelectInquiry(applyFormBean);
-        if (applyFormList != null && applyFormList.size() == 0) {
-            return badRequestOfArguments(applyFormList);
-        }
 
         return succeedRequest(applyFormList);
     }
@@ -238,9 +215,7 @@ public class ApplyTransferController extends BaseController {
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setApplyHospitalId(hospitalId);
 
-        String msg = "无待审核";
-
-        return sirInquirySelect(applyFormBean, consultationStatusList, msg);
+        return sirInquirySelect(applyFormBean, consultationStatusList);
     }
 
     /**
@@ -255,20 +230,13 @@ public class ApplyTransferController extends BaseController {
 
         List<String> consultationStatusList = new ArrayList<>();
         String inquiryStatus = String.valueOf(InquiryStatus.INQUIRY_APPLY_ACCEDE);
-        String inquiryStatus1 = String.valueOf(InquiryStatus.INQUIRY_SLAVE_REJECT);
         consultationStatusList.add(inquiryStatus);
-        consultationStatusList.add(inquiryStatus1);
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setApplyHospitalId(hospitalId);
         applyFormBean.setInviteHospitalId(hospitalId);
-        applyFormBean.setConsultationStatusList(consultationStatusList);
-        applyFormBean.setConsultationTypeList(consultationTypeListInquiry);
-        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
-        applyFormBean.setPageSize(getPageEntity().getPageSize());
 
-        List<ApplyForm> applyFormList = applyFormService.sirSelectInquiryDai(applyFormBean);
-        return succeedRequest(applyFormList);
+        return sirInquirySelect(applyFormBean, consultationStatusList);
     }
 
     /**
@@ -290,9 +258,7 @@ public class ApplyTransferController extends BaseController {
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setInviteHospitalId(hospitalId);
 
-        String msg = "无排期审核";
-
-        return sirInquirySelect(applyFormBean, consultationStatusList, msg);
+        return sirInquirySelect(applyFormBean, consultationStatusList);
     }
 
     /**
@@ -312,9 +278,7 @@ public class ApplyTransferController extends BaseController {
         applyFormBean.setApplyHospitalId(hospitalId);
         applyFormBean.setInviteHospitalId(hospitalId);
 
-        String msg = "无已排期";
-
-        return sirInquirySelect(applyFormBean, consultationStatusList, msg);
+        return sirInquirySelect(applyFormBean, consultationStatusList);
     }
 
     /**
@@ -335,14 +299,8 @@ public class ApplyTransferController extends BaseController {
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setApplyHospitalId(hospitalId);
         applyFormBean.setInviteHospitalId(hospitalId);
-        applyFormBean.setConsultationTypeList(consultationTypeListInquiry);
-        applyFormBean.setConsultationStatusList(consultationStatusList);
-        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
-        applyFormBean.setPageSize(getPageEntity().getPageSize());
 
-        List<ApplyForm> applyFormList = applyFormService.sirSelectInquiryJuShou(applyFormBean);
-
-        return succeedRequest(applyFormList);
+        return sirInquirySelect(applyFormBean, consultationStatusList);
     }
 
     /**
@@ -363,9 +321,7 @@ public class ApplyTransferController extends BaseController {
         applyFormBean.setApplyHospitalId(hospitalId);
         applyFormBean.setInviteHospitalId(hospitalId);
 
-        String msg = "无已结束";
-
-        return sirInquirySelect(applyFormBean, consultationStatusList, msg);
+        return sirInquirySelect(applyFormBean, consultationStatusList);
     }
 
     /**

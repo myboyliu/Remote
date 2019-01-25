@@ -84,14 +84,12 @@
                 </foreach>
             </if>
             AND ((apply_user_id = #{applyUserId,jdbcType=VARCHAR} and apply_status = 'INQUIRY_MASTER_REJECT')
-            or (invite_user_id = #{inviteUserId,jdbcType=VARCHAR} and
-            <if test="consultationStatusList != null">
-                AND apply_status IN
-                <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
-                    #{item,jdbcType=VARCHAR}
-                </foreach>
-            </if>
-            ))
+            or (invite_user_id = #{inviteUserId,jdbcType=VARCHAR} and apply_status IN
+            <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+            )
+            )
         </where>
         order by apply_urgent desc ,update_time desc
         limit #{beginNo},#{pageSize}
