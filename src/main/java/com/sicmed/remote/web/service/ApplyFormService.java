@@ -94,6 +94,7 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setConsultationTypeList(consultantTypeList);
         applyFormBean.setApplyHospitalId(hospitalId);
+        applyFormBean.setInviteHospitalId(hospitalId);
 
         return applyFormMapper.inquiryCreateSuccessAllCountSir(applyFormBean);
     }

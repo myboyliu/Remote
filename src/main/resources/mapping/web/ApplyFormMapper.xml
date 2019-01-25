@@ -825,12 +825,13 @@
         cacs,
         count(apply_status="INQUIRY_APPLY_ACCEDE" or NULL) caa,
         count(apply_status="INQUIRY_APPLY_REJECT" or NULL) car,
-        count(apply_status="INQUIRY_SLAVE_ACCEDE" and invite_hospital_id = #{applyHospitalId} or NULL) csa,
+        count(apply_status="INQUIRY_SLAVE_ACCEDE" and  apply_hospital_id !=#{applyHospitalId} or NULL) csa,
         count(apply_status="INQUIRY_SLAVE_REJECT" or NULL) csr,
         count(apply_status="INQUIRY_MASTER_ACCEDE" or NULL) cma,
         count(apply_status="INQUIRY_MASTER_REJECT" or NULL) cmr,
         count(apply_status="INQUIRY_DATETIME_LOCKED" or NULL) cdrl,
-        count(apply_status="INQUIRY_END" or NULL) crs
+        count(apply_status="INQUIRY_END" or NULL) crs,
+        count(apply_status="INQUIRY_SLAVE_ACCEDE" and invite_hospital_id != #{inviteHospitalId} or NULL) csatwo
         from apply_form
         <where>
             del_flag = "0"
@@ -842,7 +843,7 @@
             </if>
             <if test="applyUserId != null">
                 AND (apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR} or invite_hospital_id =
-                #{applyHospitalId,jdbcType=VARCHAR})
+                #{inviteHospitalId,jdbcType=VARCHAR})
             </if>
         </where>
     </select>

@@ -229,14 +229,22 @@ public class ApplyTransferController extends BaseController {
         String hospitalId = userDetail.getHospitalId();
 
         List<String> consultationStatusList = new ArrayList<>();
-        String inquiryStatus = String.valueOf(InquiryStatus.INQUIRY_APPLY_ACCEDE);
-        consultationStatusList.add(inquiryStatus);
+        String inquiryStatus1 = String.valueOf(InquiryStatus.INQUIRY_APPLY_ACCEDE);
+        String inquiryStatus2 = String.valueOf(InquiryStatus.INQUIRY_SLAVE_ACCEDE);
+        consultationStatusList.add(inquiryStatus1);
+        consultationStatusList.add(inquiryStatus2);
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setApplyHospitalId(hospitalId);
         applyFormBean.setInviteHospitalId(hospitalId);
+        applyFormBean.setConsultationStatusList(consultationStatusList);
+        applyFormBean.setConsultationTypeList(consultationTypeListInquiry);
+        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
+        applyFormBean.setPageSize(getPageEntity().getPageSize());
 
-        return sirInquirySelect(applyFormBean, consultationStatusList);
+        List<ApplyForm> applyFormList = applyFormService.sirSelectInquiryDai(applyFormBean);
+
+        return succeedRequest(applyFormList);
     }
 
     /**
