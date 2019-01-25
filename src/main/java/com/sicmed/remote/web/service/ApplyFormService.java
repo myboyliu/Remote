@@ -208,6 +208,11 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         return applyFormMapper.getByApplyFormBean(applyFormBean);
     }
 
+    // 医生 转诊  待审核
+    public List<ApplyForm> inquiryDaiShou(ApplyFormBean applyFormBean) {
+        return applyFormMapper.inquiryDaiShou(applyFormBean);
+    }
+
     //  医政会诊查询
     public List<ApplyForm> sirGetByApplyFormBean(ApplyFormBean applyFormBean) {
         return applyFormMapper.sirGetByApplyFormBean(applyFormBean);

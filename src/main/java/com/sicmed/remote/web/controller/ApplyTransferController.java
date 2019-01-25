@@ -174,7 +174,7 @@ public class ApplyTransferController extends BaseController {
         applyFormBean.setConsultationStatusList(consultationStatusList);
         applyFormBean.setBeginNo(getPageEntity().getBeginNo());
         applyFormBean.setPageSize(getPageEntity().getPageSize());
-        List<ApplyForm> applyFormList = applyFormService.getByApplyFormBean(applyFormBean);
+        List<ApplyForm> applyFormList = applyFormService.inquiryDaiShou(applyFormBean);
 
         return succeedRequest(applyFormList);
     }
