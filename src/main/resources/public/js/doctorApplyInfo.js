@@ -15,6 +15,7 @@ let applyStatus;
 let applyTimeList = [];
 let caseContentList = [];
 let userInfo = {};
+let hasDoctorEnjoin = false;
 const _$ = layui.jquery;
 
 const statusArr = ["已拒收", '待收诊', '已排期', '会诊中', '待反馈', '已完成'];
@@ -158,6 +159,116 @@ function renderCaseContentView(data) {
     renderLeftNavigation(data);
 }
 
+/** 渲染 医嘱 */
+function renderDoctorEnjoin(doctorEnjoinJsonStr) {
+
+    let doctorEnjoinJson = JSON.parse(doctorEnjoinJsonStr)
+    console.log(hasDoctorEnjoin)
+    console.log(doctorEnjoinJson)
+    if(doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0){
+        let _html = '<div class="chunkContent"><h2><span>01</span><p class="chunkType">长期医嘱</p><a class="printBtn no-print" href="">下载</a></h2>\
+            <div class="oneList">'
+        for(let i = 0;i < doctorEnjoinJson.longTimeArr.length;i++){
+            let twoLevel = doctorEnjoinJson.longTimeArr[i].drugArr;
+            _html += '<div class="oneListItem">\
+                    <p class="headTop">'+((i+1)<10?"0"+(i+1):(i+1))+'-药物&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;执行时间：'+doctorEnjoinJson.longTimeArr[i].startTime+'&nbsp;&nbsp;&nbsp;&nbsp;结束时间：'+doctorEnjoinJson.longTimeArr[i].endTime+'</p>\
+                    <div class="twoList">'
+            for(let j = 0;j < twoLevel.length;j++){
+                if(j == 0){
+                    _html += '<p class="twoListItem"><b>'+twoLevel[j].name+'</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单次'+twoLevel[j].singleNum+twoLevel[j].unit+'；'+twoLevel[j].frequency+'；'+twoLevel[j].means+'</p>'
+                } else {
+                    _html += '<p class="twoListItem"><b>'+twoLevel[j].name+'</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单次'+twoLevel[j].singleNum+twoLevel[j].unit+'；</p>'
+                }
+            }
+            _html += '</div>\
+                </div>\
+                <p class="boundary"></p>';
+        }
+        _html += '<p class="remarkBox">备注：'+doctorEnjoinJson.longTimeArea+'</p></div></div>';
+        $(".doctorEnjoinBody").append(_html);
+    }
+    if(doctorEnjoinJson.temporaryDrugArr || doctorEnjoinJson.temporaryTreatArr){
+        let _html;
+        if(doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0){
+            _html = '<div class="chunkContent"><h2><span>02</span><p class="chunkType">临时医嘱</p><a class="printBtn no-print" href="">下载</a></h2><div class="oneList">'
+        } else {
+            _html = '<div class="chunkContent"><h2><span>01</span><p class="chunkType">临时医嘱</p><a class="printBtn no-print" href="">下载</a></h2><div class="oneList">'
+        }
+        if(doctorEnjoinJson.temporaryDrugArr && doctorEnjoinJson.temporaryDrugArr.length > 0){
+            for(let i = 0;i < doctorEnjoinJson.temporaryDrugArr.length;i++){
+                let twoLevel = doctorEnjoinJson.temporaryDrugArr[i].drugArr;
+                _html += '<div class="oneListItem">\
+                    <p class="headTop">'+((i+1)<10?"0"+(i+1):(i+1))+'-药物&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;下达时间：'+doctorEnjoinJson.temporaryDrugArr[i].arriveTime+'</p>\
+                    <div class="twoList">'
+                for(let j = 0;j < twoLevel.length;j++){
+                    if(j == 0){
+                        _html += '<p class="twoListItem"><b>'+twoLevel[j].name+'</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单次'+twoLevel[j].singleNum+twoLevel[j].unit+'；'+twoLevel[j].means+'</p>'
+                    } else {
+                        _html += '<p class="twoListItem"><b>'+twoLevel[j].name+'</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单次'+twoLevel[j].singleNum+twoLevel[j].unit+'；</p>'
+                    }
+                }
+                _html += '</div>\
+                </div>\
+                <p class="boundary"></p>';
+            }
+        }
+        if(doctorEnjoinJson.temporaryTreatArr && doctorEnjoinJson.temporaryTreatArr.length > 0){
+            let tempNum;
+            if(doctorEnjoinJson.temporaryDrugArr){
+                tempNum = doctorEnjoinJson.temporaryDrugArr.length;
+            } else {
+                tempNum = 0;
+            }
+            for(let i = 0;i < doctorEnjoinJson.temporaryTreatArr.length;i++){
+                _html += '<div class="oneListItem">\
+                <p class="headTop">'+((tempNum+i+1)>10?(tempNum+i+1):'0'+(tempNum+i+1))+'-诊疗&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;下达时间：'+doctorEnjoinJson.temporaryTreatArr[i].arriveTime+'</p>\
+                <div class="twoList">\
+                    <p class="twoListItem"><b>'+doctorEnjoinJson.temporaryTreatArr[i].name+'</b></p>\
+                </div>\
+            </div><p class="boundary"></p>'
+            }
+        }
+        _html += '<p class="remarkBox">备注：'+doctorEnjoinJson.temporaryArea+'</p></div></div>';
+        $(".doctorEnjoinBody").append(_html);
+    }
+    if(doctorEnjoinJson.surgeryArr && doctorEnjoinJson.surgeryArr.length > 0){
+        let _html;
+        if(doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 || doctorEnjoinJson.temporaryDrugArr &&doctorEnjoinJson.temporaryDrugArr.length > 0){
+            _html = '<div class="chunkContent">\
+            <h2><span>02</span><p class="chunkType">手术备品</p><a class="printBtn" href="'+IP+"download/specificationsOrder?orderId="+localStorage.getItem("orderId")+'">下载</a></h2>'
+        }
+        if(doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 || doctorEnjoinJson.temporaryTreatArr &&doctorEnjoinJson.temporaryTreatArr.length > 0){
+            _html = '<div class="chunkContent">\
+                <h2><span>02</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="'+IP+"download/specificationsOrder?orderId="+localStorage.getItem("orderId")+'">下载</a></h2>'
+        }
+        if(doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 && doctorEnjoinJson.temporaryDrugArr &&doctorEnjoinJson.temporaryDrugArr.length > 0){
+            _html = '<div class="chunkContent">\
+            <h2><span>03</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="'+IP+"download/specificationsOrder?orderId="+localStorage.getItem("orderId")+'">下载</a></h2>'
+        }
+        if(doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 && doctorEnjoinJson.temporaryTreatArr &&doctorEnjoinJson.temporaryTreatArr.length > 0){
+            _html = '<div class="chunkContent">\
+                <h2><span>03</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="'+IP+"download/specificationsOrder?orderId="+localStorage.getItem("orderId")+'">下载</a></h2>'
+        }
+        if(!doctorEnjoinJson.longTimeArr && !doctorEnjoinJson.temporaryTreatArr && !doctorEnjoinJson.temporaryDrugArr){
+            _html = '<div class="chunkContent">\
+                <h2><span>01</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="'+IP+"download/specificationsOrder?orderId="+localStorage.getItem("orderId")+'">下载</a></h2>'
+        }
+        _html += '<div class="oneList">\
+                    <div class="oneListItem">\
+                        <div class="twoList">'
+        for(let i = 0;i < doctorEnjoinJson.surgeryArr.length;i++){
+            _html += '<p class="twoListItem"><b>'+((i+1)>10?(i+1):'0'+(i+1))+"&nbsp;&nbsp;&nbsp;&nbsp;"+doctorEnjoinJson.surgeryArr[i].surgeryName+'&nbsp;&nbsp;&nbsp;&nbsp;'+doctorEnjoinJson.surgeryArr[i].surgerySize+"&nbsp;&nbsp;&nbsp;&nbsp;"+doctorEnjoinJson.surgeryArr[i].surgeryNum+'</b></p>';
+        }
+        _html += '</div>\
+                    </div>\
+                    <p class="boundary"></p>\
+                    <p class="remarkBox">备注：'+doctorEnjoinJson.surgeryArea+'</p>\
+                </div>\
+            </div>';
+        $(".doctorEnjoinBody").append(_html);
+    }
+}
+
 /** 查询申请详情 */
 function getApplyInfo() {
     applyFormId = sessionStorage.getItem('applyFormId');
@@ -219,6 +330,10 @@ function renderViewByRole() {
             $(".progressBar li:nth-child(4)").addClass("libg");
             $("#applyRecord").show();
             $("#applyRecordContext").show();
+            if (hasDoctorEnjoin) {
+                $("#doctorEnjoinTitle").show();
+                $("#doctorEnjoinBody").show();
+            }
             applyRecordNavigationShow = true;
         } else if (applyStatus === "CONSULTATION_END") {
             //已完成
@@ -230,6 +345,10 @@ function renderViewByRole() {
             $("#applyRecordContext").show();
             $("#consultantFeedback").show();
             $("#consultantFeedbackContext").show();
+            if (hasDoctorEnjoin) {
+                $("#doctorEnjoinTitle").show();
+                $("#doctorEnjoinBody").show();
+            }
             applyRecordNavigationShow = true;
             consultantFeedbackNavigationShow = true;
         } else if (applyStatus === "CONSULTATION_MASTER_REJECT" || applyInfo.applyStatus === "CONSULTATION_SLAVE_REJECT") {
@@ -258,6 +377,9 @@ function renderViewByRole() {
             //会诊中
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
+            if (isVideo) {
+                $(".entrance").show();
+            }
         } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
             //待反馈
             $(".progressBar li:nth-child(2)").addClass("libg");
@@ -266,6 +388,10 @@ function renderViewByRole() {
             $(".editClinicalFeedback").show();
             $("#applyRecord").show();
             $("#applyRecordContext").show();
+            if (hasDoctorEnjoin) {
+                $("#doctorEnjoinTitle").show();
+                $("#doctorEnjoinBody").show();
+            }
             applyRecordNavigationShow = true;
         } else if (applyStatus === "CONSULTATION_END") {
             //已完成
@@ -277,6 +403,10 @@ function renderViewByRole() {
             $("#applyRecordContext").show();
             $("#consultantFeedback").show();
             $("#consultantFeedbackContext").show();
+            if (hasDoctorEnjoin) {
+                $("#doctorEnjoinTitle").show();
+                $("#doctorEnjoinBody").show();
+            }
             applyRecordNavigationShow = true;
             consultantFeedbackNavigationShow = true;
         } else {
@@ -405,6 +535,10 @@ $(function () {
     let goalHtml = '';
     for (let item of consultantReport) {
         goalHtml += '<pre class="report">' + item.doctorName + ':<br />' + item.report + '</pre>'
+        if (item.doctorEnjoin) {
+            hasDoctorEnjoin = true;
+            renderDoctorEnjoin(item.doctorEnjoin);
+        }
     }
     $('.goalObj').html(goalHtml);
     /**临床反馈*/

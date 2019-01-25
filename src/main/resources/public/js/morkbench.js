@@ -54,7 +54,7 @@ function renderApplyInquiryListView(data) {
         const _day = timeStr.split('-')[2];
         if (0 == 0) {
             // 未读
-            _html += '<tr class="unread" applyFlag="' + data[i].applyUrgent + '" type="2" name="' + data[i].id + '">';
+            _html += '<tr class="read" applyFlag="' + data[i].applyUrgent + '" type="2" name="' + data[i].id + '">';
         } else {
             // 已读
             _html += '<tr class="read" applyFlag="' + data[i].applyUrgent + '" type="2" name="' + data[i].id + '">';

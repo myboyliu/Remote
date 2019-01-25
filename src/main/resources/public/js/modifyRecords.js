@@ -11,8 +11,8 @@ let uploadFile = [];
 let fileIndex;
 let objParent = null; // 当前点击块的父级
 let caseId;
-let casePatientId ;
-
+let casePatientId;
+let _$ = layui.jquery;
 /** 渲染 病历页面 左侧导航 */
 function renderCaseTypeLeftNavigation(data) {
     let _html = '<li class="oneLevelItem patientInfo active">\
@@ -160,7 +160,6 @@ function addCaseFile() {
     }
 }
 
-
 /** 提交病历信息*/
 function buildCaseData() {
     let data = new FormData();
@@ -205,6 +204,7 @@ function buildCaseData() {
     /** 修改病历信息 */
     console.log(JSON.stringify(caseContentArray));
     ajaxRequest("POST", sirUpdateCase, data, false, false, true, updateCaseSuccess, failedParam, null);
+
     /** 修改申请信息 */
     function failedParam(data) {
         layer.closeAll();
@@ -215,6 +215,76 @@ function buildCaseData() {
         window.location = '../page/adminApplyInfo.html';
     }
 
+}
+
+/** 校验病历是否正确 */
+function checkCase() {
+    let isFailedParam = false;
+    if (!RegExpObj.Reg_Name.test($('#username').val())) {
+        $("#failedParamMessage").html("患者姓名错误!");
+        isFailedParam = true;
+        showFailedParamMessage()
+        return true;
+    } else if (!RegExpObj.Reg_IDCardNo.test($('#idCard').val())) {
+        $("#failedParamMessage").html("身份证号格式错误!");
+        isFailedParam = true;
+        showFailedParamMessage()
+        return true;
+    } else if (!RegExpObj.Reg_age.test($('#age').val())) {
+        $("#failedParamMessage").html("年龄错误!");
+        isFailedParam = true;
+        showFailedParamMessage()
+        return true;
+    } else if (!RegExpObj.Reg_hight.test($('#high').val())) {
+        $("#failedParamMessage").html("身高错误!");
+        isFailedParam = true;
+        showFailedParamMessage()
+        return true;
+    } else if (!RegExpObj.Reg_weight.test($('#weight').val())) {
+        $("#failedParamMessage").html("体重错误!");
+        isFailedParam = true;
+        showFailedParamMessage()
+        return true;
+    } else if (!RegExpObj.Reg_mobilePhone.test($('#phone').val())) {
+        $("#failedParamMessage").html("电话号码错误!");
+        isFailedParam = true;
+        showFailedParamMessage()
+        return true;
+    } else if (!RegExpObj.Reg_address.test($('#address').val())) {
+        $("#failedParamMessage").html("常住城市错误!");
+        isFailedParam = true;
+        showFailedParamMessage()
+        return true;
+    } else if ($('#createCase_textDiagnose').val() === '') {
+        $("#failedParamMessage").html("初步诊断不能为空!");
+        isFailedParam = true;
+        showFailedParamMessage()
+        return true;
+    } else if ($('#createCase_textGola').val() === '') {
+        $("#failedParamMessage").html("会/转诊目的不能为空!");
+        isFailedParam = true;
+        showFailedParamMessage()
+        return true;
+    } else if (fileAllArr.length === 0) {
+        $("#failedParamMessage").html("电子病历附件不能为空!");
+        isFailedParam = true;
+        showFailedParamMessage()
+        return true;
+    }
+    return isFailedParam;
+}
+
+function showFailedParamMessage(){
+    layer.open({
+        type: 1,
+        title: '',
+        area: ['300px', '80px'],
+        closeBtn: false,
+        shade: [0.1, '#000000'],
+        shadeClose: false,
+        time: 2000,
+        content: _$('#failedParamMessageBox'),
+    });
 }
 
 $(function () {
@@ -261,7 +331,7 @@ $(function () {
             let fileType = tempArr[i].contentPath.substr(tempArr[i].contentPath.lastIndexOf('.') + 1, tempArr[i].contentPath.length);
             let fileName = tempArr[i].contentPath;
             fileAllArr.push({
-                name:fileName,
+                name: fileName,
             });
             if (fileType == 'png' || fileType == 'jpg') {
                 if (tempArr[i].contentRemark == "") {
@@ -346,6 +416,7 @@ $(function () {
             fileAllArr.splice(fileAllArr.splice(fileAllArr.indexOf(fileName), 1));
             $('.fileCount').html(Number($('.fileCount').html()) - 1);
         }
+
         $(this).parent('.fileItem').remove();
         return false;
     });
@@ -360,49 +431,54 @@ $(function () {
     })
     /* 保存修改按钮 */
     $('.save').click(function () {
-        /* 判断信息是否填写完整 */
-        if ($('#username').val() == '' || $('#idCard').val() == '' || $('#phone').val() == '' || $('#address').val() == '' || $('#age').val() + $('.choiceAge').val() == '' || $('#high').val() == '' || $('#weight').val() == '' || $('.sex > a.active').html() == '' || $('#createCase_textDiagnose').val() == '' || $('#createCase_textGola').val() == '') {
-            var _$ = layui.jquery;
-            layer.open({
-                type: 1,
-                title: '',
-                area: ['300px', '80px'],
-                closeBtn: false,
-                shade: [0.1, '#000000'],
-                shadeClose: false,
-                time: 2000,
-                content: _$('.incomplete'),
-            });
-            setTimeout(function () {
-                $('.incomplete').hide();
-
-            }, 2000);
-        } else if (!RegExpObj.Reg_Name.test($('#username').val()) || !RegExpObj.Reg_IDCardNo.test($('#idCard').val()) || !RegExpObj.Reg_age.test($('#age').val()) || !RegExpObj.Reg_hight.test($('#high').val()) || !RegExpObj.Reg_hight.test($('#weight').val()) || !RegExpObj.Reg_mobilePhone.test($('#phone').val()) || !RegExpObj.Reg_address.test($('#address').val()) || $('#createCase_textDiagnose').val() == '' || $('#createCase_textGola').val() == '') {
-            var _$ = layui.jquery;
-            layer.open({
-                type: 1,
-                title: '',
-                area: ['300px', '80px'],
-                closeBtn: false,
-                shade: [0.1, '#000000'],
-                shadeClose: false,
-                time: 2000,
-                content: _$('.modifier'),
-            });
-            setTimeout(function () {
-                $('.modifier').hide();
-
-            }, 2000);
-
-        } else {
-            // 提交病历信息
-            buildCaseData()
+        let isFailed = checkCase();
+        if (isFailed) {
+            return false;
         }
+        buildCaseData();
+        return false;
+        /* 判断信息是否填写完整 */
+        // if ($('#username').val() == '' || $('#idCard').val() == '' || $('#phone').val() == '' || $('#address').val() == '' || $('#age').val() + $('.choiceAge').val() == '' || $('#high').val() == '' || $('#weight').val() == '' || $('.sex > a.active').html() == '' || $('#createCase_textDiagnose').val() == '' || $('#createCase_textGola').val() == '') {
+        //     var _$ = layui.jquery;
+        //     layer.open({
+        //         type: 1,
+        //         title: '',
+        //         area: ['300px', '80px'],
+        //         closeBtn: false,
+        //         shade: [0.1, '#000000'],
+        //         shadeClose: false,
+        //         time: 2000,
+        //         content: _$('.incomplete'),
+        //     });
+        //     setTimeout(function () {
+        //         $('.incomplete').hide();
+        //
+        //     }, 2000);
+        // } else if (!RegExpObj.Reg_Name.test($('#username').val()) || !RegExpObj.Reg_IDCardNo.test($('#idCard').val()) || !RegExpObj.Reg_age.test($('#age').val()) || !RegExpObj.Reg_hight.test($('#high').val()) || !RegExpObj.Reg_hight.test($('#weight').val()) || !RegExpObj.Reg_mobilePhone.test($('#phone').val()) || !RegExpObj.Reg_address.test($('#address').val()) || $('#createCase_textDiagnose').val() == '' || $('#createCase_textGola').val() == '') {
+        //     var _$ = layui.jquery;
+        //     layer.open({
+        //         type: 1,
+        //         title: '',
+        //         area: ['300px', '80px'],
+        //         closeBtn: false,
+        //         shade: [0.1, '#000000'],
+        //         shadeClose: false,
+        //         time: 2000,
+        //         content: _$('.modifier'),
+        //     });
+        //     setTimeout(function () {
+        //         $('.modifier').hide();
+        //
+        //     }, 2000);
+        //
+        // } else {
+        //     // 提交病历信息
+        //     buildCaseData()
+        // }
     })
 
     // 图片点击查看大图
     $('.upfileUl').delegate('.fileItem', 'click', function () {
-        let $ = layui.jquery;
         // 弹出层
         layer.open({
             type: 1,
@@ -412,7 +488,7 @@ $(function () {
             shade: [0.7, '#000000'],
             shadeClose: false,
             scrollbar: false,
-            content: $('.bigImgContainer'),
+            content: _$('.bigImgContainer'),
         });
         // 整理一组图片展示数据
         objParent = $(this).parent('.fileContent');
@@ -644,127 +720,127 @@ $(function () {
         return false;
     });
 
-    // 验证中文名字
-    $('#username').blur(function () {
-        if ($('#username').val().length === 0) {
-            layer.msg('姓名不能为空');
-        } else if (!RegExpObj.Reg_Name.test($('#username').val())) {
-            layer.msg('输入内容格式有误,请修改')
-
-        }
-    });
-    //  校验身份证号
-    $('#idCard').blur(function () {
-        // 账号的验证 手机号验证
-        if ($('#idCard').val().length === 0) {
-            layer.msg('身份证号不能为空');
-        } else if (!RegExpObj.Reg_IDCardNo.test($('#idCard').val())) {
-            layer.msg('输入内容格式有误，请修改');
-        } else {
-            discriCard($(this).val())
-        }
-    });
-    //  校验年龄 身高 体重
-    $('#age').blur(function () {
-        if (!RegExpObj.Reg_age.test($('#age').val())) {
-            layer.msg('输入内容格式有误，请修改')
-        } else if ($('#age').val().length == 0) {
-            layer.msg('年龄不能为空');
-        }
-    });
-    $('#high').blur(function () {
-        if (!RegExpObj.Reg_hight.test($('#high').val())) {
-            layer.msg('输入内容格式有误，请修改')
-
-        } else if ($('#high').val().length == 0) {
-            layer.msg('身高不能为空');
-        }
-    });
-    $('#weight').blur(function () {
-        if (!RegExpObj.Reg_hight.test($('#weight').val())) {
-
-            layer.msg('输入内容格式有误，请修改')
-        } else if ($('#weight').val().length == 0) {
-            layer.msg('体重不能为空');
-        }
-    });
-    //    验证电话号码
-    $('#phone').blur(function () {
-        if (!RegExpObj.Reg_isPhone.test($('#phone').val())) {
-            layer.msg('输入内容格式有误，请修改')
-        }
-    });
-    //    验证常住城市
-    $('#address').blur(function () {
-        if ($('#address').val().length == 0) {
-            layer.msg('城市不能为空');
-        } else if (!RegExpObj.Reg_address.test($('#address').val())) {
-            layer.msg('输入内容格式有误，请修改')
-        }
-    });
-    // 验证初步诊断不能为空
-    $('#createCase_textDiagnose').blur(function () {
-        if ($('#createCase_textDiagnose').val().length == 0) {
-            layer.msg('初步诊断不能为空');
-        }
-    });
-    // 验证会、转诊目的不能为空
-    $('#createCase_textGola').blur(function () {
-        if ($('#createCase_textGola').val().length == 0) {
-            layer.msg('会/转诊目的不能为空');
-        }
-    });
+    // // 验证中文名字
+    // $('#username').blur(function () {
+    //     if ($('#username').val().length === 0) {
+    //         layer.msg('姓名不能为空');
+    //     } else if (!RegExpObj.Reg_Name.test($('#username').val())) {
+    //         layer.msg('输入内容格式有误,请修改')
+    //
+    //     }
+    // });
+    // //  校验身份证号
+    // $('#idCard').blur(function () {
+    //     // 账号的验证 手机号验证
+    //     if ($('#idCard').val().length === 0) {
+    //         layer.msg('身份证号不能为空');
+    //     } else if (!RegExpObj.Reg_IDCardNo.test($('#idCard').val())) {
+    //         layer.msg('输入内容格式有误，请修改');
+    //     } else {
+    //         discriCard($(this).val())
+    //     }
+    // });
+    // //  校验年龄 身高 体重
+    // $('#age').blur(function () {
+    //     if (!RegExpObj.Reg_age.test($('#age').val())) {
+    //         layer.msg('输入内容格式有误，请修改')
+    //     } else if ($('#age').val().length == 0) {
+    //         layer.msg('年龄不能为空');
+    //     }
+    // });
+    // $('#high').blur(function () {
+    //     if (!RegExpObj.Reg_hight.test($('#high').val())) {
+    //         layer.msg('输入内容格式有误，请修改')
+    //
+    //     } else if ($('#high').val().length == 0) {
+    //         layer.msg('身高不能为空');
+    //     }
+    // });
+    // $('#weight').blur(function () {
+    //     if (!RegExpObj.Reg_hight.test($('#weight').val())) {
+    //
+    //         layer.msg('输入内容格式有误，请修改')
+    //     } else if ($('#weight').val().length == 0) {
+    //         layer.msg('体重不能为空');
+    //     }
+    // });
+    // //    验证电话号码
+    // $('#phone').blur(function () {
+    //     if (!RegExpObj.Reg_isPhone.test($('#phone').val())) {
+    //         layer.msg('输入内容格式有误，请修改')
+    //     }
+    // });
+    // //    验证常住城市
+    // $('#address').blur(function () {
+    //     if ($('#address').val().length == 0) {
+    //         layer.msg('城市不能为空');
+    //     } else if (!RegExpObj.Reg_address.test($('#address').val())) {
+    //         layer.msg('输入内容格式有误，请修改')
+    //     }
+    // });
+    // // 验证初步诊断不能为空
+    // $('#createCase_textDiagnose').blur(function () {
+    //     if ($('#createCase_textDiagnose').val().length == 0) {
+    //         layer.msg('初步诊断不能为空');
+    //     }
+    // });
+    // // 验证会、转诊目的不能为空
+    // $('#createCase_textGola').blur(function () {
+    //     if ($('#createCase_textGola').val().length == 0) {
+    //         layer.msg('会/转诊目的不能为空');
+    //     }
+    // });
 
     // 输入身份证号自动计算年龄 性别 idCard
-    function discriCard(UUserCard) {
-        console.log(UUserCard)
-        let unit = '岁'; // 单位
-        let num = 0; // 值
-        if (UUserCard.length == 18) {
-            //获取出生日期
-            let userYear = UUserCard.substring(6, 10);
-            let userMonth = UUserCard.substring(10, 12);
-            let userDay = UUserCard.substring(12, 14);
-            //获取性别
-            if (parseInt(UUserCard.substr(16, 1)) % 2 == 1) {
-                $('#man').addClass('active').siblings('a').removeClass('active');
-            } else {
-                $('#woman').addClass('active').siblings('a').removeClass('active');
-                //是女则执行代码 ...
-            }
-        } else {
-            let userYear = 19 + UUserCard.substring(6, 8);
-            let userMonth = UUserCard.substring(8, 10);
-            let userDay = UUserCard.substring(10, 12);
-            //获取性别
-            if (parseInt(UUserCard.substring(14, 15)) % 2 == 1) {
-                console.log($('.sex > a').html())
-                $('#man').addClass('active').siblings('a').removeClass('active');
-            } else {
-                $('#woman').addClass('active').siblings('a').removeClass('active');
-                //是女则执行代码 ...
-            }
-        }
-        // 计算年月日
-        let myDate = new Date();
-        let year = myDate.getFullYear(); // 当前年份
-        let month = myDate.getMonth() + 1; // 当前月份
-        let day = myDate.getDate(); // 当前号数
-        if (year - userYear > 0) {
-            num = year - userYear;
-            unit = '岁';
-        } else if (month - userMonth > 0) {
-            num = month - userMonth;
-            unit = '月';
-        } else if (day - userDay >= 0) {
-            num = day - userDay;
-            unit = '天';
-        } else {
-            layer.msg('输入内容格式有误，请修改');
-        }
-        $('#age').val(num);
-        $('.choiceAge').val(unit);
-    }
+    // function discriCard(UUserCard) {
+    //     console.log(UUserCard)
+    //     let unit = '岁'; // 单位
+    //     let num = 0; // 值
+    //     if (UUserCard.length == 18) {
+    //         //获取出生日期
+    //         let userYear = UUserCard.substring(6, 10);
+    //         let userMonth = UUserCard.substring(10, 12);
+    //         let userDay = UUserCard.substring(12, 14);
+    //         //获取性别
+    //         if (parseInt(UUserCard.substr(16, 1)) % 2 == 1) {
+    //             $('#man').addClass('active').siblings('a').removeClass('active');
+    //         } else {
+    //             $('#woman').addClass('active').siblings('a').removeClass('active');
+    //             //是女则执行代码 ...
+    //         }
+    //     } else {
+    //         let userYear = 19 + UUserCard.substring(6, 8);
+    //         let userMonth = UUserCard.substring(8, 10);
+    //         let userDay = UUserCard.substring(10, 12);
+    //         //获取性别
+    //         if (parseInt(UUserCard.substring(14, 15)) % 2 == 1) {
+    //             console.log($('.sex > a').html())
+    //             $('#man').addClass('active').siblings('a').removeClass('active');
+    //         } else {
+    //             $('#woman').addClass('active').siblings('a').removeClass('active');
+    //             //是女则执行代码 ...
+    //         }
+    //     }
+    //     // 计算年月日
+    //     let myDate = new Date();
+    //     let year = myDate.getFullYear(); // 当前年份
+    //     let month = myDate.getMonth() + 1; // 当前月份
+    //     let day = myDate.getDate(); // 当前号数
+    //     if (year - userYear > 0) {
+    //         num = year - userYear;
+    //         unit = '岁';
+    //     } else if (month - userMonth > 0) {
+    //         num = month - userMonth;
+    //         unit = '月';
+    //     } else if (day - userDay >= 0) {
+    //         num = day - userDay;
+    //         unit = '天';
+    //     } else {
+    //         layer.msg('输入内容格式有误，请修改');
+    //     }
+    //     $('#age').val(num);
+    //     $('.choiceAge').val(unit);
+    // }
 
     $(window).scroll(function () {
         $('.hospitalUl').css({

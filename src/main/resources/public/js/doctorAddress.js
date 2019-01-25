@@ -45,6 +45,8 @@ function renderDoctorListView(data) {
     let hospitalName = $("#hospitalBranchNavigation li.active p").attr("title");
     let branchId = $("#hospitalBranchNavigation li.active ul li.active ul li.active").attr("name");
     let branchName = $("#hospitalBranchNavigation li.active ul li.active ul li.active").attr("title");
+    let hospitalImgPrice = $("#hospitalBranchNavigation li.active").attr("imgpric");
+    let hospitalVideoPrice = $("#hospitalBranchNavigation li.active").attr("videopric");
     let _html = '';
     let currentUserId = localStorage.getItem('token');
     for (let i = 0; i < data.length; i++) {
@@ -56,8 +58,8 @@ function renderDoctorListView(data) {
                                     <div class="message">\
                                         <span class="mess_l username">' + data[i].userName + '</span>\
                                         <span class="occupation" name="' + data[i].titleName + '">' + data[i].titleName + '</span>\
-                                        <p class="p1 hospital" hospitalVideoPic="' + data[i].consultationVideoPrice
-            + '" hospitalImgPic="' + data[i].consultationPicturePrice + '" name="' + hospitalId + '">' + hospitalName + '</p>\
+                                        <p class="p1 hospital" hospitalVideoPic="' + hospitalVideoPrice
+            + '" hospitalImgPic="' +hospitalImgPrice + '" name="' + hospitalId + '">' + hospitalName + '</p>\
                                         <p class="p2">' + data[i].userStrong + '</p>\
                                         <p medicalFeesVideo="' + data[i].consultationVideoPrice + '" medicalFees="' + data[i].consultationPicturePrice + '" class="p3 pric">图文&nbsp;' + data[i].consultationPicturePrice + '元/视频&nbsp;' + data[i].consultationVideoPrice + '元</p>\
                                     </div>\
