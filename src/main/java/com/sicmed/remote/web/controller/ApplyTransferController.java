@@ -103,9 +103,18 @@ public class ApplyTransferController extends BaseController {
         consultationStatusList.add(inquiryStatus1);
         consultationStatusList.add(inquiryStatus2);
 
-        String msg = "无已拒收";
+        String userId = getRequestToken();
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setConsultationTypeList(consultationTypeListInquiry);
+        applyFormBean.setConsultationStatusList(consultationStatusList);
+        applyFormBean.setApplyUserId(userId);
+        applyFormBean.setInviteUserId(userId);
+        applyFormBean.setBeginNo(getPageEntity().getBeginNo());
+        applyFormBean.setPageSize(getPageEntity().getPageSize());
 
-        return inquirySelect(consultationStatusList, msg);
+        List<ApplyForm> applyFormList = applyFormService.dorSelectInquiryJuShou(applyFormBean);
+
+        return succeedRequest(applyFormList);
     }
 
     /**

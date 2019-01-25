@@ -39,6 +39,8 @@ public interface ApplyFormMapper {
 
     List<ApplyForm> sirSelectInquiryJuShou(ApplyFormBean applyFormBean);
 
+    List<ApplyForm> dorSelectInquiryJuShou(ApplyFormBean applyFormBean);
+
     ApplyFormBean detailById(String id);
 
     int softDel(String id);

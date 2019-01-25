@@ -69,6 +69,34 @@
         limit #{beginNo},#{pageSize}
     </select>
 
+    <!--转诊医生已拒收-->
+    <select id="dorSelectInquiryJuShou" parameterType="com.sicmed.remote.web.bean.ApplyFormBean"
+            resultMap="BaseResultMap">
+        select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
+        apply_type, apply_remark,apply_urgent, create_time,update_time
+        from apply_form
+        <where>
+            del_flag = "0"
+            <if test="consultationTypeList != null">
+                AND apply_type IN
+                <foreach collection="consultationTypeList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            AND ((apply_user_id = #{applyUserId,jdbcType=VARCHAR} and apply_status = 'INQUIRY_MASTER_REJECT')
+            or (invite_user_id = #{inviteUserId,jdbcType=VARCHAR} and
+            <if test="consultationStatusList != null">
+                AND apply_status IN
+                <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            ))
+        </where>
+        order by apply_urgent desc,update_time,create_time
+        limit #{beginNo},#{pageSize}
+    </select>
+
     <!--转诊医生待收诊-->
     <select id="selectInquiryDai" parameterType="com.sicmed.remote.web.bean.ApplyFormBean" resultMap="BaseResultMap">
         select id,case_summary, apply_summary, invite_summary,consultant_apply_time,apply_status,case_record_id,
