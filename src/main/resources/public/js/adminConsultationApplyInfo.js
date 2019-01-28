@@ -70,8 +70,8 @@ $(function () {
             content: _$("#receiveConsultationBox")
         });
     });
-    /** 会诊医政接收确认按钮*/
-    $("#receiveConsultationBoxYesBtn,#MDTConsultationBoxYesBtn,#examineConsultationBoxYesBtn").click(function () {
+    /** 会诊医政  待收诊状态 接收确认按钮*/
+    $("#receiveConsultationBoxYesBtn").click(function () {
         if (!applyInfo.inviteUserId) {
             layer.closeAll();
             $('.submitBox').hide();
@@ -97,6 +97,65 @@ $(function () {
                 }, 2000)
             }
 
+            return false;
+        }
+    });
+    /** 会诊医政  专家协调状态 接收确认按钮*/
+    $("#MDTConsultationBoxYesBtn").click(function () {
+        if (!applyInfo.inviteUserId) {
+            layer.closeAll();
+            $('.submitBox').hide();
+            $("#alertText").html("请先分配主会诊医生");
+            alertMessage();
+        } else if ($('#consultationDateTimeList >p').length !== 1 && applyInfo.applyType !== "APPLY_CONSULTATION_IMAGE_TEXT") {
+            layer.closeAll();
+            $('.submitBox').hide();
+            $("#alertText").html("请选定会诊时间");
+            alertMessage();
+        } else {
+            let data = new FormData();
+            data.append("applyFormId", applyFormId);
+            ajaxRequest("POST", sirReceiveHarmonizeAccede, data, false, false, true, sirReceiveHarmonizeAccedeSuccess, null, null);
+
+            //接收 成功回调
+            function sirReceiveHarmonizeAccedeSuccess() {
+                $('.submitBox').hide();
+                $("#alertText").html("接收成功");
+                alertMessage();
+                setTimeout(function () {
+                    window.location = '../page/administrator.html'
+                }, 2000)
+            }
+
+            return false;
+        }
+    });
+    /** 会诊医政  排期审核状态  接收确认按钮*/
+    $("#examineConsultationBoxYesBtn").click(function () {
+        if (!applyInfo.inviteUserId) {
+            layer.closeAll();
+            $('.submitBox').hide();
+            $("#alertText").html("请先分配主会诊医生");
+            alertMessage();
+        } else if ($('#consultationDateTimeList >p').length !== 1 && applyInfo.applyType !== "APPLY_CONSULTATION_IMAGE_TEXT") {
+            layer.closeAll();
+            $('.submitBox').hide();
+            $("#alertText").html("请选定会诊时间");
+            alertMessage();
+        } else {
+            let data = new FormData();
+            data.append("applyFormId", applyFormId);
+            ajaxRequest("POST", sirReceiveDateCheckAccede, data, false, false, true, sirReceiveDateCheckAccedeSuccess, null, null);
+
+            //接收 成功回调
+            function sirReceiveDateCheckAccedeSuccess() {
+                $('.submitBox').hide();
+                $("#alertText").html("接收成功");
+                alertMessage();
+                setTimeout(function () {
+                    window.location = '../page/administrator.html'
+                }, 2000)
+            }
             return false;
         }
     });
