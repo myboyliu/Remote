@@ -1,3 +1,14 @@
+
+
+//接收 成功回调
+function receiveSuccess() {
+    $('.submitBox').hide();
+    $("#alertText").html("接收成功");
+    alertMessage();
+    setTimeout(function () {
+        window.location = '../page/administrator.html'
+    }, 2000)
+}
 $(function () {
     /**  首诊退回弹窗 */
     $('#sendBackConsultationBtn').click(function () {
@@ -85,19 +96,7 @@ $(function () {
         } else {
             let data = new FormData();
             data.append("applyFormId", applyFormId);
-            ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, sirReceiveMasterAccedeSuccess, null, null);
-
-            //接收 成功回调
-            function sirReceiveMasterAccedeSuccess() {
-                $('.submitBox').hide();
-                $("#alertText").html("接收成功");
-                alertMessage();
-                setTimeout(function () {
-                    window.location = '../page/administrator.html'
-                }, 2000)
-            }
-
-            return false;
+            ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, receiveSuccess, null, null);
         }
     });
     /** 会诊医政  专家协调状态 接收确认按钮*/
@@ -115,19 +114,11 @@ $(function () {
         } else {
             let data = new FormData();
             data.append("applyFormId", applyFormId);
-            ajaxRequest("POST", sirReceiveHarmonizeAccede, data, false, false, true, sirReceiveHarmonizeAccedeSuccess, null, null);
-
-            //接收 成功回调
-            function sirReceiveHarmonizeAccedeSuccess() {
-                $('.submitBox').hide();
-                $("#alertText").html("接收成功");
-                alertMessage();
-                setTimeout(function () {
-                    window.location = '../page/administrator.html'
-                }, 2000)
+            if(applyInfo.applyStatus === "CONSULTATION_APPLY_ACCEDE"){
+                ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, receiveSuccess, null, null);
+            }else{
+                ajaxRequest("POST", sirReceiveHarmonizeAccede, data, false, false, true, receiveSuccess, null, null);
             }
-
-            return false;
         }
     });
     /** 会诊医政  排期审核状态  接收确认按钮*/
@@ -145,18 +136,7 @@ $(function () {
         } else {
             let data = new FormData();
             data.append("applyFormId", applyFormId);
-            ajaxRequest("POST", sirReceiveDateCheckAccede, data, false, false, true, sirReceiveDateCheckAccedeSuccess, null, null);
-
-            //接收 成功回调
-            function sirReceiveDateCheckAccedeSuccess() {
-                $('.submitBox').hide();
-                $("#alertText").html("接收成功");
-                alertMessage();
-                setTimeout(function () {
-                    window.location = '../page/administrator.html'
-                }, 2000)
-            }
-            return false;
+            ajaxRequest("POST", sirReceiveDateCheckAccede, data, false, false, true, receiveSuccess, null, null);
         }
     });
 
