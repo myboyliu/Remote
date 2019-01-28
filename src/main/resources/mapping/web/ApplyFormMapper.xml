@@ -655,6 +655,85 @@
         where id = #{id,jdbcType=VARCHAR} and apply_status = 'CONSULTATION_APPLY_ACCEDE'
     </update>
 
+    <!--转诊 待收诊 同意-->
+    <update id="inviteeTransfer" parameterType="com.sicmed.remote.web.entity.ApplyForm">
+        update apply_form
+        <set>
+            <if test="applyNumber != null">
+                apply_number = #{applyNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="caseRecordId != null">
+                case_record_id = #{caseRecordId,jdbcType=VARCHAR},
+            </if>
+            <if test="caseSummary != null">
+                case_summary = #{caseSummary,jdbcType=VARCHAR},
+            </if>
+            <if test="applySummary != null">
+                apply_summary = #{applySummary,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteSummary != null">
+                invite_summary = #{inviteSummary,jdbcType=VARCHAR},
+            </if>
+            <if test="applyUserId != null">
+                apply_user_id = #{applyUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="applyHospitalId != null">
+                apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteUserId != null">
+                invite_user_id = #{inviteUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteHospitalId != null">
+                invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteBranchId != null">
+                invite_branch_id = #{inviteBranchId,jdbcType=VARCHAR},
+            </if>
+            <if test="applyBranchId != null">
+                apply_branch_id = #{applyBranchId,jdbcType=VARCHAR},
+            </if>
+            <if test="consultantApplyTime != null">
+                consultant_apply_time = #{consultantApplyTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="applyStatus != null">
+                apply_status = #{applyStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="applyType != null">
+                apply_type = #{applyType,jdbcType=VARCHAR},
+            </if>
+            <if test="applyRemark != null">
+                apply_remark = #{applyRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="refuseRemark != null">
+                refuse_remark = #{refuseRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="applyUrgent != null">
+                apply_urgent = #{applyUrgent,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            update_time = now(),
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                delete_user = #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR} and apply_status = 'INQUIRY_APPLY_ACCEDE'
+    </update>
+
+
     <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.ApplyForm">
     update apply_form
     set apply_number = #{applyNumber,jdbcType=VARCHAR},

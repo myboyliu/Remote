@@ -173,6 +173,11 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         return applyFormMapper.inviteeConsent(applyForm);
     }
 
+    // 转诊 待收诊  同意
+    public int inviteeTransfer(ApplyForm applyForm) {
+        return applyFormMapper.inviteeTransfer(applyForm);
+    }
+
     @Override
     public int insertSelective(ApplyForm applyForm) {
         return applyFormMapper.insertSelective(applyForm);

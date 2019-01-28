@@ -47,6 +47,8 @@ public interface ApplyFormMapper {
 
     int inviteeConsent(ApplyForm applyForm);
 
+    int inviteeTransfer(ApplyForm applyForm);
+
     int softDel(String id);
 
     int updateInviteDoctorByPrimaryKeySelective(ApplyForm applyForm);

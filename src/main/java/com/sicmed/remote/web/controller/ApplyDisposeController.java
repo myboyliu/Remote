@@ -265,7 +265,7 @@ public class ApplyDisposeController extends BaseController {
     }
 
     /**
-     * 医政 受邀会诊 待收诊 接收                   ----------------------------------------
+     * 医政 受邀会诊 待收诊 接收
      */
     @Transactional
     @PostMapping(value = "sirReceiveMasterAccede")
@@ -280,10 +280,18 @@ public class ApplyDisposeController extends BaseController {
             applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
         }
 
-        String msg1 = "受邀会诊收诊医政待收诊接受,form修改失败";
-        String msg2 = "受邀会诊收诊医政待收诊接受,time修改失败";
+        String userId = getRequestToken();
 
-        return updateStatus(applyFormId, null, applyStatus, msg1, msg2, null);
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setUpdateUser(userId);
+        applyForm.setId(applyFormId);
+        applyForm.setApplyStatus(applyStatus);
+        int i = applyFormService.inviteeConsent(applyForm);
+        if (i < 1) {
+            return badRequestOfArguments("");
+        }
+        applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已排期.toString());
+        return succeedRequest(applyForm);
     }
 
     /**
@@ -302,7 +310,7 @@ public class ApplyDisposeController extends BaseController {
 
 
     /**
-     * 医政 受邀会诊 砖家协调 确认协调
+     * 医政 受邀会诊 MDT协调 确认协调
      */
     @Transactional
     @PostMapping(value = "sirReceiveHarmonizeAccede")
@@ -316,10 +324,18 @@ public class ApplyDisposeController extends BaseController {
             applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
         }
 
-        String msg1 = "受邀会诊收诊医政确认砖家协调,form修改失败";
-        String msg2 = "受邀会诊收诊医政确认砖家协调,time修改失败";
+        String userId = getRequestToken();
 
-        return updateStatus(applyFormId, null, applyStatus, msg1, msg2, null);
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setUpdateUser(userId);
+        applyForm.setId(applyFormId);
+        applyForm.setApplyStatus(applyStatus);
+        int i = applyFormService.inviteeConsent(applyForm);
+        if (i < 1) {
+            return badRequestOfArguments("已被接受");
+        }
+        applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已排期.toString());
+        return succeedRequest(applyForm);
     }
 
     /**
@@ -505,7 +521,8 @@ public class ApplyDisposeController extends BaseController {
         ApplyForm applyForm = new ApplyForm();
         applyForm.setId(applyFormId);
         applyForm.setUpdateUser(userId);
-        int i = applyFormService.updateStatus(applyForm, applyStatus, userId);
+        applyForm.setApplyStatus(applyStatus);
+        int i = applyFormService.inviteeTransfer(applyForm);
         if (i < 1) {
             return badRequestOfArguments("form修改失败");
         }
