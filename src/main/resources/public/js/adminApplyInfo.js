@@ -345,29 +345,29 @@ function renderDoctorEnjoin(doctorEnjoinJsonStr) {
         let _html;
         if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 || doctorEnjoinJson.temporaryDrugArr && doctorEnjoinJson.temporaryDrugArr.length > 0) {
             _html = '<div class="chunkContent">\
-            <h2><span>02</span><p class="chunkType">手术备品</p><a class="printBtn" href="' + IP + "download/specificationsOrder?orderId=" + localStorage.getItem("orderId") + '">下载</a></h2>'
+            <h2><span>02</span><p class="chunkType">手术备品</p><a class="printBtn" href="">下载</a></h2>'
         }
         if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 || doctorEnjoinJson.temporaryTreatArr && doctorEnjoinJson.temporaryTreatArr.length > 0) {
             _html = '<div class="chunkContent">\
-                <h2><span>02</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="' + IP + "download/specificationsOrder?orderId=" + localStorage.getItem("orderId") + '">下载</a></h2>'
+                <h2><span>02</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="">下载</a></h2>'
         }
         if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 && doctorEnjoinJson.temporaryDrugArr && doctorEnjoinJson.temporaryDrugArr.length > 0) {
             _html = '<div class="chunkContent">\
-            <h2><span>03</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="' + IP + "download/specificationsOrder?orderId=" + localStorage.getItem("orderId") + '">下载</a></h2>'
+            <h2><span>03</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="">下载</a></h2>'
         }
         if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 && doctorEnjoinJson.temporaryTreatArr && doctorEnjoinJson.temporaryTreatArr.length > 0) {
             _html = '<div class="chunkContent">\
-                <h2><span>03</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="' + IP + "download/specificationsOrder?orderId=" + localStorage.getItem("orderId") + '">下载</a></h2>'
+                <h2><span>03</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="">下载</a></h2>'
         }
         if (!doctorEnjoinJson.longTimeArr && !doctorEnjoinJson.temporaryTreatArr && !doctorEnjoinJson.temporaryDrugArr) {
             _html = '<div class="chunkContent">\
-                <h2><span>01</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="' + IP + "download/specificationsOrder?orderId=" + localStorage.getItem("orderId") + '">下载</a></h2>'
+                <h2><span>01</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="">下载</a></h2>'
         }
         _html += '<div class="oneList">\
                     <div class="oneListItem">\
                         <div class="twoList">'
         for (let i = 0; i < doctorEnjoinJson.surgeryArr.length; i++) {
-            _html += '<p class="twoListItem"><b>' + ((i + 1) > 10 ? (i + 1) : '0' + (i + 1)) + "&nbsp;&nbsp;&nbsp;&nbsp;" + doctorEnjoinJson.surgeryArr[i].surgeryName + '&nbsp;&nbsp;&nbsp;&nbsp;' + doctorEnjoinJson.surgeryArr[i].surgerySize + "&nbsp;&nbsp;&nbsp;&nbsp;" + doctorEnjoinJson.surgeryArr[i].surgeryNum + '</b></p>';
+            _html += '<p class="twoListItem"><b>' + ((i + 1) > 10 ? (i + 1) : '0' + (i + 1)) + "&nbsp;&nbsp;&nbsp;&nbsp;" + doctorEnjoinJson.surgeryArr[i].surgeryName + '&nbsp;&nbsp;&nbsp;&nbsp;' +  + doctorEnjoinJson.surgeryArr[i].surgeryNum + '</b></p>';
         }
         _html += '</div>\
                     </div>\

@@ -591,7 +591,7 @@ function doctorEnjoinBuilder(feedBackFunction) {
         for (let i = 0; i < oneLevel.length; i++) {
             oneTempArr.push({
                 "surgeryName": oneLevel.eq(i).find(".surgeryNameObj").html(),// 器械名称
-                "surgerySize": oneLevel.eq(i).find(".surgerySizeObj").val(),// 器械规格
+                // "surgerySize": oneLevel.eq(i).find(".surgerySizeObj").val(),// 器械规格
                 "surgeryNum": oneLevel.eq(i).find(".surgeryNumObj").val(),// 器械数量
                 "surgeryId": oneLevel.eq(i).find(".surgeryNameObj").attr("name"),// 器械id
             })
@@ -686,6 +686,7 @@ function submitReportEnjoin(doctorEnjoinJson) {
     data.append("applyFormId", applyFormId);
     data.append("report", JSON.stringify(reportEnjoin));
     ajaxRequest("POST", doctorSendFeedbackReport, data, false, false, true, submitReportEnjoinSuccess, submitReportEnjoinFailed, null);
+
     function submitReportEnjoinSuccess() {
         $('.working').html('提交成功');
         layer.open({
@@ -702,6 +703,7 @@ function submitReportEnjoin(doctorEnjoinJson) {
             window.location = "../page/morkbench.html"
         }, 2000);
     }
+
     function submitReportEnjoinFailed() {
         $('.working').html('提交失败')
         layer.open({
@@ -715,6 +717,7 @@ function submitReportEnjoin(doctorEnjoinJson) {
             content: _$('.working')
         });
     }
+
     return false;
 }
 
@@ -986,67 +989,20 @@ $(function () {
         $(".surgeryBox").find(".remarkBox").show();
         $(".surgeryBox").find(".noData").hide();
         let _obj = $(this);
-        $.ajax({
-            type: 'POST',
-            url: IP + 'consumables/findSpecificationsById',
-            dataType: 'json',
-            data: {
-                "id": $(this).attr('name'),
-            },
-            xhrFields: {
-                withCredentials: true
-            },
-            crossDomain: true,
-            success: function (data) {
-                console.log(data);
-                if (data.code == 1) {
-                    if (data.data.length > 0) {
-                        let _html = '<option value=""></option>';
-                        for (let i = 0; i < data.data.length; i++) {
-                            _html += '<option value="' + data.data[i].specificationsName + '">' + data.data[i].specificationsName + '</option>'
-                        }
-                        let tempHtml = '<li class="dataItem">\
-                                <div class="listBottomBox">\
-                                    <div class="listItem">\
-                                        <span class="drugName surgeryNameObj" name="' + _obj.attr("name") + '">' + _obj.attr("consumablesname") + '</span>\
-                                        <div class="drugRule">\
-                                            <div class="layui-input-inline" style="width: 300px;">\
-                                                <select class="mustValue surgerySizeObj" name="">' + _html + '</select>\
-                                            </div>\
-                                            <input type="text" class="mustValue surgeryNumObj" oninput="value=value.replace(/[^\\d]/g,\'\')" placeholder="数量" style="margin-right: 20px;">\
-                                        </div>\
-                                    </div>\
-                                </div>\
-                            </li>';
-                    } else {
-                        let tempHtml = '<li class="dataItem">\
+
+        let tempHtml = '<li class="dataItem">\
                         <div class="listBottomBox">\
                             <div class="listItem">\
                                 <span class="drugName surgeryNameObj" name="' + _obj.attr("name") + '">' + _obj.attr("consumablesname") + '</span>\
                                 <div class="drugRule">\
-                                    <div class="layui-input-inline" style="width: 300px;">\
-                                        <select class="mustValue surgerySizeObj" name=""><option value="--">--</option></select>\
-                                    </div>\
                                     <input type="text" class="mustValue surgeryNumObj" oninput="value=value.replace(/[^\\d]/g,\'\')" placeholder="数量" style="margin-right: 20px;">\
                                 </div>\
                             </div>\
                         </div>\
                     </li>';
-                    }
-                    $(".surgeryBox").find(".dataUl").append(tempHtml);
-                    $(".surgerySearchContent").hide();
-                    layerRender();
-                } else if (data.code == 250) {
-                    // 未登录操作
-                    window.location = '/yilaiyiwang/login/login.html';
-                } else {
-                    // 其他操作
-                }
-            },
-            error: function (err) {
-                console.log(err);
-            },
-        });
+        $(".surgeryBox").find(".dataUl").append(tempHtml);
+        $(".surgerySearchContent").hide();
+        layerRender();
     });
 
     // 医生签名
@@ -1220,7 +1176,11 @@ $(function () {
                 </div>\
             </div>';
             $(".listItem.active").parents(".dataItem").prev("li.dataItem").find(".listBottomBox").append(objHtml);
-            $(".listItem.active").parents(".dataItem").remove();
+            if ($(".listItem.active").parents(".listBottomBox").children().length > 2) {
+                $(".listItem.active").remove();
+            } else {
+                $(".listItem.active").parents(".dataItem").remove();
+            }
             layerRender();
             $(".setBtn").addClass("noClick");
         }
