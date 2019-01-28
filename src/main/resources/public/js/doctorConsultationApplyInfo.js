@@ -50,20 +50,18 @@ $(function () {
                 return false;
             }
         }
+        let data = new FormData();
         for (const item of consultantReport) {
             if (item.doctorId === userInfo.id) {
-                item["report"] = $('#textarea').val();
-                item["reportStatus"] = "0";
+                data.append("doctorName", item.doctorName);
+                data.append("doctorId", item.doctorId);
+                data.append("report", $('#textarea').val());
+                data.append("reportStatus", "0");
             }
         }
-        let data = new FormData();
         data.append("applyFormId", applyFormId);
-        data.append("report", JSON.stringify(consultantReport));
-        if (!isMainDoctor) {
-            ajaxRequest("POST", doctorSendFeedbackReportMoment, data, false, false, true, success, failed, null);
-        } else {
-            ajaxRequest("POST", doctorSendFeedbackReport, data, false, false, true, success, failed, null);
-        }
+
+        ajaxRequest("POST", doctorSendFeedbackReportMoment, data, false, false, true, success, failed, null);
 
         function success() {
             layer.open({
@@ -101,16 +99,17 @@ $(function () {
     })
     /* 编辑会诊报告暂存按钮 */
     $('.hold').click(function () {
+        let data = new FormData();
         for (const item of consultantReport) {
             if (item.doctorId === userInfo.id) {
-                item["report"] = $('#textarea').val();
+                data.append("doctorName", item.doctorName);
+                data.append("doctorId", item.doctorId);
+                data.append("report", $('#textarea').val());
+                data.append("reportStatus", "1");
             }
         }
-        let data = new FormData();
-        data.append("report", JSON.stringify(consultantReport));
         data.append("applyFormId", applyFormId);
         ajaxRequest("POST", doctorSendFeedbackReportMoment, data, false, false, true, success, failed, null);
-        console.log(consultantReport);
 
         function success() {
             $('.working').html('暂存成功')

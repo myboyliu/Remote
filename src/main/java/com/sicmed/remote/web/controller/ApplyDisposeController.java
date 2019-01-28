@@ -16,7 +16,10 @@ import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.ApplyTime;
 import com.sicmed.remote.web.entity.CaseConsultant;
-import com.sicmed.remote.web.service.*;
+import com.sicmed.remote.web.service.ApplyFormService;
+import com.sicmed.remote.web.service.ApplyNodeService;
+import com.sicmed.remote.web.service.ApplyTimeService;
+import com.sicmed.remote.web.service.CaseConsultantService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -657,7 +660,7 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "doctorSendFeedbackReportMoment")
-    public Map doctorSendFeedbackReportMoment(String applyFormId, String consultantFeedback, String report) {
+    public Map doctorSendFeedbackReportMoment(String applyFormId, String consultantFeedback, ConsultantReportBean consultantReportBean) {
 
         String userId = getRequestToken();
 
@@ -666,8 +669,23 @@ public class ApplyDisposeController extends BaseController {
         if (StringUtils.isNotBlank(consultantFeedback)) {
             caseConsultant.setConsultantFeedback(consultantFeedback);
         }
-        if (StringUtils.isNotBlank(report)) {
-            caseConsultant.setConsultantReport(report);
+        log.debug(consultantReportBean.toString());
+        if (consultantReportBean == null || StringUtils.isNotBlank(consultantReportBean.getReport())) {
+            String oldReport = caseConsultantService.selectReport(applyFormId);
+            List<ConsultantReportBean> newConsultantReportBeanList = new ArrayList<>();
+            List<ConsultantReportBean> consultantReportBeanList = JSON.parseObject(oldReport, new TypeReference<List<ConsultantReportBean>>() {
+            }, Feature.OrderedField);
+            for (ConsultantReportBean reportBean : consultantReportBeanList) {
+                if (reportBean.getDoctorId().equals(consultantReportBean.getDoctorId())) {
+                    newConsultantReportBeanList.add(consultantReportBean);
+                } else {
+                    newConsultantReportBeanList.add(reportBean);
+                }
+            }
+            String newReport = JSON.toJSONString(newConsultantReportBeanList);
+            log.debug(newReport);
+            caseConsultant.setConsultantReport(newReport);
+
         }
         caseConsultant.setUpdateUser(userId);
         int k = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
@@ -683,7 +701,7 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "doctorSendFeedbackReport")
-    public Map doctorSendFeedbackReport(String applyFormId, String consultantFeedback, String report) {
+    public Map doctorSendFeedbackReport(String applyFormId, String consultantFeedback, ConsultantReportBean consultantReportBean) {
 
         if (StringUtils.isBlank(applyFormId)) {
             return badRequestOfArguments("applyFormId is null");
@@ -698,9 +716,22 @@ public class ApplyDisposeController extends BaseController {
             applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_END);
             caseConsultant.setConsultantFeedback(consultantFeedback);
         }
-        if (StringUtils.isNotBlank(report)) {
+        if (consultantReportBean == null || StringUtils.isNotBlank(consultantReportBean.getReport())) {
+            String oldReport = caseConsultantService.selectReport(applyFormId);
+            List<ConsultantReportBean> newConsultantReportBeanList = new ArrayList<>();
+            List<ConsultantReportBean> consultantReportBeanList = JSON.parseObject(oldReport, new TypeReference<List<ConsultantReportBean>>() {
+            }, Feature.OrderedField);
+            for (ConsultantReportBean reportBean : consultantReportBeanList) {
+                if (reportBean.getDoctorId().equals(consultantReportBean.getDoctorId())) {
+                    newConsultantReportBeanList.add(consultantReportBean);
+                } else {
+                    newConsultantReportBeanList.add(reportBean);
+                }
+            }
+            String newReport = JSON.toJSONString(newConsultantReportBeanList);
             applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_REPORT_SUBMITTED);
-            caseConsultant.setConsultantReport(report);
+            caseConsultant.setConsultantReport(newReport);
+
         }
         caseConsultant.setUpdateUser(userId);
         int k = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);

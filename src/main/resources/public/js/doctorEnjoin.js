@@ -613,14 +613,16 @@ function doctorEnjoinBuilder(feedBackFunction) {
 
 /** 暂存 会诊报告 医嘱 */
 function cacheReportEnjoin(doctorEnjoinJson) {
+    let data = new FormData();
     for (const item of reportEnjoin) {
         if (item.doctorId === currentUserInfo.id) {
-            item["report"] = $('.verdictArea').val();
-            item["doctorEnjoin"] = doctorEnjoinJson;
+            data.append("doctorName",item.doctorName);
+            data.append("doctorId",item.doctorId);
+            data.append("report",$('.verdictArea').val());
+            data.append("reportStatus","1");
+            data.append("doctorEnjoin",doctorEnjoinJson);
         }
     }
-    let data = new FormData();
-    data.append("report", JSON.stringify(reportEnjoin));
     data.append("applyFormId", applyFormId);
     ajaxRequest("POST", doctorSendFeedbackReportMoment, data, false, false, true, cacheReportEnjoinSuccess, cacheReportEnjoinFailed, null);
 
@@ -675,16 +677,17 @@ function submitReportEnjoin(doctorEnjoinJson) {
             return false;
         }
     }
+    let data = new FormData();
     for (const item of reportEnjoin) {
         if (item.doctorId === currentUserInfo.id) {
-            item["report"] = $('.verdictArea').val();
-            item["doctorEnjoin"] = doctorEnjoinJson;
-            item["reportStatus"] = "0";
+            data.append("doctorName",item.doctorName);
+            data.append("doctorId",item.doctorId);
+            data.append("report",$('.verdictArea').val());
+            data.append("reportStatus","0");
+            data.append("doctorEnjoin",doctorEnjoinJson);
         }
     }
-    let data = new FormData();
     data.append("applyFormId", applyFormId);
-    data.append("report", JSON.stringify(reportEnjoin));
     ajaxRequest("POST", doctorSendFeedbackReport, data, false, false, true, submitReportEnjoinSuccess, submitReportEnjoinFailed, null);
 
     function submitReportEnjoinSuccess() {

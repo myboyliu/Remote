@@ -2,8 +2,10 @@ package com.sicmed.remote.web.bean;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class ConsultantReportBean {
+public class ConsultantReportBean implements Serializable {
 
     private String doctorName;
 
@@ -12,5 +14,7 @@ public class ConsultantReportBean {
     private String report;
 
     private String reportStatus;
+
+    private String doctorEnjoin;
 
 }
