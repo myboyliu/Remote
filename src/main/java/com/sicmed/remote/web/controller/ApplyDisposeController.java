@@ -64,7 +64,7 @@ public class ApplyDisposeController extends BaseController {
         String userId = getRequestToken();
 
         applyForm.setUpdateUser(userId);
-        int i = applyFormService.updateInviteDoctorByPrimaryKeySelective(applyForm);
+        int i = applyFormService.updateByPrimaryKeySelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("修改applyForm失败");
         }
@@ -78,7 +78,7 @@ public class ApplyDisposeController extends BaseController {
         caseConsultant.setConsultantReport(consultantReport);
         caseConsultant.setUpdateUser(userId);
 
-        int k = caseConsultantService.updateInviteDoctorByPrimaryKeySelective(caseConsultant);
+        int k = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
         if (k < 1) {
             return badRequestOfArguments("添加失败");
         }
@@ -265,7 +265,7 @@ public class ApplyDisposeController extends BaseController {
     }
 
     /**
-     * 医政 受邀会诊 待收诊 接收
+     * 医政 受邀会诊 待收诊 接收                   ----------------------------------------
      */
     @Transactional
     @PostMapping(value = "sirReceiveMasterAccede")
@@ -995,7 +995,7 @@ public class ApplyDisposeController extends BaseController {
         caseConsultant.setConsultantReport(consultantReport);
         caseConsultant.setUpdateUser(userId);
 
-        int l = caseConsultantService.updateInviteDoctorByPrimaryKeySelective(caseConsultant);
+        int l = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
         if (l < 1) {
             return badRequestOfArguments("添加失败");
         }
@@ -1032,7 +1032,7 @@ public class ApplyDisposeController extends BaseController {
         caseConsultant.setConsultantReport(consultantReport);
         caseConsultant.setUpdateUser(userId);
 
-        int l = caseConsultantService.updateInviteDoctorByPrimaryKeySelective(caseConsultant);
+        int l = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
         if (l < 1) {
             return badRequestOfArguments("添加失败");
         }
