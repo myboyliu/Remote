@@ -293,6 +293,12 @@ public class ApplyDisposeController extends BaseController {
         if (i < 1) {
             return badRequestOfArguments("");
         }
+
+        ApplyTime applyTime = new ApplyTime();
+        applyTime.setApplyStatus(applyStatus);
+        applyTime.setApplyFormId(applyFormId);
+        applyTime.setUpdateUser(userId);
+        applyTimeService.updateStatus(applyTime);
         applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已排期.toString());
         return succeedRequest(applyForm);
     }
@@ -337,6 +343,12 @@ public class ApplyDisposeController extends BaseController {
         if (i < 1) {
             return badRequestOfArguments("已被接受");
         }
+
+        ApplyTime applyTime = new ApplyTime();
+        applyTime.setApplyStatus(applyStatus);
+        applyTime.setApplyFormId(applyFormId);
+        applyTime.setUpdateUser(userId);
+        applyTimeService.updateStatus(applyTime);
         applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已排期.toString());
         return succeedRequest(applyForm);
     }
