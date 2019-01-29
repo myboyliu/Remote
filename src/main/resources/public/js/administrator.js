@@ -148,7 +148,6 @@ function redrawDate() {
 }
 
 function renderApplyListView(data) {
-    console.log(data);
     const myDate = new Date();
     const year = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
     const month = double(myDate.getMonth() + 1); //获取当前月份(0-11,0代表1月)
@@ -409,7 +408,6 @@ function getApplyCount() {
 
     function sendSelectAllCountDoctorSuccess(result) {
         countObject = result;
-        console.log(countObject);
         currentApplyCount();
     }
 }
@@ -436,7 +434,6 @@ function getInviteCount() {
 
     function receiveSelectAllCountDoctorSuccess(result) {
         countObject = result;
-        console.log(countObject);
         currentInviteCount();
     }
 }
@@ -459,15 +456,12 @@ function getReferralCount() {
 
     function inquiryAllCountDoctorSuccess(result) {
         countObject = result;
-        console.log(result);
         currentReferralCount();
     }
 }
 
 /** 渲染转诊导航列表记录数*/
 function currentReferralCount() {
-    console.log("医政转诊数量")
-    console.log(countObject)
     $("#WAITING_AUDIT").html(Number(countObject.inquiryApplyCreateSuccess))
     $("#WAITING_ACCEDE").html(Number(countObject.inquiryApplyAccede) + Number(countObject.inquirySlaveAccedeTwo));
     $("#DATETIME_AUDIT").html(Number(countObject.inquirySlaveAccede))

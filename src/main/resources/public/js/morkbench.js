@@ -347,8 +347,6 @@ function getApplyCount() {
 
 /** 渲染申请导航列表记录数*/
 function currentApplyCount() {
-    console.log("发出会诊导航数量:")
-    console.log(countObject)
     let applyAcceptCount = 0
     applyAcceptCount += Number(countObject.consultationApplyAccede);
     applyAcceptCount += Number(countObject.consultationDoctorLocked);
@@ -375,8 +373,6 @@ function getInviteCount() {
 
 /** 渲染受邀导航列表记录数*/
 function currentInviteCount() {
-    console.log("受邀会诊导航数量:")
-    console.log(countObject)
     $("#INVITE_ACCEPT").html(Number(countObject.consultationApplyAccede))
     $("#INVITE_REVIEW").html(Number(countObject.consultationSlaveAccede))
     $("#INVITE_DATETIME").html(Number(countObject.consultationDatetimeLocked))
@@ -398,7 +394,6 @@ function getReferralCount() {
 
 /** 渲染转诊导航列表记录数*/
 function currentReferralCount() {
-    console.log(countObject);
     $("#WAITING_AUDIT").html(Number(countObject.inquiryApplyCreateSuccess))
     $("#WAITING_ACCEDE").html(Number(countObject.inquiryApplyAccede)+Number(countObject.inquirySlaveAccedeTwo))
     $("#DATETIME_AUDIT").html(Number(countObject.inquirySlaveAccede))

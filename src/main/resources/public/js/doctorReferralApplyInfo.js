@@ -10,13 +10,6 @@ function receiveReferralApplySuccess(responseData) {
     }, 2000);
 }
 
-function failedParamFeadBack(failedParam) {
-    console.log(failedParam);
-    layer.closeAll();
-    $("#alertText").html("接收失败");
-    alertMessage();
-}
-
 function refuseReferralApplySuccess(result) {
     $("#alertText").html("拒收成功");
     alertMessage();
@@ -26,8 +19,6 @@ function refuseReferralApplySuccess(result) {
 }
 
 $(function () {
-    /** 发起方操作 */
-    /** 接收方操作*/
     /** 拒绝按钮 */
     $("#refuseReferralBtn").click(function () {
         console.log(1233)
@@ -57,13 +48,24 @@ $(function () {
         $('#isFullRefuseReferralReason').removeAttr('style');
         refuseReferralReasonPrefix = "其他原因:";
     })
+    // 拒收确定按钮
+    $('#refuseReferralBoxBtn').click(function () {
+        if ($('#refuseReferralReason').val() == '') {
+            $("#alertText").html("请填写拒收原因");
+            alertMessage();
+        } else {
+            let data = new FormData();
+            data.append("applyFormId", applyFormId);
+            data.append("refuseRemark", refuseReferralReasonPrefix + $('#refuseReferralReason').val());
+            ajaxRequest("POST", doctorTransferReject, data, false, false, true, refuseReferralApplySuccess, null, null);
+        }
+    });
     /** 接收按钮 */
     $("#receiveReferralBtn").click(function () {
         isOnly = true;
         showDateView();
     })
     $("#checkDateBoxYesBtn").click(function () {
-
         dateList = [];
         let tempHtml = '';
         for (let key in markReferralJson) {
@@ -83,10 +85,8 @@ $(function () {
                 shadeClose: false,
                 content: _$('#receiveReferralBox')
             });
-        } else if (dateList.length === 0) {
-
         } else {
-            $("#alertText").html("当前时间不符合要求，您只能选择一天转诊");
+            $("#alertText").html("当前时间不符合要求，请选择一天转诊时间");
             alertMessage();
         }
     })
@@ -95,27 +95,15 @@ $(function () {
         let data = new FormData();
         data.append("applyFormId", applyFormId);
         data.append("inquiryDatetime", dateList[0]);
-        ajaxRequest("POST", doctorTransDateSure, data, false, false, true, receiveReferralApplySuccess, failedParamFeadBack, null);
+        ajaxRequest("POST", doctorTransDateSure, data, false, false, true, receiveReferralApplySuccess, operationFailid, null);
     })
     //发送给医政
     $("#sendManagerBtn").click(function () {
         let data = new FormData();
         data.append("applyFormId", applyFormId);
         data.append("inquiryDatetime", dateList[0]);
-        ajaxRequest("POST", doctorTransDateCheck, data, false, false, true, receiveReferralApplySuccess, failedParamFeadBack, null);
+        ajaxRequest("POST", doctorTransDateCheck, data, false, false, true, receiveReferralApplySuccess, operationFailid, null);
     })
-    /** 拒收确定按钮 */
-    $('#refuseReferralBoxBtn').click(function () {
-        if ($('#refuseReferralReason').val() == '') {
-            $("#alertText").html("请填写拒收原因");
-            alertMessage();
-        } else {
-            let data = new FormData();
-            data.append("applyFormId", applyFormId);
-            data.append("refuseRemark", refuseReferralReasonPrefix + $('#refuseReferralReason').val());
-            ajaxRequest("POST", doctorTransferReject, data, false, false, true, refuseReferralApplySuccess, null, null);
-        }
-    });
 
     $(".noBtn").click(function () {
         layer.closeAll();
