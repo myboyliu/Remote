@@ -41,17 +41,18 @@ const ReferralStatus = {
 };
 
 function renderApplyInquiryListView(data) {
+    console.log(data);
     const myDate = new Date();
     const year = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
     const month = double(myDate.getMonth() + 1); //获取当前月份(0-11,0代表1月)
     const day = double(myDate.getDate()); //获取当前日(1-31)
     let _html = '';
     for (let i = 0; i < data.length; i++) {
-        const timeStr = data[i].updateTime.split(' ')[0];
-        const time = data[i].updateTime.split(' ')[1];
-        const _year = timeStr.split('-')[0];
-        const _month = timeStr.split('-')[1];
-        const _day = timeStr.split('-')[2];
+        let timeStr = data[i].updateTime.split(' ')[0];
+        let time = data[i].updateTime.split(' ')[1];
+        let _year = timeStr.split('-')[0];
+        let _month = timeStr.split('-')[1];
+        let _day = timeStr.split('-')[2];
         if (0 == 0) {
             // 未读
             _html += '<tr class="read" applyFlag="' + data[i].applyUrgent + '" type="2" name="' + data[i].id + '">';
@@ -68,11 +69,20 @@ function renderApplyInquiryListView(data) {
                 <td>\
                     <p class="overHidden2" title="' + data[i].applySummary + '">' + data[i].applySummary + '</p>\
                 </td>'
-        if (year == _year && month == _month && day == _day) {
-            _html += '<td class="tl2em">今天' + time + '</td>'
-        } else {
-            _html += '<td class="tl2em">' + data[i].updateTime + '</td>'
+        if(data[i].applyStatus === "INQUIRY_END"){
+            if (year == _year && month == _month && day == _day) {
+                _html += '<td class="tl2em">今天' + '</td>'
+            } else {
+                _html += '<td class="tl2em">' + timeStr + '</td>'
+            }
+        }else{
+            if (year == _year && month == _month && day == _day) {
+                _html += '<td class="tl2em">今天' + time + '</td>'
+            } else {
+                _html += '<td class="tl2em">' + data[i].updateTime + '</td>'
+            }
         }
+
         _html += '</tr>'
     }
     $('#referralTableBody').html(_html);
@@ -378,7 +388,7 @@ function currentInviteCount() {
     $("#INVITE_DATETIME").html(Number(countObject.consultationDatetimeLocked))
     $("#INVITE_ONGOING").html(Number(countObject.consultationBegin))
     $("#INVITE_FEEDBACK").html(Number(countObject.consultationReportSubmitted))
-    $("#INVITE_REJECT").html(Number(countObject.consultationMasterReject)+Number(countObject.consultationSlaveReject))
+    $("#INVITE_REJECT").html(Number(countObject.consultationMasterReject) + Number(countObject.consultationSlaveReject))
     $("#INVITE_DONE").html(Number(countObject.consultationEn))
 }
 
@@ -395,7 +405,7 @@ function getReferralCount() {
 /** 渲染转诊导航列表记录数*/
 function currentReferralCount() {
     $("#WAITING_AUDIT").html(Number(countObject.inquiryApplyCreateSuccess))
-    $("#WAITING_ACCEDE").html(Number(countObject.inquiryApplyAccede)+Number(countObject.inquirySlaveAccedeTwo))
+    $("#WAITING_ACCEDE").html(Number(countObject.inquiryApplyAccede) + Number(countObject.inquirySlaveAccedeTwo))
     $("#DATETIME_AUDIT").html(Number(countObject.inquirySlaveAccede))
     $("#DATETIME_LOCKED").html(Number(countObject.inquiryDatetimeLocked))
     $("#HAS_REJECT").html(Number(countObject.inquiryMasterReject) + Number(countObject.inquirySlaveReject))
@@ -405,6 +415,7 @@ function currentReferralCount() {
 // 获取草稿箱数据
 function getDraftsCount() {
     ajaxRequest("GET", draftCount, null, false, false, true, draftCountSuccess, null, null);
+
     function draftCountSuccess(result) {
         $("#DRAFT").html(Number(result))
     }
@@ -415,6 +426,7 @@ function selectOrderById(orderId) {
     sessionStorage.setItem('applyFormId', orderId);
     window.location = '../page/doctorApplyInfo.html';
 }
+
 // 查看草稿详情
 function selectDraftById(orderId) {
     sessionStorage.setItem('draftId', orderId);
@@ -543,7 +555,7 @@ $(function () {
     });
     // 草稿箱详情
     $('.drafts_tbody').delegate('tr', 'click', function () {
-        selectDraftById( $(this).attr('name'))
+        selectDraftById($(this).attr('name'))
     })
 
     /*日历点击显示隐藏 */

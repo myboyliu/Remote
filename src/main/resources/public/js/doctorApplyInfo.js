@@ -286,6 +286,10 @@ function getApplyInfo() {
         }else{
             isInvite = userInfo.id === applyInfo.inviteUserId ? true : false;
         }
+        if(applyInfo.applyStatus === "CONSULTATION_APPLY_ACCEDE"){
+            isInvite = isBranchDoctor;
+        }
+
         // isInvite = userInfo.branchId === applyInfo.inviteBranchId ? true : false;
         isVideo = applyInfo.applyType === "APPLY_CONSULTATION_VIDEO" ? true : false;
     }
@@ -299,6 +303,7 @@ function renderViewByRole() {
         str += '<li>' + statusArr[i] + '</li>'
         $('.progressBar').html(str);
     }
+
     if (isInvite && isConsultation) {
         $(".progressBar li:nth-child(1)").addClass("libg");
         if (applyStatus === "CONSULTATION_APPLY_ACCEDE") {

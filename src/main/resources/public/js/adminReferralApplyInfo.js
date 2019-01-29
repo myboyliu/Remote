@@ -1,7 +1,6 @@
 let refuseReferralReasonPrefix = "病床已满:";
 $(function () {
 
-
     /** 发起方操作 */
     //修改排期按钮点击事件
     $("#updateReferralDateTimeBtn").click(function () {
@@ -9,7 +8,7 @@ $(function () {
             markReferralJson[item.eventStartTime.split(" ")[0]] = "";
         }
         showDateView();
-    })
+    });
 
     /** 转诊退回按钮 */
     $("#sendBackReferralBtn").click(function () {
@@ -22,7 +21,7 @@ $(function () {
             shadeClose: false,
             content: $('#sendBackReferralBox'),
         });
-    })
+    });
     $("#sendBackReferralBoxYesBtn").click(function () {
         console.log(applyFormId);
         console.log($('#sendBackReferralBoxText').val().replace(/\s+/g, ""));
@@ -36,7 +35,7 @@ $(function () {
             let formData = new FormData();
             formData.append("applyFormId", applyFormId);
             formData.append("refuseRemark", $('#sendBackReferralBoxText').val());
-            ajaxRequest("POST", sirTransferCheckReject, formData, false, false, false, sendBackSuccess, sendBackFailed, null)
+            ajaxRequest("POST", sirTransferCheckReject, formData, false, false, false, sendBackSuccess, sendBackFailed, null);
 
             function sendBackSuccess() {
                 layer.closeAll();
@@ -55,7 +54,7 @@ $(function () {
                 $('.referBox').hide();
             }
         }
-    })
+    });
 
     /** 通过按钮 */
     $("#throughReferralBtn").click(function () {
@@ -68,7 +67,7 @@ $(function () {
             shadeClose: false,
             content: _$('#throughReferralBox')
         });
-    })
+    });
     $("#throughBackReferralBoxYesBtn").click(function () {
         let data = new FormData();
         data.append("applyFormId", applyFormId);
@@ -90,7 +89,7 @@ $(function () {
             $("#alertText").html("审核失败");
             alertMessage();
         }
-    })
+    });
 
     /** 接收方操作*/
     /** 拒绝按钮 */
@@ -104,18 +103,23 @@ $(function () {
             shadeClose: false,
             content: $('#refuseReferralBox'),
         });
-    })
+    });
     $("#isFullRefuseReferralReason").click(function () {
         refuseReferralReasonPrefix = "病床已满:";
-    })
+    });
     $("#otherRefuseReferralReason").click(function () {
         refuseReferralReasonPrefix = "其他原因:";
-    })
+    });
     /** 接收按钮 */
     $("#receiveReferralBtn").click(function () {
+        if (!applyInfo.inviteUserId) {
+            $("#alertText").html("请选择一个医生");
+            alertMessage();
+            return false;
+        }
         isOnly = true;
         showDateView();
-    })
+    });
     $("#checkDateBoxYesBtn").click(function () {
 
         dateList = [];
@@ -125,7 +129,7 @@ $(function () {
             dateList.push(key);
         }
         // $(".schedule_modules").html(tempHtml);
-        if(isInvite){
+        if (isInvite) {
             if (dateList.length === 1) {
                 layer.closeAll();
                 $(".referralDateSelect").hide();
@@ -144,31 +148,32 @@ $(function () {
                 $("#alertText").html("当前时间不符合要求，您只能选择一天转诊");
                 alertMessage();
             }
-        }else if (isApply){
+        } else if (isApply) {
             if (dateList.length > 1) {
                 layer.closeAll();
                 $(".referralDateSelect").hide();
                 let formData = new FormData();
-                formData.append("applyFormId",applyFormId);
-                formData.append("startEndTime",JSON.stringify(dateList));
-                ajaxRequest("POST",sirTransferAmendTime,formData,false,false,true,sirTransferAmendTimeSuccess,null,null);
+                formData.append("applyFormId", applyFormId);
+                formData.append("startEndTime", JSON.stringify(dateList));
+                ajaxRequest("POST", sirTransferAmendTime, formData, false, false, true, sirTransferAmendTimeSuccess, null, null);
+
                 function sirTransferAmendTimeSuccess(result) {
                     getApplyInfo();
                     renderApplyTimeView(applyTimeList);
                 }
 
-            }  else {
+            } else {
                 $("#alertText").html("当前时间不符合要求，请选选择时间");
                 alertMessage();
             }
         }
 
-    })
+    });
     $("#receiveReferralBoxYesBtn").click(function () {
         let data = new FormData();
         data.append("applyFormId", applyFormId);
         data.append("inquiryDatetime", dateList[0]);
-        console.log(dateList[0])
+        console.log(dateList[0]);
         ajaxRequest("POST", sirTransferMasterAccede, data, false, false, true, sirTransferMasterAccedeSuccess, failedParamFeadBack, null);
 
         function sirTransferMasterAccedeSuccess(responseData) {
@@ -187,7 +192,7 @@ $(function () {
             $("#alertText").html("接收失败");
             alertMessage();
         }
-    })
+    });
     /** 拒收确定按钮 */
     $('#refuseReferralBoxBtn').click(function () {
         if ($('#refuseReferralReason').val() == '') {
@@ -217,4 +222,4 @@ $(function () {
         $(".referralDateSelect").hide();
     })
 
-})
+});

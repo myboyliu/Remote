@@ -224,10 +224,18 @@ function renderApplyInquiryListView(data) {
                 <td>\
                     <p class="overHidden2" title="' + data[i].applySummary + '">' + data[i].applySummary + '</p>\
                 </td>'
-        if (year == _year && month == _month && day == _day) {
-            _html += '<td class="tl2em">今天' + time + '</td>'
-        } else {
-            _html += '<td class="tl2em">' + data[i].updateTime + '</td>'
+        if(data[i].applyStatus === "INQUIRY_END"){
+            if (year == _year && month == _month && day == _day) {
+                _html += '<td class="tl2em">今天' + '</td>'
+            } else {
+                _html += '<td class="tl2em">' + timeStr + '</td>'
+            }
+        }else{
+            if (year == _year && month == _month && day == _day) {
+                _html += '<td class="tl2em">今天' + time + '</td>'
+            } else {
+                _html += '<td class="tl2em">' + data[i].updateTime + '</td>'
+            }
         }
         _html += '</tr>'
     }
