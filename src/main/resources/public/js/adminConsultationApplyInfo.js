@@ -9,6 +9,15 @@ function receiveSuccess() {
         window.location = '../page/administrator.html'
     }, 2000)
 }
+//接收 成功回调
+function statusIsChange() {
+    $('.submitBox').hide();
+    $("#alertText").html("订单状态已改变!");
+    alertMessage();
+    setTimeout(function () {
+        window.location = '../page/administrator.html'
+    }, 2000)
+}
 $(function () {
     /**  首诊退回弹窗 */
     $('#sendBackConsultationBtn').click(function () {
@@ -26,7 +35,7 @@ $(function () {
     $("#sendBackConsultationBoxYesBtn").click(function () {
         let data = new FormData();
         data.append("applyFormId", applyFormId);
-        ajaxRequest("POST", sirSendCheckReject, data, false, false, true, sirSendCheckRejectSuccess, null, null);
+        ajaxRequest("POST", sirSendCheckReject, data, false, false, true, sirSendCheckRejectSuccess, statusIsChange, null);
 
         function sirSendCheckRejectSuccess(result) {
             layer.closeAll();
@@ -57,7 +66,7 @@ $(function () {
     $("#auditConsultationBoxYesBtn").click(function () {
         let data = new FormData();
         data.append("applyFormId", applyFormId);
-        ajaxRequest("POST", sirSendCheckAccede, data, false, false, true, sirSendCheckAccedeSuccess, null, null);
+        ajaxRequest("POST", sirSendCheckAccede, data, false, false, true, sirSendCheckAccedeSuccess, statusIsChange, null);
 
         function sirSendCheckAccedeSuccess(result) {
             layer.closeAll();
@@ -96,7 +105,7 @@ $(function () {
         } else {
             let data = new FormData();
             data.append("applyFormId", applyFormId);
-            ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, receiveSuccess, null, null);
+            ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, receiveSuccess, statusIsChange, null);
         }
     });
     /** 会诊医政  专家协调状态 接收确认按钮*/
@@ -115,9 +124,9 @@ $(function () {
             let data = new FormData();
             data.append("applyFormId", applyFormId);
             if(applyInfo.applyStatus === "CONSULTATION_APPLY_ACCEDE"){
-                ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, receiveSuccess, null, null);
+                ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, receiveSuccess, statusIsChange, null);
             }else{
-                ajaxRequest("POST", sirReceiveHarmonizeAccede, data, false, false, true, receiveSuccess, null, null);
+                ajaxRequest("POST", sirReceiveHarmonizeAccede, data, false, false, true, receiveSuccess, statusIsChange, null);
             }
         }
     });
@@ -136,7 +145,7 @@ $(function () {
         } else {
             let data = new FormData();
             data.append("applyFormId", applyFormId);
-            ajaxRequest("POST", sirReceiveDateCheckAccede, data, false, false, true, receiveSuccess, null, null);
+            ajaxRequest("POST", sirReceiveDateCheckAccede, data, false, false, true, receiveSuccess, statusIsChange, null);
         }
     });
 
@@ -221,7 +230,7 @@ $(function () {
             data.append("applyFormId", applyFormId);
             data.append("report", viewText + $('.refuseReason').val());
             console.log(viewText + $('.refuseReason').val());
-            ajaxRequest("POST", sirReceiveMasterReject, data, false, false, true, sirReceiveMasterRejectSuccess, null, null);
+            ajaxRequest("POST", sirReceiveMasterReject, data, false, false, true, sirReceiveMasterRejectSuccess, statusIsChange, null);
 
             function sirReceiveMasterRejectSuccess(result) {
                 $("#alertText").html("拒收成功");

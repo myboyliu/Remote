@@ -170,11 +170,15 @@ $(function () {
 
     });
     $("#receiveReferralBoxYesBtn").click(function () {
+
         let data = new FormData();
         data.append("applyFormId", applyFormId);
         data.append("inquiryDatetime", dateList[0]);
-        console.log(dateList[0]);
-        ajaxRequest("POST", sirTransferMasterAccede, data, false, false, true, sirTransferMasterAccedeSuccess, failedParamFeadBack, null);
+        if(applyInfo.applyStatus === "INQUIRY_APPLY_ACCEDE"){
+            ajaxRequest("POST", sirTransferMasterAccede, data, false, false, true, sirTransferMasterAccedeSuccess, failedParamFeadBack, null);
+        }else{
+            ajaxRequest("POST", sirTransferDateCheckAccede, data, false, false, true, sirTransferMasterAccedeSuccess, failedParamFeadBack, null);
+        }
 
         function sirTransferMasterAccedeSuccess(responseData) {
             console.log(responseData);
