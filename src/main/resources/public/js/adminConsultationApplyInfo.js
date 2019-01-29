@@ -1,5 +1,3 @@
-
-
 //接收 成功回调
 function receiveSuccess() {
     $('.submitBox').hide();
@@ -9,6 +7,7 @@ function receiveSuccess() {
         window.location = '../page/administrator.html'
     }, 2000)
 }
+
 //接收 成功回调
 function statusIsChange() {
     $('.submitBox').hide();
@@ -18,6 +17,7 @@ function statusIsChange() {
         window.location = '../page/administrator.html'
     }, 2000)
 }
+
 $(function () {
     /**  首诊退回弹窗 */
     $('#sendBackConsultationBtn').click(function () {
@@ -97,15 +97,30 @@ $(function () {
             $('.submitBox').hide();
             $("#alertText").html("请先分配主会诊医生");
             alertMessage();
-        } else if ($('#consultationDateTimeList >p').length !== 1 && applyInfo.applyType !== "APPLY_CONSULTATION_IMAGE_TEXT") {
-            layer.closeAll();
-            $('.submitBox').hide();
-            $("#alertText").html("请选定会诊时间");
-            alertMessage();
-        } else {
-            let data = new FormData();
-            data.append("applyFormId", applyFormId);
-            ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, receiveSuccess, statusIsChange, null);
+        } else if (applyInfo.applyType !== "APPLY_CONSULTATION_IMAGE_TEXT") {
+            if (applyTimeList.length === 1) {
+                let startDate = applyTimeList[0].eventStartTime;
+                startDate = startDate.replace(new RegExp("-", "gm"), "/");
+                let startDateM = (new Date(startDate)).getTime(); //得到毫秒数
+                let currentDate = new Date(); //得到普通的时间了
+                let currentDateM = currentDate.getTime();
+                startDateM -= 960000;
+                if (startDateM < currentDateM) {
+                    layer.closeAll();
+                    $('.submitBox').hide();
+                    $("#alertText").html("会诊时间错误,请选择一段开始时间大于当前时间15分钟的时间");
+                    alertMessage();
+                }else{
+                    let data = new FormData();
+                    data.append("applyFormId", applyFormId);
+                    ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, receiveSuccess, statusIsChange, null);
+                }
+            }else{
+                layer.closeAll();
+                $('.submitBox').hide();
+                $("#alertText").html("只能选择一段会诊时间");
+                alertMessage();
+            }
         }
     });
     /** 会诊医政  专家协调状态 接收确认按钮*/
@@ -120,18 +135,32 @@ $(function () {
             $('.submitBox').hide();
             $("#alertText").html("请选定会诊时间");
             alertMessage();
-        } else {
-            let data = new FormData();
-            data.append("applyFormId", applyFormId);
-            if(applyInfo.applyStatus === "CONSULTATION_APPLY_ACCEDE"){
-                ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, receiveSuccess, statusIsChange, null);
-            }else{
-                ajaxRequest("POST", sirReceiveHarmonizeAccede, data, false, false, true, receiveSuccess, statusIsChange, null);
+        } else if(applyTimeList.length === 1) {
+            let startDate = applyTimeList[0].eventStartTime;
+            startDate = startDate.replace(new RegExp("-", "gm"), "/");
+            let startDateM = (new Date(startDate)).getTime(); //得到毫秒数
+            let currentDate = new Date(); //得到普通的时间了
+            let currentDateM = currentDate.getTime();
+            startDateM -= 960000;
+            if (startDateM < currentDateM) {
+                layer.closeAll();
+                $('.submitBox').hide();
+                $("#alertText").html("会诊时间错误,请选择一段开始时间大于当前时间15分钟的时间");
+                alertMessage();
+            }else {
+                let data = new FormData();
+                data.append("applyFormId", applyFormId);
+                if (applyInfo.applyStatus === "CONSULTATION_APPLY_ACCEDE") {
+                    ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, receiveSuccess, statusIsChange, null);
+                } else {
+                    ajaxRequest("POST", sirReceiveHarmonizeAccede, data, false, false, true, receiveSuccess, statusIsChange, null);
+                }
             }
         }
     });
     /** 会诊医政  排期审核状态  接收确认按钮*/
     $("#examineConsultationBoxYesBtn").click(function () {
+        console.log(applyTimeList);
         if (!applyInfo.inviteUserId) {
             layer.closeAll();
             $('.submitBox').hide();
@@ -142,10 +171,23 @@ $(function () {
             $('.submitBox').hide();
             $("#alertText").html("请选定会诊时间");
             alertMessage();
-        } else {
-            let data = new FormData();
-            data.append("applyFormId", applyFormId);
-            ajaxRequest("POST", sirReceiveDateCheckAccede, data, false, false, true, receiveSuccess, statusIsChange, null);
+        }else if(applyTimeList.length === 1) {
+            let startDate = applyTimeList[0].eventStartTime;
+            startDate = startDate.replace(new RegExp("-", "gm"), "/");
+            let startDateM = (new Date(startDate)).getTime(); //得到毫秒数
+            let currentDate = new Date(); //得到普通的时间了
+            let currentDateM = currentDate.getTime();
+            startDateM -= 960000;
+            if (startDateM < currentDateM) {
+                layer.closeAll();
+                $('.submitBox').hide();
+                $("#alertText").html("会诊时间错误,请选择一段开始时间大于当前时间15分钟的时间");
+                alertMessage();
+            }else {
+                let data = new FormData();
+                data.append("applyFormId", applyFormId);
+                ajaxRequest("POST", sirReceiveDateCheckAccede, data, false, false, true, receiveSuccess, statusIsChange, null);
+            }
         }
     });
 
@@ -241,6 +283,5 @@ $(function () {
             }
         }
     });
-
 
 });
