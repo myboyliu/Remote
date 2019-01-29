@@ -283,6 +283,8 @@ function getApplyInfo() {
         isBranchDoctor = userInfo.branchId === applyInfo.inviteBranchId ? true : false;
         if (applyInfo.consultantUserList) {
             isInvite = applyInfo.consultantUserList.indexOf(userInfo.id) > 0 ? true : false;
+        }else{
+            isInvite = userInfo.id === applyInfo.inviteUserId ? true : false;
         }
         // isInvite = userInfo.branchId === applyInfo.inviteBranchId ? true : false;
         isVideo = applyInfo.applyType === "APPLY_CONSULTATION_VIDEO" ? true : false;
