@@ -515,6 +515,15 @@ function alertMessage() {
     });
 }
 
+/** 订单状态 变化 导致 操作失败 */
+function operationFailid(data) {
+    $("#alertText").html("订单状态已改变!");
+    alertMessage();
+    setTimeout(function () {
+        window.location = '../page/morkbench.html'
+    }, 2000);
+}
+
 $(function () {
 
     getApplyInfo();

@@ -268,7 +268,7 @@ $(function () {
             let data = new FormData();
             data.append("applyFormId", applyFormId);
             data.append("report", viewText + $('.refuseReason').val());
-            ajaxRequest("POST", doctorReceiveReject, data, false, false, true, doctorReceiveRejectSuccess, null, null)
+            ajaxRequest("POST", doctorReceiveReject, data, false, false, true, doctorReceiveRejectSuccess, operationFailid, null)
 
             function doctorReceiveRejectSuccess(result) {
                 $("#alertText").html("拒收成功");
@@ -342,15 +342,6 @@ $(function () {
         }
 
     })
-
-    function operationFailid(data) {
-        console.log(data.result);
-        $("#alertText").html("订单状态已改变!");
-        alertMessage();
-        setTimeout(function () {
-            window.location = '../page/morkbench.html'
-        }, 2000);
-    }
 
     function sirUpdateDateSuccess(result) {
         $("#alertText").html("接收成功");
