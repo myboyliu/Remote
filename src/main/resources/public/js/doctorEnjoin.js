@@ -659,6 +659,7 @@ function cacheReportEnjoin(doctorEnjoinJson) {
 
 /** 提交 会诊报告 医嘱 */
 function submitReportEnjoin(doctorEnjoinJson) {
+    getReportEnjoin();
     for (let i = 1, len = reportEnjoin.length; i < len; i++) {
         if (reportEnjoin[i].reportStatus === "1") {
             layer.open({
@@ -732,7 +733,6 @@ function getReportEnjoin() {
 
     function selectReportSuccess(data) {
         reportEnjoin = JSON.parse(data);
-        console.log(reportEnjoin);
         render();
     }
 }
