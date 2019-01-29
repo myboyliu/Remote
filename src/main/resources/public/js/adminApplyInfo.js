@@ -21,241 +21,259 @@ let isConsultation = false; //true: 会诊订单 false: 不是会诊订单
 const statusArr = ["已拒收", '待收诊', '已排期', '会诊中', '待反馈', '已完成'];
 const referralStatusArr = ["已拒收", '待收诊', '已排期', '已完成'];
 
+//渲染 发起医政 会诊 详情页面
+function renderApplyMasterConsultationView(applyStatus) {
+    let str = '';
+    for (let i = 1; i < statusArr.length; i++) {
+        str += '<li>' + statusArr[i] + '</li>';
+        $('.progressBar').html(str);
+    }
+    if (applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
+        //创建成功
+        $(".progressBar").hide();
+        $(".modifier1").show();
+        $(".modifier3").show();
+        $(".modifier5").show();
+        $(".modifier22").show();
+        $("#sendBackConsultationBtn").show();
+        $("#auditConsultationBtn").show();
+    } else if (applyStatus === "CONSULTATION_MASTER_REJECT") {
+        //会诊医政已拒绝
+        $("#refuseReasonBox").show();
+        $('.progressBar').empty();
+        $('.progressBar').html('<li>' + statusArr[0] + '</li>');
+        $(".progressBar li:nth-child(1)").addClass("libg");
+    } else if (applyStatus === "CONSULTATION_DATETIME_LOCKED") {
+        //已排期
+        $(".progressBar li:nth-child(1)").addClass("libg");
+        $(".progressBar li:nth-child(2)").addClass("libg");
+
+        $(".modifier2").show();
+    } else if (applyStatus === "CONSULTATION_BEGIN") {
+        //会诊中
+        $(".progressBar li:nth-child(1)").addClass("libg");
+        $(".progressBar li:nth-child(2)").addClass("libg");
+        $(".progressBar li:nth-child(3)").addClass("libg");
+
+    } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
+        //待反馈
+        $(".progressBar li:nth-child(1)").addClass("libg");
+        $(".progressBar li:nth-child(2)").addClass("libg");
+        $(".progressBar li:nth-child(3)").addClass("libg");
+        $(".progressBar li:nth-child(4)").addClass("libg");
+        $("#applyRecord").show();
+        if (hasDoctorEnjoin) {
+            $("#doctorEnjoinTitle").show();
+            $("#doctorEnjoinBody").show();
+        }
+        applyRecordNavigationShow = true;
+    } else if (applyStatus === "CONSULTATION_END") {
+        //已完成
+        $(".progressBar li:nth-child(1)").addClass("libg");
+        $(".progressBar li:nth-child(2)").addClass("libg");
+        $(".progressBar li:nth-child(3)").addClass("libg");
+        $(".progressBar li:nth-child(4)").addClass("libg");
+        $(".progressBar li:nth-child(5)").addClass("libg");
+        $("#applyRecord").show();
+        $("#consultantFeedback").show();
+        if (hasDoctorEnjoin) {
+            $("#doctorEnjoinTitle").show();
+            $("#doctorEnjoinBody").show();
+        }
+        applyRecordNavigationShow = true;
+        consultantFeedbackNavigationShow = true;
+    } else {
+        //待收诊
+        $(".progressBar li:nth-child(1)").addClass("libg");
+        $(".modifier2").show();
+    }
+}
+
+//渲染 发起医政 转诊 详情页面
+function renderApplyMasterReferralView(applyStatus) {
+    $('.progressBar').empty();
+    let referralStatus = '';
+    for (var i = 1; i < referralStatusArr.length; i++) {
+        referralStatus += '<li style="width: 400px;">' + referralStatusArr[i] + '</li>';
+        $('.progressBar').html(referralStatus);
+    }
+    $(".progressBar li:nth-child(1)").addClass("libg");
+    if (applyStatus === "INQUIRY_APPLY_CREATE_SUCCESS") {
+        //待审核
+        $(".modifier1").show();
+        $(".modifier3").show();
+        $(".modifier5").show();
+
+        $('.progressBar').hide();
+        $('#applyTime').hide();
+        $('#applyNumber').hide();
+        $('.layui-timeline').hide();
+
+        $("#sendBackReferralBtn").show();
+        $("#throughReferralBtn").show();
+
+    } else if (applyStatus === "INQUIRY_APPLY_ACCEDE") {
+        //待收诊
+        $("#rejectionReferral").show();
+        $("#receiveReferral").show();
+    } else if (applyStatus === "INQUIRY_SLAVE_ACCEDE") {
+        //排期审核
+
+    } else if (applyStatus === "INQUIRY_DATETIME_LOCKED") {
+        //已排期
+        $(".progressBar li:nth-child(2)").addClass("libg");
+    } else if (applyStatus === "INQUIRY_MASTER_REJECT" || applyStatus === "INQUIRY_APPLY_REJECT" || applyStatus === "INQUIRY_SLAVE_REJECT") {
+        //已拒收
+        $("#refuseReasonBox").show();
+        $('.progressBar').empty();
+        referralStatus = '<li class="libg" style="width: 100%">' + '已拒收' + '</li>';
+        $('.progressBar').html(referralStatus);
+    } else if (applyStatus === "INQUIRY_END") {
+        //已结束
+
+    }
+}
+
+//渲染 接收方医政 会诊 详情页面
+function renderInviteyMasterConsultationView(applyStatus) {
+    let str = '';
+    for (let i = 1; i < statusArr.length; i++) {
+        str += '<li>' + statusArr[i] + '</li>';
+        $('.progressBar').html(str);
+    }
+    if (applyStatus === "CONSULTATION_APPLY_ACCEDE") {
+        //待收诊
+        $(".progressBar li:nth-child(1)").addClass("libg");
+        $(".modifier2").show();
+        $(".modifier3").show();
+        $(".modifier5").show();
+        $("#refuseConsultationBtn").show();
+        if (inviteDoctorCount > 2) {
+            $("#MDTConsultationBtn").show();
+        } else {
+            $("#receiveConsultationBtn").show();
+        }
+    } else if (applyStatus === "CONSULTATION_SLAVE_ACCEDE" || applyStatus === "CONSULTATION_MASTER_ACCEDE") {
+        //排期审核
+        $(".progressBar li:nth-child(1)").addClass("libg");
+        $(".modifier2").show();
+        $(".rejection").show();
+        $(".modifier3").show();
+        $(".modifier5").show();
+        $("#refuseConsultationBtn").show();
+        $("#examineConsultationBtn").show();
+
+    } else if (applyStatus === "CONSULTATION_SLAVE_REJECT") {
+        //专家协调
+        $(".progressBar li:nth-child(1)").addClass("libg");
+        $(".modifier2").show();
+        $(".rejection").show();
+        $(".modifier3").show();
+        $(".modifier5").show();
+        $("#toBeMDTConsultationBtn").show();
+        $("#refuseConsultationBtn").show();
+
+    } else if (applyStatus === "CONSULTATION_DATETIME_LOCKED") {
+        //已排期
+        $(".progressBar li:nth-child(1)").addClass("libg");
+        $(".progressBar li:nth-child(2)").addClass("libg");
+        $(".modifier2").show();
+        $("#refuseConsultationBtn").show();
+
+    } else if (applyStatus === "CONSULTATION_BEGIN") {
+        //会诊中
+        $(".progressBar li:nth-child(1)").addClass("libg");
+        $(".progressBar li:nth-child(2)").addClass("libg");
+        $(".progressBar li:nth-child(3)").addClass("libg");
+        $(".modifier2").show();
+        $("#refuseConsultationBtn").show();
+        if (isVideo) {
+            $("#entryConsultationRoomBtn").show();
+        }
+    } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
+        //待反馈
+        $(".progressBar li:nth-child(1)").addClass("libg");
+        $(".progressBar li:nth-child(2)").addClass("libg");
+        $(".progressBar li:nth-child(3)").addClass("libg");
+        $(".progressBar li:nth-child(4)").addClass("libg");
+        $("#applyRecord").show();
+        if (hasDoctorEnjoin) {
+            $("#doctorEnjoinTitle").show();
+            $("#doctorEnjoinBody").show();
+        }
+        applyRecordNavigationShow = true;
+    } else if (applyStatus === "CONSULTATION_END") {
+        //已完成
+        $(".progressBar li:nth-child(1)").addClass("libg");
+        $(".progressBar li:nth-child(2)").addClass("libg");
+        $(".progressBar li:nth-child(3)").addClass("libg");
+        $(".progressBar li:nth-child(4)").addClass("libg");
+        $(".progressBar li:nth-child(5)").addClass("libg");
+        $("#applyRecord").show();
+        $("#consultantFeedback").show();
+        if (hasDoctorEnjoin) {
+            $("#doctorEnjoinTitle").show();
+            $("#doctorEnjoinBody").show();
+        }
+        applyRecordNavigationShow = true;
+        consultantFeedbackNavigationShow = true;
+    } else if (applyStatus === "CONSULTATION_MASTER_REJECT") {
+        //会诊医政已拒绝
+        $(".modifier2").show();
+        $("#refuseReasonBox").show();
+        $('.progressBar').empty();
+        $('.progressBar').html('<li>' + statusArr[0] + '</li>');
+        $(".progressBar li:nth-child(1)").addClass("libg");
+    }
+}
+
+//渲染 接收方医政  转诊 详情页面
+function renderInviteyMasterReferralView(applyStatus) {
+    $('.progressBar').empty();
+    let referralStatus = '';
+    for (var i = 1; i < referralStatusArr.length; i++) {
+        referralStatus += '<li style="width: 400px;">' + referralStatusArr[i] + '</li>';
+        $('.progressBar').html(referralStatus);
+    }
+    $(".progressBar li:nth-child(1)").addClass("libg");
+    if (applyStatus === "INQUIRY_APPLY_ACCEDE") {
+        //待收诊
+        $(".modifier3").show();
+        $("#refuseReferralBtn").show();
+        $("#receiveReferralBtn").show();
+    } else if (applyStatus === "INQUIRY_SLAVE_ACCEDE") {
+        //排期审核
+        $(".modifier3").show();
+        $("#refuseReferralBtn").show();
+        $("#receiveReferralBtn").show();
+    } else if (applyStatus === "INQUIRY_DATETIME_LOCKED") {
+        //已排期
+        $(".progressBar li:nth-child(2)").addClass("libg");
+    } else if (applyStatus === "INQUIRY_MASTER_REJECT" || applyStatus === "INQUIRY_APPLY_REJECT" || applyStatus === "INQUIRY_SLAVE_REJECT") {
+        //已拒收
+        $("#refuseReasonBox").show();
+        $('.progressBar').empty();
+        referralStatus = '<li class="libg" style="width: 100%">' + '已拒收' + '</li>';
+        $('.progressBar').html(referralStatus);
+    } else if (applyStatus === "INQUIRY_END") {
+        //已结束
+    }
+}
+
 /** 根据 不同角色 渲染 基础页面 元素 */
 function renderViewByRole(applyStatus) {
-    /** 动态创建进度条 */
-
     if (isInvite && isConsultation) {
-        let str = '';
-        for (let i = 1; i < statusArr.length; i++) {
-            str += '<li>' + statusArr[i] + '</li>';
-            $('.progressBar').html(str);
-        }
-        if (applyStatus === "CONSULTATION_APPLY_ACCEDE") {
-            //待收诊
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".modifier2").show();
-            $(".modifier3").show();
-            $(".modifier5").show();
-            $("#refuseConsultationBtn").show();
-            if (inviteDoctorCount > 2) {
-                $("#MDTConsultationBtn").show();
-            } else {
-                $("#receiveConsultationBtn").show();
-            }
-        } else if (applyStatus === "CONSULTATION_SLAVE_ACCEDE" || applyStatus === "CONSULTATION_MASTER_ACCEDE") {
-            //排期审核
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".modifier2").show();
-            $(".rejection").show();
-            $(".modifier3").show();
-            $(".modifier5").show();
-            $("#refuseConsultationBtn").show();
-            $("#examineConsultationBtn").show();
-
-        } else if (applyStatus === "CONSULTATION_SLAVE_REJECT") {
-            //专家协调
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".modifier2").show();
-            $(".rejection").show();
-            $(".modifier3").show();
-            $(".modifier5").show();
-            $("#toBeMDTConsultationBtn").show();
-            $("#refuseConsultationBtn").show();
-
-        } else if (applyStatus === "CONSULTATION_DATETIME_LOCKED") {
-            //已排期
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".progressBar li:nth-child(2)").addClass("libg");
-            $(".modifier2").show();
-            $("#refuseConsultationBtn").show();
-
-        } else if (applyStatus === "CONSULTATION_BEGIN") {
-            //会诊中
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".progressBar li:nth-child(2)").addClass("libg");
-            $(".progressBar li:nth-child(3)").addClass("libg");
-            $(".modifier2").show();
-            $("#refuseConsultationBtn").show();
-            if (isVideo) {
-                $("#entryConsultationRoomBtn").show();
-            }
-        } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
-            //待反馈
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".progressBar li:nth-child(2)").addClass("libg");
-            $(".progressBar li:nth-child(3)").addClass("libg");
-            $(".progressBar li:nth-child(4)").addClass("libg");
-            $("#applyRecord").show();
-            if (hasDoctorEnjoin) {
-                $("#doctorEnjoinTitle").show();
-                $("#doctorEnjoinBody").show();
-            }
-            applyRecordNavigationShow = true;
-        } else if (applyStatus === "CONSULTATION_END") {
-            //已完成
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".progressBar li:nth-child(2)").addClass("libg");
-            $(".progressBar li:nth-child(3)").addClass("libg");
-            $(".progressBar li:nth-child(4)").addClass("libg");
-            $(".progressBar li:nth-child(5)").addClass("libg");
-            $("#applyRecord").show();
-            $("#consultantFeedback").show();
-            if (hasDoctorEnjoin) {
-                $("#doctorEnjoinTitle").show();
-                $("#doctorEnjoinBody").show();
-            }
-            applyRecordNavigationShow = true;
-            consultantFeedbackNavigationShow = true;
-        } else if (applyStatus === "CONSULTATION_MASTER_REJECT") {
-            //会诊医政已拒绝
-            $(".modifier2").show();
-            $("#refuseReasonBox").show();
-            $('.progressBar').empty();
-            $('.progressBar').html('<li>' + statusArr[0] + '</li>');
-            $(".progressBar li:nth-child(1)").addClass("libg");
-        }
-
+        renderInviteyMasterConsultationView(applyStatus);
     } else if (isConsultation) {
-        let str = '';
-        for (let i = 1; i < statusArr.length; i++) {
-            str += '<li>' + statusArr[i] + '</li>';
-            $('.progressBar').html(str);
-        }
-        if (applyStatus === "CONSULTATION_APPLY_CREATE_SUCCESS") {
-            //创建成功
-            $(".progressBar").hide();
-            $(".modifier1").show();
-            $(".modifier3").show();
-            $(".modifier5").show();
-            $(".modifier22").show();
-            $("#sendBackConsultationBtn").show();
-            $("#auditConsultationBtn").show();
-        } else if (applyStatus === "CONSULTATION_MASTER_REJECT") {
-            //会诊医政已拒绝
-            $("#refuseReasonBox").show();
-            $('.progressBar').empty();
-            $('.progressBar').html('<li>' + statusArr[0] + '</li>');
-            $(".progressBar li:nth-child(1)").addClass("libg");
-        } else if (applyStatus === "CONSULTATION_DATETIME_LOCKED") {
-            //已排期
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".progressBar li:nth-child(2)").addClass("libg");
-
-            $(".modifier2").show();
-        } else if (applyStatus === "CONSULTATION_BEGIN") {
-            //会诊中
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".progressBar li:nth-child(2)").addClass("libg");
-            $(".progressBar li:nth-child(3)").addClass("libg");
-
-        } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
-            //待反馈
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".progressBar li:nth-child(2)").addClass("libg");
-            $(".progressBar li:nth-child(3)").addClass("libg");
-            $(".progressBar li:nth-child(4)").addClass("libg");
-            $("#applyRecord").show();
-            if (hasDoctorEnjoin) {
-                $("#doctorEnjoinTitle").show();
-                $("#doctorEnjoinBody").show();
-            }
-            applyRecordNavigationShow = true;
-        } else if (applyStatus === "CONSULTATION_END") {
-            //已完成
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".progressBar li:nth-child(2)").addClass("libg");
-            $(".progressBar li:nth-child(3)").addClass("libg");
-            $(".progressBar li:nth-child(4)").addClass("libg");
-            $(".progressBar li:nth-child(5)").addClass("libg");
-            $("#applyRecord").show();
-            $("#consultantFeedback").show();
-            if (hasDoctorEnjoin) {
-                $("#doctorEnjoinTitle").show();
-                $("#doctorEnjoinBody").show();
-            }
-            applyRecordNavigationShow = true;
-            consultantFeedbackNavigationShow = true;
-        } else {
-            //待收诊
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            $(".modifier2").show();
-        }
+        renderApplyMasterConsultationView(applyStatus);
     } else {
         $('#adminConsultationDoctor').hide();
         $(".modifier2").show();
         if (isInvite) {
-            $('.progressBar').empty();
-            let referralStatus = '';
-            for (var i = 1; i < referralStatusArr.length; i++) {
-                referralStatus += '<li style="width: 400px;">' + referralStatusArr[i] + '</li>';
-                $('.progressBar').html(referralStatus);
-            }
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            if (applyStatus === "INQUIRY_APPLY_ACCEDE") {
-                //待收诊
-                $(".modifier3").show();
-                $("#refuseReferralBtn").show();
-                $("#receiveReferralBtn").show();
-            } else if (applyStatus === "INQUIRY_SLAVE_ACCEDE") {
-                //排期审核
-            } else if (applyStatus === "INQUIRY_DATETIME_LOCKED") {
-                //已排期
-                $(".progressBar li:nth-child(2)").addClass("libg");
-            } else if (applyStatus === "INQUIRY_MASTER_REJECT" || applyStatus === "INQUIRY_APPLY_REJECT" || applyStatus === "INQUIRY_SLAVE_REJECT") {
-                //已拒收
-                $("#refuseReasonBox").show();
-                $('.progressBar').empty();
-                referralStatus = '<li class="libg" style="width: 100%">' + '已拒收' + '</li>';
-                $('.progressBar').html(referralStatus);
-            } else if (applyStatus === "INQUIRY_END") {
-                //已结束
-
-            }
+            renderInviteyMasterReferralView(applyStatus);
         } else {
-            $('.progressBar').empty();
-            let referralStatus = '';
-            for (var i = 1; i < referralStatusArr.length; i++) {
-                referralStatus += '<li style="width: 400px;">' + referralStatusArr[i] + '</li>';
-                $('.progressBar').html(referralStatus);
-            }
-            $(".progressBar li:nth-child(1)").addClass("libg");
-            if (applyStatus === "INQUIRY_APPLY_CREATE_SUCCESS") {
-                //待审核
-                $(".modifier1").show();
-                $(".modifier3").show();
-                $(".modifier5").show();
-
-                $('.progressBar').hide();
-                $('#applyTime').hide();
-                $('#applyNumber').hide();
-                $('.layui-timeline').hide();
-
-                $("#sendBackReferralBtn").show();
-                $("#throughReferralBtn").show();
-
-            } else if (applyStatus === "INQUIRY_APPLY_ACCEDE") {
-                //待收诊
-                $("#rejectionReferral").show();
-                $("#receiveReferral").show();
-            } else if (applyStatus === "INQUIRY_SLAVE_ACCEDE") {
-                //排期审核
-
-            } else if (applyStatus === "INQUIRY_DATETIME_LOCKED") {
-                //已排期
-                $(".progressBar li:nth-child(2)").addClass("libg");
-            } else if (applyStatus === "INQUIRY_MASTER_REJECT" || applyStatus === "INQUIRY_APPLY_REJECT" || applyStatus === "INQUIRY_SLAVE_REJECT") {
-                //已拒收
-                $("#refuseReasonBox").show();
-                $('.progressBar').empty();
-                referralStatus = '<li class="libg" style="width: 100%">' + '已拒收' + '</li>';
-                $('.progressBar').html(referralStatus);
-            } else if (applyStatus === "INQUIRY_END") {
-                //已结束
-
-            }
+            renderApplyMasterReferralView(applyStatus);
         }
-
     }
 }
 
@@ -367,7 +385,7 @@ function renderDoctorEnjoin(doctorEnjoinJsonStr) {
                     <div class="oneListItem">\
                         <div class="twoList">'
         for (let i = 0; i < doctorEnjoinJson.surgeryArr.length; i++) {
-            _html += '<p class="twoListItem"><b>' + ((i + 1) > 10 ? (i + 1) : '0' + (i + 1)) + "&nbsp;&nbsp;&nbsp;&nbsp;" + doctorEnjoinJson.surgeryArr[i].surgeryName + '&nbsp;&nbsp;&nbsp;&nbsp;' +  + doctorEnjoinJson.surgeryArr[i].surgeryNum + '</b></p>';
+            _html += '<p class="twoListItem"><b>' + ((i + 1) > 10 ? (i + 1) : '0' + (i + 1)) + "&nbsp;&nbsp;&nbsp;&nbsp;" + doctorEnjoinJson.surgeryArr[i].surgeryName + '&nbsp;&nbsp;&nbsp;&nbsp;' + +doctorEnjoinJson.surgeryArr[i].surgeryNum + '</b></p>';
         }
         _html += '</div>\
                     </div>\
