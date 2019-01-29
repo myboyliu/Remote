@@ -275,6 +275,7 @@ public class ApplyDisposeController extends BaseController {
     public Map sirConsultationMasterAccede(String applyFormId) {
 
         String applyType = applyFormService.getByPrimaryKey(applyFormId).getApplyType();
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
         // 视频会诊状态变为会诊时间已选定
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
         // 图文会诊接收后立刻变为会诊中
@@ -299,7 +300,6 @@ public class ApplyDisposeController extends BaseController {
         applyTime.setApplyFormId(applyFormId);
         applyTime.setUpdateUser(userId);
         applyTimeService.updateStatus(applyTime);
-        applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已排期.toString());
         return succeedRequest(applyForm);
     }
 
@@ -326,11 +326,12 @@ public class ApplyDisposeController extends BaseController {
     public Map sirReceiveHarmonizeAccede(String applyFormId) {
 
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
-
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
         String applyType = applyFormService.getByPrimaryKey(applyFormId).getApplyType();
         // 图文会诊砖家协调后立刻变为会诊中
         if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyType)) {
             applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
+            applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
         }
 
         String userId = getRequestToken();
@@ -349,7 +350,6 @@ public class ApplyDisposeController extends BaseController {
         applyTime.setApplyFormId(applyFormId);
         applyTime.setUpdateUser(userId);
         applyTimeService.updateStatus(applyTime);
-        applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已排期.toString());
         return succeedRequest(applyForm);
     }
 
