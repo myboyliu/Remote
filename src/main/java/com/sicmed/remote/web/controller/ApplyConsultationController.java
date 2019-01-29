@@ -578,7 +578,7 @@ public class ApplyConsultationController extends BaseController {
      */
     @GetMapping(value = "sendSelectAllCountDoctor")
     public Map sendSelectAllCountDoctor() {
-
+        procedureService.applyChecked();
         String userId = getRequestToken();
 
         ConsultationStatusBean consultationStatusBean = applyFormService.sendSelectAllCount(userId, null, consultantTypeList);
@@ -591,7 +591,7 @@ public class ApplyConsultationController extends BaseController {
      */
     @GetMapping(value = "sendSelectAllCountSir")
     public Map sendSelectAllCountSir() {
-
+        procedureService.applyChecked();
         String userId = getRequestToken();
         CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
         ConsultationStatusBean consultationStatusBean = applyFormService.sendSelectAllCount(null, userDetail.getHospitalId(), consultantTypeList);
@@ -604,7 +604,7 @@ public class ApplyConsultationController extends BaseController {
      */
     @GetMapping(value = "receiveSelectAllCountDoctor")
     public Map receiveSelectAllCountDoctor() {
-
+        procedureService.applyChecked();
         String userId = getRequestToken();
         CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
@@ -621,7 +621,7 @@ public class ApplyConsultationController extends BaseController {
      */
     @GetMapping(value = "receiveSelectAllCountSir")
     public Map receiveSelectAllCountSir() {
-
+        procedureService.applyChecked();
         String userId = getRequestToken();
         CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
 
