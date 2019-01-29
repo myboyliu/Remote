@@ -281,7 +281,10 @@ function getApplyInfo() {
         isConsultation = applyInfo.applyType === "APPLY_REFERRAL" ? false : true;
         isMainDoctor = userInfo.id === applyInfo.inviteUserId ? true : false;
         isBranchDoctor = userInfo.branchId === applyInfo.inviteBranchId ? true : false;
-        isInvite = userInfo.branchId === applyInfo.inviteBranchId ? true : false;
+        if (applyInfo.consultantUserList) {
+            isInvite = applyInfo.consultantUserList.indexOf(userInfo.id) > 0 ? true : false;
+        }
+        // isInvite = userInfo.branchId === applyInfo.inviteBranchId ? true : false;
         isVideo = applyInfo.applyType === "APPLY_CONSULTATION_VIDEO" ? true : false;
     }
 }
