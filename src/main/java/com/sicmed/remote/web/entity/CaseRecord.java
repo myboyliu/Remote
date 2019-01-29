@@ -31,7 +31,7 @@ public class CaseRecord extends BaseEntity {
     private String allergicHistory;
 
     @NotBlank(message = "caseDiagnosis is null")
-    @Size(min = 2, max = 255, message = "caseDiagnosis 长度不合规")
+    @Size(min = 2, max = 2550, message = "caseDiagnosis 长度不合规")
     private String caseDiagnosis;
 
     @Min(1)
