@@ -1,3 +1,13 @@
+/** 查询会诊报告 */
+function getConsultantReport() {
+    applyFormId = sessionStorage.getItem('applyFormId');
+    let formData = {"applyFormId": applyFormId};
+    ajaxRequest("GET", selectReport, formData, true, "application/json", false, selectReportSuccess, null, null);
+    function selectReportSuccess(data) {
+        consultantReport = JSON.parse(data);
+        console.log(consultantReport);
+    }
+}
 $(function () {
     /** 编辑会诊报告 */
     $('.compileReport').click(function () {
@@ -64,6 +74,7 @@ $(function () {
         ajaxRequest("POST", doctorSendFeedbackReportMoment, data, false, false, true, success, failed, null);
 
         function success() {
+            getConsultantReport();
             layer.open({
                 type: 1,
                 title: '',
@@ -112,6 +123,7 @@ $(function () {
         ajaxRequest("POST", doctorSendFeedbackReportMoment, data, false, false, true, success, failed, null);
 
         function success() {
+            getConsultantReport();
             $('.working').html('暂存成功')
             layer.open({
                 type: 1,
