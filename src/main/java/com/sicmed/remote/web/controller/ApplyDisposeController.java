@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -292,7 +293,8 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setApplyStatus(applyStatus);
         int i = applyFormService.inviteeConsent(applyForm);
         if (i < 1) {
-            return badRequestOfArguments("");
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return badRequestOfArguments("已被接收");
         }
 
         ApplyTime applyTime = new ApplyTime();
@@ -342,7 +344,8 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setApplyStatus(applyStatus);
         int i = applyFormService.inviteeConsent(applyForm);
         if (i < 1) {
-            return badRequestOfArguments("已被接受");
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return badRequestOfArguments("已被接收");
         }
 
         ApplyTime applyTime = new ApplyTime();
@@ -539,7 +542,8 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setApplyStatus(applyStatus);
         int i = applyFormService.inviteeTransfer(applyForm);
         if (i < 1) {
-            return badRequestOfArguments("form修改失败");
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return badRequestOfArguments("已被接收");
         }
 
         int j = applyTimeService.delByApplyForm(applyFormId);
@@ -850,12 +854,12 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
         if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(type)) {
             applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_BEGIN.toString());
-            applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
         }
         applyForm.setUpdateUser(userId);
         int i = applyFormService.inviteeConsent(applyForm);
         if (i < 1) {
-            return badRequestOfArguments("更新form失败");
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return badRequestOfArguments("已被接收");
         }
 
         // 视频会诊,更新applyTime相关
@@ -956,7 +960,8 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setUpdateUser(userId);
         int k = applyFormService.inviteeConsent(applyForm);
         if (k < 1) {
-            return badRequestOfArguments("修改applyForm失败");
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return badRequestOfArguments("已被接收");
         }
 
         // 添加新的时间
@@ -995,7 +1000,8 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setUpdateUser(userId);
         int k = applyFormService.inviteeConsent(applyForm);
         if (k < 1) {
-            return badRequestOfArguments("修改applyForm失败");
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return badRequestOfArguments("已被接收");
         }
 
         applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
@@ -1082,7 +1088,8 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setInviteSummary(inviteSummary);
         int i = applyFormService.inviteeConsent(applyForm);
         if (i < 1) {
-            return badRequestOfArguments("修改applyForm失败");
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return badRequestOfArguments("已被接收");
         }
 
         CaseConsultant caseConsultant = new CaseConsultant();
