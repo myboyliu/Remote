@@ -678,10 +678,7 @@ function submitReportEnjoin(doctorEnjoinJson) {
         }
     }
     let data = new FormData();
-    console.log(reportEnjoin);
-    console.log($(".verdictArea").val());
-    console.log(doctorEnjoinJson);
-    return false;
+
     for (const item of reportEnjoin) {
         if (item.doctorId === currentUserInfo.id) {
             data.append("doctorName",item.doctorName);
