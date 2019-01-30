@@ -337,8 +337,14 @@ function createHalfCase(successCallBack) {
 
     function failedParam(data) {
         layer.closeAll();
-
-        layer.msg(data.result.patientWeight);
+        let errorMsg = data.result;
+        if (errorMsg.patientName) {
+            layer.msg("患者姓名错误!");
+        } else if(errorMsg.patientWeight){
+            layer.msg("体重数值错误!");
+        }else {
+            layer.msg(errorMsg);
+        }
     }
 
     function createCaseSuccess(result) {
@@ -388,7 +394,6 @@ function buildCaseData(successCallBack) {
     function failedParam(data) {
         layer.closeAll();
         let errorMsg = data.result;
-        console.log(errorMsg);
         if (errorMsg.patientName) {
             layer.msg("患者姓名错误!");
         } else {
@@ -1735,16 +1740,17 @@ $(function () {
     function referraSelectRender() {
         $("#referralTimeScope").html('');
         layui.use('laydate', function () {
-            const laydate = layui.laydate;
+            let laydate = layui.laydate;
             //执行一个laydate实例
             laydate.render({
                 elem: '#referralTimeScope',
                 position: 'static',
                 showBottom: false,
                 min: 0,
-                value: initValue,
+                value: dateStr,
                 mark: markReferralJson,
                 change: function (value, date) { //监听日期被切换
+                    console.log(date)
                     if (date.date === initDay && date.month != initMonth || date.year != initYear) {
 
                     } else {
@@ -1760,7 +1766,7 @@ $(function () {
                             markReferralJson[value] = '';
                         }
                     }
-                    initValue = value;
+                    dateStr = value;
                     initYear = date.year;
                     initMonth = date.month;
                     initDay = date.date;
@@ -1780,6 +1786,10 @@ $(function () {
         //判断病历信息是否正确
         let isIncorrect = checkCase();
         if (isIncorrect) {
+            return false;
+        }
+        if ($('.videoPric').html() === "-") {
+            layer.msg('请选择医院');
             return false;
         }
         if (!hospitalInfo.id && inviteDoctorArray.length <= 0) {
