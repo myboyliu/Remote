@@ -7,6 +7,7 @@ let userInfo;
 let isReferral = false;
 let isConsultation = false;
 let applyFormId = "";
+
 /** 渲染 医生页面 左侧导航 */
 function renderDoctorNavigation(data) {
     let _html = '';
@@ -75,7 +76,6 @@ function renderDoctorNavigation(data) {
     $('.hospitalTel').html(data[0].hospitalPhone);
     // favoriteHtml();
 
-
     if (!isInvite) {
         hospitalInfo["id"] = data[0].id;
         hospitalInfo["hospitalName"] = data[0].hospitalName;
@@ -94,7 +94,9 @@ let deptId = "";
 
 /** 渲染 医生列表*/
 function renderDoctorList(data) {
-    let _html = '<li class="doctorChunk noDoctor">\
+    let _html = "";
+    if (!isInvite) {
+        _html = '<li class="doctorChunk noDoctor">\
                         <div class="Firstdiamond"></div>\
                         <div class="message">\
                             <span class="mess_l">不选医生</span><span>远程中心</span>\
@@ -102,6 +104,7 @@ function renderDoctorList(data) {
                             <p class="p4">选择此项,申请将发送至对方医院远程中心,由医务人员为您调度医生资源,诊费会在选定医生后确定。<br />请将您的备注信息填至【会/转诊目的】 </p>\
                         </div>\
                     </li>';
+    }
     let currentUserId = localStorage.getItem('token');
     for (let i = 0; i < data.length; i++) {
         if (currentUserId === data[i].id) {
@@ -173,7 +176,6 @@ $(function () {
     var hospitalId = '';
     // 选择的医生信息数组
     var price = 0;
-
 
     // let applyFormId = sessionStorage.getItem('applyFormId');
     // let formData = {"applyFormId": applyFormId};
@@ -303,7 +305,6 @@ $(function () {
         getDoctorByBranchId($(this).attr('name'))
         return false;
     });
-
 
     // 选医生鼠标移入
     $('.doctorUl').delegate('.doctorChunk', 'mouseover', function (event) {
@@ -440,6 +441,12 @@ $(function () {
     })
     //    首诊医政修改病历基本信息 order/applyManagerUpdateOrder
     $('.save').click(function () {
+        if(isInvite && isConsultation){
+            if(inviteDoctorArray.length === 0){
+                layer.msg("最少要选择一位医生!");
+                return false;
+            }
+        }
         if (isReferral) {
             let referralModifyDoctor = {};
             if (inviteDoctorArray.length > 0) {
@@ -450,7 +457,7 @@ $(function () {
                     "branchId": inviteDoctorArray[0].branchId,
                     "doctorId": inviteDoctorArray[0].doctorId,
                 }
-            }else {
+            } else {
                 referralModifyDoctor = {
                     "inviteSummary": "<" + hospitalInfo.hospitalName + ">",
                     "hospitalId": hospitalInfo.id,
@@ -460,11 +467,11 @@ $(function () {
 
             }
             let formData = new FormData();
-            formData.append("applyFormId",applyFormId);
-            formData.append("inviteSummary",referralModifyDoctor.inviteSummary);
-            formData.append("inviteHospitalId",referralModifyDoctor.hospitalId);
-            formData.append("inviteBranchId",referralModifyDoctor.branchId);
-            formData.append("inviteUserId",referralModifyDoctor.doctorId);
+            formData.append("applyFormId", applyFormId);
+            formData.append("inviteSummary", referralModifyDoctor.inviteSummary);
+            formData.append("inviteHospitalId", referralModifyDoctor.hospitalId);
+            formData.append("inviteBranchId", referralModifyDoctor.branchId);
+            formData.append("inviteUserId", referralModifyDoctor.doctorId);
 
             ajaxRequest("POST", sirTransferAmendDor, formData, false, false, true, sirTransferAmendDorSuccess, null, null);
 
@@ -472,6 +479,7 @@ $(function () {
                 // window.history.go(-1);
                 window.location = '../page/adminApplyInfo.html';
             }
+
             return false
         }
         let data = new FormData();
