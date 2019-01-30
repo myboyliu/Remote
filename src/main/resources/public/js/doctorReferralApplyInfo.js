@@ -86,7 +86,7 @@ $(function () {
                 content: _$('#receiveReferralBox')
             });
         } else {
-            $("#alertText").html("当前时间不符合要求，请选择一天转诊时间");
+            $("#alertText").html("请选择一天转诊时间");
             alertMessage();
         }
     })
