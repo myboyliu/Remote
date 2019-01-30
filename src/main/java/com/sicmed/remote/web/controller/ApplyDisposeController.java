@@ -276,9 +276,13 @@ public class ApplyDisposeController extends BaseController {
     public Map sirConsultationMasterAccede(String applyFormId) {
 
         String applyType = applyFormService.getByPrimaryKey(applyFormId).getApplyType();
-        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
+        String applyStatus = "";
+
         // 视频会诊状态变为会诊时间已选定
-        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
+        if (ApplyType.APPLY_CONSULTATION_VIDEO.toString().equals(applyType)) {
+            applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
+            applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
+        }
         // 图文会诊接收后立刻变为会诊中
         if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyType)) {
             applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
@@ -327,9 +331,14 @@ public class ApplyDisposeController extends BaseController {
     @PostMapping(value = "sirReceiveHarmonizeAccede")
     public Map sirReceiveHarmonizeAccede(String applyFormId) {
 
-        String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
-        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
         String applyType = applyFormService.getByPrimaryKey(applyFormId).getApplyType();
+        String applyStatus = "";
+
+        // 视频会诊状态变为会诊时间已选定
+        if (ApplyType.APPLY_CONSULTATION_VIDEO.toString().equals(applyType)) {
+            applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
+            applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
+        }
         // 图文会诊砖家协调后立刻变为会诊中
         if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyType)) {
             applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
@@ -429,6 +438,7 @@ public class ApplyDisposeController extends BaseController {
     /**
      * 转诊 修改时间
      */
+    @Transactional
     @PostMapping(value = "sirTransferAmendTime")
     public Map sirTransferAmendTime(String applyFormId, String startEndTime) {
         if (StringUtils.isBlank(applyFormId) || StringUtils.isBlank(startEndTime)) {
@@ -438,6 +448,7 @@ public class ApplyDisposeController extends BaseController {
         String userId = getRequestToken();
         int j = applyTimeService.delByApplyForm(applyFormId);
         if (j < 1) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return badRequestOfArguments("删除原时间失败");
         }
 
@@ -467,6 +478,7 @@ public class ApplyDisposeController extends BaseController {
         applyTimeBean.setCreateUser(userId);
         int k = applyTimeService.insertStartEndTimes(applyTimeBean);
         if (k < 1) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return badRequestOfArguments("添加申请时间失败");
         }
         return succeedRequest(resultMap);
@@ -685,7 +697,7 @@ public class ApplyDisposeController extends BaseController {
         if (StringUtils.isNotBlank(consultantFeedback)) {
             caseConsultant.setConsultantFeedback(consultantFeedback);
         }
-        log.debug(consultantReportBean.toString());
+
         if (consultantReportBean == null || StringUtils.isNotBlank(consultantReportBean.getReport())) {
             String oldReport = caseConsultantService.selectReport(applyFormId);
             List<ConsultantReportBean> newConsultantReportBeanList = new ArrayList<>();
@@ -699,10 +711,9 @@ public class ApplyDisposeController extends BaseController {
                 }
             }
             String newReport = JSON.toJSONString(newConsultantReportBeanList);
-            log.debug(newReport);
             caseConsultant.setConsultantReport(newReport);
-
         }
+
         caseConsultant.setUpdateUser(userId);
         int k = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
         if (k < 1) {

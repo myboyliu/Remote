@@ -7,7 +7,6 @@ import com.sicmed.remote.common.ApplyNodeConstant;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
-import com.sicmed.remote.web.YoonaLtUtils.IdentityCardUtil;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
 import com.sicmed.remote.web.bean.*;
 import com.sicmed.remote.web.entity.*;
@@ -29,7 +28,7 @@ import java.util.*;
 /**
  * @author YoonaLt
  * @version Running JDK 1.8
- * @description 转诊, 图文会诊, 视频会诊, 草稿, 搜索
+ * @description 转诊, 图文会诊, 视频会诊, 草稿, 工作台病例详细展示
  * @data 2018/12/19
  */
 @Slf4j
