@@ -13,6 +13,7 @@ let objParent = null; // 当前点击块的父级
 let caseId;
 let casePatientId;
 let _$ = layui.jquery;
+
 /** 渲染 病历页面 左侧导航 */
 function renderCaseTypeLeftNavigation(data) {
     let _html = '<li class="oneLevelItem patientInfo active">\
@@ -75,33 +76,33 @@ function renderFileListView(baseUrl, url, type, fileName) {
 
 }
 
-function success(data) {
-    fileAllArr.push(name);
-    // 成功操作
-    if (/[png|jpg]$/gi.test(name)) {
-        objParent.append(
-            `<li class="fileItem fileNewItem" sort="${sort}" id="${data.patientCaseId}" filePath="${data.patientCaseUrl}">\
-                                          <div style='background-image:url(${imgIp + data.patientCaseUrl});'></div>\
-                                          <img class="delFileBtn" src="../images/delete_file.png"/><p type="img" desc="" class="fileName">${name}</p></li>`
-        );
-    } else if (/[pdf]$/gi.test(name)) {
-        // console.log('是pdf类型')
-        objParent.append(
-            `<li class="fileItem fileNewItem" sort="${sort}" id="${data.patientCaseId}" filePath="${data.patientCaseUrl}">\
-                                                        <div class="bgSize" style='background-image:url(../images/pdf_icon.png);'></div>\
-                                                        <img class="delFileBtn" src="../images/delete_file.png"/><p type="pdf" desc="" class="fileName">${name}</p></li>`
-        );
-    } else if (/[dcm]$/gi.test(name)) {
-        objParent.append(
-            `<li class="fileItem fileNewItem" sort="${sort}" id="${data.patientCaseId}" filePath="${data.patientCaseUrl}">\
-                                                        <div class="bgSize" style='background-image:url(../images/dcm_icon.png);'></div>\
-                                                        <img class="delFileBtn" src="../images/delete_file.png"/><p type="dcm" desc="" class="fileName">${name}</p></li>`
-        );
-    } else {
-        layer.msg('请上传png/jpg/pdf/dcm类型的文件');
-    }
-    $('.fileCount').html(Number($('.fileCount').html()) + 1);
-}
+// function success(data) {
+//     fileAllArr.push(name);
+//     // 成功操作
+//     if (/[png|jpg]$/gi.test(name)) {
+//         objParent.append(
+//             `<li class="fileItem fileNewItem" sort="${sort}" id="${data.patientCaseId}" filePath="${data.patientCaseUrl}">\
+//                                           <div style='background-image:url(${imgIp + data.patientCaseUrl});'></div>\
+//                                           <img class="delFileBtn" src="../images/delete_file.png"/><p type="img" desc="" class="fileName">${name}</p></li>`
+//         );
+//     } else if (/[pdf]$/gi.test(name)) {
+//         // console.log('是pdf类型')
+//         objParent.append(
+//             `<li class="fileItem fileNewItem" sort="${sort}" id="${data.patientCaseId}" filePath="${data.patientCaseUrl}">\
+//                                                         <div class="bgSize" style='background-image:url(../images/pdf_icon.png);'></div>\
+//                                                         <img class="delFileBtn" src="../images/delete_file.png"/><p type="pdf" desc="" class="fileName">${name}</p></li>`
+//         );
+//     } else if (/[dcm]$/gi.test(name)) {
+//         objParent.append(
+//             `<li class="fileItem fileNewItem" sort="${sort}" id="${data.patientCaseId}" filePath="${data.patientCaseUrl}">\
+//                                                         <div class="bgSize" style='background-image:url(../images/dcm_icon.png);'></div>\
+//                                                         <img class="delFileBtn" src="../images/delete_file.png"/><p type="dcm" desc="" class="fileName">${name}</p></li>`
+//         );
+//     } else {
+//         layer.msg('请上传png/jpg/pdf/dcm类型的文件');
+//     }
+//     $('.fileCount').html(Number($('.fileCount').html()) + 1);
+// }
 
 function addCaseFile() {
     let fileName = uploadFile[fileIndex].name;
@@ -126,8 +127,8 @@ function addCaseFile() {
 
     function uploadFileSuccess(result) {
         fileAllArr.push({
-            "name": fileName,
-            "value": result,
+            name: fileName,
+            value: result,
         });
         if (/(.png|.jpg|.jpeg)$/gi.test(fileName)) {
             type = "img";
@@ -274,7 +275,7 @@ function checkCase() {
     return isFailedParam;
 }
 
-function showFailedParamMessage(){
+function showFailedParamMessage() {
     layer.open({
         type: 1,
         title: '',
@@ -413,7 +414,11 @@ $(function () {
         ajaxRequest("POST", softDelPicture, data, false, false, true, removeFileSuccess, null, null);
 
         function removeFileSuccess(result) {
-            fileAllArr.splice(fileAllArr.splice(fileAllArr.indexOf(fileName), 1));
+            for (let i = 0; len = fileAllArr.length, i < len; i++) {
+                if (fileAllArr[i].name === filePath) {
+                    fileAllArr.splice(i,1);
+                }
+            }
             $('.fileCount').html(Number($('.fileCount').html()) - 1);
         }
 
