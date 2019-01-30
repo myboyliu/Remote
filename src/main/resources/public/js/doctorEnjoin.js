@@ -510,7 +510,6 @@ function render() {
 
 /** 组装 医嘱 */
 function doctorEnjoinBuilder(feedBackFunction) {
-    // 暂存 按钮
     let dataJson = {};
     if ($(".longTimeBox .dataUl > li").length > 0) {
         let oneTempArr = [];
@@ -659,7 +658,7 @@ function cacheReportEnjoin(doctorEnjoinJson) {
 
 /** 提交 会诊报告 医嘱 */
 function submitReportEnjoin(doctorEnjoinJson) {
-    getReportEnjoin();
+    getCheckReportEnjoin();
     for (let i = 1, len = reportEnjoin.length; i < len; i++) {
         if (reportEnjoin[i].reportStatus === "1") {
             layer.open({
@@ -679,11 +678,15 @@ function submitReportEnjoin(doctorEnjoinJson) {
         }
     }
     let data = new FormData();
+    console.log(reportEnjoin);
+    console.log($(".verdictArea").val());
+    console.log(doctorEnjoinJson);
+    return false;
     for (const item of reportEnjoin) {
         if (item.doctorId === currentUserInfo.id) {
             data.append("doctorName",item.doctorName);
             data.append("doctorId",item.doctorId);
-            data.append("report",$('.verdictArea').val());
+            data.append("report",$(".verdictArea").val());
             data.append("reportStatus","0");
             data.append("doctorEnjoin",doctorEnjoinJson);
         }
@@ -736,7 +739,16 @@ function getReportEnjoin() {
         render();
     }
 }
+/** 查询会诊报告 + 医嘱 */
+function getCheckReportEnjoin() {
+    applyFormId = sessionStorage.getItem('applyFormId');
+    let formData = {"applyFormId": applyFormId};
+    ajaxRequest("GET", selectReport, formData, true, "application/json", false, selectReportSuccess, null, null);
 
+    function selectReportSuccess(data) {
+        reportEnjoin = JSON.parse(data);
+    }
+}
 $(function () {
     getReportEnjoin()
     // 长期医嘱 药物搜索按钮
