@@ -351,7 +351,7 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setUpdateUser(userId);
         applyForm.setId(applyFormId);
         applyForm.setApplyStatus(applyStatus);
-        int i = applyFormService.inviteeConsent(applyForm);
+        int i = applyFormService.updateByPrimaryKeySelective(applyForm);
         if (i < 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return badRequestOfArguments("已被接收");
