@@ -2,7 +2,7 @@
  * 统一接口管理JS
  * @type {string}
  */
-const baseUrl = "http://192.168.0.222"; //服务地址
+const baseUrl = "http://" + window.location.host; //服务地址
 /**
  * 公共接口
  */
