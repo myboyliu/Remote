@@ -209,9 +209,10 @@ $(function () {
                     let doctorTitleName = inviteDoctorArr[1];
                     let branchName = inviteDoctorArr[2];
                     let hospitalName = inviteDoctorArr[3];
+                    let doctorBranchId = item.branchId;
                     inviteDoctorArray.push({
                         hospitalId: applyInfo.inviteHospitalId, // 医院id
-                        branchId: applyInfo.inviteBranchId, // 科室id
+                        branchId: doctorBranchId, // 科室id
                         doctorId: item.doctorId, // 医生id
                         hospitalName: hospitalName, // 医院名字
                         branchName: branchName, // 科室名字
@@ -505,6 +506,11 @@ $(function () {
                         "doctorName": inviteDoctor,
                         "doctorId": inviteDoctorArray[i].doctorId,
                         "price": inviteDoctorArray[i].doctorVideoPrice,
+                        "branchId": inviteDoctorArray[i].branchId,
+                        "doctorPicturePrice": inviteDoctorArray[i].doctorPicturePrice,
+                        "doctorVideoPrice": inviteDoctorArray[i].doctorVideoPrice,
+                        "hospitalImgPrice": inviteDoctorArray[i].hospitalImgPrice,
+                        "hospitalVideoPrice": inviteDoctorArray[i].hospitalVideoPrice,
                     });
                     price += Number(inviteDoctorArray[i].doctorVideoPrice);
                 } else {
@@ -512,6 +518,11 @@ $(function () {
                         "doctorName": inviteDoctor,
                         "doctorId": inviteDoctorArray[i].doctorId,
                         "price": inviteDoctorArray[i].doctorPicturePrice,
+                        "branchId": inviteDoctorArray[i].branchId,
+                        "doctorPicturePrice": inviteDoctorArray[i].doctorPicturePrice,
+                        "doctorVideoPrice": inviteDoctorArray[i].doctorVideoPrice,
+                        "hospitalImgPrice": inviteDoctorArray[i].hospitalImgPrice,
+                        "hospitalVideoPrice": inviteDoctorArray[i].hospitalVideoPrice,
                     });
                     price += Number(inviteDoctorArray[i].doctorPicturePrice);
                 }
