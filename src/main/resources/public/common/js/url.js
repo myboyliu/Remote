@@ -194,3 +194,8 @@ const findSpecificationsByIdApi = "/consumables/findSpecificationsById";        
 
 const selectReport = "/apply/consultation/selectReport";                                    //查询会诊报告 + 医嘱
 
+
+/** 统计模块接口 **/
+
+const getConsultationCount = "/statistics/getConsultationCount"
+

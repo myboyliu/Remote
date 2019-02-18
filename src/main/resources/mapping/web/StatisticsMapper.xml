@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sicmed.remote.web.mapper.StatisticsMapper">
+    <resultMap id="BaseResultMap" type="com.sicmed.remote.web.bean.ConsultationStatisticsBean">
+        <result column="applyHospitalName" jdbcType="VARCHAR" property="applyHospitalName"/>
+        <result column="inviteHospitalName" jdbcType="VARCHAR" property="inviteHospitalName"/>
+        <result column="applyCustomBranchName" jdbcType="VARCHAR" property="applyCustomBranchName"/>
+        <result column="inviteCustomBranchName" jdbcType="VARCHAR" property="inviteCustomBranchName"/>
+        <result column="applyUserSpecialistTypeName" jdbcType="VARCHAR" property="applyUserSpecialistTypeName"/>
+        <result column="inviteUserSpecialistTypeName" jdbcType="VARCHAR" property="inviteUserSpecialistTypeName"/>
+        <result column="groupCount" jdbcType="VARCHAR" property="groupCount"/>
+    </resultMap>
+    <select id="getConsultationStatisticsListByParam" parameterType="com.sicmed.remote.web.bean.ConsultationStatisticsParamBean" resultMap="BaseResultMap">
+        SELECT
+          applyHospital.hospital_name applyHospitalName,
+          inviteHospital.hospital_name inviteHospitalName,
+          applyCustomBranch.custom_name applyCustomBranchName,
+          inviteCustomBranch.custom_name inviteCustomBranchName,
+          applyUserSpecialistType.specialist_name applyUserSpecialistTypeName,
+          inviteUserSpecialistType.specialist_name inviteUserSpecialistTypeName,
+          count(*) AS groupCount
+        FROM apply_form applyForm
+          LEFT JOIN base_hospital applyHospital ON applyHospital.id = applyForm.apply_hospital_id
+          LEFT JOIN base_hospital inviteHospital ON inviteHospital.id = applyForm.invite_hospital_id
+          LEFT JOIN custom_branch applyCustomBranch ON applyCustomBranch.id = applyForm.apply_branch_id
+          LEFT JOIN custom_branch inviteCustomBranch ON inviteCustomBranch.id = applyForm.invite_branch_id
+          LEFT JOIN user_detail applyUserDetail ON applyUserDetail.id = applyForm.apply_user_id
+          LEFT JOIN specialist_type applyUserSpecialistType ON applyUserSpecialistType.id = applyUserDetail.specialist_type_id
+          LEFT JOIN user_detail inviteUserDetail ON inviteUserDetail.id = applyForm.invite_user_id
+          LEFT JOIN specialist_type inviteUserSpecialistType ON inviteUserSpecialistType.id = inviteUserDetail.specialist_type_id
+        WHERE
+        applyForm.del_flag = "0"
+        AND #{startTime}&lt;applyForm.consultant_apply_time &lt;#{endTime}
+        <if test="isApply != null">
+            AND  applyForm.apply_hospital_id = #{hospitalId}
+        </if>
+        <if test="isInvite != null">
+            AND  applyForm.invite_hospital_id = #{hospitalId}
+        </if>
+         AND applyForm.apply_status = #{applyStatus}
+        GROUP BY
+        <if test="groupByApplyBranch != null">
+            applyForm.apply_branch_id;
+        </if>
+        <if test="groupByInviteBranch != null">
+            applyForm.invite_branch_id;
+        </if>
+        <if test="groupByApplyUserSpecialistType != null">
+            applyUserSpecialistType.id;
+        </if>
+        <if test="groupByInviteUserSpecialistType != null">
+            inviteUserSpecialistType.id;
+        </if>
+    </select>
+</mapper>

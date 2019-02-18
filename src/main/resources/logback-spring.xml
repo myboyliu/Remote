@@ -3,6 +3,7 @@
 
 
     <!--自定义变量-->
+    <!--<property name="logdir" value="/home"/>-->
     <property name="logdir" value="d:/"/>
     <property name="appname" value="Remote"/>
 

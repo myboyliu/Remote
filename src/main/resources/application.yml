@@ -6,6 +6,7 @@ spring:
   datasource:
     name: test
     url: jdbc:mysql://bj-cdb-3xrlmzai.sql.tencentcdb.com:63037/sicmed_slaver_ychz?serverTimezone=CTT&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
+#    url: jdbc:mysql://192.168.20.114:3306/sicmed_slaver_ychz?serverTimezone=CTT&useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
     username: root
     password: Sicmed123
     driver-class-name: com.mysql.jdbc.Driver
@@ -18,6 +19,20 @@ spring:
       max-wait: 60000
       time-between-eviction-runs-millis: 60000
       min-evictable-idle-time-millis: 300000
+#  redis:
+#    #################redis基础配置#################
+#    database: 6
+#    host: 172.21.0.6
+#    password: crs-rgs3lnbs:Qlxlm123456
+#    port: 6379
+#    timeout: 5000
+#    #################redis线程池设置#################
+#    jedis:
+#      pool:
+#        max-idle: 500
+#        min-idle: 50
+#        max-active: 2000
+#        max-wait: 1000
   mvc:
     static-path-pattern: /**
   resources:
@@ -33,3 +48,4 @@ logging:
     root: debug
 img:
   location: d:/mypicture
+#  location: /home/mypicture
