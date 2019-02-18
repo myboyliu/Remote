@@ -4,6 +4,7 @@ import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.bean.InquiryStatusBean;
+import com.sicmed.remote.web.bean.StatisticsSearchBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 
 import java.util.List;
@@ -64,4 +65,6 @@ public interface ApplyFormMapper {
     List<ApplyFormBean> searchByRemark(ApplyFormBean applyFormBean);
 
     List<ApplyFormBean> sirSearchByRemark(ApplyFormBean applyFormBean);
+
+    List<StatisticsSearchBean> applyConsultationStatistics(StatisticsSearchBean statisticsSearchBean);
 }

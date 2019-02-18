@@ -1125,4 +1125,46 @@
         order by ayf.consultant_apply_time
         limit #{beginNo},#{pageSize}
     </select>
+
+    <!--会诊病例次数统计,发出列表(下级医院)-->
+    <resultMap id="StatisticsSearchBeanResultMap" type="com.sicmed.remote.web.bean.StatisticsSearchBean">
+        <result column="applyHospital" jdbcType="VARCHAR" property="applyHospital"/>
+        <result column="inviteHospital" jdbcType="VARCHAR" property="inviteHospital"/>
+        <result column="applyBranch" jdbcType="VARCHAR" property="applyBranch"/>
+        <result column="inviteBranch" jdbcType="VARCHAR" property="inviteBranch"/>
+        <result column="applyName" jdbcType="VARCHAR" property="applyDoctorName"/>
+        <result column="inviteName" jdbcType="VARCHAR" property="inviteDoctorName"/>
+        <result column="afNumber" jdbcType="VARCHAR" property="amountStatistics"/>
+    </resultMap>
+    <select id="applyConsultationStatistics" parameterType="com.sicmed.remote.web.bean.StatisticsSearchBean"
+            resultMap="StatisticsSearchBeanResultMap">
+        select count(af.id) afNumber,
+        applybh.hospital_name applyHospital,
+        invitebh.hospital_name inviteHospital,
+        applycb.custom_name applyBranch,
+        invitecb.custom_name inviteBranch,
+        applyud.title_name applyName,
+        inviteud.title_name inviteName
+        from apply_form af
+        left join base_hospital applybh on af.apply_hospital_id = applybh.id
+        left join base_hospital invitebh on af.invite_hospital_id = invitebh.id
+        left join custom_branch applycb on af.apply_branch_id = applycb.id
+        left join custom_branch invitecb on af.invite_branch_id = invitecb.id
+        left join user_detail applyud on af.apply_user_id = applyud.id
+        left join user_detail inviteud on af.invite_user_id = inviteud.id
+        where af.del_flag = "0"
+        and #{startTime}&lt;af.consultant_apply_time &lt;#{endTime}
+        <if test="apply !=null">
+            and af.apply_hospital_id=#{hospitalId}
+        </if>
+        <if test="invite !=null">
+            and af.invite_hospital_id=#{hospitalId}
+        </if>
+        and af.apply_status = #{status}
+        group by
+        ${queryCondition1}
+        <if test="queryCondition2 != null">
+            ,${queryCondition2}
+        </if>
+    </select>
 </mapper>

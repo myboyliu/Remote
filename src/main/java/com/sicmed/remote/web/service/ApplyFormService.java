@@ -6,6 +6,7 @@ import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.bean.InquiryStatusBean;
+import com.sicmed.remote.web.bean.StatisticsSearchBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.CaseRecord;
 import com.sicmed.remote.web.mapper.ApplyFormMapper;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -176,6 +178,21 @@ public class ApplyFormService implements BaseService<ApplyForm> {
     // 转诊 待收诊  同意
     public int inviteeTransfer(ApplyForm applyForm) {
         return applyFormMapper.inviteeTransfer(applyForm);
+    }
+
+    // 会诊病例次数统计,发出列表
+    public List<StatisticsSearchBean> applyConsultationStatistics(Date start, Date end, String hospitalId, String consultatioSelStatus,
+                                                                  String queryCondition1, String queryCondition2, String apply, String invite) {
+        StatisticsSearchBean statisticsSearchBean = new StatisticsSearchBean();
+        statisticsSearchBean.setStartTime(start);
+        statisticsSearchBean.setEndTime(end);
+        statisticsSearchBean.setHospitalId(hospitalId);
+        statisticsSearchBean.setStatus(consultatioSelStatus);
+        statisticsSearchBean.setQueryCondition1(queryCondition1);
+        statisticsSearchBean.setQueryCondition2(queryCondition2);
+        statisticsSearchBean.setApply(apply);
+        statisticsSearchBean.setInviteBranch(invite);
+        return applyFormMapper.applyConsultationStatistics(statisticsSearchBean);
     }
 
     @Override
