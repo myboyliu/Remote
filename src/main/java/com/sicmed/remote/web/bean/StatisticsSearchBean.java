@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author YoonaLt
@@ -15,28 +14,42 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StatisticsSearchBean implements Serializable {
 
-
     // 选择的开始时间
-    private Date startTime;
+    private String startTime;
 
     // 选择的结束时间
-    private Date endTime;
+    private String endTime;
 
-    // 发出列表
+    // 医院id
+    private String hospitalId;
+
+    // 会/转 诊标识
+    private String status;
+
+    // 发出列表查询标识
     private String apply;
 
-    // 受邀列表
+    // 受邀列表查询标识
     private String invite;
+
+    // 会诊高级统计 统计方式  日-%Y-%m-%d   月-%Y-%m  年-%Y
+    private String dayMouthYear;
 
     // 查询条件
     private String queryCondition1;
     private String queryCondition2;
 
-    // 医院id
-    private String hospitalId;
+    // 单学科会诊
+    private String singleSubject;
 
-    // 会诊状态
-    private String status;
+    // 多学科会诊
+    private String multiSubject;
+
+    // 图文会诊
+    private String picture;
+
+    // 视频会诊
+    private String video;
 
     // 次数
     private String amountStatistics;
@@ -59,6 +72,9 @@ public class StatisticsSearchBean implements Serializable {
     // 收件医生职称
     private String inviteDoctorName;
 
-    // 费用
+    // 返回日期
+    private String dates;
 
+    // 费用
+    private String price;
 }

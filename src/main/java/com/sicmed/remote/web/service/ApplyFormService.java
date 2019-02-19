@@ -180,19 +180,22 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         return applyFormMapper.inviteeTransfer(applyForm);
     }
 
-    // 会诊病例次数统计,发出列表
-    public List<StatisticsSearchBean> applyConsultationStatistics(Date start, Date end, String hospitalId, String consultatioSelStatus,
-                                                                  String queryCondition1, String queryCondition2, String apply, String invite) {
-        StatisticsSearchBean statisticsSearchBean = new StatisticsSearchBean();
-        statisticsSearchBean.setStartTime(start);
-        statisticsSearchBean.setEndTime(end);
+    // 会/转 诊病例次数统计,发出列表
+    public List<StatisticsSearchBean> applyConsultationStatistics(String hospitalId, String status, StatisticsSearchBean statisticsSearchBean
+    ) {
         statisticsSearchBean.setHospitalId(hospitalId);
-        statisticsSearchBean.setStatus(consultatioSelStatus);
-        statisticsSearchBean.setQueryCondition1(queryCondition1);
-        statisticsSearchBean.setQueryCondition2(queryCondition2);
-        statisticsSearchBean.setApply(apply);
-        statisticsSearchBean.setInviteBranch(invite);
+        statisticsSearchBean.setStatus(status);
+
         return applyFormMapper.applyConsultationStatistics(statisticsSearchBean);
+    }
+
+    // 会诊高级统计
+    public List<StatisticsSearchBean> advancedConsultationStatistics(String hospitalId, StatisticsSearchBean statisticsSearchBean) {
+
+        statisticsSearchBean.setStatus(String.valueOf(ConsultationStatus.CONSULTATION_END));
+        statisticsSearchBean.setHospitalId(hospitalId);
+
+        return applyFormMapper.advancedConsultationStatistics(statisticsSearchBean);
     }
 
     @Override

@@ -67,4 +67,7 @@ public interface ApplyFormMapper {
     List<ApplyFormBean> sirSearchByRemark(ApplyFormBean applyFormBean);
 
     List<StatisticsSearchBean> applyConsultationStatistics(StatisticsSearchBean statisticsSearchBean);
+
+    List<StatisticsSearchBean> advancedConsultationStatistics(StatisticsSearchBean statisticsSearchBean);
+
 }

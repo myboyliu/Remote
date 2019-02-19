@@ -2,7 +2,6 @@ package com.sicmed.remote.web.controller;
 
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
-import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
 import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.bean.StatisticsSearchBean;
@@ -13,9 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -32,10 +28,10 @@ public class StatisticsSearchController extends BaseController {
     private ApplyFormService applyFormService;
 
     // 会诊结束状态
-    private final String consultatioSelStatus = String.valueOf(ConsultationStatus.CONSULTATION_END);
+    private final String consultationEndStatus = String.valueOf(ConsultationStatus.CONSULTATION_END);
 
     // 转诊结束状态
-    private final String inquirySelStatus = String.valueOf(InquiryStatus.INQUIRY_END);
+    private final String inquiryEndStatus = String.valueOf(InquiryStatus.INQUIRY_END);
 
     /**
      * 医生 主页面搜索
@@ -81,34 +77,51 @@ public class StatisticsSearchController extends BaseController {
 
     /**
      * 会诊病例次数统计
-     *
-     * @param startTime
-     * @param endTime
-     * @param apply
-     * @param invite
-     * @param queryCondition1
-     * @param queryCondition2 当apply不为空invite为空时,为发出列表查询;反之为受邀列表查询
      */
-    @GetMapping(value = "applyConsultationStatistics")
-    public Map applyConsultationStatistics(String startTime, String endTime, String apply, String invite, String queryCondition1, String queryCondition2) {
-
-        if (StringUtils.isBlank(startTime) || StringUtils.isBlank(endTime)) {
-            return badRequestOfArguments("时间未传入");
-        }
-        if (StringUtils.isBlank(queryCondition1)) {
-            return badRequestOfArguments("必须选择至少一个搜索条件");
-        }
+    @GetMapping(value = "consultationStatistics")
+    public Map consultationStatistics(StatisticsSearchBean statisticsSearchBean) {
 
         String userId = getRequestToken();
         CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
-        Date start = YtDateUtils.stringToDate(startTime);
-        Date end = YtDateUtils.stringToDate(endTime);
-        String hospitalId = currentUserBean.getHospitalId();
 
         List<StatisticsSearchBean> statisticsSearchBeans = applyFormService.applyConsultationStatistics(
-                start, end, hospitalId, consultatioSelStatus, queryCondition1, queryCondition2, apply, invite);
+                currentUserBean.getHospitalId(), consultationEndStatus, statisticsSearchBean);
 
         return succeedRequest(statisticsSearchBeans);
     }
 
+    /**
+     * 转诊病例次数统计
+     */
+    @GetMapping(value = "inviteStatistics")
+    public Map inviteStatistics(StatisticsSearchBean statisticsSearchBean) {
+
+        String userId = getRequestToken();
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+
+        List<StatisticsSearchBean> statisticsSearchBeans = applyFormService.applyConsultationStatistics(
+                currentUserBean.getHospitalId(), inquiryEndStatus, statisticsSearchBean);
+
+        return succeedRequest(statisticsSearchBeans);
+    }
+
+    /**
+     * 会诊高级统计
+     *
+     * @param statisticsSearchBean
+     */
+    @GetMapping(value = "advancedConsultationStatistics")
+    public Map advancedConsultationStatistics(StatisticsSearchBean statisticsSearchBean) {
+
+        String userId = getRequestToken();
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+
+        List<StatisticsSearchBean> statisticsSearchBeans = applyFormService.advancedConsultationStatistics(currentUserBean.getHospitalId(), statisticsSearchBean);
+
+        return succeedRequest(statisticsSearchBeans);
+    }
+
+    /**
+     * 会诊费用统计
+     */
 }

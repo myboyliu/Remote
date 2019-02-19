@@ -1126,7 +1126,7 @@
         limit #{beginNo},#{pageSize}
     </select>
 
-    <!--会诊病例次数统计,发出列表(下级医院)-->
+    <!--会诊病例次数统计)-->
     <resultMap id="StatisticsSearchBeanResultMap" type="com.sicmed.remote.web.bean.StatisticsSearchBean">
         <result column="applyHospital" jdbcType="VARCHAR" property="applyHospital"/>
         <result column="inviteHospital" jdbcType="VARCHAR" property="inviteHospital"/>
@@ -1135,6 +1135,7 @@
         <result column="applyName" jdbcType="VARCHAR" property="applyDoctorName"/>
         <result column="inviteName" jdbcType="VARCHAR" property="inviteDoctorName"/>
         <result column="afNumber" jdbcType="VARCHAR" property="amountStatistics"/>
+        <result column="dates" jdbcType="VARCHAR" property="dates"/>
     </resultMap>
     <select id="applyConsultationStatistics" parameterType="com.sicmed.remote.web.bean.StatisticsSearchBean"
             resultMap="StatisticsSearchBeanResultMap">
@@ -1167,4 +1168,35 @@
             ,${queryCondition2}
         </if>
     </select>
+
+    <!--会诊高级统计-->
+    <select id="advancedConsultationStatistics" parameterType="com.sicmed.remote.web.bean.StatisticsSearchBean"
+            resultMap="StatisticsSearchBeanResultMap">
+        select count(af.id) afNumber,DATE_FORMAT(af.consultant_apply_time, #{dayMouthYear}) dates
+        from apply_form af
+        left join case_consultant cc on af.id = cc.id
+        where af.del_flag = "0"
+        and af.apply_status = #{status}
+        and #{startTime}&lt;af.consultant_apply_time &lt;#{endTime}
+        <if test="apply !=null">
+            and af.apply_hospital_id=#{hospitalId}
+        </if>
+        <if test="invite !=null">
+            and af.invite_hospital_id=#{hospitalId}
+        </if>
+        <if test="picture !=null">
+            and af.apply_type=#{picture}
+        </if>
+        <if test="video !=null">
+            and af.apply_type=#{video}
+        </if>
+        <if test="singleSubject !=null">
+            and mdt_flag = '1'
+        </if>
+        <if test="multiSubject !=null">
+            and mdt_flag = '0'
+        </if>
+        group by dates
+    </select>
 </mapper>
+
