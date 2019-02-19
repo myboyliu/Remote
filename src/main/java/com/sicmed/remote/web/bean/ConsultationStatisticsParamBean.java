@@ -13,6 +13,8 @@ public class ConsultationStatisticsParamBean {
 
     private String applyStatus;
 
+    private String groupByApplyHospital;
+
     private String groupByApplyBranch;
 
     private String groupByInviteBranch;
@@ -22,6 +24,8 @@ public class ConsultationStatisticsParamBean {
     private String groupByInviteUserSpecialistType;
 
     private String groupByInviteHospital;
+
+    private String groupByDay;
 
     private String isApply;
 

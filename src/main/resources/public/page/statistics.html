@@ -19,6 +19,8 @@
     <script src="../common/js/url.js"></script>
     <script src="../common/js/ajaxRequestUtils.js"></script>
     <script src="../common/js/jquery.table2excel.min.js"></script>
+    <script type="text/javascript" src="../js/statistics/consultationStatistics.js"></script>
+    <script type="text/javascript" src="../js/statistics/referralStatistics.js"></script>
     <script type="text/javascript" src="../js/statistics.js"></script>
     <!-- [if lt IE9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -121,37 +123,19 @@
                 <!-- 选择两个条件的表格 -->
                 <table class="consultationTable" id="datatable_one">
                     <thead class="consultationHeadBox">
-                    <!-- <tr>
-                        <th></th>
-                        <th>河北医科大学第二医院</th>
-                    </tr> -->
+
                     </thead>
                     <tbody class="consultationBodyBox">
-                    <!-- <tr>
-                        <td>心脏中心</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                    </tr> -->
+
                     </tbody>
                 </table>
                 <!-- 选择一个条件的表格 -->
                 <table class="consultationTable1" id="datatable_one2">
                     <thead class="consultationHeadBox1">
-                    <!-- <tr>
-                                            <th></th>
-                                            <th>河北医科大学第二医院</th>
-                                        </tr> -->
+
                     </thead>
                     <tbody class="consultationBodyBox1">
-                    <!-- <tr>
-                                            <td>心脏中心</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                        </tr> -->
+
                     </tbody>
                 </table>
                 <div id="SSSS" class="chartBox consultationChartBox">
@@ -237,7 +221,7 @@
 
                     </tbody>
                 </table>
-                <div class="chartBox referralChartBox"></div>
+                <div id="ReferralChartBox" class="chartBox referralChartBox"></div>
             </div>
         </div>
         <!-- 会诊高级统计 -->

@@ -14,5 +14,6 @@ public class ConsultationStatisticsBean implements Serializable {
     private String applyUserSpecialistTypeName;
     private String inviteUserSpecialistTypeName;
     private String groupCount;
+    private String groupDay;
 
 }

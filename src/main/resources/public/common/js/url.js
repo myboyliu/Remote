@@ -196,6 +196,6 @@ const selectReport = "/apply/consultation/selectReport";                        
 
 /** 统计模块接口 **/
 
-const getConsultationCount = "/statistics/getConsultationCount"                             //会诊数量统计查询
-const getReferralCount = "/statistics/getReferralCount"                                     //转诊数量统计查询
+const getConsultationStatisticsCount = "/statistics/getConsultationCount"                             //会诊数量统计查询
+const getReferralStatisticsCount = "/statistics/getReferralCount"                                     //转诊数量统计查询
 

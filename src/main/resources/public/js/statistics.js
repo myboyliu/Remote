@@ -1,5 +1,8 @@
-// 已选项 索引 数组
+// 会诊 已选项 索引 数组
 let consultationOptionArr = [];
+// 转诊 已选项 索引 数组
+let referralOptionArr = [];
+let myChart;
 /**
  * 渲染统计选项
  */
@@ -26,55 +29,11 @@ let expertOptionObj = [{key: "EXP_VIDEO_CON", value: "视频会诊"}, {
     value: "图文会诊"
 }, {key: "EXP_SINGLE_CON", value: "单学科会诊"},
     {key: "EXP_MULTIPLE_CON", value: "多学科会诊"}];
-let consultationRule = {
-    CON_SEND_HOSPITAL: {
-        CON_SEND_BRANCH: "groupByApplyBranch",
-        CON_SEND_DOCTOR: "groupByApplyUserSpecialistType",
-        CON_RECEIVE_BRANCH: "groupByInviteBranch",
-        CON_RECEIVE_DOCTOR: "groupByInviteUserSpecialistType"
-    },
-    CON_SEND_BRANCH: {CON_SEND_DOCTOR: "groupByApplyUserSpecialistType"},
-    CON_SEND_DOCTOR: {
-        CON_RECEIVE_HOSPITAL: "groupByInviteHospital",
-        CON_RECEIVE_BRANCH: "groupByInviteBranch",
-        CON_RECEIVE_DOCTOR: "groupByInviteUserSpecialistType"
-    },
-    CON_RECEIVE_HOSPITAL: {
-        CON_RECEIVE_BRANCH: "groupByInviteBranch",
-        CON_RECEIVE_DOCTOR: "groupByInviteUserSpecialistType"
-    },
-    CON_RECEIVE_BRANCH: {CON_RECEIVE_DOCTOR: "groupByInviteUserSpecialistType"}
-};
-// let formData = {
-//     "startTime": consultationStartDate,
-//     "endTime": consultationEndDate,
-//     "groupByApplyBranch": "1",
-//     "groupByInviteBranch": "1",
-//     "groupByApplyUserSpecialistType": "1",
-//     "groupByInviteUserSpecialistType": "1",
-//     "isApply": "1",
-//     "isInvite": "1",
-// };
 
-let referralRule = {
-    REF_SEND_HOSPITAL: {
-        REF_SEND_BRANCH: "REF_SEND_BRANCH",
-        REF_SEND_DOCTOR: "REF_SEND_DOCTOR",
-        REF_RECEIVE_BRANCH: "REF_RECEIVE_BRANCH",
-        REF_RECEIVE_DOCTOR: "REF_RECEIVE_DOCTOR"
-    },
-    REF_SEND_BRANCH: {REF_SEND_DOCTOR: "REF_SEND_DOCTOR"},
-    REF_SEND_DOCTOR: {
-        REF_RECEIVE_HOSPITAL: "REF_RECEIVE_HOSPITAL",
-        REF_RECEIVE_BRANCH: "REF_RECEIVE_BRANCH",
-        REF_RECEIVE_DOCTOR: "REF_RECEIVE_DOCTOR"
-    },
-    REF_RECEIVE_HOSPITAL: {REF_RECEIVE_BRANCH: "REF_RECEIVE_BRANCH", REF_RECEIVE_DOCTOR: "REF_RECEIVE_DOCTOR"},
-    REF_RECEIVE_BRANCH: {REF_RECEIVE_DOCTOR: "REF_RECEIVE_DOCTOR"}
-};
 let expertRule = {
     EXP_VIDEO_CON: {EXP_SINGLE_CON: "EXP_SINGLE_CON", EXP_MULTIPLE_CON: "EXP_MULTIPLE_CON"},
     EXP_PICTURE_CON: {EXP_SINGLE_CON: "EXP_SINGLE_CON", EXP_MULTIPLE_CON: "EXP_MULTIPLE_CON"}
+
 };
 
 function renderStatisticaltem() {
@@ -88,7 +47,7 @@ function renderStatisticaltem() {
 
     //转诊病历统计数据列表 选项渲染
     let referralOption_html = '';
-    for (let item of referralOptionObj) {
+    for (let item of consultationOptionObj) {
         referralOption_html += '<a href="javascript:;" id="' + item.key + '">' + item.value + '</a>'
     }
     $('.referralOptionBox').html(referralOption_html);
@@ -108,197 +67,9 @@ function renderStatisticaltem() {
     $('.costOptionBox').html(costOption_html);
 }
 
-function renderMore(dataJson) {
-    let firstItem = $('.consultationOptionBox > a').eq(consultationOptionArr[0]).attr('id');
-    let secondItem = $('.consultationOptionBox > a').eq(consultationOptionArr[1]).attr('id');
-    console.log(dataJson);
-    let myChart = echarts.init(document.getElementById('SSSS'));
-    myChart.clear();
-    let labelOption = {
-        normal: {
-            show: true,
-            position: 'insideBottom',
-            distance: 15,
-            align: 'left',
-            verticalAlign: 'middle',
-            rotate: 90,
-            formatter: '{c}  {name|{a}}',
-            fontSize: 16,
-            rich: {
-                name: {
-                    textBorderColor: '#fff'
-                }
-            }
-        }
-    };
-    let optionColor = ['#003366', '#006699', '#4cabce', '#e5323e'];
-    let xData = [];
-    let legendData = [];
-    let optionSeries = [];
-    // 发起医院 + 发起科室
-    if (firstItem === "CON_SEND_HOSPITAL") {
-        switch (secondItem) {
-            case "CON_SEND_BRANCH":
-                for (let item of dataJson) {
-                    if (xData.indexOf(item.applyHospitalName) === -1) {
-                        xData.push(item.applyHospitalName);
-                    }
-                    if (legendData.indexOf(item.applyCustomBranchName) === -1) {
-                        legendData.push(item.applyCustomBranchName);
-                        optionSeries.push({
-                            name: item.applyCustomBranchName,
-                            type: 'bar',
-                            barGap: 0,
-                            label: labelOption,
-                            data: []
-                        });
-                    }
-                }
-                for (let xItem of xData) {
-                    for (let dataJsonItem of dataJson) {
-                        if (xItem === dataJsonItem.applyHospitalName) {
-                            for (let optionSeriesItem of optionSeries) {
-                                if (optionSeriesItem.name === dataJsonItem.applyCustomBranchName) {
-                                    optionSeriesItem.data[xData.indexOf(xItem)] = dataJsonItem.groupCount;
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-            case "CON_SEND_DOCTOR":
-                for (let item of dataJson) {
-                    if (xData.indexOf(item.applyHospitalName) === -1) {
-                        xData.push(item.applyHospitalName);
-                    }
-                    if (legendData.indexOf(item.applyUserSpecialistTypeName) === -1) {
-                        legendData.push(item.applyUserSpecialistTypeName);
-                        optionSeries.push({
-                            name: item.applyUserSpecialistTypeName,
-                            type: 'bar',
-                            barGap: 0,
-                            label: labelOption,
-                            data: []
-                        });
-                    }
-                }
-                for (let xItem of xData) {
-                    for (let dataJsonItem of dataJson) {
-                        if (xItem === dataJsonItem.applyHospitalName) {
-                            for (let optionSeriesItem of optionSeries) {
-                                if (optionSeriesItem.name === dataJsonItem.applyUserSpecialistTypeName) {
-                                    optionSeriesItem.data[xData.indexOf(xItem)] = dataJsonItem.groupCount;
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-            case "CON_RECEIVE_BRANCH":
-                for (let item of dataJson) {
-                    if (xData.indexOf(item.applyHospitalName) === -1) {
-                        xData.push(item.applyHospitalName);
-                    }
-                    if (legendData.indexOf(item.inviteCustomBranchName) === -1) {
-                        legendData.push(item.inviteCustomBranchName);
-                        optionSeries.push({
-                            name: item.inviteCustomBranchName,
-                            type: 'bar',
-                            barGap: 0,
-                            label: labelOption,
-                            data: []
-                        });
-                    }
-                }
-                for (let xItem of xData) {
-                    for (let dataJsonItem of dataJson) {
-                        if (xItem === dataJsonItem.applyHospitalName) {
-                            for (let optionSeriesItem of optionSeries) {
-                                if (optionSeriesItem.name === dataJsonItem.inviteCustomBranchName) {
-                                    optionSeriesItem.data[xData.indexOf(xItem)] = dataJsonItem.groupCount;
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
-            case "CON_RECEIVE_DOCTOR":
-                for (let item of dataJson) {
-                    if (xData.indexOf(item.applyHospitalName) === -1) {
-                        xData.push(item.applyHospitalName);
-                    }
-                    if (legendData.indexOf(item.inviteUserSpecialistTypeName) === -1) {
-                        legendData.push(item.inviteUserSpecialistTypeName);
-                        optionSeries.push({
-                            name: item.inviteUserSpecialistTypeName,
-                            type: 'bar',
-                            barGap: 0,
-                            label: labelOption,
-                            data: []
-                        });
-                    }
-                }
-                for (let xItem of xData) {
-                    for (let dataJsonItem of dataJson) {
-                        if (xItem === dataJsonItem.applyHospitalName) {
-                            for (let optionSeriesItem of optionSeries) {
-                                if (optionSeriesItem.name === dataJsonItem.inviteUserSpecialistTypeName) {
-                                    optionSeriesItem.data[xData.indexOf(xItem)] = dataJsonItem.groupCount;
-                                }
-                            }
-                        }
-                    }
-                }
-            default:
-                break;
-        }
-    }
-
-    let option = {
-        color: optionColor,
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-                type: 'shadow'
-            }
-        },
-        legend: {
-            data: legendData
-        },
-        toolbox: {
-            show: true,
-            orient: 'vertical',
-            left: 'right',
-            top: 'center',
-            feature: {
-                mark: {show: true},
-                dataView: {show: true, readOnly: false},
-                magicType: {show: true, type: ['line', 'bar', 'stack', 'tiled']},
-                restore: {show: true},
-                saveAsImage: {show: true}
-            }
-        },
-        calculable: true,
-        xAxis: [
-            {
-                type: 'category',
-                axisTick: {show: false},
-                data: xData
-            }
-        ],
-        yAxis: [
-            {
-                type: 'value'
-            }
-        ],
-        series: optionSeries
-    };
-    myChart.setOption(option);
-}
-
 $(function () {
     function chart(xData, xName, yData, yName, chartType, domObj) {
-        var myChart = echarts.init(domObj[0]);
+        // var myChart = echarts.init(domObj[0]);
         // xData  // x轴 数据
         // xName // x轴 名字
         // yData  // y轴 数据
@@ -468,11 +239,12 @@ $(function () {
                 if (consultationRule[firstItem][secondItem]) {
                     let formData = {
                         "startTime": consultationStartDate,
-                        "endTime": consultationEndDate,
-                        "isInvite": "1",
+                        "endTime": consultationEndDate
                     };
-                    formData[consultationRule[firstItem][secondItem]] = "1";
-                    ajaxRequest("GET", getConsultationCount, formData, true, "application/json", true, renderMore, null, null);
+                    $('.consultationSelect').val() === "1" ? formData["isInvite"] = "1" : formData["isApply"] = "1";
+                    formData[consultationRule[firstItem][secondItem][0]] = "1";
+                    formData[consultationRule[firstItem][secondItem][1]] = "1";
+                    ajaxRequest("GET", getConsultationStatisticsCount, formData, true, "application/json", true, renderConsultationDoubleList, null, null);
                     return false;
                 } else {
                     layer.msg('统计组合不存在');
@@ -480,153 +252,28 @@ $(function () {
             } else {
                 layer.msg('统计组合不存在');
             }
-
         } else {
-            var dataArr = [];
             // 只有一个选项 的 情况
-            var optionName = $('.consultationOptionBox > a').eq(consultationOptionArr[0]).html();
-            $.ajax({
-                type: 'POST',
-                url: baseUrl + 'dateUtil/findDay',
-                dataType: 'json',
-                data: {
-                    "startDate": consultationStartDate,
-                    "endDate": consultationEndDate,
-                },
-                async: false,
-                xhrFields: {
-                    withCredentials: true
-                },
-                crossDomain: true,
-                success: function (data) {
-                    dataArr = data;
-                },
-                error: function (err) {
-                    console.log(err);
-                },
-            })
-            $.ajax({
-                type: 'POST',
-                url: baseUrl + 'statistics/consultationStatisticsSingle',
-                dataType: 'json',
-                data: {
-                    "startDate": consultationStartDate,
-                    "endDate": consultationEndDate,
-                    "type": $('.consultationSelect').val() == '1' ? '1' : '0',
-                    "condition": $('.consultationOptionBox > a').eq(consultationOptionArr[0]).attr('rulesfield'),
-                },
-                xhrFields: {
-                    withCredentials: true
-                },
-                crossDomain: true,
-                success: function (data) {
-                    console.log(data)
-                    if (data.status == 200) {
-                        var tempArr = data.statisticsBean;
-                        if (tempArr.length == 0) {
-                            layer.msg('统计结果无数据')
-                        } else {
-                            var xData = []; // x轴 数据
-                            var yData = []; // y轴 数据
-                            if (optionName == '发件医院' && $('.consultationSelect').val() == '2') {
-                                var tempDataArr = [];
-                                for (var i = 0; i < tempArr.length; i++) {
-                                    tempDataArr.push(tempArr[i].x);
-                                }
-                                for (var i = 0; i < dataArr.length; i++) {
-                                    if (tempDataArr.indexOf(dataArr[i]) != -1) {
-                                        yData.push(tempArr[tempDataArr.indexOf(dataArr[i])].size);
-                                    } else {
-                                        yData.push(0);
-                                    }
-                                }
-                                xData = dataArr;
-                                chart(xData, optionName, yData, '数量', 'line', $('.consultationChartBox'));
-                                //xData, xName, yData, yName, chartType
-                            } else if (optionName == '收件医院' && $('.consultationSelect').val() == '1') {
-
-                                var tempDataArr = [];
-                                for (var i = 0; i < tempArr.length; i++) {
-                                    tempDataArr.push(tempArr[i].x);
-                                }
-                                for (var i = 0; i < dataArr.length; i++) {
-                                    if (tempDataArr.indexOf(dataArr[i]) != -1) {
-                                        yData.push(tempArr[tempDataArr.indexOf(dataArr[i])].size);
-                                    } else {
-                                        yData.push(0);
-                                    }
-                                }
-                                xData = dataArr;
-                                chart(xData, optionName, yData, '数量', 'line', $('.consultationChartBox'));
-                                //xData, xName, yData, yName, chartType
-                            } else {
-                                for (var i = 0; i < tempArr.length; i++) {
-                                    xData.push(tempArr[i].x);
-                                    yData.push(tempArr[i].size);
-                                }
-                                chart(xData, optionName, yData, '数量', 'bar', $('.consultationChartBox')); //xData, xName, yData, yName, chartType
-                            }
-                        }
-                        var headHtml = '<tr><th></th><th>数量</th></tr>';
-                        var bodyHtml = '';
-                        for (var i = 0; i < xData.length; i++) {
-                            bodyHtml += '<tr><td>' + xData[i] + '</td><td>' + yData[i] + '</td></tr>';
-                        }
-                        $('.consultationHeadBox1').html(headHtml);
-                        $('.consultationBodyBox1').html(bodyHtml);
-                        $('.tableBtn_one').addClass('active');
-                        $('.consultationTable').hide();
-                        $('.consultationTable1').hide();
-                        $('.consultationChartBox').show();
-
-                    } else if (data.status == 250) {
-                        // 未登录操作
-                        window.location = '/yilaiyiwang/login/login.html';
-                    } else {
-                        // 其他操作
-                    }
-                },
-                error: function (err) {
-                    console.log(err);
-
-                },
-            })
+            let optionName = $('.consultationOptionBox > a').eq(consultationOptionArr[0]).attr('id');
+            if (consultationSingleRule[optionName]) {
+                let formData = {
+                    "startTime": consultationStartDate,
+                    "endTime": consultationEndDate
+                };
+                $('.consultationSelect').val() === "1" ? formData["isInvite"] = "1" : formData["isApply"] = "1";
+                if (optionName === "CON_SEND_HOSPITAL" && $('.consultationSelect').val() === "2") {
+                    formData["groupByDay"] = "1";
+                }
+                if (optionName === "CON_RECEIVE_HOSPITAL" && $('.consultationSelect').val() === "1") {
+                    formData["groupByDay"] = "1";
+                }
+                formData[consultationSingleRule[optionName]] = "1";
+                ajaxRequest("GET", getConsultationStatisticsCount, formData, true, "application/json", true, renderConsultationSingleList, null, null);
+            }
         }
     })
 
-    // 转诊病历统计数据列表 选项渲染
-    // $.ajax({
-    //     type: 'GET',
-    //     url: baseUrl + 'statisticalRules/statisticalConsultationList',
-    //     dataType: 'json',
-    //     xhrFields: {
-    //         withCredentials: true
-    //     },
-    //     crossDomain: true,
-    //     global: false,
-    //     success: function(data) {
-    //         console.log(data);
-    //         if (data.status == 200) {
-    //             var _html = '';
-    //             var tempArr = data.statisticalRulesList;
-    //             for (var i = 0; i < tempArr.length; i++) {
-    //                 _html += '<a href="javascrbaseUrlt:;" rulesField="' + tempArr[i].rulesField + '" rulesNumber="' + tempArr[i].rulesNumber + '">' + tempArr[i].rulesName + '</a>'
-    //             }
-    //             $('.referralOptionBox').html(_html);
-    //         } else if (data.status == 250) {
-    //             // 未登录操作
-    //             window.location = '/yilaiyiwang/login/login.html';
-    //         } else {
-    //             // 其他操作
-    //         }
-    //     },
-    //     error: function(err) {
-    //         console.log(err);
-    //     },
-    // });
     // 发送病历次数统计--选项选择
-    // 已选项 索引 数组
-    var referralOptionArr = [];
     // 选项点击事件
     $('.referralOptionBox').delegate('a', 'click', function () {
         // 判断当前是否已经选中
@@ -662,95 +309,19 @@ $(function () {
         } else if (referralOptionArr.length == 0) {
             layer.msg('数据不完整')
         } else if (referralOptionArr.length >= 2) {
-            var numberStr = '';
-            var condition1 = $('.referralOptionBox > a').eq(referralOptionArr[0]).attr('rulesfield');
-            var condition2 = $('.referralOptionBox > a').eq(referralOptionArr[1]).attr('rulesfield');
-            for (var i = 0; i < referralOptionArr.length; i++) {
-                numberStr += $('.referralOptionBox > a').eq(referralOptionArr[i]).attr('rulesNumber');
-            }
             let firstItem = $('.referralOptionBox > a').eq(referralOptionArr[0]).attr('id');
             let secondItem = $('.referralOptionBox > a').eq(referralOptionArr[1]).attr('id');
-            if (referralRule[firstItem]) {
-                if (referralRule[firstItem][secondItem]) {
-                    // 两个选项的
-                    $.ajax({
-                        type: 'POST',
-                        url: baseUrl + 'statistics/referralStatistics',
-                        dataType: 'json',
-                        data: {
-                            "startDate": referralStartDate,
-                            "endDate": referralEndDate,
-                            "type": $('.referralSelect').val() == '1' ? '1' : '0',
-                            "condition1": condition1,
-                            "condition2": condition2,
-                        },
-                        xhrFields: {
-                            withCredentials: true
-                        },
-                        crossDomain: true,
-                        success: function (data) {
-                            console.log(data)
-                            if (data.status == 200) {
-                                var tempArr = data.statisticsBean;
-                                if (tempArr.length == 0) {
-                                    layer.msg('统计内容无数据');
-                                    $('.referralTable').hide();
-                                } else {
-                                    var headArr = [];
-                                    var bodyArr = [];
-                                    for (var i = 0; i < tempArr.length; i++) {
-                                        if (headArr.indexOf(tempArr[i].y) == -1) {
-                                            headArr.push(tempArr[i].y);
-                                        }
-                                        if (bodyArr.indexOf(tempArr[i].x) == -1) {
-                                            bodyArr.push(tempArr[i].x);
-                                        }
-                                    }
-                                    var headHtml = '<tr><th></th>';
-                                    var bodyHtml = '';
-                                    for (var i = 0; i < headArr.length; i++) {
-                                        headHtml += '<th>' + headArr[i] + '</th>';
-                                    }
-                                    for (var y = 0; y < bodyArr.length; y++) {
-                                        var itemArr = [];
-                                        var itemTextArr = [];
-                                        for (var x = 0; x < tempArr.length; x++) {
-                                            if (tempArr[x].x == bodyArr[y]) {
-                                                itemArr.push(tempArr[x]);
-                                                itemTextArr.push(tempArr[x].y);
-                                            }
-                                        }
-                                        bodyHtml += '<tr>\
-                                                <td>' + bodyArr[y] + '</td>';
-                                        for (var z = 0; z < headArr.length; z++) {
-                                            console.log(itemArr)
-                                            if (itemTextArr.indexOf(headArr[z]) != -1) {
-                                                bodyHtml += '<td>' + itemArr[itemTextArr.indexOf(headArr[z])].size + '</td>';
-                                            } else {
-                                                bodyHtml += '<td>0</td>';
-                                            }
-                                        }
-                                        bodyHtml += '</tr>';
-                                    }
-                                    headHtml += '</tr>';
-                                    $('.tableBtn_two').addClass('active');
-                                    $('.consultationTable').show();
-                                    $('.referralChartBox').hide();
-                                    $('.referralHeadBox').html(headHtml);
-                                    $('.referralBodyBox').html(bodyHtml);
-                                }
-                            } else if (data.status == 250) {
-                                // 未登录操作
-                                window.location = '/yilaiyiwang/login/login.html';
-                            } else {
-                                // 其他操作
-                            }
-                        },
-                        error: function (err) {
-                            console.log(err);
-
-                        },
-                    })
+            if (consultationRule[firstItem]) {
+                if (consultationRule[firstItem][secondItem]) {
+                    let formData = {
+                        "startTime": referralStartDate,
+                        "endTime": referralEndDate
+                    };
+                    $('.referralSelect').val() === "1" ? formData["isInvite"] = "1" : formData["isApply"] = "1";
+                    formData[consultationRule[firstItem][secondItem][0]] = "1";
+                    formData[consultationRule[firstItem][secondItem][1]] = "1";
+                    ajaxRequest("GET", getReferralStatisticsCount, formData, true, "application/json", true, renderReferralDoubleList, null, null);
+                    return false;
                 } else {
                     layer.msg('统计组合不存在')
                 }
@@ -760,106 +331,22 @@ $(function () {
 
         } else {
             // 只有一个选项 的 情况
-            var optionName = $('.referralOptionBox > a').eq(referralOptionArr[0]).html();
-            $.ajax({
-                type: 'POST',
-                url: baseUrl + 'statistics/referralStatisticsSingle',
-                dataType: 'json',
-                data: {
-                    "startDate": referralStartDate,
-                    "endDate": referralEndDate,
-                    "type": $('.referralSelect').val() == '1' ? '1' : '0',
-                    "condition": $('.referralOptionBox > a').eq(referralOptionArr[0]).attr('rulesfield'),
-                },
-                xhrFields: {
-                    withCredentials: true
-                },
-                crossDomain: true,
-                success: function (data) {
-                    console.log(data)
-                    if (data.status == 200) {
-                        $('.referralTable').hide();
-                        $('.referralChartBox').show();
-                        var tempArr = data.statisticsBean;
-                        if (tempArr.length == 0) {
-                            layer.msg('统计内容无数据');
-                        } else {
-                            var xData = []; // x轴 数据
-                            var yData = []; // y轴 数据
-                            if (optionName == '发件医院' && $('.referralSelect').val() == '2') {
-                                for (var i = 0; i < tempArr.length; i++) {
-                                    xData.push(tempArr[i].x);
-                                    yData.push(tempArr[i].size);
-                                }
-                                chart(xData, optionName, yData, '数量', 'line', $('.referralChartBox')); //xData, xName, yData, yName, chartType
-                            } else if (optionName == '收件医院' && $('.referralSelect').val() == '1') {
-                                for (var i = 0; i < tempArr.length; i++) {
-                                    xData.push(tempArr[i].x);
-                                    yData.push(tempArr[i].size);
-                                }
-                                chart(xData, optionName, yData, '数量', 'line', $('.referralChartBox')); //xData, xName, yData, yName, chartType
-                            } else {
-                                for (var i = 0; i < tempArr.length; i++) {
-                                    xData.push(tempArr[i].x);
-                                    yData.push(tempArr[i].size);
-                                }
-                                chart(xData, optionName, yData, '数量', 'bar', $('.referralChartBox')); //xData, xName, yData, yName, chartType
-                            }
-                            var tempArr = data.statisticsBean;
-                            var headArr = [];
-                            var bodyArr = [];
-                            for (var i = 0; i < tempArr.length; i++) {
-                                if (headArr.indexOf(tempArr[i].y) == -1) {
-                                    headArr.push(tempArr[i].y);
-                                }
-                                if (bodyArr.indexOf(tempArr[i].x) == -1) {
-                                    bodyArr.push(tempArr[i].x);
-                                }
-                            }
-                            var headHtml = '<tr><th></th>';
-                            var bodyHtml = '';
-                            for (var i = 0; i < headArr.length; i++) {
-                                headHtml += '<th>数量</th>';
-                            }
-                            for (var y = 0; y < bodyArr.length; y++) {
-                                var itemArr = [];
-                                for (var x = 0; x < tempArr.length; x++) {
-                                    if (tempArr[x].x == bodyArr[y]) {
-                                        itemArr.push(tempArr[x])
-                                    }
-                                }
-                                bodyHtml += '<tr>\
-                                                            <td>' + bodyArr[y] + '</td>';
-                                for (var z = 0; z < headArr.length; z++) {
-                                    if (z < itemArr.length) {
-                                        bodyHtml += '<td>' + itemArr[z].size + '</td>';
-
-                                    } else {
-                                        bodyHtml += '<td>0</td>';
-                                    }
-                                }
-                                bodyHtml += '</tr>';
-                            }
-                            headHtml += '</tr>';
-                            $('.referralHeadBox2').html(headHtml);
-                            $('.referralBodyBox2').html(bodyHtml);
-                            $('.tableBtn_two').addClass('active');
-                            $('.consultationTable').hide();
-                            $('.consultationTable2').hide();
-                            $('.consultationChartBox').show();
-                        }
-                    } else if (data.status == 250) {
-                        // 未登录操作
-                        window.location = '/yilaiyiwang/login/login.html';
-                    } else {
-                        // 其他操作
-                    }
-                },
-                error: function (err) {
-                    console.log(err);
-
-                },
-            })
+            let optionName = $('.referralOptionBox > a').eq(referralOptionArr[0]).attr('id');
+            if (referralSingleRule[optionName]) {
+                let formData = {
+                    "startTime": referralStartDate,
+                    "endTime": referralEndDate
+                };
+                $('.referralSelect').val() === "1" ? formData["isInvite"] = "1" : formData["isApply"] = "1";
+                if (optionName === "CON_SEND_HOSPITAL" && $('.referralSelect').val() === "2") {
+                    formData["groupByDay"] = "1";
+                }
+                if (optionName === "CON_RECEIVE_HOSPITAL" && $('.referralSelect').val() === "1") {
+                    formData["groupByDay"] = "1";
+                }
+                formData[referralSingleRule[optionName]] = "1";
+                ajaxRequest("GET", getReferralStatisticsCount, formData, true, "application/json", true, renderReferralSingleList, null, null);
+            }
         }
     })
 

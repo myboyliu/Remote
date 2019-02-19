@@ -9,15 +9,18 @@
         <result column="applyUserSpecialistTypeName" jdbcType="VARCHAR" property="applyUserSpecialistTypeName"/>
         <result column="inviteUserSpecialistTypeName" jdbcType="VARCHAR" property="inviteUserSpecialistTypeName"/>
         <result column="groupCount" jdbcType="VARCHAR" property="groupCount"/>
+        <result column="groupDay" jdbcType="VARCHAR" property="groupDay"/>
     </resultMap>
     <select id="getConsultationStatisticsListByParam" parameterType="com.sicmed.remote.web.bean.ConsultationStatisticsParamBean" resultMap="BaseResultMap">
         SELECT
+
           applyHospital.hospital_name applyHospitalName,
           inviteHospital.hospital_name inviteHospitalName,
           applyCustomBranch.custom_name applyCustomBranchName,
           inviteCustomBranch.custom_name inviteCustomBranchName,
           applyUserSpecialistType.specialist_name applyUserSpecialistTypeName,
           inviteUserSpecialistType.specialist_name inviteUserSpecialistTypeName,
+          DATE_FORMAT(applyForm.consultant_apply_time,'%Y-%m-%d') groupDay,
           count(*) AS groupCount
         FROM apply_form applyForm
           LEFT JOIN base_hospital applyHospital ON applyHospital.id = applyForm.apply_hospital_id
@@ -39,20 +42,27 @@
         </if>
          AND applyForm.apply_status = #{applyStatus}
         GROUP BY
-        <if test="groupByApplyBranch != null">
-            applyForm.apply_branch_id;
+        <if test="groupByApplyHospital != null">
+            applyForm.apply_hospital_id,
+        </if>
+         <if test="groupByApplyBranch != null">
+            applyForm.apply_branch_id,
         </if>
         <if test="groupByInviteBranch != null">
-            applyForm.invite_branch_id;
+            applyForm.invite_branch_id,
         </if>
         <if test="groupByApplyUserSpecialistType != null">
-            applyUserSpecialistType.id;
+            applyUserSpecialistType.id,
         </if>
         <if test="groupByInviteUserSpecialistType != null">
-            inviteUserSpecialistType.id;
+            inviteUserSpecialistType.id,
         </if>
         <if test="groupByInviteHospital != null">
-            applyForm.invite_hospital_id;
+            applyForm.invite_hospital_id,
         </if>
+         <if test="groupByDay != null">
+             groupDay,
+        </if>
+        applyForm.del_flag
     </select>
 </mapper>
