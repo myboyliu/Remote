@@ -28,18 +28,21 @@ let expertOptionObj = [{key: "EXP_VIDEO_CON", value: "视频会诊"}, {
     {key: "EXP_MULTIPLE_CON", value: "多学科会诊"}];
 let consultationRule = {
     CON_SEND_HOSPITAL: {
-        CON_SEND_BRANCH:  "groupByApplyBranch",
+        CON_SEND_BRANCH: "groupByApplyBranch",
         CON_SEND_DOCTOR: "groupByApplyUserSpecialistType",
         CON_RECEIVE_BRANCH: "groupByInviteBranch",
         CON_RECEIVE_DOCTOR: "groupByInviteUserSpecialistType"
     },
     CON_SEND_BRANCH: {CON_SEND_DOCTOR: "groupByApplyUserSpecialistType"},
     CON_SEND_DOCTOR: {
-        CON_RECEIVE_HOSPITAL: "CON_RECEIVE_HOSPITAL",
+        CON_RECEIVE_HOSPITAL: "groupByInviteHospital",
         CON_RECEIVE_BRANCH: "groupByInviteBranch",
         CON_RECEIVE_DOCTOR: "groupByInviteUserSpecialistType"
     },
-    CON_RECEIVE_HOSPITAL: {CON_RECEIVE_BRANCH: "groupByInviteBranch", CON_RECEIVE_DOCTOR: "groupByInviteUserSpecialistType"},
+    CON_RECEIVE_HOSPITAL: {
+        CON_RECEIVE_BRANCH: "groupByInviteBranch",
+        CON_RECEIVE_DOCTOR: "groupByInviteUserSpecialistType"
+    },
     CON_RECEIVE_BRANCH: {CON_RECEIVE_DOCTOR: "groupByInviteUserSpecialistType"}
 };
 // let formData = {
@@ -108,11 +111,9 @@ function renderStatisticaltem() {
 function renderMore(dataJson) {
     let firstItem = $('.consultationOptionBox > a').eq(consultationOptionArr[0]).attr('id');
     let secondItem = $('.consultationOptionBox > a').eq(consultationOptionArr[1]).attr('id');
-    console.log(firstItem);
-    console.log(secondItem);
     console.log(dataJson);
-
     let myChart = echarts.init(document.getElementById('SSSS'));
+    myChart.clear();
     let labelOption = {
         normal: {
             show: true,
@@ -135,117 +136,123 @@ function renderMore(dataJson) {
     let legendData = [];
     let optionSeries = [];
     // 发起医院 + 发起科室
-    consultationRule[firstItem][secondItem]
-    if(firstItem === "CON_SEND_HOSPITAL" && secondItem === "CON_SEND_BRANCH"){
-        for (let item of dataJson) {
-            if (xData.indexOf(item.applyHospitalName) === -1) {
-                xData.push(item.applyHospitalName);
-            }
-            if (legendData.indexOf(item.applyCustomBranchName) === -1) {
-                legendData.push(item.applyCustomBranchName);
-                optionSeries.push({
-                    name: item.applyCustomBranchName,
-                    type: 'bar',
-                    barGap: 0,
-                    label: labelOption,
-                    data: []
-                });
-            }
-        }
-        for (let xItem of xData) {
-            for (let dataJsonItem of dataJson) {
-                if (xItem === dataJsonItem.applyHospitalName) {
-                    for (let optionSeriesItem of optionSeries) {
-                        if (optionSeriesItem.name === dataJsonItem.applyCustomBranchName) {
-                            optionSeriesItem.data[xData.indexOf(xItem)] = dataJsonItem.groupCount;
+    if (firstItem === "CON_SEND_HOSPITAL") {
+        switch (secondItem) {
+            case "CON_SEND_BRANCH":
+                for (let item of dataJson) {
+                    if (xData.indexOf(item.applyHospitalName) === -1) {
+                        xData.push(item.applyHospitalName);
+                    }
+                    if (legendData.indexOf(item.applyCustomBranchName) === -1) {
+                        legendData.push(item.applyCustomBranchName);
+                        optionSeries.push({
+                            name: item.applyCustomBranchName,
+                            type: 'bar',
+                            barGap: 0,
+                            label: labelOption,
+                            data: []
+                        });
+                    }
+                }
+                for (let xItem of xData) {
+                    for (let dataJsonItem of dataJson) {
+                        if (xItem === dataJsonItem.applyHospitalName) {
+                            for (let optionSeriesItem of optionSeries) {
+                                if (optionSeriesItem.name === dataJsonItem.applyCustomBranchName) {
+                                    optionSeriesItem.data[xData.indexOf(xItem)] = dataJsonItem.groupCount;
+                                }
+                            }
                         }
                     }
                 }
-            }
-        }
-    }else if(firstItem === "CON_SEND_HOSPITAL" && secondItem === "CON_SEND_DOCTOR"){
-        for (let item of dataJson) {
-            if (xData.indexOf(item.applyHospitalName) === -1) {
-                xData.push(item.applyHospitalName);
-            }
-            if (legendData.indexOf(item.applyUserSpecialistTypeName) === -1) {
-                legendData.push(item.applyUserSpecialistTypeName);
-                optionSeries.push({
-                    name: item.applyUserSpecialistTypeName,
-                    type: 'bar',
-                    barGap: 0,
-                    label: labelOption,
-                    data: []
-                });
-            }
-        }
-        for (let xItem of xData) {
-            for (let dataJsonItem of dataJson) {
-                if (xItem === dataJsonItem.applyHospitalName) {
-                    for (let optionSeriesItem of optionSeries) {
-                        if (optionSeriesItem.name === dataJsonItem.applyUserSpecialistTypeName) {
-                            optionSeriesItem.data[xData.indexOf(xItem)] = dataJsonItem.groupCount;
+                break;
+            case "CON_SEND_DOCTOR":
+                for (let item of dataJson) {
+                    if (xData.indexOf(item.applyHospitalName) === -1) {
+                        xData.push(item.applyHospitalName);
+                    }
+                    if (legendData.indexOf(item.applyUserSpecialistTypeName) === -1) {
+                        legendData.push(item.applyUserSpecialistTypeName);
+                        optionSeries.push({
+                            name: item.applyUserSpecialistTypeName,
+                            type: 'bar',
+                            barGap: 0,
+                            label: labelOption,
+                            data: []
+                        });
+                    }
+                }
+                for (let xItem of xData) {
+                    for (let dataJsonItem of dataJson) {
+                        if (xItem === dataJsonItem.applyHospitalName) {
+                            for (let optionSeriesItem of optionSeries) {
+                                if (optionSeriesItem.name === dataJsonItem.applyUserSpecialistTypeName) {
+                                    optionSeriesItem.data[xData.indexOf(xItem)] = dataJsonItem.groupCount;
+                                }
+                            }
                         }
                     }
                 }
-            }
-        }
-    }else if(firstItem === "CON_SEND_HOSPITAL" && secondItem === "CON_RECEIVE_BRANCH"){
-        for (let item of dataJson) {
-            if (xData.indexOf(item.applyHospitalName) === -1) {
-                xData.push(item.applyHospitalName);
-            }
-            if (legendData.indexOf(item.inviteUserSpecialistTypeName) === -1) {
-                legendData.push(item.inviteUserSpecialistTypeName);
-                optionSeries.push({
-                    name: item.inviteUserSpecialistTypeName,
-                    type: 'bar',
-                    barGap: 0,
-                    label: labelOption,
-                    data: []
-                });
-            }
-        }
-        for (let xItem of xData) {
-            for (let dataJsonItem of dataJson) {
-                if (xItem === dataJsonItem.applyHospitalName) {
-                    for (let optionSeriesItem of optionSeries) {
-                        if (optionSeriesItem.name === dataJsonItem.inviteUserSpecialistTypeName) {
-                            optionSeriesItem.data[xData.indexOf(xItem)] = dataJsonItem.groupCount;
+                break;
+            case "CON_RECEIVE_BRANCH":
+                for (let item of dataJson) {
+                    if (xData.indexOf(item.applyHospitalName) === -1) {
+                        xData.push(item.applyHospitalName);
+                    }
+                    if (legendData.indexOf(item.inviteCustomBranchName) === -1) {
+                        legendData.push(item.inviteCustomBranchName);
+                        optionSeries.push({
+                            name: item.inviteCustomBranchName,
+                            type: 'bar',
+                            barGap: 0,
+                            label: labelOption,
+                            data: []
+                        });
+                    }
+                }
+                for (let xItem of xData) {
+                    for (let dataJsonItem of dataJson) {
+                        if (xItem === dataJsonItem.applyHospitalName) {
+                            for (let optionSeriesItem of optionSeries) {
+                                if (optionSeriesItem.name === dataJsonItem.inviteCustomBranchName) {
+                                    optionSeriesItem.data[xData.indexOf(xItem)] = dataJsonItem.groupCount;
+                                }
+                            }
                         }
                     }
                 }
-            }
-        }
-    }else if(firstItem === "CON_SEND_HOSPITAL" && secondItem === "CON_RECEIVE_DOCTOR"){
-        for (let item of dataJson) {
-            if (xData.indexOf(item.applyHospitalName) === -1) {
-                xData.push(item.applyHospitalName);
-            }
-            if (legendData.indexOf(item.inviteCustomBranchName) === -1) {
-                legendData.push(item.inviteCustomBranchName);
-                optionSeries.push({
-                    name: item.inviteCustomBranchName,
-                    type: 'bar',
-                    barGap: 0,
-                    label: labelOption,
-                    data: []
-                });
-            }
-        }
-        for (let xItem of xData) {
-            for (let dataJsonItem of dataJson) {
-                if (xItem === dataJsonItem.applyHospitalName) {
-                    for (let optionSeriesItem of optionSeries) {
-                        if (optionSeriesItem.name === dataJsonItem.inviteCustomBranchName) {
-                            optionSeriesItem.data[xData.indexOf(xItem)] = dataJsonItem.groupCount;
+                break;
+            case "CON_RECEIVE_DOCTOR":
+                for (let item of dataJson) {
+                    if (xData.indexOf(item.applyHospitalName) === -1) {
+                        xData.push(item.applyHospitalName);
+                    }
+                    if (legendData.indexOf(item.inviteUserSpecialistTypeName) === -1) {
+                        legendData.push(item.inviteUserSpecialistTypeName);
+                        optionSeries.push({
+                            name: item.inviteUserSpecialistTypeName,
+                            type: 'bar',
+                            barGap: 0,
+                            label: labelOption,
+                            data: []
+                        });
+                    }
+                }
+                for (let xItem of xData) {
+                    for (let dataJsonItem of dataJson) {
+                        if (xItem === dataJsonItem.applyHospitalName) {
+                            for (let optionSeriesItem of optionSeries) {
+                                if (optionSeriesItem.name === dataJsonItem.inviteUserSpecialistTypeName) {
+                                    optionSeriesItem.data[xData.indexOf(xItem)] = dataJsonItem.groupCount;
+                                }
+                            }
                         }
                     }
                 }
-            }
+            default:
+                break;
         }
     }
-
 
     let option = {
         color: optionColor,

@@ -194,8 +194,8 @@ const findSpecificationsByIdApi = "/consumables/findSpecificationsById";        
 
 const selectReport = "/apply/consultation/selectReport";                                    //查询会诊报告 + 医嘱
 
-
 /** 统计模块接口 **/
 
-const getConsultationCount = "/statistics/getConsultationCount"
+const getConsultationCount = "/statistics/getConsultationCount"                             //会诊数量统计查询
+const getReferralCount = "/statistics/getReferralCount"                                     //转诊数量统计查询
 

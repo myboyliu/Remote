@@ -21,6 +21,8 @@ public class ConsultationStatisticsParamBean {
 
     private String groupByInviteUserSpecialistType;
 
+    private String groupByInviteHospital;
+
     private String isApply;
 
     private String isInvite;

@@ -51,5 +51,8 @@
         <if test="groupByInviteUserSpecialistType != null">
             inviteUserSpecialistType.id;
         </if>
+        <if test="groupByInviteHospital != null">
+            applyForm.invite_hospital_id;
+        </if>
     </select>
 </mapper>
