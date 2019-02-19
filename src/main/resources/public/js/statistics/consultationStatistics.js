@@ -38,7 +38,7 @@ function renderConsultationDoubleList(dataJson) {
     myChart.clear();
     let labelOption = {
         normal: {
-            show: true,
+            show: false,
             position: 'insideBottom',
             distance: 15,
             align: 'left',
