@@ -16,10 +16,7 @@ import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.ApplyTime;
 import com.sicmed.remote.web.entity.CaseConsultant;
-import com.sicmed.remote.web.service.ApplyFormService;
-import com.sicmed.remote.web.service.ApplyNodeService;
-import com.sicmed.remote.web.service.ApplyTimeService;
-import com.sicmed.remote.web.service.CaseConsultantService;
+import com.sicmed.remote.web.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +54,8 @@ public class ApplyDisposeController extends BaseController {
 
     @Autowired
     private ApplyNodeService applyNodeService;
+    @Autowired
+    private ConsultationPriceRecordService consultationPriceRecordService;
 
     /**
      * 医政 工作台 重新分配医生
@@ -790,6 +789,7 @@ public class ApplyDisposeController extends BaseController {
         } else if (applyStatus == ConsultationStatus.CONSULTATION_END.toString()) {
             applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已反馈.toString());
 
+            consultationPriceRecordService.insertList(caseConsultantService.getByPrimaryKey(applyFormId),applyForm);
             new Thread(() -> {
                 try {
                     Thread.sleep(1000);
