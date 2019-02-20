@@ -246,9 +246,9 @@
                     <div class="selectContent clearfix">
                         <p class="selectTitle">统计方式:</p>
                         <select class="seniorMode">
-                            <option value="%Y-%m-%d">按日统计</option>
-                            <option value="%Y-%m">按月统计</option>
-                            <option value="%Y">按年统计</option>
+                            <option value="groupByDay">按日统计</option>
+                            <option value="groupByMonth">按月统计</option>
+                            <option value="groupByYear">按年统计</option>
                         </select>
                     </div>
                 </div>
@@ -290,7 +290,7 @@
             </table>
 
             <div class="formBox">
-                <div class="chartBox seniorChartBox"></div>
+                <div id="ExpertChartBox" class="chartBox seniorChartBox"></div>
             </div>
         </div>
         <!-- 会诊费用统计 -->

@@ -2,6 +2,9 @@
 let consultationOptionArr = [];
 // 转诊 已选项 索引 数组
 let referralOptionArr = [];
+// 高级 已选项 索引 数组
+let seniorOptionArr = [];
+
 let myChart;
 /**
  * 渲染统计选项
@@ -29,12 +32,6 @@ let expertOptionObj = [{key: "EXP_VIDEO_CON", value: "视频会诊"}, {
     value: "图文会诊"
 }, {key: "EXP_SINGLE_CON", value: "单学科会诊"},
     {key: "EXP_MULTIPLE_CON", value: "多学科会诊"}];
-
-let expertRule = {
-    EXP_VIDEO_CON: {EXP_SINGLE_CON: "EXP_SINGLE_CON", EXP_MULTIPLE_CON: "EXP_MULTIPLE_CON"},
-    EXP_PICTURE_CON: {EXP_SINGLE_CON: "EXP_SINGLE_CON", EXP_MULTIPLE_CON: "EXP_MULTIPLE_CON"}
-
-};
 
 function renderStatisticaltem() {
     //会诊病历统计数据列表 选项渲染
@@ -197,8 +194,6 @@ $(function () {
         });
     })
 
-    // 发送病历次数统计--选项选择
-
     // 选项点击事件
     $('.consultationOptionBox').delegate('a', 'click', function () {
         // 判断当前是否已经选中
@@ -273,7 +268,6 @@ $(function () {
         }
     })
 
-    // 发送病历次数统计--选项选择
     // 选项点击事件
     $('.referralOptionBox').delegate('a', 'click', function () {
         // 判断当前是否已经选中
@@ -297,7 +291,6 @@ $(function () {
             $('.referralOptionBox > a').eq(referralOptionArr[i]).addClass("active");
         }
     });
-
     // 转诊病历次数 统计 按钮
     $('.referralBtn').click(function () {
         referralOptionArr.sort(function (a, b) {
@@ -350,9 +343,7 @@ $(function () {
         }
     })
 
-    // 发送病历次数统计--选项选择
     // 已选项 索引 数组
-    var seniorOptionArr = [];
     // 选项点击事件
     $('.seniorOptionBox').delegate('a', 'click', function () {
         // 判断当前是否已经选中
@@ -387,76 +378,20 @@ $(function () {
         } else if (seniorOptionArr.length == 0) {
             layer.msg('数据不完整')
         } else if (seniorOptionArr.length >= 2) {
-            expertRule
-            var numberStr = '';
-            var condition1 = $('.seniorOptionBox > a').eq(seniorOptionArr[0]).attr('rulesfield');
-            var conditionName1 = $('.seniorOptionBox > a').eq(seniorOptionArr[0]).html();
-            var condition2 = $('.seniorOptionBox > a').eq(seniorOptionArr[1]).attr('rulesfield');
-            var conditionName2 = $('.seniorOptionBox > a').eq(seniorOptionArr[1]).html();
-            for (var i = 0; i < seniorOptionArr.length; i++) {
-                numberStr += $('.seniorOptionBox > a').eq(seniorOptionArr[i]).attr('rulesNumber');
-            }
             let firstItem = $('.seniorOptionBox > a').eq(seniorOptionArr[0]).attr('id');
             let secondItem = $('.seniorOptionBox > a').eq(seniorOptionArr[1]).attr('id');
             if (expertRule[firstItem]) {
                 if (expertRule[firstItem][secondItem]) {
-                    // 两个选项的
-                    $.ajax({
-                        type: 'POST',
-                        url: baseUrl + 'statistics/seniorStatistics',
-                        dataType: 'json',
-                        data: {
-                            "startDate": seniorStartDate,
-                            "endDate": seniorEndDate,
-                            "type": $('.seniorSelect').val() == '1' ? '1' : '0',
-                            "condition1": condition1,
-                            "condition2": condition2,
-                            "mode": $('.seniorMode').val(),
-                        },
-                        xhrFields: {
-                            withCredentials: true
-                        },
-                        crossDomain: true,
-                        success: function (data) {
-                            console.log(data)
-                            if (data.status == 200) {
-                                var tempArr = data.statisticsBean;
-                                var xData = []; // x轴 数据
-                                var yData = []; // y轴 数据
-                                var tempDataArr = [];
-                                for (var i = 0; i < tempArr.length; i++) {
-                                    tempDataArr.push(tempArr[i].x);
-                                }
-                                for (var i = 0; i < dateArr.length; i++) {
-                                    if (tempDataArr.indexOf(dateArr[i]) != -1) {
-                                        yData.push(tempArr[tempDataArr.indexOf(dateArr[i])].size)
-                                    } else {
-                                        yData.push(0);
-                                    }
-                                }
-                                xData = dateArr;
-                                chart(xData, conditionName1 + '/' + conditionName2, yData, '数量', 'line', $('.seniorChartBox'));
-                                var headHtml = '<tr><th></th><th>数量</th></tr>';
-                                var bodyHtml = '';
-                                for (var i = 0; i < xData.length; i++) {
-                                    bodyHtml += '<tr><td>' + xData[i] + '</td><td>' + yData[i] + '</td></tr>'
-                                }
-                                $('.referralHeadBox3').html(headHtml);
-                                $('.referralBodyBox3').html(bodyHtml);
-                                $('.consultationTable3').hide();
-                                $('.tableBtn_three').addClass('active');
-                            } else if (data.status == 250) {
-                                // 未登录操作
-                                window.location = '/yilaiyiwang/login/login.html';
-                            } else {
-                                // 其他操作
-                            }
-                        },
-                        error: function (err) {
-                            console.log(err);
-
-                        },
-                    })
+                    let formData = {
+                        "startTime": seniorStartDate,
+                        "endTime": seniorEndDate
+                    };
+                    $('.seniorSelect').val() === "1" ? formData["isInvite"] = "1" : formData["isApply"] = "1";
+                    formData[$('.seniorMode').val()] = "1";
+                    formData["isMdt"] = expertRule[firstItem][secondItem];
+                    firstItem === "EXP_VIDEO_CON" ? formData["isVideo"] = "1" : formData["isPicture"] = "1";
+                    ajaxRequest("GET", getConsultationStatisticsCount, formData, true, "application/json", true, renderExpertDoubleList, null, null);
+                    return false;
                 } else {
                     layer.msg('统计组合不存在')
                 }
@@ -465,93 +400,22 @@ $(function () {
             }
         } else {
             // 只有一个选项 的 情况
-            var optionName = $('.seniorOptionBox > a').eq(seniorOptionArr[0]).html();
-            if ($('.seniorMode').val() == "%Y") {
-                // 年
-                var url = "dateUtil/findYear";
-            } else if ($('.seniorMode').val() == "%Y-%m") {
-                // 月
-                var url = "dateUtil/findMonth";
-            } else if ($('.seniorMode').val() == "%Y-%m-%d") {
-                // 日
-                var url = "dateUtil/findDay";
+            let optionName = $('.seniorOptionBox > a').eq(seniorOptionArr[0]).attr('id');
+            if (expertSingleRule[optionName]) {
+                let formData = {
+                    "startTime": seniorStartDate,
+                    "endTime": seniorEndDate
+                };
+                $('.seniorSelect').val() === "1" ? formData["isInvite"] = "1" : formData["isApply"] = "1";
+                formData[$('.seniorMode').val()] = "1";
+                if (optionName === "EXP_VIDEO_CON" || optionName === "EXP_PICTURE_CON"){
+                    optionName === "EXP_VIDEO_CON" ? formData["isVideo"] = "1" : formData["isPicture"] = "1";
+                }else{
+                    formData["isMdt"] = optionName === "EXP_SINGLE_CON" ? "1":"0";
+                }
+                ajaxRequest("GET", getConsultationStatisticsCount, formData, true, "application/json", true, renderExpertDoubleList, null, null);
+                return false;
             }
-            $.ajax({
-                type: 'POST',
-                url: baseUrl + url,
-                dataType: 'json',
-                data: {
-                    "startDate": seniorStartDate,
-                    "endDate": seniorEndDate,
-                },
-                xhrFields: {
-                    withCredentials: true
-                },
-                crossDomain: true,
-                success: function (data) {
-                    var dateArr = data;
-                    $.ajax({
-                        type: 'POST',
-                        url: baseUrl + 'statistics/seniorStatisticsSingle',
-                        dataType: 'json',
-                        data: {
-                            "startDate": seniorStartDate,
-                            "endDate": seniorEndDate,
-                            "mode": $('.seniorMode').val(),
-                            "type": $('.seniorSelect').val() == '1' ? '1' : '0',
-                            "condition": $('.seniorOptionBox > a').eq(seniorOptionArr[0]).attr('rulesfield'),
-                        },
-                        xhrFields: {
-                            withCredentials: true
-                        },
-                        crossDomain: true,
-                        success: function (data) {
-                            console.log(data)
-                            if (data.status == 200) {
-                                var tempArr = data.statisticsBean;
-
-                                var xData = []; // x轴 数据
-                                var yData = []; // y轴 数据
-                                var tempDataArr = [];
-                                for (var i = 0; i < tempArr.length; i++) {
-                                    tempDataArr.push(tempArr[i].x);
-                                }
-                                for (var i = 0; i < dateArr.length; i++) {
-                                    if (tempDataArr.indexOf(dateArr[i]) != -1) {
-                                        yData.push(tempArr[tempDataArr.indexOf(dateArr[i])].size);
-                                    } else {
-                                        yData.push(0);
-                                    }
-                                }
-                                xData = dateArr;
-                                chart(xData, optionName, yData, '数量', 'line', $('.seniorChartBox')); //xData, xName, yData, yName, chartType
-                                var headHtml = '<tr><th></th><th>数量</th></tr>';
-                                var bodyHtml = '';
-                                for (var i = 0; i < xData.length; i++) {
-                                    bodyHtml += '<tr><td>' + xData[i] + '</td><td>' + yData[i] + '</td></tr>'
-                                }
-                                $('.referralHeadBox3').html(headHtml);
-                                $('.referralBodyBox3').html(bodyHtml);
-                                $('.consultationTable3').hide();
-                                $('.tableBtn_three').addClass('active');
-                            } else if (data.status == 250) {
-                                // 未登录操作
-                                window.location = '/yilaiyiwang/login/login.html';
-                            } else {
-                                // 其他操作
-                            }
-                        },
-                        error: function (err) {
-                            console.log(err);
-
-                        },
-                    })
-                },
-                error: function (err) {
-                    console.log(err);
-                },
-            })
-
         }
     })
 

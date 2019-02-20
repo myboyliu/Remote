@@ -17,13 +17,23 @@ let consultationRule = {
     },
     CON_RECEIVE_BRANCH: {CON_RECEIVE_DOCTOR: ["groupByInviteBranch", "groupByInviteUserSpecialistType"]}
 };
-consultationSingleRule = {
-    CON_SEND_HOSPITAL: "groupByApplyHospital",
+let consultationSingleRule = {
+    CON_SEND_HOSPITAL: "",
     CON_SEND_BRANCH: "groupByApplyBranch",
     CON_SEND_DOCTOR: "groupByApplyUserSpecialistType",
     CON_RECEIVE_HOSPITAL: "groupByInviteHospital",
     CON_RECEIVE_BRANCH: "groupByInviteBranch",
     CON_RECEIVE_DOCTOR: "groupByInviteUserSpecialistType"
+};
+let expertRule = {
+    EXP_VIDEO_CON: {EXP_SINGLE_CON: "1", EXP_MULTIPLE_CON: "0"},
+    EXP_PICTURE_CON: {EXP_SINGLE_CON: "1", EXP_MULTIPLE_CON: "0"}
+};
+let expertSingleRule = {
+    EXP_VIDEO_CON: "isVideo",
+    EXP_PICTURE_CON: "isPicture",
+    EXP_SINGLE_CON: "groupBySingle",
+    EXP_MULTIPLE_CON: "groupByMdt"
 };
 
 function renderConsultationDoubleList(dataJson) {
@@ -458,7 +468,7 @@ function renderConsultationSingleList(dataJson) {
     switch (optionName) {
         case "CON_SEND_HOSPITAL":
             xName = "发件医院"
-            if ($('.consultationSelect').val() === "2"){
+            if ($('.consultationSelect').val() === "2") {
                 chartType = "line";
                 for (let dataJsonElement of dataJson) {
                     xData.push(dataJsonElement.groupDay);
@@ -487,7 +497,7 @@ function renderConsultationSingleList(dataJson) {
             break;
         case "CON_RECEIVE_HOSPITAL":
             xName = "收件医院"
-            if ($('.consultationSelect').val() === "1"){
+            if ($('.consultationSelect').val() === "1") {
                 chartType = "line";
                 for (let dataJsonElement of dataJson) {
                     xData.push(dataJsonElement.groupDay);
@@ -518,6 +528,78 @@ function renderConsultationSingleList(dataJson) {
 
     // chartType  // Chart类型   bar柱形 line折线
     let myChart = echarts.init(document.getElementById('SSSS'));
+    myChart.clear();
+    let option = {
+        color: ["#516dcf"],
+        grid: {
+            left: '10%',
+            right: '15%',
+            bottom: '10%',
+            containLabel: true,
+        },
+        tooltip: {
+            trigger: 'axis',
+        },
+        xAxis: {
+            axisLabel: {
+                rotate: 10,
+                interval: parseInt(xData.length / 10),
+                color: '#333333',
+                fontSize: '14',
+            },
+            nameTextStyle: {
+                color: '#101010',
+                fontWeight: '600',
+                fontSize: '14',
+            },
+            name: xName,
+            data: xData,
+        },
+        yAxis: {
+            name: yName,
+            axisLabel: {
+                color: '#333333',
+                fontSize: '16',
+            },
+            nameTextStyle: {
+                color: '#101010',
+                fontWeight: '600',
+                fontSize: '14',
+            },
+        },
+        dataZoom: [{
+            start: 0,
+            end: 100,
+        }],
+        series: [{
+            name: '数量',
+            type: chartType,
+            data: yData,
+            areaStyle: {},
+        }]
+    };
+    myChart.setOption(option);
+}
+function renderExpertDoubleList(dataJson) {
+
+    if (dataJson.length == 0) {
+        layer.msg('统计结果无数据')
+        return false;
+    }
+    console.log(dataJson)
+    let firstItem = $('.seniorOptionBox > a').eq(seniorOptionArr[0]).attr('id');
+    let secondItem = $('.seniorOptionBox > a').eq(seniorOptionArr[1]).attr('id');
+    let xName;
+    let xData = [];
+    let yName = "数量";
+    let yData = [];
+    chartType = "line";
+    // xName = "发件医院"
+    for (let dataJsonElement of dataJson) {
+        xData.push(dataJsonElement.groupDay);
+        yData.push(dataJsonElement.groupCount);
+    }
+    let myChart = echarts.init(document.getElementById('ExpertChartBox'));
     myChart.clear();
     let option = {
         color: ["#516dcf"],

@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.controller;
 
+import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.bean.ConsultationStatisticsBean;
@@ -32,6 +33,12 @@ public class StatisticsController extends BaseController {
     @GetMapping(value = "getConsultationCount")
     public Map getConsultationCount(ConsultationStatisticsParamBean consultationStatisticsParamBean) {
 
+        if (consultationStatisticsParamBean.getIsVideo() != null) {
+            consultationStatisticsParamBean.setApplyType(String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO));
+        }
+        if (consultationStatisticsParamBean.getIsPicture() != null) {
+            consultationStatisticsParamBean.setApplyType(String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT));
+        }
         consultationStatisticsParamBean.setHospitalId(getCurrentUser().getHospitalId());
         consultationStatisticsParamBean.setApplyStatus(String.valueOf(ConsultationStatus.CONSULTATION_END));
         List<ConsultationStatisticsBean> consultationStatisticsBeanList = statisticsService.getConsultationStatisticsListByParam(consultationStatisticsParamBean);

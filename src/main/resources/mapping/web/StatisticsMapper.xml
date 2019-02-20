@@ -11,41 +11,58 @@
         <result column="groupCount" jdbcType="VARCHAR" property="groupCount"/>
         <result column="groupDay" jdbcType="VARCHAR" property="groupDay"/>
     </resultMap>
-    <select id="getConsultationStatisticsListByParam" parameterType="com.sicmed.remote.web.bean.ConsultationStatisticsParamBean" resultMap="BaseResultMap">
+    <select id="getConsultationStatisticsListByParam"
+            parameterType="com.sicmed.remote.web.bean.ConsultationStatisticsParamBean" resultMap="BaseResultMap">
         SELECT
 
-          applyHospital.hospital_name applyHospitalName,
-          inviteHospital.hospital_name inviteHospitalName,
-          applyCustomBranch.custom_name applyCustomBranchName,
-          inviteCustomBranch.custom_name inviteCustomBranchName,
-          applyUserSpecialistType.specialist_name applyUserSpecialistTypeName,
-          inviteUserSpecialistType.specialist_name inviteUserSpecialistTypeName,
-          DATE_FORMAT(applyForm.consultant_apply_time,'%Y-%m-%d') groupDay,
-          count(*) AS groupCount
+        applyHospital.hospital_name applyHospitalName,
+        inviteHospital.hospital_name inviteHospitalName,
+        applyCustomBranch.custom_name applyCustomBranchName,
+        inviteCustomBranch.custom_name inviteCustomBranchName,
+        applyUserSpecialistType.specialist_name applyUserSpecialistTypeName,
+        inviteUserSpecialistType.specialist_name inviteUserSpecialistTypeName,
+        <if test="groupByDay != null">
+            DATE_FORMAT(applyForm.consultant_apply_time,'%Y-%m-%d') groupDay,
+        </if>
+        <if test="groupByMonth != null">
+            DATE_FORMAT(applyForm.consultant_apply_time,'%Y-%m') groupDay,
+        </if>
+        <if test="groupByYear != null">
+            DATE_FORMAT(applyForm.consultant_apply_time,'%Y') groupDay,
+        </if>
+        count(*) AS groupCount
         FROM apply_form applyForm
-          LEFT JOIN base_hospital applyHospital ON applyHospital.id = applyForm.apply_hospital_id
-          LEFT JOIN base_hospital inviteHospital ON inviteHospital.id = applyForm.invite_hospital_id
-          LEFT JOIN custom_branch applyCustomBranch ON applyCustomBranch.id = applyForm.apply_branch_id
-          LEFT JOIN custom_branch inviteCustomBranch ON inviteCustomBranch.id = applyForm.invite_branch_id
-          LEFT JOIN user_detail applyUserDetail ON applyUserDetail.id = applyForm.apply_user_id
-          LEFT JOIN specialist_type applyUserSpecialistType ON applyUserSpecialistType.id = applyUserDetail.specialist_type_id
-          LEFT JOIN user_detail inviteUserDetail ON inviteUserDetail.id = applyForm.invite_user_id
-          LEFT JOIN specialist_type inviteUserSpecialistType ON inviteUserSpecialistType.id = inviteUserDetail.specialist_type_id
+        LEFT JOIN base_hospital applyHospital ON applyHospital.id = applyForm.apply_hospital_id
+        LEFT JOIN base_hospital inviteHospital ON inviteHospital.id = applyForm.invite_hospital_id
+        LEFT JOIN custom_branch applyCustomBranch ON applyCustomBranch.id = applyForm.apply_branch_id
+        LEFT JOIN custom_branch inviteCustomBranch ON inviteCustomBranch.id = applyForm.invite_branch_id
+        LEFT JOIN user_detail applyUserDetail ON applyUserDetail.id = applyForm.apply_user_id
+        LEFT JOIN specialist_type applyUserSpecialistType ON applyUserSpecialistType.id =
+        applyUserDetail.specialist_type_id
+        LEFT JOIN user_detail inviteUserDetail ON inviteUserDetail.id = applyForm.invite_user_id
+        LEFT JOIN specialist_type inviteUserSpecialistType ON inviteUserSpecialistType.id =
+        inviteUserDetail.specialist_type_id
         WHERE
         applyForm.del_flag = "0"
         AND #{startTime}&lt;applyForm.consultant_apply_time &lt;#{endTime}
+        <if test="isMdt != null">
+            AND applyForm.mdt_flag = #{isMdt}
+        </if>
         <if test="isApply != null">
-            AND  applyForm.apply_hospital_id = #{hospitalId}
+            AND applyForm.apply_hospital_id = #{hospitalId}
         </if>
         <if test="isInvite != null">
-            AND  applyForm.invite_hospital_id = #{hospitalId}
+            AND applyForm.invite_hospital_id = #{hospitalId}
         </if>
-         AND applyForm.apply_status = #{applyStatus}
+        <if test="applyType != null">
+            AND applyForm.apply_type = #{applyType}
+        </if>
+        AND applyForm.apply_status = #{applyStatus}
         GROUP BY
         <if test="groupByApplyHospital != null">
             applyForm.apply_hospital_id,
         </if>
-         <if test="groupByApplyBranch != null">
+        <if test="groupByApplyBranch != null">
             applyForm.apply_branch_id,
         </if>
         <if test="groupByInviteBranch != null">
@@ -60,8 +77,8 @@
         <if test="groupByInviteHospital != null">
             applyForm.invite_hospital_id,
         </if>
-         <if test="groupByDay != null">
-             groupDay,
+        <if test="groupByDay != null or groupByMonth != null or groupByYear != null">
+            groupDay,
         </if>
         applyForm.del_flag
     </select>
