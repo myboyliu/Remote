@@ -68,11 +68,17 @@ function renderCaseTypeLeftNavigation(data) {
 
 /** 渲染 病例图片列表 */
 function renderFileListView(baseUrl, url, type, fileName) {
-    objParent.append(
-        `<li class="fileItem" dataBase="${baseUrl}">\
-                                        <div style='background-image:url(${url});'></div>\
-                                        <img class="delFileBtn" src="../images/delete_file.png"/><p type="${type}" desc="" class="fileName">${fileName}</p></li>`
-    );
+    // objParent.append(
+    //     `<li class="fileItem" dataBase="${baseUrl}">\
+    //                                     <div style='background-image:url(${url});'></div>\
+    //                                     <img class="delFileBtn" src="../images/delete_file.png"/><p type="${type}" desc="" class="fileName">${fileName}</p></li>`
+    // );
+
+    objParent.append( '<li dataBase="${baseUrl}" filePath="' + fileName + '"  class="fileItem">\
+                                       <div style = "background-image: url(&apos;' + url + '&apos;)"></div>\
+                                        <img class="delFileBtn" src="../images/delete_file.png"/>\
+                                        <p type="${type}" desc="" class="fileName">' + fileName + '</p>\
+                                    </li>');
 
 }
 
@@ -132,12 +138,8 @@ function addCaseFile() {
         });
         if (/(.png|.jpg|.jpeg)$/gi.test(fileName)) {
             type = "img";
-            let reader = new FileReader();
-            reader.readAsDataURL(uploadFile[fileIndex]);
-            reader.onload = function (e) {
-                url = e.target.result;
-                renderFileListView(result, url, type, result);
-            }
+            let url = baseUrl + "/" + encodeURI(result);
+            renderFileListView(baseUrl + "/" + result, url, type, result);
         } else if (/(.pdf)$/gi.test(fileName)) {
             type = "pdf";
             url = "../images/pdf_icon.png";
@@ -147,9 +149,10 @@ function addCaseFile() {
             url = "../images/dcm_icon.png";
             renderFileListView(baseUrl + "/" + result, url, type, result);
         }
+        $('.fileCount').html(Number($('.fileCount').html()) + 1);
         // 总张数
         fileIndex++;
-        $('.sum').html(fileAllArr.length);
+        // $('.sum').html(fileAllArr.length);
         if (fileIndex < uploadFile.length) {
             addCaseFile();
         } else {

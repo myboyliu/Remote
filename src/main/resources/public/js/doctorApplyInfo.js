@@ -65,9 +65,13 @@ function renderLeftNavigation(data) {
     })
     _html += '</ul>\
              </li>'
-    if (isVideo || isReferral) {
+    if (isVideo) {
         _html += '<li class="oneLevelItem patientInfo">\
                         <p class="oneLevelName">会诊排期</p>\
+                    </li>'
+    }else if (isReferral){
+        _html += '<li class="oneLevelItem patientInfo">\
+                        <p class="oneLevelName">转诊排期</p>\
                     </li>'
     }
     _html += '<li class="oneLevelItem patientInfo">\
@@ -421,6 +425,7 @@ function renderViewByRole() {
             //待收诊
         }
     } else {
+        $("#applyTimeListTitle").html("转诊排期")
         $('.progressBar').empty();
         let referralStatus = '';
         for (var i = 1; i < referralStatusArr.length; i++) {

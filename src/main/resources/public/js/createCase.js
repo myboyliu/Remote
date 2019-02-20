@@ -166,8 +166,8 @@ function favoriteHtml() {
     $('.doctorCount').html(inviteDoctorArray.length);
     if (inviteDoctorArray.length === 0) {
         _html = '<li class="clearfix"><span>主会诊人:未选择</span></li>';
-        $('.imgPric').html(hospitalInfo.hospitalImgPrice ? hospitalInfo.hospitalImgPrice : '-');
-        $('.videoPric').html(hospitalInfo.hospitalVideoPrice ? hospitalInfo.hospitalVideoPrice : '-');
+        // $('.imgPric').html(hospitalInfo.hospitalImgPrice ? hospitalInfo.hospitalImgPrice : '-');
+        // $('.videoPric').html(hospitalInfo.hospitalVideoPrice ? hospitalInfo.hospitalVideoPrice : '-');
     } else {
         let imgPric = Number(inviteDoctorArray[0].hospitalImgPrice);
         let videoPric = Number(inviteDoctorArray[0].hospitalVideoPrice);
@@ -633,11 +633,11 @@ function requestField(data) {
 /** 渲染 病例图片列表 */
 let objParent = null; // 当前点击块的父级
 function renderFileListView(baseUrl, url, type, fileName) {
-    objParent.append(
-        `<li class="fileItem" dataBase="${baseUrl}">\
-                                        <div style='background-image:url(${url});'></div>\
-                                        <img class="delFileBtn" src="../images/delete_file.png"/><p type="${type}" desc="" class="fileName">${fileName}</p></li>`
-    );
+    objParent.append('<li dataBase="${baseUrl}" filePath="' + fileName + '"  class="fileItem">\
+                                       <div style = "background-image: url(&apos;' + url + '&apos;)"></div>\
+                                        <img class="delFileBtn" src="../images/delete_file.png"/>\
+                                        <p type="${type}" desc="" class="fileName">' + fileName + '</p>\
+                                    </li>');
 }
 
 /** 校验病历是否完整 */
@@ -734,7 +734,7 @@ function showFailedParamMessage() {
 
 /** 渲染 草稿信息 */
 function renderDraftInfo(draftInfo) {
-    sessionStorage.removeItem("draftId");
+
     casePatientId = draftInfo.patientId;
     caseRecordId = draftInfo.caseRecordId;
     $('#username').val(draftInfo.patientName)
@@ -882,6 +882,13 @@ function renderDraftInfo(draftInfo) {
     }
     $('.sum').html(fileAllArr.length);
     favoriteHtml();
+    /*  //textarea 标签随着文本的高度实现自适应 */
+    $('.text-adaption').each(function () {
+        this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
+    }).on('input', function () {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
 }
 
 $(function () {
@@ -922,39 +929,6 @@ $(function () {
     // 加急选择
     $('.urgent > a').click(function () {
         $(this).addClass('active').siblings('a').removeClass('active');
-    });
-
-    // 滚动事件
-    $(window).scroll(function () {
-        $('.hospitalUl').css({
-            'width': '145px',
-            'position': 'fixed',
-        });
-        if ($(document).scrollTop() >= $(document).height() - $(window).height() - $('.footer').height()) {
-            $('.sectionUl').css({
-                'height': $(window).height() - 300 - $('.hospitalUl .hospitalItem').length * $('.hospitalName').height(),
-            });
-        } else {
-            $('.sectionUl').css({
-                'height': $(window).height() - 230 - $('.hospitalUl .hospitalItem').length * $('.hospitalName').height(),
-            });
-        }
-    });
-
-    $(window).scroll(function () {
-        $('.oneLevelUl').css({
-            'width': '145px',
-            'position': 'fixed',
-        })
-        if ($(document).scrollTop() >= $(document).height() - $(window).height() - $('.footer').height()) {
-            $('.twoLevelUl').css({
-                'height': $(window).height() - 300 - $('.oneLevelUl .oneLevelItem').length * $('.oneLevelName').height(),
-            });
-        } else {
-            $('.twoLevelUl').css({
-                'height': $(window).height() - 230 - $('.oneLevelUl .oneLevelItem').length * $('.oneLevelName').height(),
-            });
-        }
     });
 
     // 选医生左侧三级列表切换
@@ -1104,40 +1078,6 @@ $(function () {
         return false;
     });
 
-    /*  //textarea 标签随着文本的高度实现自适应 */
-    const ie = !!window.attachEvent && !window.opera;
-    const ie9 = ie && (!!+"\v1");
-    const inputhandler = function (node, fun) {
-        if ("oninput" in node) {
-            node.oninput = fun;
-        } else {
-            node.onpropertychange = fun;
-        }
-        if (ie9) node.onkeyup = fun;
-    };
-    /* 初步诊断随诊文本增加高度自适应 */
-    let createCase_textDiagnose = document.getElementById("createCase_textDiagnose");
-    inputhandler(createCase_textDiagnose, function () {
-        if (!ie) createCase_textDiagnose.style.height = 40 + "px";
-        const height = createCase_textDiagnose.scrollHeight;
-        if (height >= 40) {
-            createCase_textDiagnose.style.height = height + "px";
-        } else {
-            createCase_textDiagnose.style.height = 40 + "px";
-        }
-    });
-    /*会/转诊目的文本增加高度自适应 */
-    let createCase_textGola = document.getElementById("createCase_textGola");
-    inputhandler(createCase_textGola, function () {
-        if (!ie) createCase_textGola.style.height = 40 + "px";
-        const height = createCase_textGola.scrollHeight;
-        if (height >= 40) {
-            createCase_textGola.style.height = height + "px";
-        } else {
-            createCase_textGola.style.height = 40 + "px";
-        }
-    });
-
 //点击添加 添加病历图片
     $(".upfileUl").delegate('.fileInput', 'change', function () {
         objParent = $(this).parents(".fileContent");
@@ -1147,7 +1087,7 @@ $(function () {
     });
 
     function addCaseFile() {
-        if(!uploadFile[fileIndex]){
+        if (!uploadFile[fileIndex]) {
             return false;
         }
         let fileName = uploadFile[fileIndex].name;
@@ -1208,19 +1148,22 @@ $(function () {
 
 // 删除文件
     $('.upfileUl').delegate('.delFileBtn', 'click', function () {
-        for (let i = 0; i < fileAllArr.length; i++) {
-            if ($(this).siblings(".fileName").html() === fileAllArr[i].value) {
-                fileAllArr.splice(i, 1);
+        let fileId = $(this).parents('.fileItem').attr('id');
+        let filePath = $(this).parents('.fileItem').attr('filePath');
+        let data = new FormData();
+        data.append("id", fileId);
+        ajaxRequest("POST", softDelPicture, data, false, false, true, removeFileSuccess, null, null);
+
+        function removeFileSuccess(result) {
+            for (let i = 0; len = fileAllArr.length, i < len; i++) {
+                if (fileAllArr[i].name === filePath) {
+                    fileAllArr.splice(i, 1);
+                }
             }
+            $('.sum').html(Number($('.sum').html()) - 1);
         }
-        for (let i = 0; i < selectFileArr.length; i++) {
-            if ($(this).siblings(".fileName").html() === selectFileArr[i].value) {
-                selectFileArr.splice(i, 1);
-            }
-        }
+
         $(this).parent('.fileItem').remove();
-        // 总张数
-        $('.sum').html(fileAllArr.length);
         return false;
     })
 
@@ -1984,13 +1927,17 @@ $(function () {
     //     }
     // });
     /** 草稿 进入*/
-    if (sessionStorage.getItem('draftId')) {
-        draftId = sessionStorage.getItem("draftId");
-        isDraft = true;
+    if (window.location.search.indexOf("isDraft") === -1) {
+        sessionStorage.removeItem("draftId");
+    } else {
+        if (sessionStorage.getItem('draftId')) {
+            draftId = sessionStorage.getItem("draftId");
+            isDraft = true;
 
-        $("#draftDeleteBtn").show();
-        let formData = {"applyFormId": draftId};
-        ajaxRequest("GET", getApplyInfoUrl, formData, true, "application/json", true, renderDraftInfo, null, null);
+            $("#draftDeleteBtn").show();
+            let formData = {"applyFormId": draftId};
+            ajaxRequest("GET", getApplyInfoUrl, formData, true, "application/json", true, renderDraftInfo, null, null);
+        }
     }
 
     //删除草稿 按钮事件
@@ -2015,5 +1962,73 @@ $(function () {
             window.location = '../page/morkbench.html';
         }
     })
+
+    // 滚动事件
+    $(window).scroll(function () {
+        $('.hospitalUl').css({
+            'width': '145px',
+            'position': 'fixed',
+        });
+        if ($(document).scrollTop() >= $(document).height() - $(window).height() - $('.footer').height()) {
+            $('.sectionUl').css({
+                'height': $(window).height() - 300 - $('.hospitalUl .hospitalItem').length * $('.hospitalName').height(),
+            });
+        } else {
+            $('.sectionUl').css({
+                'height': $(window).height() - 230 - $('.hospitalUl .hospitalItem').length * $('.hospitalName').height(),
+            });
+        }
+    });
+
+    $(window).scroll(function () {
+        $('.oneLevelUl').css({
+            'width': '145px',
+            'position': 'fixed',
+        })
+        if ($(document).scrollTop() >= $(document).height() - $(window).height() - $('.footer').height()) {
+            $('.twoLevelUl').css({
+                'height': $(window).height() - 300 - $('.oneLevelUl .oneLevelItem').length * $('.oneLevelName').height(),
+            });
+        } else {
+            $('.twoLevelUl').css({
+                'height': $(window).height() - 230 - $('.oneLevelUl .oneLevelItem').length * $('.oneLevelName').height(),
+            });
+        }
+    });
+
+    /*  //textarea 标签随着文本的高度实现自适应 */
+
+    const ie = !!window.attachEvent && !window.opera;
+    const ie9 = ie && (!!+"\v1");
+    const inputhandler = function (node, fun) {
+        if ("oninput" in node) {
+            node.oninput = fun;
+        } else {
+            node.onpropertychange = fun;
+        }
+        if (ie9) node.onkeyup = fun;
+    };
+    /* 初步诊断随诊文本增加高度自适应 */
+    let createCase_textDiagnose = document.getElementById("createCase_textDiagnose");
+    inputhandler(createCase_textDiagnose, function () {
+        if (!ie) createCase_textDiagnose.style.height = 40 + "px";
+        const height = createCase_textDiagnose.scrollHeight;
+        if (height >= 40) {
+            createCase_textDiagnose.style.height = height + "px";
+        } else {
+            createCase_textDiagnose.style.height = 40 + "px";
+        }
+    });
+    /*会/转诊目的文本增加高度自适应 */
+    let createCase_textGola = document.getElementById("createCase_textGola");
+    inputhandler(createCase_textGola, function () {
+        if (!ie) createCase_textGola.style.height = 40 + "px";
+        const height = createCase_textGola.scrollHeight;
+        if (height >= 40) {
+            createCase_textGola.style.height = height + "px";
+        } else {
+            createCase_textGola.style.height = 40 + "px";
+        }
+    });
 
 })

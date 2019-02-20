@@ -430,7 +430,7 @@ function selectOrderById(orderId) {
 // 查看草稿详情
 function selectDraftById(orderId) {
     sessionStorage.setItem('draftId', orderId);
-    window.location = '../page/createCase.html';
+    window.location = '../page/createCase.html?isDraft';
 }
 
 $(function () {
