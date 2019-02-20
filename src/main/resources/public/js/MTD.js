@@ -167,6 +167,11 @@ function sub() {
                     "doctorName": inviteDoctor,
                     "doctorId": inviteDoctorArray[i].doctorId,
                     "price": inviteDoctorArray[i].doctorVideoPrice,
+                    "branchId": inviteDoctorArray[i].branchId,
+                    "doctorPicturePrice": inviteDoctorArray[i].doctorPicturePrice,
+                    "doctorVideoPrice": inviteDoctorArray[i].doctorVideoPrice,
+                    "hospitalImgPrice": inviteDoctorArray[i].hospitalImgPrice,
+                    "hospitalVideoPrice": inviteDoctorArray[i].hospitalVideoPrice,
                 });
                 price += Number(inviteDoctorArray[i].doctorVideoPrice);
             } else {
@@ -174,6 +179,11 @@ function sub() {
                     "doctorName": inviteDoctor,
                     "doctorId": inviteDoctorArray[i].doctorId,
                     "price": inviteDoctorArray[i].doctorPicturePrice,
+                    "branchId": inviteDoctorArray[i].branchId,
+                    "doctorPicturePrice": inviteDoctorArray[i].doctorPicturePrice,
+                    "doctorVideoPrice": inviteDoctorArray[i].doctorVideoPrice,
+                    "hospitalImgPrice": inviteDoctorArray[i].hospitalImgPrice,
+                    "hospitalVideoPrice": inviteDoctorArray[i].hospitalVideoPrice,
                 });
                 price += Number(inviteDoctorArray[i].doctorPicturePrice);
             }
@@ -253,15 +263,15 @@ $(function () {
             let hospitalName = inviteDoctorArr[3];
             inviteDoctorArray.push({
                 hospitalId: applyInfo.inviteHospitalId, // 医院id
-                branchId: applyInfo.inviteBranchId, // 科室id
+                branchId: item.branchId, // 科室id
                 doctorId: item.doctorId, // 医生id
                 hospitalName: hospitalName, // 医院名字
                 branchName: branchName, // 科室名字
                 doctorName: doctorName, // 医生名字
-                hospitalImgPrice: applyInfo.hospitalPrice, // 医院图文价格
-                hospitalVideoPrice: applyInfo.hospitalPrice, // 医院视频价格
-                doctorPicturePrice: item.price, // 图文价格
-                doctorVideoPrice: item.price, // 视频价格
+                hospitalImgPrice: item.hospitalImgPrice, // 医院图文价格
+                hospitalVideoPrice: item.hospitalVideoPrice, // 医院视频价格
+                doctorPicturePrice: item.doctorPicturePrice, // 图文价格
+                doctorVideoPrice: item.doctorVideoPrice, // 视频价格
                 doctorTitleName: doctorTitleName, // 职称名字
             });
         }
@@ -473,6 +483,11 @@ $(function () {
                         "doctorName": inviteDoctor,
                         "doctorId": inviteDoctorArray[i].doctorId,
                         "price": inviteDoctorArray[i].doctorVideoPrice,
+                        "branchId": inviteDoctorArray[i].branchId,
+                        "doctorPicturePrice": inviteDoctorArray[i].doctorPicturePrice,
+                        "doctorVideoPrice": inviteDoctorArray[i].doctorVideoPrice,
+                        "hospitalImgPrice": inviteDoctorArray[i].hospitalImgPrice,
+                        "hospitalVideoPrice": inviteDoctorArray[i].hospitalVideoPrice,
                     });
                     price += Number(inviteDoctorArray[i].doctorVideoPrice);
                 } else {
@@ -480,6 +495,11 @@ $(function () {
                         "doctorName": inviteDoctor,
                         "doctorId": inviteDoctorArray[i].doctorId,
                         "price": inviteDoctorArray[i].doctorPicturePrice,
+                        "branchId": inviteDoctorArray[i].branchId,
+                        "doctorPicturePrice": inviteDoctorArray[i].doctorPicturePrice,
+                        "doctorVideoPrice": inviteDoctorArray[i].doctorVideoPrice,
+                        "hospitalImgPrice": inviteDoctorArray[i].hospitalImgPrice,
+                        "hospitalVideoPrice": inviteDoctorArray[i].hospitalVideoPrice,
                     });
                     price += Number(inviteDoctorArray[i].doctorPicturePrice);
                 }
