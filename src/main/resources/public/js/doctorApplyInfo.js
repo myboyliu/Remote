@@ -458,6 +458,7 @@ function renderViewByRole() {
                 $('.progressBar').html(referralStatus);
             } else if (applyStatus === "INQUIRY_END") {
                 //已结束
+                $(".progressBar li:nth-child(2)").addClass("libg");
                 $(".progressBar li:nth-child(3)").addClass("libg");
             }
         } else {
@@ -482,6 +483,7 @@ function renderViewByRole() {
                 $('.progressBar').html(referralStatus);
             } else if (applyStatus === "INQUIRY_END") {
                 //已结束
+                $(".progressBar li:nth-child(2)").addClass("libg");
                 $(".progressBar li:nth-child(3)").addClass("libg");
             }
         }

@@ -130,7 +130,8 @@ function renderApplyMasterReferralView(applyStatus) {
         $('.progressBar').html(referralStatus);
     } else if (applyStatus === "INQUIRY_END") {
         //已结束
-
+        $(".progressBar li:nth-child(2)").addClass("libg");
+        $(".progressBar li:nth-child(3)").addClass("libg");
     }
 }
 
@@ -257,6 +258,8 @@ function renderInviteyMasterReferralView(applyStatus) {
         $('.progressBar').html(referralStatus);
     } else if (applyStatus === "INQUIRY_END") {
         //已结束
+        $(".progressBar li:nth-child(2)").addClass("libg");
+        $(".progressBar li:nth-child(3)").addClass("libg");
     }
 }
 
