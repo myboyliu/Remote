@@ -10,9 +10,9 @@
     <result column="invite_hospital_id" jdbcType="VARCHAR" property="inviteHospitalId" />
     <result column="invite_branch_id" jdbcType="VARCHAR" property="inviteBranchId" />
     <result column="invite_user_id" jdbcType="VARCHAR" property="inviteUserId" />
-    <result column="invite_user_price" jdbcType="VARCHAR" property="inviteUserPrice" />
-    <result column="invite_hospital_price" jdbcType="VARCHAR" property="inviteHospitalPrice" />
-    <result column="total_price" jdbcType="VARCHAR" property="totalPrice" />
+    <result column="invite_user_price" jdbcType="DECIMAL" property="inviteUserPrice" />
+    <result column="invite_hospital_price" jdbcType="DECIMAL" property="inviteHospitalPrice" />
+    <result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
     <result column="consultation_type" jdbcType="VARCHAR" property="consultationType" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="del_flag" jdbcType="VARCHAR" property="delFlag" />
@@ -47,9 +47,9 @@
       #{item.inviteHospitalId,jdbcType=VARCHAR},
       #{item.inviteBranchId,jdbcType=VARCHAR},
       #{item.inviteUserId,jdbcType=VARCHAR},
-      #{item.inviteUserPrice,jdbcType=VARCHAR},
-      #{item.inviteHospitalPrice,jdbcType=VARCHAR},
-      #{item.totalPrice,jdbcType=VARCHAR},
+      #{item.inviteUserPrice,jdbcType=DECIMAL},
+      #{item.inviteHospitalPrice,jdbcType=DECIMAL},
+      #{item.totalPrice,jdbcType=DECIMAL},
       #{item.consultationType,jdbcType=VARCHAR})
     </foreach>
   </insert>
@@ -61,8 +61,8 @@
       create_time, del_flag)
     values (#{id,jdbcType=VARCHAR}, #{consultationId,jdbcType=VARCHAR}, #{applyHospitalId,jdbcType=VARCHAR}, 
       #{applyBranchId,jdbcType=VARCHAR}, #{applyUserId,jdbcType=VARCHAR}, #{inviteHospitalId,jdbcType=VARCHAR}, 
-      #{inviteBranchId,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=VARCHAR}, #{inviteUserPrice,jdbcType=VARCHAR}, 
-      #{inviteHospitalPrice,jdbcType=VARCHAR}, #{totalPrice,jdbcType=VARCHAR}, #{consultationType,jdbcType=VARCHAR}, 
+      #{inviteBranchId,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=VARCHAR}, #{inviteUserPrice,jdbcType=DECIMAL},
+      #{inviteHospitalPrice,jdbcType=DECIMAL}, #{totalPrice,jdbcType=DECIMAL}, #{consultationType,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.ConsultationPriceRecord">
@@ -137,13 +137,13 @@
         #{inviteUserId,jdbcType=VARCHAR},
       </if>
       <if test="inviteUserPrice != null">
-        #{inviteUserPrice,jdbcType=VARCHAR},
+        #{inviteUserPrice,jdbcType=DECIMAL},
       </if>
       <if test="inviteHospitalPrice != null">
-        #{inviteHospitalPrice,jdbcType=VARCHAR},
+        #{inviteHospitalPrice,jdbcType=DECIMAL},
       </if>
       <if test="totalPrice != null">
-        #{totalPrice,jdbcType=VARCHAR},
+        #{totalPrice,jdbcType=DECIMAL},
       </if>
       <if test="consultationType != null">
         #{consultationType,jdbcType=VARCHAR},
@@ -181,13 +181,13 @@
         invite_user_id = #{inviteUserId,jdbcType=VARCHAR},
       </if>
       <if test="inviteUserPrice != null">
-        invite_user_price = #{inviteUserPrice,jdbcType=VARCHAR},
+        invite_user_price = #{inviteUserPrice,jdbcType=DECIMAL},
       </if>
       <if test="inviteHospitalPrice != null">
-        invite_hospital_price = #{inviteHospitalPrice,jdbcType=VARCHAR},
+        invite_hospital_price = #{inviteHospitalPrice,jdbcType=DECIMAL},
       </if>
       <if test="totalPrice != null">
-        total_price = #{totalPrice,jdbcType=VARCHAR},
+        total_price = #{totalPrice,jdbcType=DECIMAL},
       </if>
       <if test="consultationType != null">
         consultation_type = #{consultationType,jdbcType=VARCHAR},
@@ -210,9 +210,9 @@
       invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR},
       invite_branch_id = #{inviteBranchId,jdbcType=VARCHAR},
       invite_user_id = #{inviteUserId,jdbcType=VARCHAR},
-      invite_user_price = #{inviteUserPrice,jdbcType=VARCHAR},
-      invite_hospital_price = #{inviteHospitalPrice,jdbcType=VARCHAR},
-      total_price = #{totalPrice,jdbcType=VARCHAR},
+      invite_user_price = #{inviteUserPrice,jdbcType=DECIMAL},
+      invite_hospital_price = #{inviteHospitalPrice,jdbcType=DECIMAL},
+      total_price = #{totalPrice,jdbcType=DECIMAL},
       consultation_type = #{consultationType,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       del_flag = #{delFlag,jdbcType=VARCHAR}

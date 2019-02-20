@@ -9,6 +9,7 @@ import com.sicmed.remote.web.mapper.ConsultationPriceRecordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,9 +33,9 @@ public class ConsultationPriceRecordService implements BaseService<ConsultationP
             consultationPriceRecord.setInviteHospitalId(applyForm.getInviteHospitalId());
             consultationPriceRecord.setInviteBranchId(consultationUserBean.getBranchId());
             consultationPriceRecord.setInviteUserId(consultationUserBean.getDoctorId());
-            consultationPriceRecord.setInviteHospitalPrice(String.valueOf(caseConsultant.getHospitalPrice()));
+            consultationPriceRecord.setInviteHospitalPrice(caseConsultant.getHospitalPrice());
             consultationPriceRecord.setInviteUserPrice(consultationUserBean.getPrice());
-            consultationPriceRecord.setTotalPrice(String.valueOf(caseConsultant.getConsultantPrice()));
+            consultationPriceRecord.setTotalPrice(caseConsultant.getConsultantPrice());
 
             consultationPriceRecordList.add(consultationPriceRecord);
         }

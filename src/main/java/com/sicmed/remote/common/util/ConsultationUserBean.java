@@ -3,15 +3,17 @@ package com.sicmed.remote.common.util;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Setter
 @Getter
 public class ConsultationUserBean {
     private String doctorName;
     private String doctorId;
-    private String price;
+    private BigDecimal price;
     private String branchId;
-    private String doctorPicturePrice;
-    private String doctorVideoPrice;
-    private String hospitalImgPrice;
-    private String hospitalVideoPrice;
+    private BigDecimal doctorPicturePrice;
+    private BigDecimal doctorVideoPrice;
+    private BigDecimal hospitalImgPrice;
+    private BigDecimal hospitalVideoPrice;
 }
