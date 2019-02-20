@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sicmed.remote.web.mapper.ConsultationPriceRecordMapper">
+  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.ConsultationPriceRecord">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="consultation_id" jdbcType="VARCHAR" property="consultationId" />
+    <result column="apply_hospital_id" jdbcType="VARCHAR" property="applyHospitalId" />
+    <result column="apply_branch_id" jdbcType="VARCHAR" property="applyBranchId" />
+    <result column="apply_user_id" jdbcType="VARCHAR" property="applyUserId" />
+    <result column="invite_hospital_id" jdbcType="VARCHAR" property="inviteHospitalId" />
+    <result column="invite_branch_id" jdbcType="VARCHAR" property="inviteBranchId" />
+    <result column="invite_user_id" jdbcType="VARCHAR" property="inviteUserId" />
+    <result column="invite_user_price" jdbcType="VARCHAR" property="inviteUserPrice" />
+    <result column="invite_hospital_price" jdbcType="VARCHAR" property="inviteHospitalPrice" />
+    <result column="total_price" jdbcType="VARCHAR" property="totalPrice" />
+    <result column="consultation_type" jdbcType="VARCHAR" property="consultationType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="del_flag" jdbcType="VARCHAR" property="delFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, consultation_id, apply_hospital_id, apply_branch_id, apply_user_id, invite_hospital_id, 
+    invite_branch_id, invite_user_id, invite_user_price, invite_hospital_price, total_price, 
+    consultation_type, create_time, del_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from consultation_price_record
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from consultation_price_record
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertList" parameterType="java.util.ArrayList">
+    insert into consultation_price_record (id, consultation_id, apply_hospital_id,
+    apply_branch_id, apply_user_id, invite_hospital_id,
+    invite_branch_id, invite_user_id, invite_user_price,
+    invite_hospital_price, total_price, consultation_type )
+    values
+    <foreach collection="list" index="" item="item" separator=",">
+      ((select replace(uuid(), '-', '') as id from dual),
+      #{item.consultationId,jdbcType=VARCHAR},
+      #{item.applyHospitalId,jdbcType=VARCHAR},
+      #{item.applyBranchId,jdbcType=VARCHAR},
+      #{item.applyUserId,jdbcType=VARCHAR},
+      #{item.inviteHospitalId,jdbcType=VARCHAR},
+      #{item.inviteBranchId,jdbcType=VARCHAR},
+      #{item.inviteUserId,jdbcType=VARCHAR},
+      #{item.inviteUserPrice,jdbcType=VARCHAR},
+      #{item.inviteHospitalPrice,jdbcType=VARCHAR},
+      #{item.totalPrice,jdbcType=VARCHAR},
+      #{item.consultationType,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <insert id="insert" parameterType="com.sicmed.remote.web.entity.ConsultationPriceRecord">
+    insert into consultation_price_record (id, consultation_id, apply_hospital_id, 
+      apply_branch_id, apply_user_id, invite_hospital_id, 
+      invite_branch_id, invite_user_id, invite_user_price, 
+      invite_hospital_price, total_price, consultation_type, 
+      create_time, del_flag)
+    values (#{id,jdbcType=VARCHAR}, #{consultationId,jdbcType=VARCHAR}, #{applyHospitalId,jdbcType=VARCHAR}, 
+      #{applyBranchId,jdbcType=VARCHAR}, #{applyUserId,jdbcType=VARCHAR}, #{inviteHospitalId,jdbcType=VARCHAR}, 
+      #{inviteBranchId,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=VARCHAR}, #{inviteUserPrice,jdbcType=VARCHAR}, 
+      #{inviteHospitalPrice,jdbcType=VARCHAR}, #{totalPrice,jdbcType=VARCHAR}, #{consultationType,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.ConsultationPriceRecord">
+    insert into consultation_price_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="consultationId != null">
+        consultation_id,
+      </if>
+      <if test="applyHospitalId != null">
+        apply_hospital_id,
+      </if>
+      <if test="applyBranchId != null">
+        apply_branch_id,
+      </if>
+      <if test="applyUserId != null">
+        apply_user_id,
+      </if>
+      <if test="inviteHospitalId != null">
+        invite_hospital_id,
+      </if>
+      <if test="inviteBranchId != null">
+        invite_branch_id,
+      </if>
+      <if test="inviteUserId != null">
+        invite_user_id,
+      </if>
+      <if test="inviteUserPrice != null">
+        invite_user_price,
+      </if>
+      <if test="inviteHospitalPrice != null">
+        invite_hospital_price,
+      </if>
+      <if test="totalPrice != null">
+        total_price,
+      </if>
+      <if test="consultationType != null">
+        consultation_type,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="consultationId != null">
+        #{consultationId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyHospitalId != null">
+        #{applyHospitalId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyBranchId != null">
+        #{applyBranchId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUserId != null">
+        #{applyUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteHospitalId != null">
+        #{inviteHospitalId,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteBranchId != null">
+        #{inviteBranchId,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserId != null">
+        #{inviteUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserPrice != null">
+        #{inviteUserPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteHospitalPrice != null">
+        #{inviteHospitalPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="totalPrice != null">
+        #{totalPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="consultationType != null">
+        #{consultationType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.ConsultationPriceRecord">
+    update consultation_price_record
+    <set>
+      <if test="consultationId != null">
+        consultation_id = #{consultationId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyHospitalId != null">
+        apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyBranchId != null">
+        apply_branch_id = #{applyBranchId,jdbcType=VARCHAR},
+      </if>
+      <if test="applyUserId != null">
+        apply_user_id = #{applyUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteHospitalId != null">
+        invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteBranchId != null">
+        invite_branch_id = #{inviteBranchId,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserId != null">
+        invite_user_id = #{inviteUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteUserPrice != null">
+        invite_user_price = #{inviteUserPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteHospitalPrice != null">
+        invite_hospital_price = #{inviteHospitalPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="totalPrice != null">
+        total_price = #{totalPrice,jdbcType=VARCHAR},
+      </if>
+      <if test="consultationType != null">
+        consultation_type = #{consultationType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null">
+        del_flag = #{delFlag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.ConsultationPriceRecord">
+    update consultation_price_record
+    set consultation_id = #{consultationId,jdbcType=VARCHAR},
+      apply_hospital_id = #{applyHospitalId,jdbcType=VARCHAR},
+      apply_branch_id = #{applyBranchId,jdbcType=VARCHAR},
+      apply_user_id = #{applyUserId,jdbcType=VARCHAR},
+      invite_hospital_id = #{inviteHospitalId,jdbcType=VARCHAR},
+      invite_branch_id = #{inviteBranchId,jdbcType=VARCHAR},
+      invite_user_id = #{inviteUserId,jdbcType=VARCHAR},
+      invite_user_price = #{inviteUserPrice,jdbcType=VARCHAR},
+      invite_hospital_price = #{inviteHospitalPrice,jdbcType=VARCHAR},
+      total_price = #{totalPrice,jdbcType=VARCHAR},
+      consultation_type = #{consultationType,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
