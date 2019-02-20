@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @author YoonaLt
@@ -72,9 +73,16 @@ public class StatisticsSearchBean implements Serializable {
     // 收件医生职称
     private String inviteDoctorName;
 
+    // 医生名字
+    private String doctorName;
+
     // 返回日期
     private String dates;
 
+    // 总费用
+    private BigDecimal totalPrice;
+
     // 费用
-    private String price;
+    private BigDecimal otherPrice;
+
 }

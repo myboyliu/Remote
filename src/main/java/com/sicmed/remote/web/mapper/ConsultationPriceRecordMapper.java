@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.mapper;
 
+import com.sicmed.remote.web.bean.StatisticsSearchBean;
 import com.sicmed.remote.web.entity.ConsultationPriceRecord;
 
 import java.util.List;
@@ -18,4 +19,8 @@ public interface ConsultationPriceRecordMapper {
     int updateByPrimaryKey(ConsultationPriceRecord record);
 
     int insertList(List<ConsultationPriceRecord> consultationPriceRecordList);
+
+    List<StatisticsSearchBean> consultationPriceApplyStatistics(StatisticsSearchBean statisticsSearchBean);
+
+    List<StatisticsSearchBean> consultationPriceInviteStatistics(StatisticsSearchBean statisticsSearchBean);
 }

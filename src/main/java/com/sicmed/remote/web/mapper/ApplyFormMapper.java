@@ -1,14 +1,15 @@
 package com.sicmed.remote.web.mapper;
 
-import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.bean.InquiryStatusBean;
 import com.sicmed.remote.web.bean.StatisticsSearchBean;
 import com.sicmed.remote.web.entity.ApplyForm;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface ApplyFormMapper {
     int deleteByPrimaryKey(String id);
 
@@ -69,5 +70,4 @@ public interface ApplyFormMapper {
     List<StatisticsSearchBean> applyConsultationStatistics(StatisticsSearchBean statisticsSearchBean);
 
     List<StatisticsSearchBean> advancedConsultationStatistics(StatisticsSearchBean statisticsSearchBean);
-
 }

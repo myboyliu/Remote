@@ -733,7 +733,6 @@
         where id = #{id,jdbcType=VARCHAR} and apply_status = 'INQUIRY_APPLY_ACCEDE'
     </update>
 
-
     <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.ApplyForm">
     update apply_form
     set apply_number = #{applyNumber,jdbcType=VARCHAR},

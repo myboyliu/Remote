@@ -16,6 +16,7 @@ import com.sicmed.remote.web.mapper.CaseRecordMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +28,6 @@ import java.util.List;
 @Service
 public class ApplyFormService implements BaseService<ApplyForm> {
 
-    @Autowired
-    private ApplyFormService applyFormService;
 
     @Autowired
     private ApplyFormMapper applyFormMapper;
@@ -152,7 +151,7 @@ public class ApplyFormService implements BaseService<ApplyForm> {
     @Transactional
     public int draftDel(String applyFormId) {
 
-        ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
+        ApplyForm applyForm = applyFormMapper.selectByPrimaryKey(applyFormId);
         // 获取caseRecordId
         String caseRecordId = applyForm.getCaseRecordId();
         // 删除caseRecordId相关的病例信息

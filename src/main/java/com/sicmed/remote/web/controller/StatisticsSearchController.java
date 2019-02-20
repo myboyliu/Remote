@@ -6,6 +6,7 @@ import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.bean.StatisticsSearchBean;
 import com.sicmed.remote.web.service.ApplyFormService;
+import com.sicmed.remote.web.service.ConsultationPriceRecordService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,9 @@ public class StatisticsSearchController extends BaseController {
 
     @Autowired
     private ApplyFormService applyFormService;
+
+    @Autowired
+    private ConsultationPriceRecordService consultationPriceRecordService;
 
     // 会诊结束状态
     private final String consultationEndStatus = String.valueOf(ConsultationStatus.CONSULTATION_END);
@@ -122,6 +126,33 @@ public class StatisticsSearchController extends BaseController {
     }
 
     /**
-     * 会诊费用统计
+     * 会诊费用统计,发出列表
      */
+    @GetMapping(value = "consultationPriceApplyStatistics")
+    public Map consultationPriceApplyStatistics(StatisticsSearchBean statisticsSearchBean) {
+
+        String userId = getRequestToken();
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+
+        List<StatisticsSearchBean> statisticsSearchBeans = consultationPriceRecordService.consultationPriceApplyStatistics(
+                currentUserBean.getHospitalId(), consultationEndStatus, statisticsSearchBean
+        );
+        return succeedRequest(statisticsSearchBeans);
+    }
+
+    /**
+     * 会诊费用统计,受邀列表
+     */
+    @GetMapping(value = "consultationPriceInviteStatistics")
+    public Map consultationPriceInviteStatistics(StatisticsSearchBean statisticsSearchBean) {
+
+        String userId = getRequestToken();
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+
+        List<StatisticsSearchBean> statisticsSearchBeans = consultationPriceRecordService.consultationPriceInviteStatistics(
+                currentUserBean.getHospitalId(), consultationEndStatus, statisticsSearchBean
+        );
+        return succeedRequest(statisticsSearchBeans);
+    }
+
 }
