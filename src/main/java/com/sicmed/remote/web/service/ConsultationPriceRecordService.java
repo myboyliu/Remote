@@ -2,6 +2,8 @@ package com.sicmed.remote.web.service;
 
 import com.sicmed.remote.common.util.ConsultationUserBean;
 import com.sicmed.remote.common.util.ConsultationUserListUtils;
+import com.sicmed.remote.web.bean.ConsultationPriceStatisticsBean;
+import com.sicmed.remote.web.bean.ConsultationPriceStatisticsParamBean;
 import com.sicmed.remote.web.bean.StatisticsSearchBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.CaseConsultant;
@@ -87,5 +89,9 @@ public class ConsultationPriceRecordService implements BaseService<ConsultationP
         statisticsSearchBean.setStatus(status);
         statisticsSearchBean.setHospitalId(hospitalId);
         return consultationPriceRecordMapper.consultationPriceInviteStatistics(statisticsSearchBean);
+    }
+
+    public List<ConsultationPriceStatisticsBean> getConsultationPriceStatisticsListByParam(ConsultationPriceStatisticsParamBean consultationPriceStatisticsParamBean) {
+        return consultationPriceRecordMapper.getConsultationPriceStatisticsListByParam(consultationPriceStatisticsParamBean);
     }
 }

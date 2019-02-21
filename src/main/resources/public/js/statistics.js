@@ -9,7 +9,13 @@ let myChart;
 /**
  * 渲染统计选项
  */
-let costOption = ["发件医院", "发件科室", "收件医院", "收件科室", "发件医师", "收件医师"]
+let costOptionObj = [{key: "groupByApplyHospital", value: "发件医院"}, {
+    key: "groupByApplyBranch",
+    value: "发件科室"
+}, {key: "groupByInviteHospital", value: "收件医院"}, {
+    key: "groupByInviteBranch",
+    value: "收件科室"
+}, {key: "groupByApplyUser", value: "发件医师"}, {key: "groupByInviteUser", value: "收件医师"}]
 
 let consultationOptionObj = [{key: "CON_SEND_HOSPITAL", value: "发件医院"}, {
     key: "CON_SEND_BRANCH",
@@ -39,27 +45,23 @@ function renderStatisticaltem() {
     for (let item of consultationOptionObj) {
         consultationOption_html += '<a href="javascript:;" id="' + item.key + '">' + item.value + '</a>'
     }
-
     $('.consultationOptionBox').html(consultationOption_html);
-
     //转诊病历统计数据列表 选项渲染
     let referralOption_html = '';
     for (let item of consultationOptionObj) {
         referralOption_html += '<a href="javascript:;" id="' + item.key + '">' + item.value + '</a>'
     }
     $('.referralOptionBox').html(referralOption_html);
-
     // 会诊高级统计 选项渲染
     let seniorOption_html = '';
     for (let item of expertOptionObj) {
         seniorOption_html += '<a href="javascript:;" id="' + item.key + '">' + item.value + '</a>'
     }
     $('.seniorOptionBox').html(seniorOption_html);
-
     // 会诊费用统计 选项渲染
     let costOption_html = '';
-    for (let i = 0; i < costOption.length; i++) {
-        costOption_html += '<a href="javascript:;" rulesField="' + costOption[i].rulesField + '" rulesNumber="' + costOption[i].rulesNumber + '">' + costOption[i] + '</a>'
+    for (let item of costOptionObj) {
+        costOption_html += '<a href="javascript:;" id="' + item.key + '">' + item.value + '</a>'
     }
     $('.costOptionBox').html(costOption_html);
 }
@@ -408,10 +410,10 @@ $(function () {
                 };
                 $('.seniorSelect').val() === "1" ? formData["isInvite"] = "1" : formData["isApply"] = "1";
                 formData[$('.seniorMode').val()] = "1";
-                if (optionName === "EXP_VIDEO_CON" || optionName === "EXP_PICTURE_CON"){
+                if (optionName === "EXP_VIDEO_CON" || optionName === "EXP_PICTURE_CON") {
                     optionName === "EXP_VIDEO_CON" ? formData["isVideo"] = "1" : formData["isPicture"] = "1";
-                }else{
-                    formData["isMdt"] = optionName === "EXP_SINGLE_CON" ? "1":"0";
+                } else {
+                    formData["isMdt"] = optionName === "EXP_SINGLE_CON" ? "1" : "0";
                 }
                 ajaxRequest("GET", getConsultationStatisticsCount, formData, true, "application/json", true, renderExpertDoubleList, null, null);
                 return false;
@@ -433,8 +435,111 @@ $(function () {
         } else if ($('.costOptionBox > a.active').length == 0) {
             layer.msg('数据不完整')
         } else {
+
+            let optionName = $('.costOptionBox > a.active').attr('id');
+
+            let formData = {
+                "startTime": costStartDate,
+                "endTime": costSndDate
+            };
+            $('.costSelect').val() === "1" ? formData["isInvite"] = "1" : formData["isApply"] = "1";
+            formData[optionName] = "1";
+            formData[priceStatisticsRule[optionName]] = "1";
+
+            function ssss(tempArr) {
+                console.log(tempArr)
+                if (tempArr.length == 0) {
+                    layer.msg('统计内容无数据');
+                    $('#datatable_four').hide();
+                } else {
+                    var _bodyHtml = '';
+                    console.log(optionName);
+                    if (optionName == "groupByInviteHospital") {
+                        $('.headBox').html('<tr>\
+                                <th>收件医院</th>\
+                                <th>诊费统计/元</th>\
+                            </tr>');
+                        for (var i = 0; i < tempArr.length; i++) {
+                            _bodyHtml += '<tr>\
+                                    <td>' + tempArr[i].inviteHospitalName + '</td>\
+                                    <td>' + tempArr[i].sumPrice + '</td>\
+                                </tr> ';
+                        }
+                    } else if (optionName == 'groupByInviteBranch') {
+                        $('.headBox').html('<tr>\
+                                <th>收件科室</th>\
+                                <th>诊费统计/元</th>\
+                            </tr>');
+                        for (var i = 0; i < tempArr.length; i++) {
+                            _bodyHtml += '<tr>\
+                                    <td>' + tempArr[i].inviteCustomBranchName + '</td>\
+                                    <td>' + tempArr[i].sumPrice + '</td>\
+                                </tr> ';
+                        }
+                    } else if (optionName == 'groupByInviteUser') {
+                        $('.headBox').html('<tr>\
+                                <th>收件医师</th>\
+                                <th>所在医院</th>\
+                                <th>所在科室</th>\
+                                <th>诊费统计/元</th>\
+                            </tr>');
+                        for (var i = 0; i < tempArr.length; i++) {
+                            _bodyHtml += '<tr>\
+                                    <td>' + tempArr[i].inviteUserName + '</td>\
+                                    <td>' + tempArr[i].inviteHospitalName + '</td>\
+                                    <td>' + tempArr[i].inviteCustomBranchName + '</td>\
+                                    <td>' + tempArr[i].sumPrice + '</td>\
+                                </tr> ';
+                        }
+                    } else if (optionName == 'groupByApplyHospital') {
+                        $('.headBox').html('<tr>\
+                                <th>发件医院</th>\
+                                <th>诊费统计/元</th>\
+                            </tr>');
+                        for (var i = 0; i < tempArr.length; i++) {
+                            _bodyHtml += '<tr>\
+                                    <td>' + tempArr[i].applyHospitalName + '</td>\
+                                    <td>' + tempArr[i].sumPrice + '</td>\
+                                </tr> ';
+                        }
+                    } else if (optionName == 'groupByApplyBranch') {
+                        $('.headBox').html('<tr>\
+                                <th>发件科室</th>\
+                                <th>诊费统计/元</th>\
+                            </tr>');
+                        for (var i = 0; i < tempArr.length; i++) {
+                            _bodyHtml += '<tr>\
+                                    <td>' + tempArr[i].applyCustomBranchName + '</td>\
+                                    <td>' + tempArr[i].sumPrice + '</td>\
+                                </tr> ';
+                        }
+                    } else if (optionName == 'groupByApplyUser') {
+                        $('.headBox').html('<tr>\
+                                <th>发件医师</th>\
+                                <th>所在医院</th>\
+                                <th>所在科室</th>\
+                                <th>诊费统计/元</th>\
+                            </tr>');
+                        for (var i = 0; i < tempArr.length; i++) {
+                            _bodyHtml += '<tr>\
+                                    <td>' + tempArr[i].applyUserName + '</td>\
+                                    <td>' + tempArr[i].applyHospitalName + '</td>\
+                                    <td>' + tempArr[i].applyCustomBranchName + '</td>\
+                                    <td>' + tempArr[i].sumPrice + '</td>\
+                                </tr> ';
+                        }
+                    }
+                    $('.bodyBox').html(_bodyHtml);
+                    $('.tableBtn_four').addClass('active');
+                    $('#datatable_four').show();
+                }
+
+            }
+
+            ajaxRequest("GET", getConsultationPriceStatistics, formData, true, "application/json", true, ssss, null, null);
+            return false;
             // 只有一个选项 的 情况
-            var optionName = $('.costOptionBox > a.active').html();
+            // var optionName = $('.costOptionBox > a.active').attr('id');
             $.ajax({
                 type: 'POST',
                 url: baseUrl + 'statistics/costStatistics',
@@ -537,22 +642,13 @@ $(function () {
                             $('.tableBtn_four').addClass('active');
                             $('#datatable_four').show();
                         }
-                    } else if (data.status == 250) {
-                        // 未登录操作
-                        window.location = '/yilaiyiwang/login/login.html';
-                    } else {
-                        // 其他操作
                     }
-                },
-                error: function (err) {
-                    console.log(err);
-
-                },
+                }
             })
         }
     })
 
-    // 下载表格
+// 下载表格
     $('.tableBtn_one').click(function () {
         if ($(this).hasClass('active')) {
             if ($(this).parents('.itemContent').find('.consultationOptionBox > a.active').length == 1) {
@@ -583,7 +679,7 @@ $(function () {
             }
         }
     })
-    // 转诊病例次数统计 下载按钮
+// 转诊病例次数统计 下载按钮
     $('.tableBtn_two').click(function () {
         if ($(this).hasClass('active')) {
             if ($(this).parents('.itemContent').find('.referralOptionBox > a.active').length == 1) {
@@ -633,7 +729,7 @@ $(function () {
             }
         }
     })
-    // 会诊费用统计下载表格按钮
+// 会诊费用统计下载表格按钮
     $('.tableBtn_four').click(function () {
         if ($(this).hasClass('active')) {
             if ($("#datatable_four").height() == '0') {

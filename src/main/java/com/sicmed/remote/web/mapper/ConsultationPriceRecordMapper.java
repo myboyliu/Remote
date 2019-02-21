@@ -1,5 +1,7 @@
 package com.sicmed.remote.web.mapper;
 
+import com.sicmed.remote.web.bean.ConsultationPriceStatisticsBean;
+import com.sicmed.remote.web.bean.ConsultationPriceStatisticsParamBean;
 import com.sicmed.remote.web.bean.StatisticsSearchBean;
 import com.sicmed.remote.web.entity.ConsultationPriceRecord;
 
@@ -23,4 +25,6 @@ public interface ConsultationPriceRecordMapper {
     List<StatisticsSearchBean> consultationPriceApplyStatistics(StatisticsSearchBean statisticsSearchBean);
 
     List<StatisticsSearchBean> consultationPriceInviteStatistics(StatisticsSearchBean statisticsSearchBean);
+
+    List<ConsultationPriceStatisticsBean> getConsultationPriceStatisticsListByParam(ConsultationPriceStatisticsParamBean consultationPriceStatisticsParamBean);
 }

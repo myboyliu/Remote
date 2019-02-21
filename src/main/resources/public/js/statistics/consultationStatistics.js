@@ -34,6 +34,15 @@ let expertSingleRule = {
     EXP_PICTURE_CON: "isPicture",
     EXP_SINGLE_CON: "groupBySingle",
     EXP_MULTIPLE_CON: "groupByMdt"
+
+};
+let priceStatisticsRule = {
+    groupByApplyHospital:"sumByTotalPrice",
+    groupByApplyBranch:"sumByTotalPrice",
+    groupByApplyUser:"sumByTotalPrice",
+    groupByInviteHospital:"sumByTotalPrice",
+    groupByInviteBranch:"sumByUserPrice",
+    groupByInviteUser:"sumByUserPrice",
 };
 
 function renderConsultationDoubleList(dataJson) {

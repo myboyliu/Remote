@@ -3,8 +3,11 @@ package com.sicmed.remote.web.controller;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
+import com.sicmed.remote.web.bean.ConsultationPriceStatisticsBean;
+import com.sicmed.remote.web.bean.ConsultationPriceStatisticsParamBean;
 import com.sicmed.remote.web.bean.ConsultationStatisticsBean;
 import com.sicmed.remote.web.bean.ConsultationStatisticsParamBean;
+import com.sicmed.remote.web.service.ConsultationPriceRecordService;
 import com.sicmed.remote.web.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +27,8 @@ public class StatisticsController extends BaseController {
     @Autowired
     private StatisticsService statisticsService;
 
+    @Autowired
+    private ConsultationPriceRecordService consultationPriceRecordService;
     /**
      * 会诊统计查询接口
      *
@@ -44,6 +49,21 @@ public class StatisticsController extends BaseController {
         List<ConsultationStatisticsBean> consultationStatisticsBeanList = statisticsService.getConsultationStatisticsListByParam(consultationStatisticsParamBean);
 
         return succeedRequest(consultationStatisticsBeanList);
+    }
+
+    /**
+     * 会诊价格统计接口
+     *
+     * @param consultationPriceStatisticsParamBean
+     * @return
+     */
+    @GetMapping(value = "getConsultationPriceStatistics")
+    public Map getConsultationPriceStatistics(ConsultationPriceStatisticsParamBean consultationPriceStatisticsParamBean) {
+
+        consultationPriceStatisticsParamBean.setHospitalId(getCurrentUser().getHospitalId());
+        List<ConsultationPriceStatisticsBean> consultationPriceStatisticsBeanList = consultationPriceRecordService.getConsultationPriceStatisticsListByParam(consultationPriceStatisticsParamBean);
+
+        return succeedRequest(consultationPriceStatisticsBeanList);
     }
 
     /**

@@ -198,4 +198,5 @@ const selectReport = "/apply/consultation/selectReport";                        
 
 const getConsultationStatisticsCount = "/statistics/getConsultationCount"                             //会诊数量统计查询
 const getReferralStatisticsCount = "/statistics/getReferralCount"                                     //转诊数量统计查询
+const getConsultationPriceStatistics = "/statistics/getConsultationPriceStatistics"                                     //转诊数量统计查询
 
