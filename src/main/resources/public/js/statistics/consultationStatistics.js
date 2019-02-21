@@ -53,7 +53,6 @@ function renderConsultationDoubleList(dataJson) {
         layer.msg('统计结果无数据');
         return false;
     }
-    console.log(dataJson)
     myChart.clear();
     let labelOption = {
         normal: {
@@ -589,13 +588,13 @@ function renderConsultationSingleList(dataJson) {
     };
     myChart.setOption(option);
 }
+
 function renderExpertDoubleList(dataJson) {
 
     if (dataJson.length == 0) {
         layer.msg('统计结果无数据')
         return false;
     }
-    console.log(dataJson)
     let firstItem = $('.seniorOptionBox > a').eq(seniorOptionArr[0]).attr('id');
     let secondItem = $('.seniorOptionBox > a').eq(seniorOptionArr[1]).attr('id');
     let xName;
@@ -660,4 +659,95 @@ function renderExpertDoubleList(dataJson) {
         }]
     };
     myChart.setOption(option);
+}
+
+function renderPriceStatisticsList(tempArr) {
+    let optionName = $('.costOptionBox > a.active').attr('id');
+
+    if (tempArr.length == 0) {
+        layer.msg('统计内容无数据');
+        $('#datatable_four').hide();
+    } else {
+        var _bodyHtml = '';
+        console.log(optionName);
+        if (optionName == "groupByInviteHospital") {
+            $('.headBox').html('<tr>\
+                                <th>收件医院</th>\
+                                <th>诊费统计/元</th>\
+                            </tr>');
+            for (var i = 0; i < tempArr.length; i++) {
+                _bodyHtml += '<tr>\
+                                    <td>' + tempArr[i].inviteHospitalName + '</td>\
+                                    <td>' + tempArr[i].sumPrice + '</td>\
+                                </tr> ';
+            }
+        } else if (optionName == 'groupByInviteBranch') {
+            $('.headBox').html('<tr>\
+                                <th>收件科室</th>\
+                                <th>诊费统计/元</th>\
+                            </tr>');
+            for (var i = 0; i < tempArr.length; i++) {
+                _bodyHtml += '<tr>\
+                                    <td>' + tempArr[i].inviteCustomBranchName + '</td>\
+                                    <td>' + tempArr[i].sumPrice + '</td>\
+                                </tr> ';
+            }
+        } else if (optionName == 'groupByInviteUser') {
+            $('.headBox').html('<tr>\
+                                <th>收件医师</th>\
+                                <th>所在医院</th>\
+                                <th>所在科室</th>\
+                                <th>诊费统计/元</th>\
+                            </tr>');
+            for (var i = 0; i < tempArr.length; i++) {
+                _bodyHtml += '<tr>\
+                                    <td>' + tempArr[i].inviteUserName + '</td>\
+                                    <td>' + tempArr[i].inviteHospitalName + '</td>\
+                                    <td>' + tempArr[i].inviteCustomBranchName + '</td>\
+                                    <td>' + tempArr[i].sumPrice + '</td>\
+                                </tr> ';
+            }
+        } else if (optionName == 'groupByApplyHospital') {
+            $('.headBox').html('<tr>\
+                                <th>发件医院</th>\
+                                <th>诊费统计/元</th>\
+                            </tr>');
+            for (var i = 0; i < tempArr.length; i++) {
+                _bodyHtml += '<tr>\
+                                    <td>' + tempArr[i].applyHospitalName + '</td>\
+                                    <td>' + tempArr[i].sumPrice + '</td>\
+                                </tr> ';
+            }
+        } else if (optionName == 'groupByApplyBranch') {
+            $('.headBox').html('<tr>\
+                                <th>发件科室</th>\
+                                <th>诊费统计/元</th>\
+                            </tr>');
+            for (var i = 0; i < tempArr.length; i++) {
+                _bodyHtml += '<tr>\
+                                    <td>' + tempArr[i].applyCustomBranchName + '</td>\
+                                    <td>' + tempArr[i].sumPrice + '</td>\
+                                </tr> ';
+            }
+        } else if (optionName == 'groupByApplyUser') {
+            $('.headBox').html('<tr>\
+                                <th>发件医师</th>\
+                                <th>所在医院</th>\
+                                <th>所在科室</th>\
+                                <th>诊费统计/元</th>\
+                            </tr>');
+            for (var i = 0; i < tempArr.length; i++) {
+                _bodyHtml += '<tr>\
+                                    <td>' + tempArr[i].applyUserName + '</td>\
+                                    <td>' + tempArr[i].applyHospitalName + '</td>\
+                                    <td>' + tempArr[i].applyCustomBranchName + '</td>\
+                                    <td>' + tempArr[i].sumPrice + '</td>\
+                                </tr> ';
+            }
+        }
+        $('.bodyBox').html(_bodyHtml);
+        $('.tableBtn_four').addClass('active');
+        $('#datatable_four').show();
+    }
+
 }
