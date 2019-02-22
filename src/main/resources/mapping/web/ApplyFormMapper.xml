@@ -844,6 +844,7 @@
         <if test="deleteUser != null">
             and delete_user = #{deleteUser,jdbcType=VARCHAR}
         </if>
+        order by create_time
     </select>
 
     <!--主会诊医生相关查询-->
