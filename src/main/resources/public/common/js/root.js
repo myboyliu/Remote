@@ -64,12 +64,22 @@ $(function () {
         }
     });
     $('.searchBtn').click(function () {
-        localStorage.setItem('searchText', $('.searchInput').val());
+        let searchText  =  $('.searchInput').val();
+        if ( searchText.replace(/\s+/g,"").length === 0){
+            layer.msg("搜索内容不能为空!")
+            return false;
+        }
+        sessionStorage.setItem('searchText', searchText.replace(/\s+/g,""));
         window.location = '../page/seek.html';
     });
     $('.searchInput').keydown(function (e) {
         if (e.keyCode == 13) {
-            localStorage.setItem('searchText', $('.searchInput').val());
+            let searchText  =  $('.searchInput').val();
+            if ( searchText.replace(/\s+/g,"").length === 0){
+                layer.msg("搜索内容不能为空!")
+                return false;
+            }
+            sessionStorage.setItem('searchText', searchText.replace(/\s+/g,""));
             window.location = '../page/seek.html';
         }
     });
