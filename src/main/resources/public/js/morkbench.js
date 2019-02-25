@@ -485,6 +485,7 @@ $(function () {
             $('.drafts_table').css("display", 'block');
             $('.tables').css('display', 'none');
             $('.referralTable').css("display", 'none');
+            pageCount = $("#DRAFT").html();
             showDraftPageList(getDraftList);
         }
     });
