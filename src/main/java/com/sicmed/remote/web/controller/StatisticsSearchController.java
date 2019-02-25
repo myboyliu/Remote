@@ -40,16 +40,11 @@ public class StatisticsSearchController extends BaseController {
     /**
      * 医生主页面 搜索 总数
      */
-    @GetMapping(value = "searchCount")
-    public Map searchCount(String condition) {
-        if (StringUtils.isBlank(condition)) {
-            return badRequestOfArguments("输入的搜索条件为空");
-        }
+    @GetMapping(value = "doctorSearchCount")
+    public Map doctorSearchCount(String condition) {
 
         String userId = getRequestToken();
-        if (StringUtils.isBlank(userId)) {
-            return badRequestOfArguments("无法获取登录用户Id");
-        }
+
         int i = applyFormService.searchCount(userId, condition);
 
         return succeedRequest(i);
@@ -61,14 +56,7 @@ public class StatisticsSearchController extends BaseController {
     @GetMapping(value = "doctorSearch")
     public Map doctorSearch(String condition) {
 
-        if (StringUtils.isBlank(condition)) {
-            return badRequestOfArguments("输入的搜索条件为空");
-        }
-
         String userId = getRequestToken();
-        if (StringUtils.isBlank(userId)) {
-            return badRequestOfArguments("无法获取登录用户Id");
-        }
 
         List<ApplyFormBean> applyFormBeanList = applyFormService.searchByRemark(userId, condition);
 
@@ -81,16 +69,9 @@ public class StatisticsSearchController extends BaseController {
     @GetMapping(value = "sirSearchCount")
     public Map sirSearchCount(String condition) {
 
-        if (StringUtils.isBlank(condition)) {
-            return badRequestOfArguments("输入的搜索条件为空");
-        }
-
         String userId = getRequestToken();
         CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
         String hospitalId = currentUserBean.getHospitalId();
-        if (StringUtils.isBlank(hospitalId)) {
-            return badRequestOfArguments("无法获取医院Id");
-        }
 
         int i = applyFormService.sirSearchCount(hospitalId, condition);
 
@@ -103,16 +84,9 @@ public class StatisticsSearchController extends BaseController {
     @GetMapping(value = "sirSearch")
     public Map sirSearch(String condition) {
 
-        if (StringUtils.isBlank(condition)) {
-            return badRequestOfArguments("输入的搜索条件为空");
-        }
-
         String userId = getRequestToken();
         CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
         String hospitalId = currentUserBean.getHospitalId();
-        if (StringUtils.isBlank(hospitalId)) {
-            return badRequestOfArguments("无法获取医院Id");
-        }
 
         List<ApplyFormBean> applyFormBeanList = applyFormService.sirSearchByRemark(hospitalId, condition);
 
