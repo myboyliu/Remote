@@ -1,9 +1,11 @@
 $(function () {
     if(JSON.parse(sessionStorage.getItem('sendOrderData'))){
         var data = JSON.parse(sessionStorage.getItem('sendOrderData'));
-        console.log(data);
-
-        $('.case').html(data.caseSummary);
+        let caseSummaryStr = data.caseSummary;
+        if (caseSummaryStr.length > 100) {
+            caseSummaryStr = caseSummaryStr.substring(0, 100) + "...";
+        }
+        $('.case').html(caseSummaryStr);
         $('.recipient').html(data.inviteSummary);
         $('.sender').html(data.applySummary);
         $('.details').attr('name', data.id);
