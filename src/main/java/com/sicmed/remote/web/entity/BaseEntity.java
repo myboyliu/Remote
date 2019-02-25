@@ -58,8 +58,8 @@ public abstract class BaseEntity implements Serializable {
 
     public BaseEntity() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        String pageSizeStr = request.getParameter("pageSize");
-        String pageNoStr = request.getParameter("pageNo");
+        String pageSizeStr = request.getHeader("pageSize");
+        String pageNoStr = request.getHeader("pageNo");
 
         if (StringUtils.isNotBlank(pageSizeStr)) {
             int size = Integer.parseInt(pageSizeStr);
