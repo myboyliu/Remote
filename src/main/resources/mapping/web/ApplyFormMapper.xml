@@ -844,7 +844,7 @@
         <if test="deleteUser != null">
             and delete_user = #{deleteUser,jdbcType=VARCHAR}
         </if>
-        order by create_time
+        order by update_time desc,create_time desc
         limit #{beginNo},#{pageSize}
     </select>
 
