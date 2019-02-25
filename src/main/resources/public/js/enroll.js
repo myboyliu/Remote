@@ -62,11 +62,14 @@ function renderRegistrationSuccessful() {
 }
 
 $(function () {
-    var Name = $('.userName'); // 账号（手机号）
-    var passWord = $('.passWord'); // 密码
-    var passwords = $('.passwords'); // 确认密码
+    var Name = $('#registerUserName'); // 账号（手机号）
+    var passWord = $('#registerPassWord'); // 密码
+    var passwords = $('#registerPasswords'); // 确认密码
     var photo1 = [];
     var photo2 = [];
+    Name.html("")
+    passWord.html("")
+    passwords.html("")
     /**用户账号区域输入框blur事件*/
     Name.blur(function () {
         if (!RegExpObj.Reg_mobilePhone.test(Name.val())) {
@@ -220,8 +223,8 @@ $(function () {
             }
 
             data.append("userName", $('.name').val());
-            data.append("userPhone", $('.userName').val());
-            data.append("userPassword", $('.passWord').val());
+            data.append("userPhone", $('#registerUserName').val());
+            data.append("userPassword", $('#registerPassWord').val());
             data.append("telephone", $('.phone').val());
             data.append("hospitalId", $('.quiz1').val());
             data.append("rolesId", $('.quiz2').val());
