@@ -195,8 +195,16 @@ const findSpecificationsByIdApi = "/consumables/findSpecificationsById";        
 const selectReport = "/apply/consultation/selectReport";                                    //查询会诊报告 + 医嘱
 
 /** 统计模块接口 **/
-
 const getConsultationStatisticsCount = "/statistics/getConsultationCount"                             //会诊数量统计查询
 const getReferralStatisticsCount = "/statistics/getReferralCount"                                     //转诊数量统计查询
-const getConsultationPriceStatistics = "/statistics/getConsultationPriceStatistics"                                     //转诊数量统计查询
+const getConsultationPriceStatistics = "/statistics/getConsultationPriceStatistics"                   //转诊价格统计查询
+
+/** 搜索模块接口 **/
+const doctorSearch = "/statisticsSearch/doctorSearch"                   //转诊价格统计查询
+const doctorSearchCount = "/statisticsSearch/doctorSearchCount"                   //转诊价格统计查询
+const sirSearch = "/statisticsSearch/sirSearch"                   //转诊价格统计查询
+const sirSearchCount = "/statisticsSearch/sirSearchCount"                   //转诊价格统计查询
+
+
+
 
