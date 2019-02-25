@@ -17,7 +17,7 @@
         <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime"/>
         <result column="delete_user" jdbcType="VARCHAR" property="deleteUser"/>
         <result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
-        <result column="patient_age" jdbcType="INTEGER" property="patientAge"/>
+        <result column="patient_age" jdbcType="VARCHAR" property="patientAge"/>
         <result column="patient_sex" jdbcType="CHAR" property="patientSex"/>
         <result column="patient_height" jdbcType="INTEGER" property="patientHeight"/>
         <result column="patient_weight" jdbcType="INTEGER" property="patientWeight"/>
@@ -81,7 +81,7 @@
             and delete_user = #{deleteUser,jdbcType=VARCHAR}
         </if>
         <if test="patientAge != null">
-            and patient_age = #{patientAge,jdbcType=INTEGER}
+            and patient_age = #{patientAge,jdbcType=VARCHAR}
         </if>
         <if test="patientSex != null">
             and patient_sex = #{patientSex,jdbcType=CHAR}
@@ -110,7 +110,7 @@
       #{allergicHistory,jdbcType=VARCHAR}, #{caseDiagnosis,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
       #{deleteTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR}, #{delFlag,jdbcType=VARCHAR},
-      #{patientAge,jdbcType=INTEGER}, #{patientSex,jdbcType=CHAR}, #{patientHeight,jdbcType=INTEGER},
+      #{patientAge,jdbcType=VARCHAR}, #{patientSex,jdbcType=CHAR}, #{patientHeight,jdbcType=INTEGER},
       #{patientWeight,jdbcType=INTEGER}
       )
   </insert>
@@ -225,7 +225,7 @@
                 #{delFlag,jdbcType=VARCHAR},
             </if>
             <if test="patientAge != null">
-                #{patientAge,jdbcType=INTEGER},
+                #{patientAge,jdbcType=VARCHAR},
             </if>
             <if test="patientSex != null">
                 #{patientSex,jdbcType=CHAR},
@@ -284,7 +284,7 @@
                 del_flag = #{delFlag,jdbcType=VARCHAR},
             </if>
             <if test="patientAge != null">
-                patient_age = #{patientAge,jdbcType=INTEGER},
+                patient_age = #{patientAge,jdbcType=VARCHAR},
             </if>
             <if test="patientSex != null">
                 patient_sex = #{patientSex,jdbcType=CHAR},
@@ -314,7 +314,7 @@
       delete_time = #{deleteTime,jdbcType=TIMESTAMP},
       delete_user = #{deleteUser,jdbcType=VARCHAR},
       del_flag = #{delFlag,jdbcType=VARCHAR},
-      patient_age = #{patientAge,jdbcType=INTEGER},
+      patient_age = #{patientAge,jdbcType=VARCHAR},
       patient_sex = #{patientSex,jdbcType=CHAR},
       patient_height = #{patientHeight,jdbcType=INTEGER},
       patient_weight = #{patientWeight,jdbcType=INTEGER}
