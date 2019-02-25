@@ -119,6 +119,20 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         return applyFormMapper.countDraft(applyForm);
     }
 
+    // 医生搜索 总数目
+    public int searchCount(String userId, String condition) {
+        List<String> statusList = new ArrayList<>();
+        statusList.add(String.valueOf(ConsultationStatus.CONSULTATION_END));
+        statusList.add(String.valueOf(InquiryStatus.INQUIRY_END));
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setApplyUserId(userId);
+        applyFormBean.setApplyRemark(condition);
+        applyFormBean.setConsultationStatusList(statusList);
+
+        return applyFormMapper.searchCount(applyFormBean);
+    }
+
     // 医生 搜索
     public List<ApplyFormBean> searchByRemark(String userId, String condition) {
 
@@ -133,7 +147,21 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         return applyFormMapper.searchByRemark(applyFormBean);
     }
 
-    // 医证 搜索
+    // 医政 搜索总数目
+    public int sirSearchCount(String hospitalId, String condition) {
+
+        List<String> statusList = new ArrayList<>();
+        statusList.add(String.valueOf(ConsultationStatus.CONSULTATION_END));
+        statusList.add(String.valueOf(InquiryStatus.INQUIRY_END));
+
+        ApplyFormBean applyFormBean = new ApplyFormBean();
+        applyFormBean.setApplyHospitalId(hospitalId);
+        applyFormBean.setApplyRemark(condition);
+        applyFormBean.setConsultationStatusList(statusList);
+        return applyFormMapper.sirSearchCount(applyFormBean);
+    }
+
+    // 医政 搜索
     public List<ApplyFormBean> sirSearchByRemark(String hospitalId, String condition) {
 
         List<String> statusList = new ArrayList<>();
@@ -180,7 +208,8 @@ public class ApplyFormService implements BaseService<ApplyForm> {
     }
 
     // 会/转 诊病例次数统计,发出列表
-    public List<StatisticsSearchBean> applyConsultationStatistics(String hospitalId, String status, StatisticsSearchBean statisticsSearchBean
+    public List<StatisticsSearchBean> applyConsultationStatistics(String hospitalId, String
+            status, StatisticsSearchBean statisticsSearchBean
     ) {
         statisticsSearchBean.setHospitalId(hospitalId);
         statisticsSearchBean.setStatus(status);
@@ -189,7 +218,8 @@ public class ApplyFormService implements BaseService<ApplyForm> {
     }
 
     // 会诊高级统计
-    public List<StatisticsSearchBean> advancedConsultationStatistics(String hospitalId, StatisticsSearchBean statisticsSearchBean) {
+    public List<StatisticsSearchBean> advancedConsultationStatistics(String hospitalId, StatisticsSearchBean
+            statisticsSearchBean) {
 
         statisticsSearchBean.setStatus(String.valueOf(ConsultationStatus.CONSULTATION_END));
         statisticsSearchBean.setHospitalId(hospitalId);

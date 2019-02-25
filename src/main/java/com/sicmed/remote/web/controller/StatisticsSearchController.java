@@ -38,6 +38,24 @@ public class StatisticsSearchController extends BaseController {
     private final String inquiryEndStatus = String.valueOf(InquiryStatus.INQUIRY_END);
 
     /**
+     * 医生主页面 搜索 总数
+     */
+    @GetMapping(value = "searchCount")
+    public Map searchCount(String condition) {
+        if (StringUtils.isBlank(condition)) {
+            return badRequestOfArguments("输入的搜索条件为空");
+        }
+
+        String userId = getRequestToken();
+        if (StringUtils.isBlank(userId)) {
+            return badRequestOfArguments("无法获取登录用户Id");
+        }
+        int i = applyFormService.searchCount(userId, condition);
+
+        return succeedRequest(i);
+    }
+
+    /**
      * 医生 主页面搜索
      */
     @GetMapping(value = "doctorSearch")
@@ -49,12 +67,34 @@ public class StatisticsSearchController extends BaseController {
 
         String userId = getRequestToken();
         if (StringUtils.isBlank(userId)) {
-            return badRequestOfArguments("五大获取登录用户Id");
+            return badRequestOfArguments("无法获取登录用户Id");
         }
 
         List<ApplyFormBean> applyFormBeanList = applyFormService.searchByRemark(userId, condition);
 
         return succeedRequest(applyFormBeanList);
+    }
+
+    /**
+     * 医政主页面 搜索总数
+     */
+    @GetMapping(value = "sirSearchCount")
+    public Map sirSearchCount(String condition) {
+
+        if (StringUtils.isBlank(condition)) {
+            return badRequestOfArguments("输入的搜索条件为空");
+        }
+
+        String userId = getRequestToken();
+        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        String hospitalId = currentUserBean.getHospitalId();
+        if (StringUtils.isBlank(hospitalId)) {
+            return badRequestOfArguments("无法获取医院Id");
+        }
+
+        int i = applyFormService.sirSearchCount(hospitalId, condition);
+
+        return succeedRequest(i);
     }
 
     /**
