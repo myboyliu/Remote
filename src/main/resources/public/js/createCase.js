@@ -322,7 +322,7 @@ function createHalfCase(successCallBack) {
     data.append("patientPhone", $('#phone').val());
     data.append("detailAddress", $('#address').val());
     //病历信息
-    data.append("patientAge", $('#age').val());// + $('.choiceAge').val()
+    data.append("patientAge", patientAge);// + $('.choiceAge').val()
     data.append("patientSex", patientSex);
     data.append("patientHeight", $('#high').val());
     if (Number($('#weight').val()) > 1) {
@@ -380,7 +380,7 @@ function buildCaseData(successCallBack) {
     data.append("patientPhone", $('#phone').val());
     data.append("detailAddress", $('#address').val());
     //病历信息
-    data.append("patientAge", $('#age').val());// + $('.choiceAge').val()
+    data.append("patientAge", patientAge);// + $('.choiceAge').val()
     data.append("patientSex", patientSex);
     data.append("patientHeight", $('#high').val());
     data.append("patientWeight", Number($('#weight').val()) * 1000);
@@ -452,7 +452,7 @@ function createDraftApplyData(caseId, caseSummary) {
     } else {
         data.append("inviteSummary", "<" + hospitalInfo.hospitalName + ">");
         data.append('inviteHospitalId', hospitalInfo.id);
-        if ($('.videoPric').html() !== "-"){
+        if ($('.videoPric').html() !== "-") {
             data.append('inviteBranchId', hospitalInfo.branchId);
         }
         data.append('hospitalPrice', "0");
@@ -748,9 +748,9 @@ function renderDraftInfo(draftInfo) {
     $('#idCard').val(draftInfo.patientCard)
     $('#phone').val(draftInfo.patientPhone)
     $('#address').val(draftInfo.detailAddress)
-    let choiceAge = draftInfo.patientAge;
-    $('#age').val(choiceAge);
-    $('.choiceAge').val("岁");
+    let choiceAge = draftInfo.patientAge + "";
+    $('#age').val(choiceAge.substring(0,choiceAge.length - 1));
+    $('.choiceAge').val(choiceAge.substring(choiceAge.length - 1));
     $('#high').val(draftInfo.patientHeight);
     if (draftInfo.patientWeight) {
         $('#weight').val(draftInfo.patientWeight / 1000);
@@ -1088,12 +1088,6 @@ $(function () {
         function uploadFileSuccess(result) {
             if (/(.png|.jpg|.jpeg)$/gi.test(result)) {
                 let type = "img";
-                // let reader = new FileReader();
-                // reader.readAsDataURL(uploadFile[fileIndex]);
-                // reader.onload = function (e) {
-                //     url = e.target.result;
-                //     renderFileListView(baseUrl + "/" + result, url, type, result);
-                // }
                 let url = baseUrl + "/" + encodeURI(result);
                 renderFileListView(baseUrl + "/" + result, url, type, result);
             } else if (/(.pdf)$/gi.test(result)) {
@@ -1841,15 +1835,7 @@ $(function () {
     /**
      * 表单数据校验
      */
-    // // 验证中文名字
-    // $("#username").blur(function () {
-    //     if ($("#username").val().length < 2) {
-    //         layer.msg('请输入长度为2-16的名字');
-    //     } else if (!RegExpObj.Reg_Name.test($('#username').val())) {
-    //         layer.msg('输入内容格式有误,请修改')
-    //         $('this').css('background', 'red');
-    //     }
-    // });
+
     // // 校验身份证号
     $('#idCard').blur(function () {
         // 账号的验证 手机号验证
@@ -1870,47 +1856,6 @@ $(function () {
             }
         }
     });
-    // // 校验年龄 身高 体重
-    // $('#age').blur(function () {
-    //     if (!RegExpObj.Reg_age.test($('#age').val())) {
-    //         layer.msg('输入内容格式有误，请修改')
-    //     }
-    // });
-    // $('#high').blur(function () {
-    //     if (!RegExpObj.Reg_hight.test($('#high').val())) {
-    //         layer.msg('输入内容格式有误，请修改')
-    //         // layer.msg('请输入10-300的数字来描述身高')
-    //     }
-    // });
-    // $('#weight').blur(function () {
-    //     if (!RegExpObj.Reg_weight.test($('#weight').val())) {
-    //         layer.msg('体重值不在正常范围(1-300kg)内')
-    //     }
-    // });
-    // // 验证电话号码
-    // $('#phone').blur(function () {
-    //     if (!RegExpObj.Reg_isPhone.test($('#phone').val())) {
-    //         layer.msg('输入内容格式有误，请修改')
-    //     }
-    // });
-    // // 验证常住城市
-    // $('#address').blur(function () {
-    //     if (!RegExpObj.Reg_address.test($('#address').val())) {
-    //         layer.msg('输入内容格式有误，请修改')
-    //     }
-    // });
-    // // 验证初步诊断不能为空
-    // $('#createCase_textDiagnose').blur(function () {
-    //     if ($('#createCase_textDiagnose').val().length === 0) {
-    //         layer.msg('初步诊断不能为空');
-    //     }
-    // });
-    // // 验证会、转诊目的不能为空
-    // $('#createCase_textGola').blur(function () {
-    //     if ($('#createCase_textGola').val().length === 0) {
-    //         layer.msg('会/转诊目的不能为空');
-    //     }
-    // });
     /** 草稿 进入*/
     if (window.location.search.indexOf("isDraft") === -1) {
         sessionStorage.removeItem("draftId");

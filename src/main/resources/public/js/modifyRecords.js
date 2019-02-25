@@ -195,7 +195,7 @@ function buildCaseData() {
     data.append("patientCard", $('#idCard').val());
     data.append("patientPhone", $('#phone').val());
     data.append("detailAddress", $('#address').val());
-    data.append("patientAge", $('#age').val());
+    data.append("patientAge",patientAge);
     data.append("patientSex", patientSex);
     data.append("patientHeight", $('#high').val());
     data.append("patientWeight", Number($('#weight').val()) * 1000);
@@ -307,9 +307,11 @@ $(function () {
         $('#idCard').val(applyInfo.patientCard)
         $('#phone').val(applyInfo.patientPhone)
         $('#address').val(applyInfo.detailAddress)
-        let choiceAge = applyInfo.patientAge;
-        $('#age').val(choiceAge);
-        $('.choiceAge').val("岁");
+        let choiceAge = applyInfo.patientAge + "";
+        $('#age').val(choiceAge.substring(0,choiceAge.length - 1));
+        $('.choiceAge').val(choiceAge.substring(choiceAge.length - 1));
+        // $('#age').val(choiceAge);
+        // $('.choiceAge').val("岁");
         $('#high').val(applyInfo.patientHeight);
         $('#weight').val(applyInfo.patientWeight / 1000);
         $('.fileCount').html(applyInfo.caseContentList.length); // 图片总张数

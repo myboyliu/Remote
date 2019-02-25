@@ -55,7 +55,7 @@ function renderReferralDoubleList(dataJson) {
     myChart.clear();
     let labelOption = {
         normal: {
-            show: true,
+            show: false,
             position: 'insideBottom',
             distance: 15,
             align: 'left',
@@ -492,7 +492,7 @@ function renderReferralDoubleList(dataJson) {
             data: legendData
         },
         toolbox: {
-            show: true,
+            show: false,
             orient: 'vertical',
             left: 'right',
             top: 'center',
