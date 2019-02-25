@@ -244,7 +244,7 @@
         <result column="ayfapplyUrgent" jdbcType="VARCHAR" property="applyUrgent"/>
 
         <result column="cpId" jdbcType="INTEGER" property="patientId"/>
-        <result column="crpatientAge" jdbcType="INTEGER" property="patientAge"/>
+        <result column="crpatientAge" jdbcType="VARCHAR" property="patientAge"/>
         <result column="crpatientSex" jdbcType="CHAR" property="patientSex"/>
         <result column="crpatientHeight" jdbcType="INTEGER" property="patientHeight"/>
         <result column="crpatientWeight" jdbcType="INTEGER" property="patientWeight"/>

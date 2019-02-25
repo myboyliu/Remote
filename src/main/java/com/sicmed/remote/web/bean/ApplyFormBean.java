@@ -31,7 +31,7 @@ public class ApplyFormBean extends ApplyForm implements Serializable {
 
     private String patientId;
     private String patientSex;
-    private Integer patientAge;
+    private String patientAge;
     private Integer patientHeight;
     private Integer patientWeight;
     private String caseDiagnosis;
