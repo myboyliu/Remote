@@ -1116,7 +1116,7 @@
         from apply_form ayf
         left join case_consultant cct on cct.id = ayf.id
         WHERE ayf.del_flag = "0"
-        and (ayf.apply_remark like CONCAT('%', #{applyRemark,jdbcType=VARCHAR}, '%')
+        and (ayf.case_summary like CONCAT('%', #{applyRemark,jdbcType=VARCHAR}, '%')
         or ayf.apply_number like CONCAT('%', #{applyRemark,jdbcType=VARCHAR}, '%'))
         and ayf.apply_status IN
         <foreach collection="consultationStatusList" open="(" close=")" item="item" separator="," index="">
