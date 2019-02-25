@@ -1,19 +1,17 @@
 let searchText = '';
 
-let pageCountJson = {};
 let count = 10;
 let isDoctor;
 let searchUrl = "";
 
 function renderLable(tempArr) {
     $('.fruitless').hide();
-    // count = data.pageSize * pageSize;
     let _html = '';
     let myDate = new Date();
     let year = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
     let month = double(myDate.getMonth() + 1); //获取当前月份(0-11,0代表1月)
     let day = double(myDate.getDate()); //获取当前日(1-31)
-    for (var i = 0; i < tempArr.length; i++) {
+    for (let i = 0; i < tempArr.length; i++) {
         let timeStr = tempArr[i].consultantApplyTime.split(' ')[0];
         let time = tempArr[i].consultantApplyTime.split(' ')[1];
         let _year = timeStr.split('-')[0];
@@ -58,8 +56,6 @@ function searchCountSuccess(pageCount) {
         $('.fruitless').show();
         return false;
     } else {
-
-        console.log(pageCount);
         layui.use('laypage', function () {
             let laypage = layui.laypage;
             //执行一个laypage实例
