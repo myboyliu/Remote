@@ -845,6 +845,7 @@
             and delete_user = #{deleteUser,jdbcType=VARCHAR}
         </if>
         order by create_time
+        limit #{beginNo},#{pageSize}
     </select>
 
     <!--主会诊医生相关查询-->
