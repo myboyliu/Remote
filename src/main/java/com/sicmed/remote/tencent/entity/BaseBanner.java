@@ -1,7 +1,10 @@
 package com.sicmed.remote.tencent.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.Date;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseBanner {
     private String id;
 

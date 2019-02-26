@@ -208,3 +208,18 @@ const sirSearchCount = "/statisticsSearch/sirSearchCount"                   //�
 
 
 
+
+
+
+
+/** 云点播 接口 */
+const getBannerList = "/banner/getBannerList"                   //转诊价格统计查询
+const fuzzySearchVideoListCount = "/vod/fuzzySearchVideoListCount"
+const fuzzySearchVideoList = "/vod/fuzzySearchVideoList"
+
+
+
+
+
+
+
