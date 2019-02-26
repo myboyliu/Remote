@@ -25,6 +25,11 @@
     from base_banner
     where id = #{id,jdbcType=VARCHAR}
   </select>
+  <select id="getList" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    picture_path
+    from base_banner
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from base_banner
     where id = #{id,jdbcType=VARCHAR}
