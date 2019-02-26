@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="../favicon.ico" rel="shortcut icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>会员优享课程-课程管理</title>
+    <link rel="stylesheet" href="../common/css/reset.css">
+    <link rel="stylesheet" href="../common/layui/css/layui.css">
+    <link rel="stylesheet/less" href="../common/css/nav.less">
+    <link rel="stylesheet/less" href="css/manage.less" />
+    <script src="../common/js/jquery.js"></script>
+    <script src="../common/layui/layui.all.js"></script>
+    <script src="../common/js/less.js"></script>
+    <script src="../common/js/root.js"></script>
+    <script type="text/javascript" src="js/manage.js"></script>
+    <!-- [if lt IE9]>
+		    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		    <![endif] -->
+</head>
+
+<body>
+    <div class="header">
+        <div class="infoArea clearfix">
+            <h1 class="logo">
+                <a href="javascript:;">
+                    <img src="../images/ylyw_logo.png" />
+                </a>
+            </h1>
+            <div class="topInfoArea clearfix">
+                <div class="personal" href="javascript:;">
+                    <span class="personalCenter"><span class="name"></span>/<span class="occupationName"></span>/<span
+                            class="deptName"></span>/<span class="hospitalName"></span>/</span>
+                    <ul>
+                        <li>
+                            <a href="../page/center.html">个人中心</a>
+                        </li>
+                        <li>
+                            <a class="loginOut" href="javascript:;">退出登录</a>
+                        </li>
+                    </ul>
+                </div>
+                <a class="news" href="/yilaiyiwang/newInformation/newInformation.html">新信息</a>
+                <div class="searchBox"><input class="searchInput" type="text" placeholder="请在这里搜索已结束的订单">
+                    <img class="searchBtn" src="../images/search.png" alt="">
+                </div>
+
+            </div>
+        </div>
+        <ul class="guide clearfix">
+            <li type='1'>
+                <a href="/yilaiyiwang/workbench/workbench.html">医政工作台</a>
+            </li>
+            <li type='1'>
+                <a href="/yilaiyiwang/DeskCalendar/DeskCalendar.html">科室日历</a>
+            </li>
+            <li type='1'>
+                <a href="/yilaiyiwang/managementCenter/managementCenter.html">管理中心</a>
+            </li>
+            <li type='0'>
+                <a href="/yilaiyiwang/morkbench/morkbench.html">医生工作台</a>
+            </li>
+            <li type='0'>
+                <a href="/yilaiyiwang/writeCase/createCase.html">创建病历</a>
+            </li>
+            <li type='0'>
+                <a href="/yilaiyiwang/doctorAddress/doctorAddress.html">医生通讯录</a>
+            </li>
+            <li>
+                <a href="/yilaiyiwang/liveMain/liveMain.html">三甲早直播</a>
+            </li>
+            <li>
+                <a class="active" href="/yilaiyiwang/premierCourseMain/premierCourseMain.html">会员优享课程</a>
+            </li>
+            <li type='1'>
+                <a href="/yilaiyiwang/statistics/statistics.html">数据统计</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 主题部分 - start -->
+    <div class="container">
+        <!-- title行 -->
+        <div class="titleContent clearfix">
+            <div class="leftBox">
+                <h1>课程管理</h1><span>/共<i class="videoCount">0</i>条</span>
+            </div>
+            <div class="rightBox">
+                <a class="releaseBtn" href="javascript:;">我要上传</a>
+            </div>
+        </div>
+        <!-- 列表 -->
+        <ul class="videoList">
+
+        </ul>
+        <!-- 分页 -->
+        <div class="pageContent">
+            <div class="pageBox" id="listBox"></div>
+        </div>
+    </div>
+    <!-- 主题部分 - end -->
+
+    <!-- 底部版权 - start -->
+    <div class="footer">
+        Copyright © 2018 医来医往(北京)科技有限公司
+    </div>
+    <!-- 底部版权 - end -->
+
+</body>
+
+</html>

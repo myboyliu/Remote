@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="../favicon.ico" rel="shortcut icon"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>会员优享课程</title>
+    <link rel="stylesheet" href="../common/css/reset.css">
+    <link rel="stylesheet" href="../common/swiper/swiper.min.css">
+    <link rel="stylesheet" href="../common/layui/css/layui.css">
+    <link rel="stylesheet/less" href="../common/css/nav.less">
+    <link rel="stylesheet/less" href="css/main.less"/>
+    <script src="../common/js/jquery.js"></script>
+    <script src="../common/layui/layui.all.js"></script>
+    <script src="../common/swiper/swiper.min.js"></script>
+    <script src="../common/js/less.js"></script>
+    <script src="../common/js/root.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <!-- [if lt IE9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif] -->
+</head>
+
+<body>
+<div class="header">
+    <div class="infoArea clearfix">
+        <h1 class="logo">
+            <a href="javascript:;">
+                <img src="../images/ylyw_logo.png"/>
+            </a>
+        </h1>
+        <div class="topInfoArea clearfix">
+            <div class="personal" href="javascript:;">
+                    <span class="personalCenter"><span class="name"></span>/<span class="occupationName"></span>/<span
+                            class="deptName"></span>/<span class="hospitalName"></span>/</span>
+                <ul>
+                    <li>
+                        <a href="/yilaiyiwang/center/center.html">个人中心</a>
+                    </li>
+                    <li>
+                        <a class="loginOut" href="javascript:;">退出登录</a>
+                    </li>
+                </ul>
+            </div>
+            <a class="news" href="/yilaiyiwang/newInformation/newInformation.html">新信息</a>
+            <div class="searchBox"><input class="searchInput" type="text" placeholder="请在这里搜索已结束的订单">
+                <img class="searchBtn" src="/yilaiyiwang/images/search.png" alt="">
+            </div>
+
+        </div>
+    </div>
+    <ul class="guide clearfix">
+        <li type='1'>
+            <a href="/yilaiyiwang/workbench/workbench.html">医政工作台</a>
+        </li>
+        <li type='1'>
+            <a href="/yilaiyiwang/DeskCalendar/DeskCalendar.html">科室日历</a>
+        </li>
+        <li type='1'>
+            <a href="/yilaiyiwang/managementCenter/managementCenter.html">管理中心</a>
+        </li>
+        <li type='0'>
+            <a href="/yilaiyiwang/morkbench/morkbench.html">医生工作台</a>
+        </li>
+        <li type='0'>
+            <a href="/yilaiyiwang/writeCase/createCase.html">创建病历</a>
+        </li>
+        <li type='0'>
+            <a href="/yilaiyiwang/doctorAddress/doctorAddress.html">医生通讯录</a>
+        </li>
+        <li>
+            <a href="/yilaiyiwang/liveMain/liveMain.html">三甲早直播</a>
+        </li>
+        <li>
+            <a class="active" href="/yilaiyiwang/premierCourseMain/premierCourseMain.html">会员优享课程</a>
+        </li>
+        <li type='1'>
+            <a href="../page/statistics.html">数据统计</a>
+        </li>
+    </ul>
+</div>
+
+<!-- 主题部分 - start -->
+<div class="container">
+    <!-- 讨论病例模块 -->
+    <div class="moduleContent">
+        <!-- banner位置 -->
+        <div class="bannerContent swiper-container">
+            <div class="swiper-wrapper">
+            </div>
+        </div>
+        <!-- screen部分 -->
+        <div class="screenContent">
+            <div class="screenBox classifyObj">
+                <span>分类:</span>
+                <a class="active" href="javascript:;">全部</a>|<a
+                    name="VIDEO_CLASSICAL_OPERATION" href="javascript:;" class="">经典手术</a>|<a
+                    name="VIDEO_EXPERT_LECTURE" href="javascript:;" class="">专家讲座</a>|<a
+                    name="VIDEO_ACADEMIC_CONFERENCE" href="javascript:;" class="">学术会议</a></div>
+            <div class="screenBox sortObj">
+                <span>排序:</span>
+                <a class="active" href="javascript:;">最新</a>|
+                <a href="javascript:;">热度</a>
+            </div>
+        </div>
+        <!-- 搜索条 -->
+        <div class="searchContent">
+            <p class="searchStatistics">共搜索到<i class="searchNum">6</i>条</p>
+            <div class="rightContent">
+                <!-- 搜索框 -->
+                <div class="searchBox">
+                    <input class="videoSearchInput" type="text" placeholder="搜索视频">
+                    <ul class="searchResult">
+                        <li></li>
+                    </ul>
+                </div>
+                |<a href="../video/manage.html">课程管理</a>
+                |<a class="releaseBtn" href="javascript:;">我要上传</a>
+            </div>
+        </div>
+        <!-- 列表 -->
+        <div class="listContent clearfix">
+
+        </div>
+        <!-- 分页 -->
+        <div class="pageContent">
+            <div class="pageBox" id="listBox"></div>
+        </div>
+    </div>
+</div>
+<!-- 主题部分 - end -->
+
+<!-- 底部版权 - start -->
+<div class="footer">
+    Copyright © 2018 医来医往(北京)科技有限公司
+</div>
+<!-- 底部版权 - end -->
+
+</body>
+
+</html>

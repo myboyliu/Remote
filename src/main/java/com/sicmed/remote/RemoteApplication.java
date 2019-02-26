@@ -9,7 +9,7 @@ import javax.xml.crypto.Data;
 
 @EnableCaching
 @SpringBootApplication
-@MapperScan({"com.sicmed.remote.web.mapper"})
+@MapperScan({"com.sicmed.remote.web.mapper","com.sicmed.remote.tencent.mapper"})
 public class RemoteApplication {
     public static void main(String[] args) {
         SpringApplication.run(RemoteApplication.class, args);
