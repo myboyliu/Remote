@@ -66,5 +66,5 @@ public class ApplyForm extends BaseEntity {
 
     private String applyUrgent;
 
-
+    private String mdtFlag;
 }

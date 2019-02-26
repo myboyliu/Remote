@@ -28,13 +28,14 @@
         <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime"/>
         <result column="delete_user" jdbcType="VARCHAR" property="deleteUser"/>
         <result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
+        <result column="mdt_flag" jdbcType="VARCHAR" property="mdtFlag"/>
     </resultMap>
 
     <sql id="Base_Column_List">
     id, apply_number, case_record_id, case_summary, apply_summary, invite_summary,
     apply_user_id, apply_hospital_id, invite_user_id, invite_hospital_id,invite_branch_id, apply_branch_id,
     consultant_apply_time, apply_status, apply_type, apply_remark,refuse_remark,apply_urgent, create_time, create_user,
-    update_time, update_user, delete_time, delete_user, del_flag
+    update_time, update_user, delete_time, delete_user, del_flag,mdt_flag
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
@@ -334,7 +335,7 @@
       apply_status, apply_type, apply_remark,refuse_remark, applyUrgent,
       create_time, create_user, update_time, 
       update_user, delete_time, delete_user, 
-      del_flag)
+      del_flag,mdt_flag)
     values (#{id,jdbcType=VARCHAR}, #{applyNumber,jdbcType=VARCHAR}, #{caseRecordId,jdbcType=VARCHAR}, 
       #{caseSummary,jdbcType=VARCHAR}, #{applySummary,jdbcType=VARCHAR}, #{inviteSummary,jdbcType=VARCHAR}, 
       #{applyUserId,jdbcType=VARCHAR}, #{applyHospitalId,jdbcType=VARCHAR}, #{inviteUserId,jdbcType=VARCHAR},
@@ -342,7 +343,7 @@
       #{applyStatus,jdbcType=VARCHAR}, #{applyType,jdbcType=VARCHAR}, #{applyRemark,jdbcType=VARCHAR}, #{refuseRemark,jdbcType=VARCHAR},  #{applyUrgent,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{updateUser,jdbcType=VARCHAR}, #{deleteTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR}, 
-      #{delFlag,jdbcType=VARCHAR})
+      #{delFlag,jdbcType=VARCHAR},#{mdtFlag,jdbcType=VARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.ApplyForm">
         <selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
@@ -423,6 +424,9 @@
             <if test="delFlag != null">
                 del_flag,
             </if>
+            <if test="mdtFlag != null">
+                mdt_flag,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -498,6 +502,9 @@
             <if test="delFlag != null">
                 #{delFlag,jdbcType=VARCHAR},
             </if>
+            <if test="mdtFlag != null">
+                #{mdtFlag,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.ApplyForm">
@@ -572,6 +579,9 @@
             </if>
             <if test="delFlag != null">
                 del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="mdtFlag !=null">
+                mdt_flag = #{mdtFlag,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=VARCHAR}

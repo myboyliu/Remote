@@ -17,4 +17,6 @@ public class ConsultantReportBean implements Serializable {
 
     private String doctorEnjoin;
 
+    // 多学科会诊标识
+    private String mdtFlag;
 }

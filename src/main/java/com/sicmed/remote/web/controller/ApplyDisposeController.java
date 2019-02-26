@@ -766,6 +766,10 @@ public class ApplyDisposeController extends BaseController {
         }
 
         ApplyForm applyForm = new ApplyForm();
+        if (StringUtils.isNotBlank(consultantReportBean.getMdtFlag())) {
+            // 修改多学科会诊标识 0为多学科 1为默认单学科
+            applyForm.setMdtFlag("0");
+        }
         applyForm.setId(applyFormId);
         int i = applyFormService.updateStatus(applyForm, applyStatus, userId);
         if (i < 1) {
@@ -789,7 +793,7 @@ public class ApplyDisposeController extends BaseController {
         } else if (applyStatus == ConsultationStatus.CONSULTATION_END.toString()) {
             applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已反馈.toString());
 
-            consultationPriceRecordService.insertList(caseConsultantService.getByPrimaryKey(applyFormId),applyForm);
+            consultationPriceRecordService.insertList(caseConsultantService.getByPrimaryKey(applyFormId), applyForm);
             new Thread(() -> {
                 try {
                     Thread.sleep(1000);
