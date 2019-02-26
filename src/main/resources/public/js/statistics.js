@@ -229,7 +229,7 @@ $(function () {
             layer.msg('数据不完整');
         } else if (consultationOptionArr.length == 0) {
             layer.msg('数据不完整');
-        } else if (consultationOptionArr.length >= 2) {
+        } else if (consultationOptionArr.length === 2) {
             let firstItem = $('.consultationOptionBox > a').eq(consultationOptionArr[0]).attr('id');
             let secondItem = $('.consultationOptionBox > a').eq(consultationOptionArr[1]).attr('id');
             if (consultationRule[firstItem]) {

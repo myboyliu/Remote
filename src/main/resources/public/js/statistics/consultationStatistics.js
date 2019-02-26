@@ -18,7 +18,7 @@ let consultationRule = {
     CON_RECEIVE_BRANCH: {CON_RECEIVE_DOCTOR: ["groupByInviteBranch", "groupByInviteUserSpecialistType"]}
 };
 let consultationSingleRule = {
-    CON_SEND_HOSPITAL: "",
+    CON_SEND_HOSPITAL: "groupByApplyHospital",
     CON_SEND_BRANCH: "groupByApplyBranch",
     CON_SEND_DOCTOR: "groupByApplyUserSpecialistType",
     CON_RECEIVE_HOSPITAL: "groupByInviteHospital",
