@@ -1,4 +1,4 @@
-package com.sicmed.remote.web.bean;
+package com.sicmed.remote.tencent.bean;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;

@@ -1,7 +1,8 @@
-package com.sicmed.remote.web.controller;
+package com.sicmed.remote.tencent.controller;
 
 import com.sicmed.remote.common.Constant;
 import com.sicmed.remote.web.YoonaLtUtils.Signature;
+import com.sicmed.remote.web.controller.BaseController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,10 +1,10 @@
-package com.sicmed.remote.web.controller;
+package com.sicmed.remote.tencent.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.sicmed.remote.web.entity.TencentVideo;
-import com.sicmed.remote.web.service.TencentVideoService;
+import com.sicmed.remote.tencent.entity.TencentVideo;
+import com.sicmed.remote.tencent.service.TencentVideoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

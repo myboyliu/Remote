@@ -1,8 +1,9 @@
-package com.sicmed.remote.web.service;
+package com.sicmed.remote.tencent.service;
 
-import com.sicmed.remote.web.bean.VideoBean;
-import com.sicmed.remote.web.entity.TencentVideo;
-import com.sicmed.remote.web.mapper.TencentVideoMapper;
+import com.sicmed.remote.tencent.bean.VideoBean;
+import com.sicmed.remote.tencent.entity.TencentVideo;
+import com.sicmed.remote.tencent.mapper.TencentVideoMapper;
+import com.sicmed.remote.web.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

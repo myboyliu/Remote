@@ -1,7 +1,7 @@
-package com.sicmed.remote.web.mapper;
+package com.sicmed.remote.tencent.mapper;
 
-import com.sicmed.remote.web.bean.VideoBean;
-import com.sicmed.remote.web.entity.TencentVideo;
+import com.sicmed.remote.tencent.bean.VideoBean;
+import com.sicmed.remote.tencent.entity.TencentVideo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

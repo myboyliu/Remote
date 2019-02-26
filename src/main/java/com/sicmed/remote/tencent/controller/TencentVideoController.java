@@ -1,13 +1,14 @@
-package com.sicmed.remote.web.controller;
+package com.sicmed.remote.tencent.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.sicmed.remote.common.Constant;
 import com.sicmed.remote.web.YoonaLtUtils.HttpConnectionUtils;
 import com.sicmed.remote.web.YoonaLtUtils.SignatureUtils;
-import com.sicmed.remote.web.bean.VideoBean;
+import com.sicmed.remote.tencent.bean.VideoBean;
+import com.sicmed.remote.web.controller.BaseController;
 import com.sicmed.remote.web.entity.CustomBranch;
-import com.sicmed.remote.web.entity.TencentVideo;
-import com.sicmed.remote.web.service.TencentVideoService;
+import com.sicmed.remote.tencent.entity.TencentVideo;
+import com.sicmed.remote.tencent.service.TencentVideoService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;

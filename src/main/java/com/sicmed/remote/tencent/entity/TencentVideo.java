@@ -1,7 +1,9 @@
-package com.sicmed.remote.web.entity;
+package com.sicmed.remote.tencent.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.sicmed.remote.web.entity.BaseEntity;
+import com.sicmed.remote.web.entity.CustomBranch;
 import lombok.Data;
 
 import java.util.Date;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sicmed.remote.web.mapper.TencentVideoMapper">
-    <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.TencentVideo">
+<mapper namespace="com.sicmed.remote.tencent.mapper.TencentVideoMapper">
+    <resultMap id="BaseResultMap" type="com.sicmed.remote.tencent.entity.TencentVideo">
         <id column="id" property="id" jdbcType="VARCHAR"/>
         <result column="video_name" property="videoName" jdbcType="VARCHAR"/>
         <result column="video_class" property="videoClass" jdbcType="VARCHAR"/>
@@ -37,7 +37,7 @@
     </select>
 
     <!-- 根据视频文件id修改内容 -->
-    <update id="updateVideoFile" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+    <update id="updateVideoFile" parameterType="com.sicmed.remote.tencent.entity.TencentVideo">
         update tencent_video
         <set>
             <if test="videoUrl != null">
@@ -54,7 +54,7 @@
     </update>
 
     <!-- 查询我发出的视频列表 -->
-    <resultMap id="MyVideoMap" type="com.sicmed.remote.web.entity.TencentVideo">
+    <resultMap id="MyVideoMap" type="com.sicmed.remote.tencent.entity.TencentVideo">
         <id column="id" property="id" jdbcType="VARCHAR"/>
         <result column="video_name" property="videoName" jdbcType="VARCHAR"/>
         <result column="video_class" property="videoClass" jdbcType="VARCHAR"/>
@@ -83,7 +83,7 @@
 
     <!-- 查询我的优享课程总条数 -->
     <select id="findMyVideoListSize" resultType="java.lang.Integer"
-            parameterType="com.sicmed.remote.web.entity.TencentVideo">
+            parameterType="com.sicmed.remote.tencent.entity.TencentVideo">
         select
         count(id) num
         from tencent_video
@@ -91,7 +91,7 @@
     </select>
 
     <!-- 查询我的优享课程 -->
-    <select id="findMyVideoList" resultMap="MyVideoMap" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+    <select id="findMyVideoList" resultMap="MyVideoMap" parameterType="com.sicmed.remote.tencent.entity.TencentVideo">
         select
         <include refid="MyVideo_List"/>
         from tencent_video
@@ -108,7 +108,7 @@
     </select>
 
     <!-- 查询视频分类列表 -->
-    <resultMap id="VideoMap" type="com.sicmed.remote.web.bean.VideoBean">
+    <resultMap id="VideoMap" type="com.sicmed.remote.tencent.bean.VideoBean">
         <id column="id" property="id" jdbcType="VARCHAR"/>
         <result column="video_name" property="videoName" jdbcType="VARCHAR"/>
         <result column="video_class" property="videoClass" jdbcType="VARCHAR"/>
@@ -128,7 +128,7 @@
   </sql>
 
     <!-- 模糊搜索总条数 -->
-    <select id="searchVideoSize" resultType="java.lang.Integer" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+    <select id="searchVideoSize" resultType="java.lang.Integer" parameterType="com.sicmed.remote.tencent.entity.TencentVideo">
         select
         count(id) num
         from tencent_video video
@@ -140,7 +140,7 @@
     </select>
 
     <!-- 模糊搜索 按时间排序-->
-    <select id="searchVideoNew" resultMap="VideoMap" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+    <select id="searchVideoNew" resultMap="VideoMap" parameterType="com.sicmed.remote.tencent.entity.TencentVideo">
         select
         <include refid="Video_List"/>
         from tencent_video video
@@ -155,7 +155,7 @@
         limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
     </select>
     <!-- 模糊搜索 按点击量排序-->
-    <select id="searchVideoHot" resultMap="VideoMap" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+    <select id="searchVideoHot" resultMap="VideoMap" parameterType="com.sicmed.remote.tencent.entity.TencentVideo">
         select
         <include refid="Video_List"/>
         from tencent_video video
@@ -171,7 +171,7 @@
     </select>
 
     <!-- 根据热度查询视频分类列表 -->
-    <select id="findVideoListByTypeHot" resultMap="VideoMap" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+    <select id="findVideoListByTypeHot" resultMap="VideoMap" parameterType="com.sicmed.remote.tencent.entity.TencentVideo">
         select
         <include refid="Video_List"/>
         from tencent_video video
@@ -188,7 +188,7 @@
 
     <!-- 查询视频分类列表总条数 -->
     <select id="findVideoListByTypeSize" resultType="java.lang.Integer"
-            parameterType="com.sicmed.remote.web.entity.TencentVideo">
+            parameterType="com.sicmed.remote.tencent.entity.TencentVideo">
         select
         count(id) num
         from tencent_video video
@@ -200,7 +200,7 @@
     </select>
 
     <!-- 根据上传时间查询视频分类列表 -->
-    <select id="findVideoListByTypeNew" resultMap="VideoMap" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+    <select id="findVideoListByTypeNew" resultMap="VideoMap" parameterType="com.sicmed.remote.tencent.entity.TencentVideo">
         select
         <include refid="Video_List"/>
         from tencent_video video
@@ -219,7 +219,7 @@
     delete from tencent_video
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-    <insert id="insert" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+    <insert id="insert" parameterType="com.sicmed.remote.tencent.entity.TencentVideo">
     insert into tencent_video (id, video_name, video_class, 
       video_describe, video_url, video_cover_url, 
       upload_time, upload_user, playback, 
@@ -237,7 +237,7 @@
       #{deleteUser,jdbcType=VARCHAR}, #{deleteTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=CHAR}
       )
   </insert>
-    <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+    <insert id="insertSelective" parameterType="com.sicmed.remote.tencent.entity.TencentVideo">
         <selectKey keyProperty="id" resultType="java.lang.String"
                    order="BEFORE">
             select replace(uuid(),'-','') from dual
@@ -374,7 +374,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+    <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.tencent.entity.TencentVideo">
         update tencent_video
         <set>
             <if test="videoName != null">
@@ -440,7 +440,7 @@
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.TencentVideo">
+    <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.tencent.entity.TencentVideo">
     update tencent_video
     set video_name = #{videoName,jdbcType=VARCHAR},
       video_class = #{videoClass,jdbcType=VARCHAR},
