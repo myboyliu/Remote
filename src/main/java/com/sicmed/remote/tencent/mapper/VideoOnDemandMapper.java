@@ -1,6 +1,8 @@
 package com.sicmed.remote.tencent.mapper;
 
 import com.sicmed.remote.tencent.bean.FuzzySearchVideoBean;
+import com.sicmed.remote.tencent.bean.SelectVideoListParamBean;
+import com.sicmed.remote.tencent.bean.VideoListBean;
 import com.sicmed.remote.tencent.entity.TencentVideo;
 import com.sicmed.remote.tencent.entity.VideoOnDemand;
 
@@ -21,5 +23,13 @@ public interface VideoOnDemandMapper {
 
     int fuzzyVideoListCountByParam(FuzzySearchVideoBean fuzzySearchVideoBean);
 
-    List<VideoOnDemand> fuzzyVideoListByParam(FuzzySearchVideoBean fuzzySearchVideoBean);
+    List<VideoListBean> fuzzyVideoListByParam(FuzzySearchVideoBean fuzzySearchVideoBean);
+
+    int updateByFileIdSelective(VideoOnDemand videoOnDemand);
+
+    int getVideoListCountByParam(SelectVideoListParamBean selectVideoListParamBean);
+
+    List<VideoListBean> getVideoListByParam(SelectVideoListParamBean selectVideoListParamBean);
+
+    int addClickCount(String videoId);
 }

@@ -19,7 +19,6 @@ function renderBannerView(data) {
 
 /** 模糊搜索 数量查询成功 回调函数 */
 function getSearchCountSuccess(videoListCount) {
-    console.log(videoListCount)
     if (videoListCount === 0) {
         let _html = '<p style="text-align: center;margin-top: 30px;">暂无数据</p>';
         $(".listContent").html(_html);
@@ -54,7 +53,6 @@ function getSearchCountSuccess(videoListCount) {
 }
 
 function renderVideoList(videoList) {
-    console.log(videoList)
     let tempArr = videoList;
     let _html = "";
     for (let i = 0; i < tempArr.length; i++) {
@@ -63,13 +61,13 @@ function renderVideoList(videoList) {
                                 <div class="rightBox">\
                                     <h2 class="videoTitle">' + tempArr[i].videoName + '</h2>\
                                     <p class="videoInfo">' + tempArr[i].hospitalName + '</p>\
-                                    <p class="videoInfo">' + tempArr[i].deptName + '</p>\
+                                    <p class="videoInfo">' + tempArr[i].branchName + '</p>\
                                 </div>\
-                                <a class="playBtn" target="_blank" href="' + tempArr[i].videoUrl + '">播放</a>\
+                                <a name="' + tempArr[i].videoFileId + '"  class="playBtn" target="_blank">播放</a>\
                                 <p class="videoDesc">简介：' + tempArr[i].videoDescribe + '</p>\
                                 <div class="popularBox">\
                                     <a href="javascript:;">\
-                                        <img src="../img/playNum.png" alt="">\
+                                        <img src="../video/img/playNum.png" alt="">\
                                     </a>\
                                     <span>播放</span>\
                                     <i class="playNum">' + tempArr[i].playback + '</i>\
@@ -78,125 +76,71 @@ function renderVideoList(videoList) {
     }
     $(".listContent").html(_html);
 
-
 }
 
-// 获取总条数
-function getCount(typeId, typeName, pageNo) {
-    // let requestData = {"typeId": typeId, "typeName": typeName, "pageNo": pageNo, "pageSize": pageSize}
-    //
-    // ajaxRequest("POST", findVideoListByType, requestData, false, false, true, renderVideoList, null, null);
-
-    // $.ajax({
-    //     type: 'POST',
-    //     url: IP + 'video/findVideoListByType',
-    //     dataType: 'json',
-    //     xhrFields: {
-    //         withCredentials: true
-    //     },
-    //     data: {
-    //         "typeId": typeId,
-    //         "typeName": typeName,
-    //         "pageNo": pageNo,
-    //         "pageSize": pageSize,
-    //     },
-    //     crossDomain: true,
-    //     success: function (data) {
-    //         console.log(data)
-    //         if (data.code == 1) {
-    //             countNum = data.data.page;
-    //             $(".searchNum").html(countNum);
-    //             // 分页
-    //             layui.use('laypage', function () {
-    //                 var laypage = layui.laypage;
-    //                 //执行一个laypage实例
-    //                 laypage.render({
-    //                     elem: 'listBox',
-    //                     count: countNum,
-    //                     limit: pageSize,
-    //                     theme: '#f6c567',
-    //                     jump: function (obj, first) {
-    //                         if (!first) {
-    //                             findAnnouncementByType($(".classifyObj > a.active").attr("name"), $(".sortObj > a.active").html(), obj.curr);
-    //                         }
-    //                     }
-    //                 });
-    //             });
-    //         } else if (data.code == 250) {
-    //             // 未登录操作
-    //             window.location = '/yilaiyiwang/login/login.html';
-    //         } else {
-    //             // 其他操作
-    //         }
-    //     },
-    //     error: function (err) {
-    //         console.log(err);
-    //     },
-    // });
+let selectRule = {
+    VIDEO_CLASSICAL_OPERATION: "VIDEO_CLASSICAL_OPERATION",
+    VIDEO_EXPERT_LECTURE: "VIDEO_EXPERT_LECTURE",
+    VIDEO_ACADEMIC_CONFERENCE: "VIDEO_ACADEMIC_CONFERENCE"
 }
-
-// 根据直播类型查询直播列表
-function findAnnouncementByType(typeId, typeName, pageNo) {
-    // $.ajax({
-    //     type: 'POST',
-    //     url: IP + 'video/findVideoListByType',
-    //     dataType: 'json',
-    //     xhrFields: {
-    //         withCredentials: true
-    //     },
-    //     data: {
-    //         "typeId": typeId,
-    //         "typeName": typeName,
-    //         "pageNo": pageNo,
-    //         "pageSize": pageSize,
-    //     },
-    //     crossDomain: true,
-    //     success: function (data) {
-    //         console.log(data)
-    //         if (data.code == 1) {
-    //             var tempArr = data.data.videoList;
-    //             var _html = "";
-    //             if (tempArr.length > 0) {
-    //                 for (var i = 0; i < tempArr.length; i++) {
-    //                     _html += '<div name="' + tempArr[i].id + '" class="itemBox">\
-    //                             <img src="'+ tempArr[i].videoCoverUrl + '" alt="">\
-    //                             <div class="rightBox">\
-    //                                 <h2 class="videoTitle">'+ tempArr[i].videoName + '</h2>\
-    //                                 <p class="videoInfo">'+ tempArr[i].hospitalName + '</p>\
-    //                                 <p class="videoInfo">' + tempArr[i].deptName + '</p>\
-    //                             </div>\
-    //                             <a class="playBtn" target="_blank" href="'+ tempArr[i].videoUrl + '">播放</a>\
-    //                             <p class="videoDesc">简介：' + tempArr[i].videoDescribe + '</p>\
-    //                             <div class="popularBox">\
-    //                                 <a href="javascript:;">\
-    //                                     <img src="../img/playNum.png" alt="">\
-    //                                 </a>\
-    //                                 <span>播放</span>\
-    //                                 <i class="playNum">'+ tempArr[i].playback + '</i>\
-    //                             </div>\
-    //                         </div>';
-    //                 }
-    //             } else {
-    //                 _html = '<p style="text-align: center;margin-top: 30px;">暂无数据</p>'
-    //             }
-    //             $(".listContent").html(_html);
-    //         } else if (data.code == 250) {
-    //             // 未登录操作
-    //             window.location = '/yilaiyiwang/login/login.html';
-    //         } else {
-    //             // 其他操作
-    //         }
-    //     },
-    //     error: function (err) {
-    //         console.log(err);
-    //     },
-    // });
+let groupRule = {
+    groupByTime: "groupByTime",
+    groupByHot: "groupByHot"
 }
 
 // 获取列表数据
-function getListData(typeId, findType, pageNo) {
-    findAnnouncementByType(typeId, findType, pageNo);
-    getCount(typeId, findType, pageNo);
+function getListData(pageNo) {
+
+    let typeName = $(".classifyObj > a.active").attr("name");
+    let groupBy = $(".sortObj > a.active").attr("name");
+    let paramData = {}
+    if (selectRule[typeName]) {
+        paramData["videoType"] = selectRule[typeName];
+    }
+    if (groupRule[groupBy]) {
+        paramData[groupRule[groupBy]] = "0";
+    }
+    ajaxRequest("GET", getVideoListCountUrl, paramData, true, "application/json", true, getVideoListCountSuccess, null, null);
+
+}
+
+function getVideoListCountSuccess(videoListCount) {
+    if (videoListCount === 0) {
+        let _html = '<p style="text-align: center;margin-top: 30px;">暂无数据</p>';
+        $(".listContent").html(_html);
+        // layer.msg("暂无数据")
+        return false
+    } else {
+        $(".searchNum").html(videoListCount);
+        let typeName = $(".classifyObj > a.active").attr("name");
+        let groupBy = $(".sortObj > a.active").attr("name");
+        let paramData = {}
+        if (selectRule[typeName]) {
+            paramData["videoType"] = selectRule[typeName];
+        }
+        if (groupRule[groupBy]) {
+            paramData[groupRule[groupBy]] = "0";
+        }
+        ajaxRequest("GET", getVideoListUrl, paramData, true, "application/json", true, renderVideoList, null, null);
+        // 分页
+        layui.use('laypage', function () {
+            var laypage = layui.laypage;
+            //执行一个laypage实例
+            laypage.render({
+                elem: 'listBox',
+                count: videoListCount,
+                limit: pageSize,
+                theme: '#f6c567',
+                jump: function (obj, first) {
+                    if (!first) {
+                        pageNo = obj.curr;
+                        ajaxRequest("GET", getVideoListUrl, paramData, true, "application/json", true, renderVideoList, null, null);
+
+                    }
+                }
+            });
+        });
+    }
 }
 
 // 获取搜索结果总条数，渲染分页器
@@ -318,53 +262,18 @@ $(function () {
     $(".classifyObj").delegate("a", "click", function () {
         $(".videoSearchInput").val("");
         $(this).addClass("active").siblings("a").removeClass("active");
-        getListData($(".classifyObj > a.active").attr("name"), $(".sortObj > a.active").html(), pageNo);
+        getListData($(".classifyObj > a.active").attr("name"), $(".sortObj > a.active").attr("name"), pageNo);
     });
     // 最新 关注度 搜索
     $(".sortObj").delegate("a", "click", function () {
         $(".videoSearchInput").val("");
         $(this).addClass("active").siblings("a").removeClass("active");
-        getListData($(".classifyObj > a.active").attr("name"), $(".sortObj > a.active").html(), pageNo);
+        getListData($(".classifyObj > a.active").attr("name"), $(".sortObj > a.active").attr("name"), pageNo);
     });
     // 获取轮播图
     ajaxRequest("GET", getBannerList, "", false, false, true, renderBannerView, null, null);
 
-    getListData($(".classifyObj > a.active").attr("name"), $(".sortObj > a.active").html(), pageNo);
-
-    // 关注、取消关注
-    function toggleFollow(liveId, status, obj) {
-        // $.ajax({
-        //     type: 'POST',
-        //     url: IP + 'follow/addFollow',
-        //     dataType: 'json',
-        //     xhrFields: {
-        //         withCredentials: true
-        //     },
-        //     data: {
-        //         "liveId": liveId,
-        //         "status": status,
-        //     },
-        //     crossDomain: true,
-        //     success: function (data) {
-        //         console.log(data)
-        //         if (data.code == 1) {
-        //             if (status) {
-        //                 obj.removeClass("active").html("关注");
-        //             } else {
-        //                 obj.addClass("active").html("已关注");
-        //             }
-        //         } else if (data.code == 250) {
-        //             // 未登录操作
-        //             window.location = '/yilaiyiwang/login/login.html';
-        //         } else {
-        //             // 其他操作
-        //         }
-        //     },
-        //     error: function (err) {
-        //         console.log(err);
-        //     },
-        // });
-    }
+    getListData($(".classifyObj > a.active").attr("name"), $(".sortObj > a.active").attr("name"), pageNo);
 
     // 搜索回车确定事件
     $('.videoSearchInput').keydown(function (event) {
@@ -378,35 +287,35 @@ $(function () {
             searchVideo($(".sortObj a.active").html(), page);
         }
     });
-
+    let player;
+    $("#videoBoxCloseBtn").click(function () {
+        layer.closeAll();
+        $('#videoBox').hide();
+        player.dispose();
+    })
     // 点击量/播放量
     $(".listContent").delegate(".playBtn", "click", function () {
-        // $.ajax({
-        //     type: 'POST',
-        //     url: IP + 'video/addClicks',
-        //     dataType: 'json',
-        //     xhrFields: {
-        //         withCredentials: true
-        //     },
-        //     data: {
-        //         "videoId": $(this).parents(".itemBox").attr("name"),
-        //     },
-        //     crossDomain: true,
-        //     success: function (data) {
-        //         console.log(data)
-        //         if (data.code == 1) {
-        //
-        //         } else if (data.code == 250) {
-        //             // 未登录操作
-        //             window.location = '/yilaiyiwang/login/login.html';
-        //         } else {
-        //             // 其他操作
-        //         }
-        //     },
-        //     error: function (err) {
-        //         console.log(err);
-        //     },
-        // });
+        $("#videoCount").append('<video style="height: 100%; width: 100%" id="player-container-id" preload="auto" playsinline webkit-playsinline></video>')
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['1060px', '480px'],
+            closeBtn: false,
+            shade: [0.7, '#000000'],
+            shadeClose: false,
+            content: $('#videoBox'),
+        });
+        player = TCPlayer('player-container-id', {
+            fileID: $(this).attr("name"),
+            appID: '1256684112'
+        });
+        let requestData = new FormData();
+        requestData.append("videoId", $(this).parents(".itemBox").attr("name"));
+        ajaxRequest("POST", addClickCountUrl, requestData, false, false, true, addClickCountSuccess, null, null);
+
+        function addClickCountSuccess(result) {
+            console.log(result);
+        }
     });
 
     // 发布点播按钮

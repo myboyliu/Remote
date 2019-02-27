@@ -41,9 +41,7 @@ public class TencentClouldVideo extends BaseController {
         sign.setSignValidDuration(3600 * 24 * 2);
         try {
             String signature = sign.getUploadSignature();
-            Map map = new LinkedHashMap();
-            map.put("signature", signature);
-            return succeedRequest(map);
+            return succeedRequest(signature);
         } catch (Exception e) {
             log.info("获取签名失败");
             e.printStackTrace();

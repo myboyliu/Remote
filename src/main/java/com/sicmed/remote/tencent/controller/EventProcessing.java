@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.sicmed.remote.tencent.entity.TencentVideo;
 import com.sicmed.remote.tencent.service.TencentVideoService;
+import com.sicmed.remote.tencent.service.VideoOnDemandService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,8 @@ public class EventProcessing {
 
     @Autowired
     private TencentVideoService tencentVideoService;
+    @Autowired
+    private VideoOnDemandService videoOnDemandService;
 
     public static final String EVENT_TYPE_NAME = "TranscodeComplete";
     public static final String EVENT_TYPE = "eventType";
@@ -43,13 +46,7 @@ public class EventProcessing {
         Map <String, Object> map = (Map) JSON.parse(str.toString());
         if (EVENT_TYPE_NAME.equals(map.get(EVENT_TYPE).toString())) {
             Map <String, Object> map1 = (Map) JSON.parse(map.get("data").toString());
-            video.setVideoFileId(map1.get("fileId").toString());
-            video.setVideoCoverUrl(map1.get("coverUrl").toString());
-            JSONArray jsonArray = JSONArray.parseArray(map1.get("playSet").toString());
-            JSONObject video1 = jsonArray.getJSONObject(1);
-            video.setVideoUrl(video1.get("url").toString());
-            video.setTransCode("1");
-            int i = tencentVideoService.updateVideoFile(video);
+            int i = videoOnDemandService.updataByEventResult(map1);
             if (i < 0){
                 log.info("视频id:"+video.getVideoFileId()+"的文件转码成功,但未修改本地转码状态");
             }

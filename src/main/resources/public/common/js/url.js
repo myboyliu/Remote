@@ -53,6 +53,8 @@ const updateCustomBranchListUrl = "/custom/branch/update";                      
 
 const getBranchListByParentIdUrl = "/branch/findByParam";                       //根据父级科室ID查询科室列表
 
+const getSecondBranchList = "/branch/getSecondList";                            //查询所有系统二级科室列表
+
 const approveRegisterUrl = "/user/agreeRegister";                               //医生注册审核通过
 
 const overruleRegisterUrl = "/user/disagreeRegister";                           //医生注册审核驳回
@@ -205,17 +207,18 @@ const doctorSearchCount = "/statisticsSearch/doctorSearchCount"                 
 const sirSearch = "/statisticsSearch/sirSearch"                   //转诊价格统计查询
 const sirSearchCount = "/statisticsSearch/sirSearchCount"                   //转诊价格统计查询
 
-
-
-
-
-
-
-
 /** 云点播 接口 */
 const getBannerList = "/banner/getBannerList"                   //转诊价格统计查询
+
 const fuzzySearchVideoListCount = "/vod/fuzzySearchVideoListCount"
 const fuzzySearchVideoList = "/vod/fuzzySearchVideoList"
+const getVideoListCountUrl = "/vod/getVideoListCount"
+const getVideoListUrl = "/vod/getVideoList"
+
+
+const getSignatureUrl = "/signature/video/getSignature"
+const saveVideoUrl = "/vod/addVideo"                //保存上传成功的视频信息
+const addClickCountUrl = "/vod/addClickCount"                //保存上传成功的视频信息
 
 
 

@@ -52,4 +52,8 @@ public class BranchService implements BaseService<Branch> {
     public List<BranchBean> findMultilevelListByDynamicParam(Branch branch) {
         return branchMapper.findMultilevelListByDynamicParam(branch);
     }
+
+    public List<Branch> getSecondList() {
+       return branchMapper.getSecondList();
+    }
 }

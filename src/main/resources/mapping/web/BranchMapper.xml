@@ -268,7 +268,8 @@
     <sql id="Bean_Left_Join">
         LEFT JOIN base_branch childBranch ON childBranch.parent_id = parentBranch.id
     </sql>
-    <select id="findMultilevelListByDynamicParam" parameterType="com.sicmed.remote.web.entity.Branch" resultMap="BeanResultMap">
+    <select id="findMultilevelListByDynamicParam" parameterType="com.sicmed.remote.web.entity.Branch"
+            resultMap="BeanResultMap">
         select
         <include refid="Bean_Column_List"/>
         from base_branch parentBranch
@@ -288,6 +289,16 @@
             <if test="branchInform != null">
                 AND parentBranch.branch_inform = #{branchInform,jdbcType=VARCHAR}
             </if>
+        </where>
+    </select>
+
+    <select id="getSecondList" parameterType="com.sicmed.remote.web.entity.Branch" resultMap="BaseResultMap">
+        select
+        id, branch_name
+        from base_branch
+        <where>
+            del_flag = "0"
+            AND parent_id is not null
         </where>
     </select>
 </mapper>

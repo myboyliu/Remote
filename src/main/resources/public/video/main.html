@@ -20,6 +20,9 @@
     <script src="../common/js/url.js"></script>
     <script src="../common/js/ajaxRequestUtils.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
+    <script src="//imgcache.qq.com/open/qcloud/video/tcplayer/lib/hls.min.0.8.8.js"></script>
+    <link href="//imgcache.qq.com/open/qcloud/video/tcplayer/tcplayer.css" rel="stylesheet">
+    <script src="//imgcache.qq.com/open/qcloud/video/tcplayer/tcplayer.min.js"></script>
     <!-- [if lt IE9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif] -->
@@ -97,14 +100,14 @@
         <div class="screenContent">
             <div class="screenBox classifyObj">
                 <span>分类:</span>
-                <a class="active" href="javascript:;">全部</a>|<a
+                <a name="VIDEO_ALL" class="active" href="javascript:;">全部</a>|<a
                     name="VIDEO_CLASSICAL_OPERATION" href="javascript:;" class="">经典手术</a>|<a
                     name="VIDEO_EXPERT_LECTURE" href="javascript:;" class="">专家讲座</a>|<a
                     name="VIDEO_ACADEMIC_CONFERENCE" href="javascript:;" class="">学术会议</a></div>
             <div class="screenBox sortObj">
                 <span>排序:</span>
-                <a class="active" href="javascript:;">最新</a>|
-                <a href="javascript:;">热度</a>
+                <a class="active" href="javascript:;" name="groupByTime">最新</a>|
+                <a href="javascript:;" name="groupByHot">热度</a>
             </div>
         </div>
         <!-- 搜索条 -->
@@ -139,7 +142,16 @@
     Copyright © 2018 医来医往(北京)科技有限公司
 </div>
 <!-- 底部版权 - end -->
+<div id="videoBox" class="rejectBox">
+    <!-- 拒收弹层 -->
+    <div class="rejectionLayer">
+        <div style="height: 100%; width: 100%" id="videoCount">
 
+        </div>
+        <div id="videoBoxCloseBtn" class="closeBtn "><img src="../images/close.png" alt="">
+            <span>关闭</span></div>
+    </div>
+</div>
 </body>
 
 </html>

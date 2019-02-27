@@ -1,89 +1,27 @@
+function getSecondBranchListSuccess(branchList){
+    console.log(branchList)
+    let _html = '<option value="">请选择</option>';
+    for (let i = 0; i < branchList.length; i++) {
+        _html += '<option value="' + branchList[i].id + '">' + branchList[i].branchName + '</option>'
+    }
+    $(".deptObj").html(_html);
+}
 $(function () {
+    // 查询此医院下所有二级科室
+    ajaxRequest("GET", getSecondBranchList, "", false, false, true, getSecondBranchListSuccess, null, null);
+
+    // 获取上传签名
+    let getSignature = function (callback) {
+        ajaxRequest("POST", getSignatureUrl, "", false, false, true, callback, null, null);
+    };
+
     var videoInfo = null;// 上传视频信息
     var uploadCos;
     var uploadTaskId;
+
     function double(n) {
         return n < 10 ? '0' + n : n;
     }
-    // 查询此医院下所有二级科室
-    $.ajax({
-        type: 'POST',
-        url: IP + 'hospitalDept/selectAllDeptList',
-        dataType: 'json',
-        xhrFields: {
-            withCredentials: true
-        },
-        data: {
-            "hospitalId": localStorage.getItem("hospitalId"),
-        },
-        async: false,
-        crossDomain: true,
-        success: function (data) {
-            console.log(data)
-            if (data.status == 200) {
-                var _html = '<option value="">请选择</option>';
-                var tempArr = data.hospitalDeptsList;
-                for (var i = 0; i < tempArr.length; i++) {
-                    _html += '<option value="' + tempArr[i].hospitalDeptId + '">' + tempArr[i].deptName + '</option>'
-                }
-                $(".deptObj").html(_html);
-            } else {
-                layer.msg("获取科室列表失败");
-            }
-        },
-        error: function (err) {
-            console.log(err);
-        },
-    });
-    // 查询直播分类列表
-    $.ajax({
-        type: 'GET',
-        url: IP + 'videoClass/findList',
-        dataType: 'json',
-        xhrFields: {
-            withCredentials: true
-        },
-        async: false,
-        crossDomain: true,
-        success: function (data) {
-            console.log(data)
-            if (data.code == 1) {
-                var _html = '<option value="">请选择</option>';
-                var tempArr = data.data;
-                for (var i = 0; i < tempArr.length; i++) {
-                    _html += '<option value="' + tempArr[i].id + '">' + tempArr[i].videoClassName + '</option>'
-                }
-                $(".classifyObj").html(_html);
-            } else if (data.code == 250) {
-                // 未登录操作
-                window.location = '/yilaiyiwang/login/login.html';
-            } else {
-                // 其他操作
-            }
-        },
-        error: function (err) {
-            console.log(err);
-        },
-    });
-
-    // 获取上传签名
-    var getSignature = function (callback) {
-        $.ajax({
-            url: IP + 'signature/video/getSignature',
-            data: JSON.stringify({
-                "Action": "GetVodSignatureV2"
-            }),
-            type: 'POST',
-            dataType: 'json',
-            success: function (res) {
-                if (res.data && res.data.signature) {
-                    callback(res.data.signature);
-                } else {
-                    return '获取签名失败';
-                }
-            }
-        });
-    };
 
     // 协议选择
     $(".checkObj").click(function () {
@@ -168,46 +106,23 @@ $(function () {
             layer.msg("请等待视频上传完成")
         } else {
             var postData = new FormData();
-            postData.append("fileId", videoInfo.fileId);//视频id
-            postData.append("videoPath", videoInfo.videoUrl);//视频路径	
-            postData.append("classTitle", $(".titleInputObj").val());//课程标题		
-            postData.append("hospitalDeptId", $(".deptObj").val());//录课科室
+            postData.append("videoFileId", videoInfo.fileId);//视频id
+            postData.append("videoUrl", videoInfo.videoUrl);//视频路径
+            postData.append("videoName", $(".titleInputObj").val());//课程标题
+            postData.append("branchId", $(".deptObj").val());//录课科室
             postData.append("videoDescribe", $(".textAreaObj").html());//直播描述
-            postData.append("classId", $(".classifyObj").val());//课程分类id	
+            postData.append("videoType", $(".classifyObj").val());//课程分类id
+            function saveVideoSuccess(resultJson){
+                console.log(resultJson);
+                $(".videoTitleObj").html($(".titleInputObj").val());
+                $(".stepObj").hide().eq(2).show();
+                $(".stepBox > span").removeClass("active").eq(2).addClass("active");
+                // layer.msg("权限不足")
+                // layer.msg("请稍后重试")
+            }
             // 发布预告
-            $.ajax({
-                type: 'POST',
-                url: IP + 'video/addVideo',
-                dataType: 'json',
-                xhrFields: {
-                    withCredentials: true
-                },
-                data: postData,
-                crossDomain: true,
-                cache: false,
-                contentType: false,
-                processData: false,
-                dataType: "json",
-                success: function (data) {
-                    console.log(data)
-                    if (data.code == 1) {
-                        $(".videoTitleObj").html($(".titleInputObj").val());
-                        $(".stepObj").hide().eq(2).show();
-                        $(".stepBox > span").removeClass("active").eq(2).addClass("active");
-                    } else if (data.code == 250) {
-                        // 未登录操作
-                        window.location = '/yilaiyiwang/login/login.html';
-                    } else if (data.status == 251) {
-                        layer.msg("权限不足")
-                    } else {
-                        // 其他操作
-                        layer.msg("请稍后重试")
-                    }
-                },
-                error: function (err) {
-                    console.log(err);
-                },
-            });
+            ajaxRequest("POST",saveVideoUrl,postData,false,false,true,saveVideoSuccess,null,null);
+
         }
     })
 

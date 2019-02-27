@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.sicmed.remote.yunqiyun.bean.YqyLiveBean;
 import com.sicmed.remote.yunqiyun.entity.YqyLive;
 import com.sicmed.remote.yunqiyun.service.YqyLiveService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ import java.util.Map;
  * @author: Xue0601
  * @create: 2018-12-18 11:53
  **/
+@Slf4j
 @RestController
 @RequestMapping(value = "/api/conference/")
 public class CallbackController {
@@ -40,6 +42,10 @@ public class CallbackController {
             //解析json数据
             JSONObject json = JSON.parseObject(obj);
             System.out.println("会议存储路径为:"+json.get("filePath"));
+            log.debug("================================================================");
+            log.debug("appointmentId="+appointmentId);
+            log.debug("obj="+obj);
+            log.debug("================================================================");
             //TODO 未把视频路径存到本地
             map.put("code",200);
             map.put("msg","SUCCESS");
