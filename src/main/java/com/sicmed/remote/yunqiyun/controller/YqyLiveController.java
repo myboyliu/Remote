@@ -1,12 +1,13 @@
-package com.sicmed.remote.web.controller;
+package com.sicmed.remote.yunqiyun.controller;
 
 import com.sicmed.remote.common.Constant;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
-import com.sicmed.remote.web.bean.LiveInfoBean;
-import com.sicmed.remote.web.bean.YqyLiveBean;
+import com.sicmed.remote.web.controller.BaseController;
+import com.sicmed.remote.yunqiyun.bean.LiveInfoBean;
+import com.sicmed.remote.yunqiyun.bean.YqyLiveBean;
 import com.sicmed.remote.web.entity.UserDetail;
-import com.sicmed.remote.web.entity.YqyLive;
-import com.sicmed.remote.web.service.YqyLiveService;
+import com.sicmed.remote.yunqiyun.entity.YqyLive;
+import com.sicmed.remote.yunqiyun.service.YqyLiveService;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;

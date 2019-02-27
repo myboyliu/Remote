@@ -1,4 +1,4 @@
-package com.sicmed.remote.web.bean;
+package com.sicmed.remote.yunqiyun.bean;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;

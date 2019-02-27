@@ -1,8 +1,8 @@
-package com.sicmed.remote.web.mapper;
+package com.sicmed.remote.yunqiyun.mapper;
 
-import com.sicmed.remote.web.bean.LiveInfoBean;
-import com.sicmed.remote.web.bean.YqyLiveBean;
-import com.sicmed.remote.web.entity.YqyLive;
+import com.sicmed.remote.yunqiyun.bean.LiveInfoBean;
+import com.sicmed.remote.yunqiyun.bean.YqyLiveBean;
+import com.sicmed.remote.yunqiyun.entity.YqyLive;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -40,4 +40,6 @@ public interface YqyLiveMapper {
     List<YqyLiveBean> searchAnnouncementHot(YqyLive yqyLive);
 
     int setDefaultCover(YqyLive yqyLive);
+
+    YqyLiveBean getLiveByRoomId(String appointmentId);
 }
