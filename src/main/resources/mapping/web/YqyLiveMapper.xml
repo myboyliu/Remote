@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sicmed.remote.web.mapper.YqyLiveMapper" >
-  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.YqyLive" >
+<mapper namespace="com.sicmed.remote.yunqiyun.mapper.YqyLiveMapper" >
+  <resultMap id="BaseResultMap" type="com.sicmed.remote.yunqiyun.entity.YqyLive" >
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="live_name" property="liveName" jdbcType="VARCHAR" />
     <result column="admin_url" property="adminUrl" jdbcType="VARCHAR" />
@@ -37,14 +37,14 @@
   </select>
 
   <!-- 设置默认封面 -->
-  <update id="setDefaultCover" parameterType="com.sicmed.remote.web.bean.YqyLiveBean" >
+  <update id="setDefaultCover" parameterType="com.sicmed.remote.yunqiyun.bean.YqyLiveBean" >
     update yqy_live
     set live_cover_url = #{liveCoverUrl,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
   <!-- 模糊查询直播总数量 -->
-  <select id="searchAnnouncementSize" resultType="java.lang.Integer" parameterType="com.sicmed.remote.web.bean.YqyLiveBean" >
+  <select id="searchAnnouncementSize" resultType="java.lang.Integer" parameterType="com.sicmed.remote.yunqiyun.bean.YqyLiveBean" >
     select
     count(id) num
     from yqy_live
@@ -54,7 +54,7 @@
   </select>
 
   <!-- 模糊搜索直播 根据热度排序-->
-  <select id="searchAnnouncementHot" resultMap="MyLiveBroadcastMap" parameterType="com.sicmed.remote.web.bean.YqyLiveBean" >
+  <select id="searchAnnouncementHot" resultMap="MyLiveBroadcastMap" parameterType="com.sicmed.remote.yunqiyun.bean.YqyLiveBean" >
     select
     <include refid="MyLiveBroadcast_List" />
     from yqy_live yqyLive
@@ -67,7 +67,7 @@
   </select>
 
   <!-- 模糊搜索直播 根据开始时间排序-->
-  <select id="searchAnnouncementNew" resultMap="MyLiveBroadcastMap" parameterType="com.sicmed.remote.web.bean.YqyLiveBean" >
+  <select id="searchAnnouncementNew" resultMap="MyLiveBroadcastMap" parameterType="com.sicmed.remote.yunqiyun.bean.YqyLiveBean" >
     select
     <include refid="MyLiveBroadcast_List" />
     from yqy_live yqyLive
@@ -80,7 +80,7 @@
   </select>
 
   <!-- 查询直播信息 -->
-  <resultMap id="LiveInfoMap" type="com.sicmed.remote.web.bean.LiveInfoBean" >
+  <resultMap id="LiveInfoMap" type="com.sicmed.remote.yunqiyun.bean.LiveInfoBean" >
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="live_user_id" property="username" jdbcType="VARCHAR" />
     <result column="admin_url" property="adminUrl" jdbcType="VARCHAR" />
@@ -97,8 +97,16 @@
     where id = #{id,jdbcType=VARCHAR}
   </select>
 
+
+  <select id="getLiveByRoomId" resultMap="MyLiveBroadcastMap" parameterType="java.lang.String" >
+    select
+    <include refid="LiveInfo_List"/>
+    from yqy_live
+    where live_room_id = #{id,jdbcType=VARCHAR}
+  </select>
+
   <!-- 查询自己发出的预告-->
-  <resultMap id="MyLiveBroadcastMap" type="com.sicmed.remote.web.bean.YqyLiveBean" >
+  <resultMap id="MyLiveBroadcastMap" type="com.sicmed.remote.yunqiyun.bean.YqyLiveBean" >
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="live_name" property="liveName" jdbcType="VARCHAR" />
     <result column="hospitalName" property="hospitalName" jdbcType="VARCHAR" />
@@ -119,14 +127,14 @@
   </sql>
 
   <!-- 查询我发出的直播数量 -->
-  <select id="findMyAnnouncementListSize" resultType="java.lang.Integer" parameterType="com.sicmed.remote.web.entity.YqyLive">
+  <select id="findMyAnnouncementListSize" resultType="java.lang.Integer" parameterType="com.sicmed.remote.yunqiyun.entity.YqyLive">
     SELECT
       count(id) num
     FROM yqy_live
     WHERE live_user_id = #{liveUserId,jdbcType=VARCHAR} AND del_flag = #{delFlag,jdbcType=VARCHAR}
   </select>
   <!-- 查询我发出的直播列表 -->
-  <select id="findMyAnnouncementList" resultMap="MyLiveBroadcastMap" parameterType="com.sicmed.remote.web.entity.YqyLive" >
+  <select id="findMyAnnouncementList" resultMap="MyLiveBroadcastMap" parameterType="com.sicmed.remote.yunqiyun.entity.YqyLive" >
     select
     <include refid="MyLiveBroadcast_List" />
     from yqy_live yqyLive
@@ -138,7 +146,7 @@
   </select>
 
   <!-- 根据直播类型查询未结束直播(根据最新排序) -->
-  <select id="findAnnouncementByTypeNew" resultMap="MyLiveBroadcastMap" parameterType="com.sicmed.remote.web.entity.YqyLive" >
+  <select id="findAnnouncementByTypeNew" resultMap="MyLiveBroadcastMap" parameterType="com.sicmed.remote.yunqiyun.entity.YqyLive" >
     select
     <include refid="MyLiveBroadcast_List" />
     from yqy_live yqyLive
@@ -155,7 +163,7 @@
   </select>
 
   <!-- 根据直播类型查询未结束直播(根据热度排序) -->
-  <select id="findAnnouncementByTypeFollow" resultMap="MyLiveBroadcastMap" parameterType="com.sicmed.remote.web.entity.YqyLive" >
+  <select id="findAnnouncementByTypeFollow" resultMap="MyLiveBroadcastMap" parameterType="com.sicmed.remote.yunqiyun.entity.YqyLive" >
     select
     <include refid="MyLiveBroadcast_List" />
     from yqy_live yqyLive
@@ -172,7 +180,7 @@
   </select>
 
   <!-- 根据类型查询直播列表数量 -->
-  <select id="findAnnouncementByTypeSize" resultType="java.lang.Integer" parameterType="com.sicmed.remote.web.entity.YqyLive" >
+  <select id="findAnnouncementByTypeSize" resultType="java.lang.Integer" parameterType="com.sicmed.remote.yunqiyun.entity.YqyLive" >
     select
     count(id) num
     from yqy_live
@@ -190,7 +198,7 @@
     delete from yqy_live
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sicmed.remote.web.entity.YqyLive" >
+  <insert id="insert" parameterType="com.sicmed.remote.yunqiyun.entity.YqyLive" >
     insert into yqy_live (id, live_name, admin_url, 
       admin_pwd, live_room_id, dept_id, 
       live_url, live_describe, live_start_time, 
@@ -208,7 +216,7 @@
       #{deleteUser,jdbcType=VARCHAR}, #{deleteTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=CHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.YqyLive" >
+  <insert id="insertSelective" parameterType="com.sicmed.remote.yunqiyun.entity.YqyLive" >
     <selectKey keyProperty="id" resultType="java.lang.String"
                order="BEFORE">
       select replace(uuid(),'-','') from dual
@@ -345,7 +353,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.YqyLive" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.yunqiyun.entity.YqyLive" >
     update yqy_live
     <set >
       <if test="liveName != null" >
@@ -411,7 +419,7 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.YqyLive" >
+  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.yunqiyun.entity.YqyLive" >
     update yqy_live
     set live_name = #{liveName,jdbcType=VARCHAR},
       admin_url = #{adminUrl,jdbcType=VARCHAR},
