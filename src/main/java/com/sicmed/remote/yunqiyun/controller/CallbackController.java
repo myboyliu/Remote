@@ -31,7 +31,7 @@ public class CallbackController {
      * @return
      */
     @PutMapping(value = "{appointmentId}/synchFile")
-    public Object VideoAddress(@PathVariable String appointmentId,@RequestBody(required = false) String obj) {
+    public Object VideoAddress(@PathVariable String appointmentId,@RequestBody String obj) {
         Map map = new HashMap();
         YqyLiveBean yqyLiveBean = yqyLiveService.getLiveByRoomId(appointmentId);
         if (yqyLiveBean!=null){
