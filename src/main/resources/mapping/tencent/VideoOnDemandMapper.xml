@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sicmed.remote.tencent.mapper.VideoOnDemandMapper">
+    <resultMap id="BaseResultMap" type="com.sicmed.remote.tencent.entity.VideoOnDemand">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="video_name" jdbcType="VARCHAR" property="videoName"/>
+        <result column="video_type" jdbcType="VARCHAR" property="videoType"/>
+        <result column="video_describe" jdbcType="VARCHAR" property="videoDescribe"/>
+        <result column="video_url" jdbcType="VARCHAR" property="videoUrl"/>
+        <result column="video_cover_url" jdbcType="VARCHAR" property="videoCoverUrl"/>
+        <result column="upload_time" jdbcType="TIMESTAMP" property="uploadTime"/>
+        <result column="upload_user" jdbcType="VARCHAR" property="uploadUser"/>
+        <result column="playback" jdbcType="INTEGER" property="playback"/>
+        <result column="dept_id" jdbcType="VARCHAR" property="deptId"/>
+        <result column="trans_code" jdbcType="CHAR" property="transCode"/>
+        <result column="video_file_id" jdbcType="VARCHAR" property="videoFileId"/>
+        <result column="time_long" jdbcType="VARCHAR" property="timeLong"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="delete_user" jdbcType="VARCHAR" property="deleteUser"/>
+        <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime"/>
+        <result column="del_flag" jdbcType="CHAR" property="delFlag"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, video_name, video_type, video_describe, video_url, video_cover_url, upload_time, 
+    upload_user, playback, dept_id, trans_code, video_file_id, time_long, create_user, 
+    create_time, update_user, update_time, delete_user, delete_time, del_flag
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from video_on_demand
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from video_on_demand
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.sicmed.remote.tencent.entity.VideoOnDemand">
+    insert into video_on_demand (id, video_name, video_type, 
+      video_describe, video_url, video_cover_url, 
+      upload_time, upload_user, playback, 
+      dept_id, trans_code, video_file_id, 
+      time_long, create_user, create_time, 
+      update_user, update_time, delete_user, 
+      delete_time, del_flag)
+    values (#{id,jdbcType=VARCHAR}, #{videoName,jdbcType=VARCHAR}, #{videoType,jdbcType=VARCHAR}, 
+      #{videoDescribe,jdbcType=VARCHAR}, #{videoUrl,jdbcType=VARCHAR}, #{videoCoverUrl,jdbcType=VARCHAR}, 
+      #{uploadTime,jdbcType=TIMESTAMP}, #{uploadUser,jdbcType=VARCHAR}, #{playback,jdbcType=INTEGER}, 
+      #{deptId,jdbcType=VARCHAR}, #{transCode,jdbcType=CHAR}, #{videoFileId,jdbcType=VARCHAR}, 
+      #{timeLong,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR}, 
+      #{deleteTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=CHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.sicmed.remote.tencent.entity.VideoOnDemand">
+        insert into video_on_demand
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="videoName != null">
+                video_name,
+            </if>
+            <if test="videoType != null">
+                video_type,
+            </if>
+            <if test="videoDescribe != null">
+                video_describe,
+            </if>
+            <if test="videoUrl != null">
+                video_url,
+            </if>
+            <if test="videoCoverUrl != null">
+                video_cover_url,
+            </if>
+            <if test="uploadTime != null">
+                upload_time,
+            </if>
+            <if test="uploadUser != null">
+                upload_user,
+            </if>
+            <if test="playback != null">
+                playback,
+            </if>
+            <if test="deptId != null">
+                dept_id,
+            </if>
+            <if test="transCode != null">
+                trans_code,
+            </if>
+            <if test="videoFileId != null">
+                video_file_id,
+            </if>
+            <if test="timeLong != null">
+                time_long,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteUser != null">
+                delete_user,
+            </if>
+            <if test="deleteTime != null">
+                delete_time,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="videoName != null">
+                #{videoName,jdbcType=VARCHAR},
+            </if>
+            <if test="videoType != null">
+                #{videoType,jdbcType=VARCHAR},
+            </if>
+            <if test="videoDescribe != null">
+                #{videoDescribe,jdbcType=VARCHAR},
+            </if>
+            <if test="videoUrl != null">
+                #{videoUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="videoCoverUrl != null">
+                #{videoCoverUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadTime != null">
+                #{uploadTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="uploadUser != null">
+                #{uploadUser,jdbcType=VARCHAR},
+            </if>
+            <if test="playback != null">
+                #{playback,jdbcType=INTEGER},
+            </if>
+            <if test="deptId != null">
+                #{deptId,jdbcType=VARCHAR},
+            </if>
+            <if test="transCode != null">
+                #{transCode,jdbcType=CHAR},
+            </if>
+            <if test="videoFileId != null">
+                #{videoFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="timeLong != null">
+                #{timeLong,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=CHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.tencent.entity.VideoOnDemand">
+        update video_on_demand
+        <set>
+            <if test="videoName != null">
+                video_name = #{videoName,jdbcType=VARCHAR},
+            </if>
+            <if test="videoType != null">
+                video_type = #{videoType,jdbcType=VARCHAR},
+            </if>
+            <if test="videoDescribe != null">
+                video_describe = #{videoDescribe,jdbcType=VARCHAR},
+            </if>
+            <if test="videoUrl != null">
+                video_url = #{videoUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="videoCoverUrl != null">
+                video_cover_url = #{videoCoverUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="uploadTime != null">
+                upload_time = #{uploadTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="uploadUser != null">
+                upload_user = #{uploadUser,jdbcType=VARCHAR},
+            </if>
+            <if test="playback != null">
+                playback = #{playback,jdbcType=INTEGER},
+            </if>
+            <if test="deptId != null">
+                dept_id = #{deptId,jdbcType=VARCHAR},
+            </if>
+            <if test="transCode != null">
+                trans_code = #{transCode,jdbcType=CHAR},
+            </if>
+            <if test="videoFileId != null">
+                video_file_id = #{videoFileId,jdbcType=VARCHAR},
+            </if>
+            <if test="timeLong != null">
+                time_long = #{timeLong,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                delete_user = #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=CHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <select id="fuzzyVideoListCountByParam" parameterType="com.sicmed.remote.tencent.bean.FuzzySearchVideoBean"
+            resultType="java.lang.Integer">
+        select
+        count(id) num
+        from video_on_demand
+        <where>
+            video_name LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%')
+            AND del_flag = '0'
+            AND trans_code = '1'
+        </where>
+    </select>
+    <select id="fuzzyVideoListByParam" parameterType="com.sicmed.remote.tencent.bean.FuzzySearchVideoBean"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from video_on_demand
+        <where>
+            video_name LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%')
+            AND del_flag = '0'
+            AND trans_code = '1'
+        </where>
+    </select>
+</mapper>
