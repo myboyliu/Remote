@@ -322,6 +322,7 @@
         </set>
         where video_file_id = #{videoFileId,jdbcType=VARCHAR}
     </update>
+
     <!--  迷糊查询视频列表  -->
     <select id="fuzzyVideoListCountByParam" parameterType="com.sicmed.remote.tencent.bean.FuzzySearchVideoBean"
             resultType="java.lang.Integer">
@@ -341,14 +342,16 @@
         <result column="videoCoverUrl" jdbcType="VARCHAR" property="videoCoverUrl"/>
         <result column="videoFileId" jdbcType="VARCHAR" property="videoFileId"/>
         <result column="playback" jdbcType="VARCHAR" property="playback"/>
+        <result column="transCode" jdbcType="VARCHAR" property="transCode"/>
+        <result column="uploadTime" jdbcType="VARCHAR" property="uploadTime"/>
         <result column="hospitalName" jdbcType="VARCHAR" property="hospitalName"/>
         <result column="branchName" jdbcType="VARCHAR" property="branchName"/>
     </resultMap>
     <select id="fuzzyVideoListByParam" parameterType="com.sicmed.remote.tencent.bean.FuzzySearchVideoBean"
             resultMap="VideoListResultMap">
         select
-        vod.id vodId,vod.video_name videoName,vod.video_describe videoDescribe, vod.video_file_id videoFileId
-        ,vod.video_cover_url videoCoverUrl,vod.playback playback,
+        vod.id vodId,vod.video_name videoName,vod.video_describe videoDescribe, vod.video_file_id videoFileId,
+        vod.video_cover_url videoCoverUrl,vod.playback playback,
         hospital.hospital_name hospitalName,
         branch.branch_name branchName
         from video_on_demand vod
@@ -379,8 +382,8 @@
     <select id="getVideoListByParam" parameterType="com.sicmed.remote.tencent.bean.SelectVideoListParamBean"
             resultMap="VideoListResultMap">
         select
-        vod.id vodId,vod.video_name videoName,vod.video_describe videoDescribe, vod.video_file_id videoFileId
-        ,vod.video_cover_url videoCoverUrl,vod.playback playback,
+        vod.id vodId,vod.video_name videoName,vod.video_describe videoDescribe, vod.video_file_id videoFileId,
+        vod.video_cover_url videoCoverUrl,vod.playback playback,
         hospital.hospital_name hospitalName,
         branch.branch_name branchName
         from video_on_demand vod
@@ -411,4 +414,41 @@
             id = #{id,jdbcType=VARCHAR}
         </where>
     </update>
+
+    <select id="getVideoListCountByUser" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select
+        count(id) num
+        from video_on_demand
+        <where>
+            del_flag = '0'
+            AND create_user = #{createUser,jdbcType=VARCHAR}
+        </where>
+    </select>
+
+
+    <select id="getVideoListByUser" parameterType="com.sicmed.remote.tencent.entity.VideoOnDemand"
+            resultMap="VideoListResultMap">
+        select
+        vod.id vodId,vod.video_name videoName,vod.video_describe videoDescribe, vod.video_file_id videoFileId,
+        vod.video_cover_url videoCoverUrl,vod.playback playback,vod.trans_code transCode,vod.upload_time uploadTime,
+        hospital.hospital_name hospitalName,
+        branch.branch_name branchName
+        from video_on_demand vod
+        LEFT JOIN base_hospital hospital ON hospital.id = vod.hospital_id
+        LEFT JOIN base_branch branch ON branch.id = vod.branch_id
+        <where>
+            vod.del_flag = '0'
+            AND vod.create_user = #{createUser,jdbcType=VARCHAR}
+        </where>
+        order by vod.create_time DESC
+        limit #{beginNo,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteVideoByParam" parameterType="com.sicmed.remote.tencent.entity.VideoOnDemand">
+        delete from video_on_demand
+        where id = #{id,jdbcType=VARCHAR}
+        AND create_user = #{createUser,jdbcType=VARCHAR}
+        AND video_file_id = #{videoFileId,jdbcType=VARCHAR}
+    </delete>
 </mapper>

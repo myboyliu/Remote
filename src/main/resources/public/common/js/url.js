@@ -214,6 +214,9 @@ const fuzzySearchVideoListCount = "/vod/fuzzySearchVideoListCount"
 const fuzzySearchVideoList = "/vod/fuzzySearchVideoList"
 const getVideoListCountUrl = "/vod/getVideoListCount"
 const getVideoListUrl = "/vod/getVideoList"
+const getVideoListCountByUserUrl = "/vod/getVideoListCountByUser"
+const getVideoListByUserUrl = "/vod/getVideoListByUser"
+const removeVideoByUserUrl = "/vod/removeVideoByUser"
 
 
 const getSignatureUrl = "/signature/video/getSignature"

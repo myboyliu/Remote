@@ -25,7 +25,7 @@ public class VideoOnDemandController extends BaseController {
     private VideoOnDemandService videoOnDemandService;
 
     /**
-     * 根据视频类型 查询 视频列表
+     * 根据视频类型 查询 视频列表数量
      *
      * @param selectVideoListParamBean
      * @return
@@ -108,6 +108,53 @@ public class VideoOnDemandController extends BaseController {
         videoOnDemandService.addClickCount(videoId);
 
         return succeedRequest("SUCCESS");
+
+    }
+
+    /**
+     * 点播视频管理功能接口
+     */
+
+    /**
+     * 根据视频创建者 查询 视频列表数量
+     *
+     * @param
+     * @return
+     */
+    @GetMapping(value = "getVideoListCountByUser")
+    public Object getVideoListCountByUser() {
+
+        int count = videoOnDemandService.getVideoListCountByUser(getRequestToken());
+
+        return succeedRequest(count);
+
+    }
+
+    /**
+     * 根据视频创建者 查询 视频列表
+     *
+     * @param
+     * @return
+     */
+    @GetMapping(value = "getVideoListByUser")
+    public Object getVideoListByUser() {
+        VideoOnDemand videoOnDemand = new VideoOnDemand();
+        videoOnDemand.setCreateUser(getRequestToken());
+        List<VideoListBean> videoOnDemandList = videoOnDemandService.getVideoListByUser(videoOnDemand);
+
+        return succeedRequest(videoOnDemandList);
+
+    }
+
+    @GetMapping(value = "removeVideoByUser")
+    public Object removeVideoByUser(VideoOnDemand videoOnDemand) throws Exception {
+        videoOnDemand.setCreateUser(getRequestToken());
+        int i = videoOnDemandService.deleteVideoByParam(videoOnDemand);
+        if (i > 0) {
+            VideoOnDemandUtils.deleteVodFile(videoOnDemand.getVideoFileId());
+            return succeedRequest("SUCCESS");
+        }
+        return badRequestOfArguments("FAILED");
 
     }
 }

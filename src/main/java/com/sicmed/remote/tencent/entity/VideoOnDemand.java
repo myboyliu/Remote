@@ -1,12 +1,13 @@
 package com.sicmed.remote.tencent.entity;
 
+import com.sicmed.remote.web.entity.PageEntity;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class VideoOnDemand implements Serializable {
+public class VideoOnDemand extends PageEntity implements Serializable {
 
     private String id;
 

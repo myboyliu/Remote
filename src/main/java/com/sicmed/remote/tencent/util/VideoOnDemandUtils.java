@@ -44,4 +44,22 @@ public class VideoOnDemandUtils {
         }
     }
 
+    /**
+     * 删除视频
+     * @param fileId
+     * @throws Exception
+     */
+    public static void deleteVodFile(String fileId) throws Exception{
+        String action = "DeleteVodFile";
+        String Region = "gz";
+        long timestamp = System.currentTimeMillis() / 1000;   //当前UNIX时间戳
+        int Nonce = new Random().nextInt(Integer.MAX_VALUE);       //随机正整数
+        String param = "Action=" + action + "&Nonce=" + Nonce + "&Region=" + Region + "&SecretId=" + Constant.SECRETID + "&Timestamp=" + timestamp + "&fileId=" + fileId + "&priority=1";
+        String url = "GETvod.api.qcloud.com/v2/index.php?" + param;
+        SignatureUtils signatures = new SignatureUtils();
+        String signature = signatures.hmacSHA1(url, Constant.PRIVATEKEY);
+        signature = java.net.URLEncoder.encode(signature, "utf8");
+        HttpConnectionUtils.get("https://vod.api.qcloud.com/v2/index.php", "Action=" + action + "&Region=" + Region + "&Timestamp=" + timestamp + "&Nonce=" + Nonce + "&SecretId=" + Constant.SECRETID + "&fileId=" + fileId + "&priority=1" + "&Signature=" + signature);
+    }
+
 }

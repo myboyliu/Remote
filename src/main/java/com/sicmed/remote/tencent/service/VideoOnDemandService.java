@@ -83,4 +83,16 @@ public class VideoOnDemandService implements BaseService<VideoOnDemand> {
     public int addClickCount(String videoId) {
         return videoOnDemandMapper.addClickCount(videoId);
     }
+
+    public int getVideoListCountByUser(String requestToken) {
+        return videoOnDemandMapper.getVideoListCountByUser(requestToken);
+    }
+
+    public List<VideoListBean> getVideoListByUser(VideoOnDemand videoOnDemand) {
+        return videoOnDemandMapper.getVideoListByUser(videoOnDemand);
+    }
+
+    public int deleteVideoByParam(VideoOnDemand videoOnDemand) {
+        return videoOnDemandMapper.deleteVideoByParam(videoOnDemand);
+    }
 }
