@@ -3,7 +3,6 @@ package com.sicmed.remote.tencent.mapper;
 import com.sicmed.remote.tencent.bean.FuzzySearchVideoBean;
 import com.sicmed.remote.tencent.bean.SelectVideoListParamBean;
 import com.sicmed.remote.tencent.bean.VideoListBean;
-import com.sicmed.remote.tencent.entity.TencentVideo;
 import com.sicmed.remote.tencent.entity.VideoOnDemand;
 import org.apache.ibatis.annotations.Param;
 

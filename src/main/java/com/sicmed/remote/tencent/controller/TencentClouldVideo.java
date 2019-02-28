@@ -48,19 +48,4 @@ public class TencentClouldVideo extends BaseController {
             return null;
         }
     }
-
-    public static void main(String[] args) {
-        //当前时间戳精确到毫秒
-        long timestamp = (System.currentTimeMillis() / 1000);
-        System.out.println(timestamp);
-
-        //将其转换为十六进制并输出
-        String strHex = Integer.toHexString((int) timestamp);
-        System.out.println(strHex);
-
-        //腾讯云key防盗链获取sign
-        //生成规则 sign = md5(KEY + Dir + t + exper + rlimit + us)
-        //key 腾讯云管理平台生成, dir 文件源存储路径 t 时间戳精确到秒 exper 是看时间 rlimit 同时观看最大人数 us 随机数
-        System.out.println(md5("UvxKt2I71n80ulh2dIZg/d3387d33vodcq1257546586/fafd38775285890784376686033/"+strHex+"72d4cd1101"));
-    }
 }

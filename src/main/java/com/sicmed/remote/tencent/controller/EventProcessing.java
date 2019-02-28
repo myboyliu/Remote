@@ -1,10 +1,6 @@
 package com.sicmed.remote.tencent.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.sicmed.remote.tencent.entity.TencentVideo;
-import com.sicmed.remote.tencent.service.TencentVideoService;
 import com.sicmed.remote.tencent.service.VideoOnDemandService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,34 +48,4 @@ public class EventProcessing {
             }
         }
     }
-
-    //删除事件
-//    public static void main(String[] args) {
-//        String a = "{\"data\":{\"fileInfo\":[{\"fileId\":\"5285890782778373724\"}],\"message\":\"\",\"status\":0},\"eventType\":\"FileDeleted\",\"version\":\"4.0\"}";
-//        System.out.println(JSON.parse(a.toString()));
-//        Map <String, Object> map = (Map) JSON.parse(a.toString());
-//        System.out.println("version=" + map.get("version"));
-//        System.out.println("eventType=" + map.get("eventType"));
-////        System.out.println("data="+map.get("data").toString());
-//        Map <String, Object> map1 = (Map) JSON.parse(map.get("data").toString());
-//        JSONArray jsonArray = JSONArray.parseArray(map1.get("fileInfo").toString());
-//        if (jsonArray.size() > 0) {
-//            for (int i = 0; i < jsonArray.size(); i++) {
-//                JSONObject doctor = jsonArray.getJSONObject(i);
-//                System.out.println("fileId=" + doctor.get("fileId"));
-//            }
-//        }
-//    }
-
-//    //上传事件
-//    public static void main(String[] args) {
-//        String str = "{\"version\":\"4.0\",\"eventType\":\"NewFileUpload\",\"data\":{\"status\":0,\"message\":\"\",\"vodTaskId\":\"\",\"fileId\":\"5285890782840573784\",\"fileUrl\":\"http://1257546586.vod2.myqcloud.com/d3387d33vodcq1257546586/a44a98395285890782840573784/hy7mALpmTWAA.mp4\",\"fileName\":\"test\",\"continued\":0,\"author\":\"\",\"sourceType\":\"ClientUpload\",\"sourceContext\":\"\",\"metaData\":{\"audioDuration\":8.034104347229004,\"audioStreamList\":[{\"bitrate\":131080,\"codec\":\"aac\",\"samplingRate\":44100}],\"bitrate\":1171634,\"container\":\"mov,mp4,m4a,3gp,3g2,mj2\",\"duration\":8,\"floatDuration\":8.034104347229004,\"height\":544,\"md5\":\"\",\"rotate\":0,\"size\":1177451,\"totalSize\":1177451,\"videoDuration\":8,\"videoStreamList\":[{\"bitrate\":1040554,\"codec\":\"h264\",\"fps\":25,\"height\":544,\"width\":960}],\"width\":960}}}";
-//        Map <String, Object> map = (Map) JSON.parse(str.toString());
-//        System.out.println(map.get("eventType").toString());
-//        if ("NewFileUpload".equals(map.get("eventType").toString())) {
-//            System.out.println("这是上传事件");
-//        }
-//    }
-
-
 }
