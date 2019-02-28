@@ -54,7 +54,7 @@ public class VideoOnDemandService implements BaseService<VideoOnDemand> {
 
     @Override
     public int updateByPrimaryKeySelective(VideoOnDemand videoOnDemand) {
-        return 0;
+        return videoOnDemandMapper.updateByPrimaryKeySelective(videoOnDemand);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class VideoOnDemandService implements BaseService<VideoOnDemand> {
 
     @Override
     public VideoOnDemand getByPrimaryKey(String id) {
-        return null;
+        return videoOnDemandMapper.selectByPrimaryKey(id);
     }
 
     @Override

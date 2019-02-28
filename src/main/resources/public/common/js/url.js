@@ -217,6 +217,8 @@ const getVideoListUrl = "/vod/getVideoList"
 const getVideoListCountByUserUrl = "/vod/getVideoListCountByUser"
 const getVideoListByUserUrl = "/vod/getVideoListByUser"
 const removeVideoByUserUrl = "/vod/removeVideoByUser"
+const getVideoInfoUrl = "/vod/getVideoInfo"
+const updateVideoInfoUrl = "/vod/updateVideo"
 
 
 const getSignatureUrl = "/signature/video/getSignature"

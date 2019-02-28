@@ -48,7 +48,7 @@ public class SignatureUtils {
         return hash;
     }
 
-    public String hmacSHA1(String data, String key) {
+    public static String hmacSHA1(String data, String key) {
         String result = null;
         try {
             //根据给定的字节数组构造一个密钥,第二参数指定一个密钥算法的名称

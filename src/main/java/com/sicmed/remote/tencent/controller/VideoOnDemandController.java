@@ -146,6 +146,13 @@ public class VideoOnDemandController extends BaseController {
 
     }
 
+    /**
+     * 删除 一条点播视频
+     *
+     * @param videoOnDemand
+     * @return
+     * @throws Exception
+     */
     @GetMapping(value = "removeVideoByUser")
     public Object removeVideoByUser(VideoOnDemand videoOnDemand) throws Exception {
         videoOnDemand.setCreateUser(getRequestToken());
@@ -156,5 +163,35 @@ public class VideoOnDemandController extends BaseController {
         }
         return badRequestOfArguments("FAILED");
 
+    }
+
+    /**
+     * 根据ID 查询 一条点播视频信息
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "getVideoInfo")
+    public Object removeVideoByUser(String id) {
+
+        VideoOnDemand videoOnDemand = videoOnDemandService.getByPrimaryKey(id);
+
+        return succeedRequest(videoOnDemand);
+
+    }
+
+
+    @PostMapping(value = "updateVideo")
+    public Object updateVideo(VideoOnDemand videoOnDemand, String coverData) {
+
+        if (coverData != null) {
+            String result = VideoOnDemandUtils.modifyMediaInfo(videoOnDemand.getVideoFileId(), coverData);
+            if ("FAILURE".equals(result)) {
+                return badRequestOfArguments("操作失败!");
+            }
+            videoOnDemand.setVideoCoverUrl(result);
+        }
+        int i = videoOnDemandService.updateByPrimaryKeySelective(videoOnDemand);
+        return i == 1 ? succeedRequest("操作成功!") : badRequestOfArguments("操作失败!");
     }
 }

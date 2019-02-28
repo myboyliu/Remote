@@ -35,7 +35,6 @@ function renderVideoList(videoList) {
 }
 
 function getVideoListCountByUserSuccess(videoListCount) {
-    console.log(videoListCount);
     if (videoListCount === 0) {
         let _html = "";
         _html = '<p style="text-align: center; margin-top: 50px;">暂无数据</p>'
@@ -87,7 +86,7 @@ $(function () {
     })
     // 编辑事件
     $(".videoList").delegate(".editBtn", "click", function () {
-        window.location = '/video/edit.html?' + $(this).parents(".videoItem").attr("name")
+        window.location = '/video/edit.html?' + $(this).parents(".videoItem").attr("id")
     })
 
     // 发布点播按钮
