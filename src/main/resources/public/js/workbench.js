@@ -642,7 +642,7 @@ $(function () {
             success: function (data) {
                 console.log(data)
                 if (data.status == 200) {
-                    sessionStorage.setItem('data', JSON.stringify(data));
+                    localStorage.setItem('data', JSON.stringify(data));
                     if (type == 0) {
                         // 会诊医政 受邀列表
                         if (data.orderFormBean.statesName == "首诊待审核") {

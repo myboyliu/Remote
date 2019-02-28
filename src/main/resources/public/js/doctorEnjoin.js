@@ -727,7 +727,7 @@ function submitReportEnjoin(doctorEnjoinJson) {
 
 /** 查询会诊报告 + 医嘱 */
 function getReportEnjoin() {
-    applyFormId = sessionStorage.getItem('applyFormId');
+    applyFormId = localStorage.getItem('applyFormId');
     let formData = {"applyFormId": applyFormId};
     ajaxRequest("GET", selectReport, formData, true, "application/json", false, selectReportSuccess, null, null);
 
@@ -738,7 +738,7 @@ function getReportEnjoin() {
 }
 /** 查询会诊报告 + 医嘱 */
 function getCheckReportEnjoin() {
-    applyFormId = sessionStorage.getItem('applyFormId');
+    applyFormId = localStorage.getItem('applyFormId');
     let formData = {"applyFormId": applyFormId};
     ajaxRequest("GET", selectReport, formData, true, "application/json", false, selectReportSuccess, null, null);
 

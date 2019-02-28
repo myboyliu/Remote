@@ -133,7 +133,7 @@ function renderDoctorList(data) {
                             <p class="p4">选择此项,申请将发送至对方医院远程中心,由医务人员为您调度医生资源,诊费会在选定医生后确定。<br />请将您的备注信息填至【会/转诊目的】 </p>\
                         </div>\
                     </li>';
-    let currentUserId = sessionStorage.getItem('token');
+    let currentUserId = localStorage.getItem('token');
     for (let i = 0; i < data.length; i++) {
         if (currentUserId === data[i].id) {
             continue;
@@ -470,7 +470,7 @@ function createDraftApplyData(caseId, caseSummary) {
             time: 2000,
             content: _$('.storage'),
         });
-        sessionStorage.setItem('draftId', result.id);
+        localStorage.setItem('draftId', result.id);
         location.href = "../page/createCase.html?isDraft";
     }
 }
@@ -528,7 +528,7 @@ function createPictureApplyData(caseId, caseSummary) {
 
     function createPictureApplySuccess(result) {
 
-        sessionStorage.setItem('sendOrderData', JSON.stringify(result));
+        localStorage.setItem('sendOrderData', JSON.stringify(result));
 
         window.location = '../page/sendSuccess.html';
     }
@@ -588,7 +588,7 @@ function createVideoApplyData(caseId, caseSummary) {
     ajaxRequest("POST", createVideoApplyUrl, data, false, false, true, createVideoApplySuccess, requestField, null);
 
     function createVideoApplySuccess(result) {
-        sessionStorage.setItem('sendOrderData', JSON.stringify(result));
+        localStorage.setItem('sendOrderData', JSON.stringify(result));
         window.location = '../page/sendSuccess.html';
     }
 
@@ -622,7 +622,7 @@ function createReferralApplyData(caseId, caseSummary) {
     ajaxRequest("POST", createReferralApplyUrl, data, false, false, true, createReferralApplySuccess, requestField, null);
 
     function createReferralApplySuccess(result) {
-        sessionStorage.setItem('sendOrderData', JSON.stringify(result));
+        localStorage.setItem('sendOrderData', JSON.stringify(result));
         window.location = '../page/referralSuccess.html';
     }
 }
@@ -870,7 +870,7 @@ function renderDraftInfo(draftInfo) {
 
 $(function () {
 
-    // let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    // let userInfo = JSON.parse(localStorage.getItem('userInfo'))
     // if(userInfo)
     /**查询病历类型列表*/
     ajaxRequest("GET", getAllCaseContentType, null, true, false, false, renderCaseTypeLeftNavigation, null, null);
@@ -878,9 +878,9 @@ $(function () {
     ajaxRequest("GET", getMasterHospitalBranchList, null, false, false, false, renderDoctorNavigation, null, null);
 
     // 判断是从医生通讯录来的
-    if (JSON.parse(sessionStorage.getItem('inviteDoctorArray'))) {
-        inviteDoctorArray = JSON.parse(sessionStorage.getItem('inviteDoctorArray'));
-        sessionStorage.removeItem('inviteDoctorArray');
+    if (JSON.parse(localStorage.getItem('inviteDoctorArray'))) {
+        inviteDoctorArray = JSON.parse(localStorage.getItem('inviteDoctorArray'));
+        localStorage.removeItem('inviteDoctorArray');
         favoriteHtml();
     }
 
@@ -1758,9 +1758,9 @@ $(function () {
         }
         if (!hospitalInfo.id && inviteDoctorArray.length <= 0) {
             layer.msg('请选择医生或医院');
-        } else if (hospitalInfo.id && hospitalInfo.id === sessionStorage.getItem("hospitalId")) {
+        } else if (hospitalInfo.id && hospitalInfo.id === localStorage.getItem("hospitalId")) {
             layer.msg('转诊不能选择本院');
-        } else if (inviteDoctorArray.length > 0 && inviteDoctorArray[0].hospitalId === sessionStorage.getItem("hospitalId")) {
+        } else if (inviteDoctorArray.length > 0 && inviteDoctorArray[0].hospitalId === localStorage.getItem("hospitalId")) {
             layer.msg('转诊不能选择本院医生');
         } else if (inviteDoctorArray.length > 1) {
             layer.msg('转诊只可邀请1位医生');
@@ -1858,10 +1858,10 @@ $(function () {
     });
     /** 草稿 进入*/
     if (window.location.search.indexOf("isDraft") === -1) {
-        sessionStorage.removeItem("draftId");
+        localStorage.removeItem("draftId");
     } else {
-        if (sessionStorage.getItem('draftId')) {
-            draftId = sessionStorage.getItem("draftId");
+        if (localStorage.getItem('draftId')) {
+            draftId = localStorage.getItem("draftId");
             isDraft = true;
 
             $("#draftDeleteBtn").show();

@@ -496,7 +496,7 @@ function updateApplyTime(dateList) {
         ajaxRequest("GET", getApplyInfoUrl, data, true, "application/json", true, getApplyInfoSuccess, null, null);
 
         function getApplyInfoSuccess(result) {
-            sessionStorage.setItem('applyInfo', JSON.stringify(result));
+            localStorage.setItem('applyInfo', JSON.stringify(result));
             applyTimeList = result.applyTimeList;
             renderApplyTimeView(applyTimeList);
         }
@@ -507,17 +507,17 @@ function updateApplyTime(dateList) {
 /** 查询订单详情 */
 function getApplyInfo() {
     /** 获取缓存 订单ID*/
-    applyFormId = sessionStorage.getItem('applyFormId');
-    isInvite = eval(sessionStorage.getItem('isInvite'));
+    applyFormId = localStorage.getItem('applyFormId');
+    isInvite = eval(localStorage.getItem('isInvite'));
     let formData = {"applyFormId": applyFormId};
     ajaxRequest("GET", getApplyInfoUrl, formData, true, "application/json", false, getApplyInfoSuccess, null, null);
 
     function getApplyInfoSuccess(result) {
-        sessionStorage.setItem('applyInfo', JSON.stringify(result));
+        localStorage.setItem('applyInfo', JSON.stringify(result));
         /** 当前登陆人 信息*/
-        userInfo = JSON.parse(sessionStorage.getItem('userInfo'));                        //当前登陆用户信息
+        userInfo = JSON.parse(localStorage.getItem('userInfo'));                        //当前登陆用户信息
         /** 当前申请 详细信息 */
-        applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));                      //会诊/转诊申请信息
+        applyInfo = JSON.parse(localStorage.getItem('applyInfo'));                      //会诊/转诊申请信息
         applyFormId = applyInfo.id;                                                             //申请ID
         applyTypeStr = applyInfo.applyType;                                                     //申请类型标识
         applyStatus = applyInfo.applyStatus;                                                    //申请状态标识

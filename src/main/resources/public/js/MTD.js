@@ -226,7 +226,7 @@ function sub() {
         layer.closeAll();
         $('.selectTimeContainer').hide();
         window.location = '../page/morkbench.html';
-        // sessionStorage.setItem('applyFormId', result.id);
+        // localStorage.setItem('applyFormId', result.id);
     }
 }
 
@@ -240,10 +240,10 @@ $(function () {
     }
     $('.progressBar li:first-child').addClass('libg');
 
-    if (JSON.parse(sessionStorage.getItem('applyInfo'))) {
-        applyFormId = sessionStorage.getItem('applyFormId');
-        applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
-        userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    if (JSON.parse(localStorage.getItem('applyInfo'))) {
+        applyFormId = localStorage.getItem('applyFormId');
+        applyInfo = JSON.parse(localStorage.getItem('applyInfo'));
+        userInfo = JSON.parse(localStorage.getItem('userInfo'));
         if (userInfo.hospitalId === applyInfo.inviteHospitalId && applyInfo.applyStatus !== "CONSULTATION_APPLY_CREATE_SUCCESS") {
             isInvite = true;
         }

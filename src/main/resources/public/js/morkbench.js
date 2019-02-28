@@ -423,13 +423,13 @@ function getDraftsCount() {
 
 // 查看订单详情
 function selectOrderById(orderId) {
-    sessionStorage.setItem('applyFormId', orderId);
+    localStorage.setItem('applyFormId', orderId);
     window.location = '../page/doctorApplyInfo.html';
 }
 
 // 查看草稿详情
 function selectDraftById(orderId) {
-    sessionStorage.setItem('draftId', orderId);
+    localStorage.setItem('draftId', orderId);
     window.location = '../page/createCase.html?isDraft';
 }
 

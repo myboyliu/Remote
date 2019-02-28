@@ -23,7 +23,7 @@ function ajaxRequest(type, url, data, processData, contentType, async, successCa
         data: data,
         async: async,
         headers: {
-            token: sessionStorage.getItem("token"),
+            token: localStorage.getItem("token"),
             pageNo: pageNo,
             pageSize: pageSize
         },

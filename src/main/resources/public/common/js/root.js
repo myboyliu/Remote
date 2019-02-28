@@ -28,11 +28,11 @@ function double(num) {
 
 // nav
 $(function () {
-    if (!sessionStorage.getItem('token')) {
+    if (!localStorage.getItem('token')) {
         window.location = "/page/login.html";
     }
     // 0医生  1医政
-    if (sessionStorage.getItem('rolesName') === '医政') {
+    if (localStorage.getItem('rolesName') === '医政') {
         $('.guide > li[type=0]').hide();
     } else {
         $('.guide > li[type=1]').hide();
@@ -44,8 +44,8 @@ $(function () {
     // $('.occupationName').html(localStorage.getItem('occupationName'))
     // $('.deptName').html(localStorage.getItem('deptName'))
     // $('.hospitalName').html(localStorage.getItem('hospitalName'))
-    let userInfo =  JSON.parse(sessionStorage.getItem('userInfo'));
-    currentUserInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    let userInfo =  JSON.parse(localStorage.getItem('userInfo'));
+    currentUserInfo = JSON.parse(localStorage.getItem('userInfo'))
     // console.log(userInfo);
     $('.personalCenter').html(userInfo.userName + '/' +userInfo.hospitalName);
     $('div.personal').mouseenter(function () {
@@ -59,7 +59,7 @@ $(function () {
         ajaxRequest("POST", signOutUrl, null, false, false, false, signOutSuccess, null, null);
         function signOutSuccess(data) {
             localStorage.clear();
-            sessionStorage.clear();
+            localStorage.clear();
             window.location = "../page/login.html";
         }
     });
@@ -69,7 +69,7 @@ $(function () {
             layer.msg("搜索内容不能为空!")
             return false;
         }
-        sessionStorage.setItem('searchText', searchText.replace(/\s+/g,""));
+        localStorage.setItem('searchText', searchText.replace(/\s+/g,""));
         window.location = '../page/seek.html';
     });
     $('.searchInput').keydown(function (e) {
@@ -79,7 +79,7 @@ $(function () {
                 layer.msg("搜索内容不能为空!")
                 return false;
             }
-            sessionStorage.setItem('searchText', searchText.replace(/\s+/g,""));
+            localStorage.setItem('searchText', searchText.replace(/\s+/g,""));
             window.location = '../page/seek.html';
         }
     });

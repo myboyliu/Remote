@@ -171,7 +171,7 @@ $(function () {
             doctorVideoPrice: $(this).parents('.doctorChunk').find('.pric').attr('medicalFeesVideo'), // 视频价格
             doctorTitleName: $(this).parents('.doctorChunk').find('.occupation').html(), // 职称名字
         })
-        sessionStorage.setItem('inviteDoctorArray', JSON.stringify(inviteDoctorArray));
+        localStorage.setItem('inviteDoctorArray', JSON.stringify(inviteDoctorArray));
         window.location = '../page/createCase.html';
     });
 

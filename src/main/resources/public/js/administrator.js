@@ -501,8 +501,8 @@ function getDrafts(pageNo, pageSize) {
 
 // 查看订单详情
 function selectOrderById(orderId, type, readFlag) {
-    sessionStorage.setItem('applyFormId', orderId);
-    sessionStorage.setItem('isInvite', isInvite);
+    localStorage.setItem('applyFormId', orderId);
+    localStorage.setItem('isInvite', isInvite);
     window.location = '../page/adminApplyInfo.html';
 }
 
@@ -616,7 +616,7 @@ $(function () {
 
     // 草稿箱详情
     $('.drafts_tbody').delegate('tr', 'click', function () {
-        sessionStorage.setItem('detailsId', $(this).attr('name'));
+        localStorage.setItem('detailsId', $(this).attr('name'));
         window.location = '/yilaiyiwang/detailsDraft/detailsDraft.html';
     })
 

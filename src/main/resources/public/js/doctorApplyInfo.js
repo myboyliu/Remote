@@ -273,14 +273,14 @@ function renderDoctorEnjoin(doctorEnjoinJsonStr) {
 
 /** 查询申请详情 */
 function getApplyInfo() {
-    applyFormId = sessionStorage.getItem('applyFormId');
+    applyFormId = localStorage.getItem('applyFormId');
     let formData = {"applyFormId": applyFormId};
     ajaxRequest("GET", getApplyInfoUrl, formData, true, "application/json", false, getApplyInfoSuccess, null, null)
 
     function getApplyInfoSuccess(result) {
-        sessionStorage.setItem('applyInfo', JSON.stringify(result));
-        applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
-        userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+        localStorage.setItem('applyInfo', JSON.stringify(result));
+        applyInfo = JSON.parse(localStorage.getItem('applyInfo'));
+        userInfo = JSON.parse(localStorage.getItem('userInfo'));
         isReferral = applyInfo.applyType === "APPLY_REFERRAL" ? true : false;
         isConsultation = applyInfo.applyType === "APPLY_REFERRAL" ? false : true;
         isMainDoctor = userInfo.id === applyInfo.inviteUserId ? true : false;

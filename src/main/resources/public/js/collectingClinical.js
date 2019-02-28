@@ -37,7 +37,7 @@ $(function () {
     console.log(data);
 //网页标题
     $('head > title').html(data.patientSex + '/' + data.patientAge + '/' + data.caseDiagnosis + '-远程会诊平台');
-    sessionStorage.removeItem('data');
+    localStorage.removeItem('data');
 // 会诊报告
     $('.lecturer_modules').append(data.consultantFeedback);
 // 医嘱与手术备品
@@ -149,7 +149,7 @@ $(function () {
     //         console.log(data)
     //         if (data.status == 200) {
     //             if (data.orderFormBean.statesName == "排期审核") {
-    //                 sessionStorage.setItem("data", JSON.stringify(data));
+    //                 localStorage.setItem("data", JSON.stringify(data));
     //             } else {
     //                 window.location = "/yilaiyiwang/workbench/workbench.html";
     //             }
@@ -164,7 +164,7 @@ $(function () {
     //         console.log(err);
     //     },
     // })
-    // var data = JSON.parse(sessionStorage.getItem('data'));
+    // var data = JSON.parse(localStorage.getItem('data'));
 
 
 

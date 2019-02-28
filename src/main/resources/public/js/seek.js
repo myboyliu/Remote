@@ -84,8 +84,8 @@ function selectSelfList(currentPageNo, currentPageSize, searchText) {
 }
 
 $(function () {
-    isDoctor = sessionStorage.getItem('rolesName') === '医政' ? false : true;
-    searchText = sessionStorage.getItem('searchText');
+    isDoctor = localStorage.getItem('rolesName') === '医政' ? false : true;
+    searchText = localStorage.getItem('searchText');
     $('.searchInput').val(searchText);
     if (isDoctor) {
         searchUrl = doctorSearch;
@@ -98,13 +98,13 @@ $(function () {
     }
 
     $('.searchTbody').delegate('tr', 'click', function () {
-        if (sessionStorage.getItem("rolesName") == "医生") {
+        if (localStorage.getItem("rolesName") == "医生") {
             // 医生
-            sessionStorage.setItem('applyFormId', $(this).attr("name"))
+            localStorage.setItem('applyFormId', $(this).attr("name"))
             window.location = '../page/doctorApplyInfo.html';
         } else {
             // 医政
-            sessionStorage.setItem('applyFormId', $(this).attr("name"))
+            localStorage.setItem('applyFormId', $(this).attr("name"))
             window.location = '../page/adminApplyInfo.html';
         }
     })

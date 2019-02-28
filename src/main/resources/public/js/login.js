@@ -35,14 +35,15 @@ $(function () {
 
             /**登陆成功回调方法*/
             function loginSuccess(responseJson) {
-                sessionStorage.setItem('userInfo', JSON.stringify(responseJson));
-                sessionStorage.setItem('token', responseJson.id);
+                localStorage.setItem('userInfo', JSON.stringify(responseJson));
+                localStorage.setItem('token', responseJson.id);
+                localStorage.setItem('token', responseJson.id);
                 layer.close(index);
                 if (responseJson.telephone === "18888888888" || responseJson.telephone === "17777777777") {
-                    sessionStorage.setItem('rolesName', "医政");
+                    localStorage.setItem('rolesName', "医政");
                     window.location.href = '/page/administrator.html';
                 } else {
-                    sessionStorage.setItem('rolesName', "医生");
+                    localStorage.setItem('rolesName', "医生");
                     layer.closeAll();
                     window.location.href = '/page/morkbench.html';
                 }

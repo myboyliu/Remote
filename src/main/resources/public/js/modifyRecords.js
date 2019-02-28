@@ -295,8 +295,8 @@ $(function () {
     /**查询病历类型列表*/
     ajaxRequest("GET", getAllCaseContentType, null, true, false, false, renderCaseTypeLeftNavigation, null, null);
 
-    if (JSON.parse(sessionStorage.getItem('applyInfo'))) {
-        applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
+    if (JSON.parse(localStorage.getItem('applyInfo'))) {
+        applyInfo = JSON.parse(localStorage.getItem('applyInfo'));
         if ("APPLY_CONSULTATION_VIDEO" === applyInfo.applyType) {
             isVideo = true;
         }

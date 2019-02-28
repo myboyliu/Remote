@@ -19,7 +19,7 @@ function renderUserInfo() {
     $('.medicalFees').val(userInfo.consultationPicturePrice);
     $('.medicalFeesVideo').val(userInfo.consultationVideoPrice);
     $('.text-adaption').val(userInfo.userStrong);
-    $('.rolesName').val(sessionStorage.getItem("rolesName"));
+    $('.rolesName').val(localStorage.getItem("rolesName"));
 
     let caseTypeList = userInfo.caseTypeIds;
     for (let i = 0; i < caseTypeList.length; i++) {

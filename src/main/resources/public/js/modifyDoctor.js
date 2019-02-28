@@ -177,16 +177,16 @@ $(function () {
     // 选择的医生信息数组
     var price = 0;
 
-    // let applyFormId = sessionStorage.getItem('applyFormId');
+    // let applyFormId = localStorage.getItem('applyFormId');
     // let formData = {"applyFormId": applyFormId};
     // ajaxRequest("GET", getApplyInfoUrl, formData, true, "application/json", false, getApplyInfoSuccess, null, null)
     //
     // function getApplyInfoSuccess(result) {
-    //     sessionStorage.setItem('applyInfo', JSON.stringify(result));
+    //     localStorage.setItem('applyInfo', JSON.stringify(result));
     // }
-    if (JSON.parse(sessionStorage.getItem('applyInfo'))) {
-        applyInfo = JSON.parse(sessionStorage.getItem('applyInfo'));
-        userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
+    if (JSON.parse(localStorage.getItem('applyInfo'))) {
+        applyInfo = JSON.parse(localStorage.getItem('applyInfo'));
+        userInfo = JSON.parse(localStorage.getItem('userInfo'));
         applyFormId = applyInfo.id;
         if (userInfo.hospitalId === applyInfo.inviteHospitalId && applyInfo.applyStatus !== "CONSULTATION_APPLY_CREATE_SUCCESS") {
             isInvite = true;
@@ -557,7 +557,7 @@ $(function () {
         ajaxRequest("POST", sirUpdateDoctor, data, false, false, true, sirUpdateDoctorSuccess, null, null);
 
         function sirUpdateDoctorSuccess(result) {
-            sessionStorage.setItem('applyFormId', result.id);
+            localStorage.setItem('applyFormId', result.id);
             window.location = '../page/adminApplyInfo.html';
         }
     })

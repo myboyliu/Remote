@@ -1,6 +1,6 @@
 $(function () {
-    if (JSON.parse(sessionStorage.getItem('sendOrderData'))) {
-        var data = JSON.parse(sessionStorage.getItem('sendOrderData'));
+    if (JSON.parse(localStorage.getItem('sendOrderData'))) {
+        var data = JSON.parse(localStorage.getItem('sendOrderData'));
         console.log(data);
         let caseSummaryStr = data.caseSummary;
         if (caseSummaryStr.length > 100) {
@@ -21,7 +21,7 @@ $(function () {
     // 查看此订单按钮 怎么跳到相应的订单页面
 
     $('.details').click(function () {
-        sessionStorage.setItem('applyFormId', data.id);
+        localStorage.setItem('applyFormId', data.id);
         window.location = '../page/doctorApplyInfo.html';
     })
 

@@ -1,6 +1,6 @@
 /** 查询会诊报告 */
 function getConsultantReport() {
-    applyFormId = sessionStorage.getItem('applyFormId');
+    applyFormId = localStorage.getItem('applyFormId');
     let formData = {"applyFormId": applyFormId};
     ajaxRequest("GET", selectReport, formData, true, "application/json", false, selectReportSuccess, null, null);
     function selectReportSuccess(data) {
@@ -12,7 +12,7 @@ $(function () {
     /** 编辑会诊报告 */
     $('.compileReport').click(function () {
         if (isMainDoctor) {
-            sessionStorage.setItem("enjoinId", applyInfo.caseRecordId)
+            localStorage.setItem("enjoinId", applyInfo.caseRecordId)
             window.location = "../page/doctorEnjoin.html"
         } else {
             for (let item of consultantReport) {

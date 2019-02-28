@@ -51,7 +51,7 @@ $(function() {
             console.log(data)
             if (data.status == 200) {
                 if (data.orderFormBean.statesName == "待收诊" || data.orderFormBean.statesName == "排期审核" || data.orderFormBean.statesName == "专家协调") {
-                    sessionStorage.setItem("data", JSON.stringify(data));
+                    localStorage.setItem("data", JSON.stringify(data));
                 } else {
                     window.location = "/yilaiyiwang/workbench/workbench.html";
                 }
@@ -66,9 +66,9 @@ $(function() {
             console.log(err);
         },
     })
-    var data = JSON.parse(sessionStorage.getItem('data'));
+    var data = JSON.parse(localStorage.getItem('data'));
     $('head > title').html(data.orderFormBean.sex+'/'+data.orderFormBean.age+'/'+data.orderFormBean.diagnosis+'-远程会诊平台');
-    // sessionStorage.removeItem('data');
+    // localStorage.removeItem('data');
     console.log(data)
     $('.patientName').html('***');
     $('.high').html(data.orderFormBean.high)
