@@ -5,10 +5,8 @@ function connectServer(token) {
     let socket = new SockJS(baseUrl + "/myUrl?token=" + token);
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
-        console.log('Connected:' + frame);
         //监听的路径以及回调
         stompClient.subscribe('/user/queue/sendUser', function (response) {
-            console.log(response);
             console.log(response.body);
         });
     });

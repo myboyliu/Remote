@@ -1,0 +1,274 @@
+body {
+    background-color: #efefef;
+    min-width: 1200px;
+}
+
+body .layui-layer {
+    background: none !important;
+}
+
+.layui-unselect {
+    height: 30px;
+}
+
+.fl {
+    float: left;
+}
+
+.fr {
+    float: right;
+}
+
+.cl {
+    clear: both;
+}
+
+.w18 {
+    width: 18px;
+}
+
+.w20 {
+    width: 20px;
+}
+
+.fw {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* ------公共头部头部结束------- */
+
+// 主题部分 - start
+.container {
+    width: 1200px;
+    background: #fff;
+    margin: 100px auto 0;
+    padding-bottom: 15px;
+    padding: 40px 20px 100px; // 标题行
+    .titleBox {
+        padding-bottom: 50px;
+        >p {
+            display: inline;
+            font-size: 24px;
+            color: #666666;
+            font-weight: 500;
+        }
+        >img {
+            margin: 0 10px;
+        }
+    } // 表单部分
+    .content {
+        // .itemBox:nth-child(2n) {
+        //     float: right;
+        // }
+        .itemBox {
+            position: relative;
+            float: left;
+            width: 50%;
+            margin-bottom: 20px;
+            >span {
+                position: absolute;
+                top: 0;
+                left: 0;
+                font-size: 14px;
+                color: #101010;
+                width: 65px;
+                line-height: 30px;
+            }
+            .rightBox {
+                position: relative;
+                margin-left: 65px;
+                width: 480px;
+                height: 30px;
+                .startTime,
+                .durationTime {
+                    border: 1px solid #dbdbdb;
+                    padding: 0 9px;
+                    width: 480px;
+                    height: 30px;
+                }
+                select {
+                    width: 480px;
+                    height: 30px;
+                    border: 1px solid #dbdbdb;
+                    border-radius: 4px;
+                }
+            } // 输入框
+            .textBox {
+                box-sizing: border-box;
+                border: 1px solid #dbdbdb;
+                border-radius: 4px;
+                width: 480px;
+                height: 30px;
+                >input {
+                    width: 100%;
+                    line-height: 28px;
+                    background: transparent;
+                    padding: 0 9px;
+                }
+                .textNumBox {
+                    position: absolute;
+                    top: 0;
+                    right: 10px;
+                    line-height: 30px;
+                    font-size: 14px;
+                    color: #999999;
+                    >i {
+                        font-style: normal;
+                    }
+                }
+            } // 多行输入
+            .textArea {
+                position: relative;
+                width: 480px;
+                height: 196px;
+                >div {
+                    width: 480px;
+                    height: 196px; // overflow-y: scroll;
+                    border: 1px solid #dbdbdb;
+                    border-radius: 4px;
+                    line-height: 30px;
+                    font-size: 14px;
+                    color: #101010;
+                    padding: 0 9px;
+                    outline: none;
+                }
+                .areaNumBox {
+                    position: absolute;
+                    bottom: 9px;
+                    right: 9px;
+                    font-size: 14px;
+                    color: #999999;
+                    >i {
+                        font-style: normal;
+                    }
+                }
+            } // 封面box
+            .coverBox {
+                position: relative; // width: 220px;
+                height: 140px;
+                .coverImgBox {
+                    background: url('../images/liveDefault.png') no-repeat;
+                    background-size: 100%;
+                    width: 220px;
+                    height: 140px;
+                    >img {
+                        width: 220px;
+                        height: 140px;
+                        border: 1px solid #dbdbdb;
+                        border-radius: 4px;
+                    }
+                }
+                .coverBtnBox {
+                    position: absolute;
+                    bottom: 60px;
+                    left: 230px;
+                    .btnBox {
+                        position: relative;
+                        width: 120px;
+                        height: 30px;
+                        >a {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                        }
+                        >input {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            z-index: 9;
+                            display: block;
+                            width: 120px;
+                            height: 30px;
+                            background: red;
+                            opacity: 0;
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .submitContent {
+        margin: 170px 0 0;
+        text-align: center;
+        >a {
+            display: inline-block;
+            width: 200px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 10px;
+            font-size: 14px;
+            letter-spacing: 2px;
+            &.submitBtn {
+                background: #516dcf;
+                border: 1px solid #3249c2;
+                color: #ffffff;
+            }
+            &.cancelBtn {
+                border: 1px solid #bdbdbd;
+                color: #101010;
+            }
+        }
+    }
+}
+
+// 主体部分 - end
+// 成功弹框
+.hintContent {
+    display: none;
+    width: 340px;
+    height: 200px;
+    box-sizing: border-box;
+    padding-top: 70px;
+    background: #f4f4f4;
+    border-radius: 10px;
+    text-align: center;
+    >img {
+        vertical-align: middle;
+        margin-right: 15px;
+    }
+    >span {
+        vertical-align: middle;
+        font-size: 22px;
+        color: #101010;
+    }
+}
+
+// option 弹出
+.optionContent {
+    display: none;
+    overflow: hidden;
+    width: 500px;
+    height: 200px;
+    background: #ffffff;
+    box-shadow: 0 0 14px rgba(0, 0, 0, .2);
+    border-radius: 10px;
+    text-align: center;
+    >p {
+        font-size: 18px;
+        color: #101010;
+        font-weight: 500;
+        margin: 55px 0;
+    }
+    .btnBox {
+        >a {
+            display: inline-block;
+            width: 200px;
+            height: 40px;
+            line-height: 40px;
+            font-size: 14px;
+            border-radius: 10px;
+            &.yesBtn {
+                border: 1px solid #3249c2;
+                background: #1937bc;
+                color: #ffffff;
+            }
+            &.noBtn {
+                border: 1px solid #bdbdbd;
+                background: #fff;
+                color: #101010;
+            }
+        }
+    }
+}
