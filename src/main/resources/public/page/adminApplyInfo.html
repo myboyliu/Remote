@@ -16,6 +16,8 @@
     <script src="../common/layui/layui.all.js"></script>
     <script src="../common/js/less.js"></script>
     <script src="../common/js/root.js"></script>
+    <script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="../common/js/ajaxRequestUtils.js"></script>
     <script src="../common/js/url.js"></script>
     <script src="../common/js/PDFObject.min.js"></script>
@@ -509,7 +511,8 @@
     <div class="rejectionLayer re_layer">
         <div class="rejectionLayer_top">
             <span>填写拒收原因</span>
-            <input id="isFullRefuseReferralReason" style="background: rgb(81, 109, 207); color: rgb(255, 255, 255);" type="button" value="病床已满"
+            <input id="isFullRefuseReferralReason" style="background: rgb(81, 109, 207); color: rgb(255, 255, 255);"
+                   type="button" value="病床已满"
                    class="suggest ip">
             <input id="otherRefuseReferralReason" type="button" value="其它原因" class="otherCause ip">
         </div>

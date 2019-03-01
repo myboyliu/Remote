@@ -40,8 +40,7 @@ $(function () {
                 layer.close(index);
                 if (responseJson.telephone === "18888888888" || responseJson.telephone === "17777777777") {
                     localStorage.setItem('rolesName', "医政");
-                    window.open('/page/administrator.html');
-                    // window.location.href = '/page/administrator.html';
+                    window.location.href = '/page/administrator.html';
                 } else {
                     localStorage.setItem('rolesName', "医生");
                     layer.closeAll();

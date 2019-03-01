@@ -2,427 +2,434 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8"><link href="../images/favicon.ico" rel="shortcut icon"/>
+    <meta charset="UTF-8">
+    <link href="../images/favicon.ico" rel="shortcut icon"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>会诊医政排期审核</title>
     <link rel="stylesheet" href="../common/css/reset.css">
     <link rel="stylesheet" href="../common/layui/css/layui.css">
     <link rel="stylesheet/less" href="../common/css/nav.less">
-    <link rel="stylesheet/less" href="../css/collectingClinical.less" />
+    <link rel="stylesheet/less" href="../css/collectingClinical.less"/>
     <script src="../common/js/jquery.js"></script>
     <script src="../common/layui/layui.all.js"></script>
     <script src="../common/js/less.js"></script>
     <script src="../common/js/PDFObject.min.js"></script>
     <script src="../common/js/root.js"></script>
+    <script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="../common/js/ajaxRequestUtils.js"></script>
     <script src="../common/js/url.js"></script>
     <script type="text/javascript" src="../js/collectingClinical.js"></script>
     <!-- [if lt IE9]>
-		    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-		    <![endif] -->
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif] -->
 </head>
 
 <body>
-    <div class="header">
-        <div class="infoArea clearfix">
-            <h1 class="logo">
+<div class="header">
+    <div class="infoArea clearfix">
+        <h1 class="logo">
             <a href="javascript:;">
-                <img src="../images/ylyw_logo.png" />
+                <img src="../images/ylyw_logo.png"/>
             </a>
         </h1>
-            <div class="topInfoArea clearfix">
-                <div class="personal" href="javascript:;">
-                  <span class="personalCenter"><span class="name"></span>/<span class="occupationName"></span>/<span class="deptName"></span>/<span class="hospitalName"></span>/</span>
-                    <ul>
-                        <li>
-                            <a href="/yilaiyiwang/center/center.html">个人中心</a>
-                        </li>
-                        <li>
-                            <a class="loginOut" href="javascript:;">退出登录</a>
-                        </li>
-                    </ul>
-                </div>
-                <a class="news" href="/yilaiyiwang/newInformation/newInformation.html">新信息</a>
-                <div class="searchBox"><input class="searchInput" type="text" placeholder="请在这里搜索已结束的订单">
-                    <img class="searchBtn" src="../images/search.png" alt="">
-                </div>
+        <div class="topInfoArea clearfix">
+            <div class="personal" href="javascript:;">
+                <span class="personalCenter"><span class="name"></span>/<span class="occupationName"></span>/<span
+                        class="deptName"></span>/<span class="hospitalName"></span>/</span>
+                <ul>
+                    <li>
+                        <a href="/yilaiyiwang/center/center.html">个人中心</a>
+                    </li>
+                    <li>
+                        <a class="loginOut" href="javascript:;">退出登录</a>
+                    </li>
+                </ul>
+            </div>
+            <a class="news" href="/yilaiyiwang/newInformation/newInformation.html">新信息</a>
+            <div class="searchBox"><input class="searchInput" type="text" placeholder="请在这里搜索已结束的订单">
+                <img class="searchBtn" src="../images/search.png" alt="">
+            </div>
 
+        </div>
+    </div>
+    <ul class="guide clearfix">
+        <li type='1'>
+            <a class="active" href="/yilaiyiwang/workbench/workbench.html">医政工作台</a>
+        </li>
+        <li type='1'>
+            <a href="/yilaiyiwang/DeskCalendar/DeskCalendar.html">科室日历</a>
+        </li>
+        <li type='1'>
+            <a href="/yilaiyiwang/managementCenter/managementCenter.html">管理中心</a>
+        </li>
+        <li>
+            <a href="/yilaiyiwang/liveMain/liveMain.html">三甲早直播</a>
+        </li>
+        <li>
+            <a href="../video/main.html">会员优享课程</a>
+        </li>
+        <li type='1'>
+            <a href="/yilaiyiwang/statistics/statistics.html">数据统计</a>
+        </li>
+    </ul>
+</div>
+<ul class="progressBar clearfix"></ul>
+<main class="clearfix">
+
+    <div class="right_main">
+        <!-- 会诊报告模块 -->
+        <div class="hosp  lecturer clearfix">
+            <img src="../images/Presentation.png" alt="会诊报告">
+            <span class="fw">会诊报告</span>
+            <div class="wire wire7"></div>
+            <div class="modifier7">
+                <!-- <a href="/yilaiyiwang/workbench/modifyDoctor.html">
+                    <span>修改排期</span>
+                </a> -->
+                <!-- <i class="chooseBtn" id="cutLec"></i> -->
+            </div>
+            <!-- 会诊报告可收缩模块 -->
+            <div class="lecturer_modules">
             </div>
         </div>
-        <ul class="guide clearfix">
-            <li type='1'>
-                <a class="active" href="/yilaiyiwang/workbench/workbench.html">医政工作台</a>
-            </li>
-            <li type='1'>
-                <a href="/yilaiyiwang/DeskCalendar/DeskCalendar.html">科室日历</a>
-            </li>
-            <li type='1'>
-                <a href="/yilaiyiwang/managementCenter/managementCenter.html">管理中心</a>
-            </li>
-            <li>
-                <a href="/yilaiyiwang/liveMain/liveMain.html">三甲早直播</a>
-            </li>
-            <li>
-                                <a href="../video/main.html">会员优享课程</a>
-            </li>
-            <li type='1'>
-                <a href="/yilaiyiwang/statistics/statistics.html">数据统计</a>
-            </li>
-        </ul>
-    </div>
-    <ul class="progressBar clearfix"></ul>
-    <main class="clearfix">
+        <!-- 医嘱 -->
+        <div class="doctorEnjoinBox clearfix">
+            <img src="../images/doctorEnjoin.png" alt="会诊报告">
+            <span>医嘱与手术备品</span>
+            <div class="wire" style="width: 980px;"></div>
+        </div>
+        <div class="doctorEnjoinBody">
 
-        <div class="right_main">
-            <!-- 会诊报告模块 -->
-            <div class="hosp  lecturer clearfix">
-                <img src="../images/Presentation.png" alt="会诊报告">
-                <span class="fw">会诊报告</span>
-                <div class="wire wire7"></div>
-                <div class="modifier7">
-                    <!-- <a href="/yilaiyiwang/workbench/modifyDoctor.html">
-                        <span>修改排期</span>
-                    </a> -->
-                    <!-- <i class="chooseBtn" id="cutLec"></i> -->
-                </div>
-                <!-- 会诊报告可收缩模块 -->
-                <div class="lecturer_modules">
-                </div>
-            </div>
-            <!-- 医嘱 -->
-            <div class="doctorEnjoinBox clearfix">
-                <img src="../images/doctorEnjoin.png" alt="会诊报告">
-                <span>医嘱与手术备品</span>
-                <div class="wire" style="width: 980px;"></div>
-            </div>
-            <div class="doctorEnjoinBody">
+        </div>
 
+        <!-- 临床反馈模块 -->
+        <div class="hosp  tickling clearfix">
+            <img src="../images/feedback.png" alt="临床反馈">
+            <span class="fw">临床反馈</span>
+            <div class="wire wire8"></div>
+            <div class="modifier8">
+                <!-- <a href="/yilaiyiwang/workbench/modifyDoctor.html">
+                    <span>修改排期</span>
+                </a> -->
+                <!-- <i class="chooseBtn" id="cutTic"></i> -->
             </div>
-
-            <!-- 临床反馈模块 -->
-            <div class="hosp  tickling clearfix">
-                <img src="../images/feedback.png" alt="临床反馈">
-                <span class="fw">临床反馈</span>
-                <div class="wire wire8"></div>
-                <div class="modifier8">
-                    <!-- <a href="/yilaiyiwang/workbench/modifyDoctor.html">
-                        <span>修改排期</span>
-                    </a> -->
-                    <!-- <i class="chooseBtn" id="cutTic"></i> -->
-                </div>
-                <!-- 临床反馈可收缩模块 -->
-                <div class="tickling_modules">
+            <!-- 临床反馈可收缩模块 -->
+            <div class="tickling_modules">
                         <pre class="applyFeedBack">
                         </pre>
-                </div>
             </div>
+        </div>
 
-            <!-- 患者基本信息模块 -->
-            <div class="hosp  essentialInformation clearfix">
-                <img src="../images/information.png" alt="写病历患者基本信息">
-                <span class="fw">患者基本信息</span>
-                <div class="wire wire1"></div>
-                <!-- <div class="modifier1">
-                    <a href="/yilaiyiwang/workbench/modifyRecords.html">
-                        <span>修改</span>
-                    </a>
-                    <i class="chooseBtn" id="cut"></i>
-                </div> -->
-                <!-- 患者基本信息的可收缩模块 -->
-                <div class="essentialInformation_modules">
-                      <span class="bFirst_p"><p class="patientName">***</p>/<p class="sex"></p>/<p class="age"></p>/<p class="high"></p>cm/<p class="weight"></p>kg</span>
-                    <span class="bSecond_p">常住址：
+        <!-- 患者基本信息模块 -->
+        <div class="hosp  essentialInformation clearfix">
+            <img src="../images/information.png" alt="写病历患者基本信息">
+            <span class="fw">患者基本信息</span>
+            <div class="wire wire1"></div>
+            <!-- <div class="modifier1">
+                <a href="/yilaiyiwang/workbench/modifyRecords.html">
+                    <span>修改</span>
+                </a>
+                <i class="chooseBtn" id="cut"></i>
+            </div> -->
+            <!-- 患者基本信息的可收缩模块 -->
+            <div class="essentialInformation_modules">
+                <span class="bFirst_p"><p class="patientName">***</p>/<p class="sex"></p>/<p class="age"></p>/<p
+                        class="high"></p>cm/<p class="weight"></p>kg</span>
+                <span class="bSecond_p">常住址：
                         <p class="address">北京</p>
                     </span>
-                    <span class="bThree_p">
+                <span class="bThree_p">
                         <img src="../images/light.png" alt="">
                         <p>加急</p>
                     </span>
-                    <!-- 初步诊断： -->
-                    <pre class="tentative"></pre>
-                    <div class="goal">
-                        <!-- <p>会/转诊目的：</p> -->
-                        <pre class="telemedicineTarget"></pre>
-                    </div>
+                <!-- 初步诊断： -->
+                <pre class="tentative"></pre>
+                <div class="goal">
+                    <!-- <p>会/转诊目的：</p> -->
+                    <pre class="telemedicineTarget"></pre>
                 </div>
             </div>
-            <!-- 电子病历模块 -->
-            <div class="hosp EMR clearfix ">
-                <img src="../images/Enclosure.png" alt="写病历患者基本信息" style="    margin-top: -4px;">
-                <span class="fw">电子病历附件<span style="padding-right:0px">(</span><span class="sum" style="padding-right:0px">0</span><span style="padding-right:0px">)</span>张</span>
-                <div class="wire wire2"></div>
-                <div class="modifier2">
-                    <span>查看全部内容</span>
-                    <i class="chooseBtn" id="cutEle"></i>
-                </div>
-                <!-- 电子病历的可收缩模块 -->
-                <ul class="upfileUl">
-                    <!-- <li class="upfileItem clearfix">
-                        <div class="upfileContent">
-                            <div class="operateLeft">首页-封面(<span class="">0</span>张)</div>
-                            <ul class="fileContent clearfix">
-                                <li class="fileAdd">
-                                    <a class="addfileBtn" href="javascript:;"></a>
-                                    <input class="fileInput" type="file" multiple>
-                                    <p class="fileName">添加文件</p>
-                                </li>
-                                <li class="fileItem">
-                                    <div></div>
-                                    <p class="fileName active">文件名字</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </li> -->
-                </ul>
+        </div>
+        <!-- 电子病历模块 -->
+        <div class="hosp EMR clearfix ">
+            <img src="../images/Enclosure.png" alt="写病历患者基本信息" style="    margin-top: -4px;">
+            <span class="fw">电子病历附件<span style="padding-right:0px">(</span><span class="sum"
+                                                                                 style="padding-right:0px">0</span><span
+                    style="padding-right:0px">)</span>张</span>
+            <div class="wire wire2"></div>
+            <div class="modifier2">
+                <span>查看全部内容</span>
+                <i class="chooseBtn" id="cutEle"></i>
             </div>
-                <!-- 收件医生模块 -->
-                <div class="hosp  ReceiptDoctor clearfix">
-                    <img src="../images/selectDoc.png" alt="收件医生">
-                    <span class="fw">收件医生</span>
-                    <div class="wire wire3"></div>
-                    <div class="modifier3">
-                        <a href="/yilaiyiwang/workbench/modifyDoctor.html">
-                            <span>重新分配</span>
-                        </a>
-                        <i class="chooseBtn" id="cutDoc"></i>
+            <!-- 电子病历的可收缩模块 -->
+            <ul class="upfileUl">
+                <!-- <li class="upfileItem clearfix">
+                    <div class="upfileContent">
+                        <div class="operateLeft">首页-封面(<span class="">0</span>张)</div>
+                        <ul class="fileContent clearfix">
+                            <li class="fileAdd">
+                                <a class="addfileBtn" href="javascript:;"></a>
+                                <input class="fileInput" type="file" multiple>
+                                <p class="fileName">添加文件</p>
+                            </li>
+                            <li class="fileItem">
+                                <div></div>
+                                <p class="fileName active">文件名字</p>
+                            </li>
+                        </ul>
                     </div>
-                    <!-- 收件医生可收缩模块 -->
-                    <div class="ReceiptDoctor_modules">
-                        <h4>
-                            <span style="padding-right: 0px">主会诊人</span>
-                            <span class="addresserInfo">
+                </li> -->
+            </ul>
+        </div>
+        <!-- 收件医生模块 -->
+        <div class="hosp  ReceiptDoctor clearfix">
+            <img src="../images/selectDoc.png" alt="收件医生">
+            <span class="fw">收件医生</span>
+            <div class="wire wire3"></div>
+            <div class="modifier3">
+                <a href="/yilaiyiwang/workbench/modifyDoctor.html">
+                    <span>重新分配</span>
+                </a>
+                <i class="chooseBtn" id="cutDoc"></i>
+            </div>
+            <!-- 收件医生可收缩模块 -->
+            <div class="ReceiptDoctor_modules">
+                <h4>
+                    <span style="padding-right: 0px">主会诊人</span>
+                    <span class="addresserInfo">
                             </span>
-                        </h4>
-                    </div>
-                </div>
-                <!-- 会诊排期模块 -->
-                <div class="hosp  schedule clearfix">
-                    <img src="../images/Scheduling.png" alt="会诊排期">
-                    <span class="fw">会诊排期</span>
-                    <div class="wire wire5"></div>
-                    <div class="modifier5">
-                        <a class="schedulingBtn" href="javascript:;">
-                            <span>修改排期</span>
-                        </a>
-                        <i class="chooseBtn" id="cutSch"></i>
-                    </div>
-                    <!-- 会诊排期可收缩模块 -->
-                    <div class="schedule_modules">
-                        <p>
-                            <span class="startDate">开始时间</span>到
-                            <span class="endDate">结束时间</span>
+                </h4>
+            </div>
+        </div>
+        <!-- 会诊排期模块 -->
+        <div class="hosp  schedule clearfix">
+            <img src="../images/Scheduling.png" alt="会诊排期">
+            <span class="fw">会诊排期</span>
+            <div class="wire wire5"></div>
+            <div class="modifier5">
+                <a class="schedulingBtn" href="javascript:;">
+                    <span>修改排期</span>
+                </a>
+                <i class="chooseBtn" id="cutSch"></i>
+            </div>
+            <!-- 会诊排期可收缩模块 -->
+            <div class="schedule_modules">
+                <p>
+                    <span class="startDate">开始时间</span>到
+                    <span class="endDate">结束时间</span>
+                </p>
+            </div>
+        </div>
+
+
+        <!-- 诊费模块 -->
+        <div class="hosp  fees clearfix">
+            <img src="../images/cost.png" alt="诊费">
+            <span class="fw">诊费</span>
+            <div class="wire wire4"></div>
+            <div class="fees_table">
+                <table class="layui-table" lay-even lay-skin="nob">
+                    <colgroup>
+                        <col width="450">
+                        <col width="150">
+                        <col width="450">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>收费清单</th>
+                        <th>原诊费/元</th>
+                        <th>最终诊费/元</th>
+                    </tr>
+                    </thead>
+                    <tbody class="tbody_doc">
+                    <!-- <tr>
+                    <td>
+                        <吴艳博/主任医师/心内科/北京朝阳医院本院>
+                    </td>
+                    <td class="yuan">500</td>
+                    <td>
+                        <input type="text" value="500" class="fees_input gai" readonly="readonly">
+                    </td>
+                </tr> -->
+
+                    </tbody>
+
+                    <tr style="background: #fff">
+                        <td>
+                            基础诊费
+                        </td>
+                        <td class="basePic">500</td>
+                        <td>
+                            <input type="text" value="200" class="fees_input gai basePicInput" readonly="readonly">
+                        </td>
+                    </tr>
+                    <tr class="bgfees">
+                        <td style="font-size: 18px; font-weight: bold; height: 50px;">
+                            费用总计
+                        </td>
+                        <td class="aggregate"></td>
+                        <td class="dynamicAggregate"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!-- 订单信息模块 -->
+        <div class="hosp order clearfix">
+            <div class="pb">
+                <img src="../images/news.png" alt="写病历患者基本信息">
+                <span class="fw">订单信息</span>
+                <div class="wire wire6"></div>
+            </div>
+
+
+            <div class="orderInformation">
+                <h4>
+                    <span>订单编号：</span>
+                    <span class="numbers"></span>
+                </h4>
+                <h4>
+                    <span>申请时间：</span>
+                    <span class="applyDate"></span>
+                </h4>
+                <h4>
+                    <span>发件人：</span>
+                    <span class="recipientsInfo">
+                            </span>
+                </h4>
+            </div>
+        </div>
+        <div class="timeline">
+            <ul class="layui-timeline">
+                <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                    <div class="layui-timeline-content layui-text">
+                        <h3 class="layui-timeline-title">
+                            <span style="padding-right: 0px;" class="fw">2018-04-09</span>
+                            <span class="fw">10:10:10</span>
+                            <span class="fw pl30">发起会诊</span>
+                        </h3>
+
+                        <span>发件人:</span>
+                        <p style="display: inline;">
                         </p>
                     </div>
-                </div>
-
-
-                <!-- 诊费模块 -->
-                <div class="hosp  fees clearfix">
-                    <img src="../images/cost.png" alt="诊费">
-                    <span class="fw">诊费</span>
-                    <div class="wire wire4"></div>
-                    <div class="fees_table">
-                        <table class="layui-table" lay-even lay-skin="nob">
-                            <colgroup>
-                                <col width="450">
-                                <col width="150">
-                                <col width="450">
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                    <th>收费清单</th>
-                                    <th>原诊费/元</th>
-                                    <th>最终诊费/元</th>
-                                </tr>
-                            </thead>
-                            <tbody class="tbody_doc">
-                                <!-- <tr>
-                                <td>
-                                    <吴艳博/主任医师/心内科/北京朝阳医院本院>
-                                </td>
-                                <td class="yuan">500</td>
-                                <td>
-                                    <input type="text" value="500" class="fees_input gai" readonly="readonly">
-                                </td>
-                            </tr> -->
-
-                            </tbody>
-
-                            <tr style="background: #fff">
-                                <td>
-                                    基础诊费
-                                </td>
-                                <td class="basePic">500</td>
-                                <td>
-                                    <input type="text" value="200" class="fees_input gai basePicInput" readonly="readonly">
-                                </td>
-                            </tr>
-                            <tr class="bgfees">
-                                <td style="font-size: 18px; font-weight: bold; height: 50px;">
-                                    费用总计
-                                </td>
-                                <td class="aggregate"></td>
-                                <td class="dynamicAggregate"></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <!-- 订单信息模块 -->
-                <div class="hosp order clearfix">
-                    <div class="pb">
-                        <img src="../images/news.png" alt="写病历患者基本信息">
-                        <span class="fw">订单信息</span>
-                        <div class="wire wire6"></div>
-                    </div>
-
-
-                    <div class="orderInformation">
-                        <h4>
-                            <span>订单编号：</span>
-                            <span class="numbers"></span>
-                        </h4>
-                        <h4>
-                            <span>申请时间：</span>
-                            <span class="applyDate"></span>
-                        </h4>
-                        <h4>
-                            <span>发件人：</span>
-                            <span class="recipientsInfo">
-                            </span>
-                        </h4>
-                    </div>
-                </div>
-                <div class="timeline">
-                    <ul class="layui-timeline">
-                        <li class="layui-timeline-item">
-                            <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
-                            <div class="layui-timeline-content layui-text">
-                                <h3 class="layui-timeline-title">
-                                    <span style="padding-right: 0px;" class="fw">2018-04-09</span>
-                                    <span class="fw">10:10:10</span>
-                                    <span class="fw pl30">发起会诊</span>
-                                </h3>
-
-                                <span>发件人:</span>
-                                <p style="display: inline;">
-                                </p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
-            </div>
-
-    </main>
-    <div class="nav">
-        <div class="handle">
-            <input type="button" value="返回" class="getBack">
-            <input type="button" value="拒收" class="rejection">
-            <input type="button" value="审核通过" class="examineBtn">
+                </li>
+            </ul>
         </div>
 
     </div>
-    <!-- 弹层部分 背景图加三个弹层 -->
-    <div class="background">
-        <!-- 拒收弹层 -->
-        <div class="rejectionLayer re_layer">
-            <div class="rejectionLayer_top">
-                <span>填写拒收原因</span>
-                <input style="background: rgb(81, 109, 207); color: rgb(255, 255, 255);" type="button" value="建议多学科会诊" class="suggest ip">
-                <input type="button" value="其它原因" class="otherCause ip">
-            </div>
-            <div class="rejectionLayer_buttom">
-                <textarea name="" class="refuseReason"></textarea>
-                <div class="font">
-                    请尽量多的填写对医务人员和发件医生有参考价值的建议及原因
-                    <br> 1.选择多学科会诊，根据自身判断给出MDT的参与学科或参与人建议...
-                    <br> 2.选择其它原因，请具体备注“排期已满”、“病历需完善”、“学科不匹配”...
-                    <br>
-                </div>
-            </div>
-            <input type="button" value="确定" class="confirm">
-            <div class="closeBtn clearfix refuseBtn"><img src="../images/close.png" alt=""><span>关闭</span></div>
-        </div>
-    </div>
-    <div class="footer marginBottom70">
-        Copyright © 2018 医来医往(北京)科技有限公司
-    </div>
-    <!-- 弹层 -->
-    <div class="returned">
-        <p>拒收成功</p>
-        <!-- <input type="button" value="确定" class="getBack"> -->
-    </div>
-    <div class="accept">
-        <p>操作成功</p>
-        <!-- <input type="button" value="确定" class="getBack"> -->
-    </div>
-    <div class="change">
-        <p>此订单已经发生改变</p>
-        <!-- <input type="button" value="确定" class="getBack"> -->
+
+</main>
+<div class="nav">
+    <div class="handle">
+        <input type="button" value="返回" class="getBack">
+        <input type="button" value="拒收" class="rejection">
+        <input type="button" value="审核通过" class="examineBtn">
     </div>
 
-
-
-    <!-- 查看大图部分 -->
-    <div class="bigImgContainer clearfix">
-        <div class="bigImgBox">
-            <div class="bigImg"></div>
-        </div>
-        <div class="bigImgRightBox">
-            <div class="fileNameBox">
-                <h2 class="fileTitle">
-                    <span></span>文件名</h2>
-                <p class="fileName">图片名字</p>
-<!-- 点击下载dcm文件块 -->
-<div class="downlodeFile">
-    <img src="../images/download.png" alt="点击下载文件">
-    <a href="javascript:;">点击下载文件</a>
 </div>
-            </div>
-            <div class="fileDescBox">
-                <h2 class="descTitle">备注</h2>
-                <textarea class="descText" readonly="readonly" name="name" rows="" cols=""></textarea>
-            </div>
-            <div class="switchBox clearfix">
-                <a class="prev" href="javascript:;">上一个文件</a>
-                <a class="next" href="javascript:;">下一个文件</a>
+<!-- 弹层部分 背景图加三个弹层 -->
+<div class="background">
+    <!-- 拒收弹层 -->
+    <div class="rejectionLayer re_layer">
+        <div class="rejectionLayer_top">
+            <span>填写拒收原因</span>
+            <input style="background: rgb(81, 109, 207); color: rgb(255, 255, 255);" type="button" value="建议多学科会诊"
+                   class="suggest ip">
+            <input type="button" value="其它原因" class="otherCause ip">
+        </div>
+        <div class="rejectionLayer_buttom">
+            <textarea name="" class="refuseReason"></textarea>
+            <div class="font">
+                请尽量多的填写对医务人员和发件医生有参考价值的建议及原因
+                <br> 1.选择多学科会诊，根据自身判断给出MDT的参与学科或参与人建议...
+                <br> 2.选择其它原因，请具体备注“排期已满”、“病历需完善”、“学科不匹配”...
+                <br>
             </div>
         </div>
-        <a class="closeBtnImg" href="javascript:;">关闭</a>
+        <input type="button" value="确定" class="confirm">
+        <div class="closeBtn clearfix refuseBtn"><img src="../images/close.png" alt=""><span>关闭</span></div>
     </div>
+</div>
+<div class="footer marginBottom70">
+    Copyright © 2018 医来医往(北京)科技有限公司
+</div>
+<!-- 弹层 -->
+<div class="returned">
+    <p>拒收成功</p>
+    <!-- <input type="button" value="确定" class="getBack"> -->
+</div>
+<div class="accept">
+    <p>操作成功</p>
+    <!-- <input type="button" value="确定" class="getBack"> -->
+</div>
+<div class="change">
+    <p>此订单已经发生改变</p>
+    <!-- <input type="button" value="确定" class="getBack"> -->
+</div>
 
-    <!-- 视频会诊时间选择 -->
-    <div class="selectTimeContainer clearfix">
-        <div class="closeBtnTime clearfix">
-            <span>关闭</span>
-            <img src="../images/close.png" alt="">
+
+<!-- 查看大图部分 -->
+<div class="bigImgContainer clearfix">
+    <div class="bigImgBox">
+        <div class="bigImg"></div>
+    </div>
+    <div class="bigImgRightBox">
+        <div class="fileNameBox">
+            <h2 class="fileTitle">
+                <span></span>文件名</h2>
+            <p class="fileName">图片名字</p>
+            <!-- 点击下载dcm文件块 -->
+            <div class="downlodeFile">
+                <img src="../images/download.png" alt="点击下载文件">
+                <a href="javascript:;">点击下载文件</a>
+            </div>
         </div>
-        <div class="selectTimeContent clearfix">
-            <div class="leftContent">
-                <h3>发送视频会诊
+        <div class="fileDescBox">
+            <h2 class="descTitle">备注</h2>
+            <textarea class="descText" readonly="readonly" name="name" rows="" cols=""></textarea>
+        </div>
+        <div class="switchBox clearfix">
+            <a class="prev" href="javascript:;">上一个文件</a>
+            <a class="next" href="javascript:;">下一个文件</a>
+        </div>
+    </div>
+    <a class="closeBtnImg" href="javascript:;">关闭</a>
+</div>
+
+<!-- 视频会诊时间选择 -->
+<div class="selectTimeContainer clearfix">
+    <div class="closeBtnTime clearfix">
+        <span>关闭</span>
+        <img src="../images/close.png" alt="">
+    </div>
+    <div class="selectTimeContent clearfix">
+        <div class="leftContent">
+            <h3>发送视频会诊
                 <span>选择时间</span>
             </h3>
-                <div class="timeBox" id="timeBox"></div>
-                <p>*选择您可接受的时间并上传，专家会根据您的选择确定最终时间</p>
-                <p>*您选择时段越多，越利于会/转诊的顺利进行</p>
-            </div>
-            <ul class="rightContent clearfix" id="timeUl">
-
-            </ul>
-            <div class="btnBox">
-                <a href="javascript:;" class="yesBtn">确定</a>
-            </div>
+            <div class="timeBox" id="timeBox"></div>
+            <p>*选择您可接受的时间并上传，专家会根据您的选择确定最终时间</p>
+            <p>*您选择时段越多，越利于会/转诊的顺利进行</p>
         </div>
-    </div>
+        <ul class="rightContent clearfix" id="timeUl">
 
-    <div class="operateBox submitBox">
-        <p>确认该视频排期时间可用，系统将通过审核记录排期</p>
+        </ul>
         <div class="btnBox">
-            <a class="noBtn" href="javascript:;">取消</a>
-            <a class="yesBtn" href="javascript:;">通过审核</a>
+            <a href="javascript:;" class="yesBtn">确定</a>
         </div>
     </div>
+</div>
+
+<div class="operateBox submitBox">
+    <p>确认该视频排期时间可用，系统将通过审核记录排期</p>
+    <div class="btnBox">
+        <a class="noBtn" href="javascript:;">取消</a>
+        <a class="yesBtn" href="javascript:;">通过审核</a>
+    </div>
+</div>
 
 </body>
 
