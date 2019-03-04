@@ -1,5 +1,6 @@
 package com.sicmed.remote.live.mapper;
 
+import com.sicmed.remote.live.bean.FuzzySearchLiveBean;
 import com.sicmed.remote.live.bean.GetLiveParamBean;
 import com.sicmed.remote.live.entity.Live;
 
@@ -23,4 +24,8 @@ public interface LiveMapper {
     int selectCountByParam(GetLiveParamBean getLiveParamBean);
 
     List<Live> selectListByParam(GetLiveParamBean getLiveParamBean);
+
+    int searchCountByParam(FuzzySearchLiveBean fuzzySearchLiveBean);
+
+    List<Live> searchListByParam(FuzzySearchLiveBean fuzzySearchLiveBean);
 }

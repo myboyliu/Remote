@@ -1,5 +1,6 @@
 package com.sicmed.remote.live.service;
 
+import com.sicmed.remote.live.bean.FuzzySearchLiveBean;
 import com.sicmed.remote.live.bean.GetLiveParamBean;
 import com.sicmed.remote.live.entity.Live;
 import com.sicmed.remote.live.mapper.LiveMapper;
@@ -52,5 +53,13 @@ public class LiveService implements BaseService<Live> {
     public List<Live> selectListByParam(GetLiveParamBean getLiveParamBean) {
 
         return liveMapper.selectListByParam(getLiveParamBean);
+    }
+
+    public int searchCountByParam(FuzzySearchLiveBean fuzzySearchLiveBean) {
+        return liveMapper.searchCountByParam(fuzzySearchLiveBean);
+    }
+
+    public List<Live> searchListByParam(FuzzySearchLiveBean fuzzySearchLiveBean) {
+        return liveMapper.searchListByParam(fuzzySearchLiveBean);
     }
 }

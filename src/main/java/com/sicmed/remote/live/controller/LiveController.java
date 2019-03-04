@@ -1,6 +1,7 @@
 package com.sicmed.remote.live.controller;
 
 import com.sicmed.remote.common.util.FileUtils;
+import com.sicmed.remote.live.bean.FuzzySearchLiveBean;
 import com.sicmed.remote.live.bean.GetLiveParamBean;
 import com.sicmed.remote.live.entity.Live;
 import com.sicmed.remote.live.service.LiveService;
@@ -65,6 +66,27 @@ public class LiveController extends BaseController {
     public Object selectListByParam(GetLiveParamBean getLiveParamBean) {
 
         List<Live> liveList = liveService.selectListByParam(getLiveParamBean);
+
+        return succeedRequest(liveList);
+    }
+
+    /**
+     * 根据条件查询直播列表数量
+     */
+    @GetMapping(value = "searchCountByParam")
+    public Object searchCountByParam(FuzzySearchLiveBean fuzzySearchLiveBean) {
+
+        int listCount = liveService.searchCountByParam(fuzzySearchLiveBean);
+
+        return succeedRequest(listCount);
+    }
+    /**
+     * 根据条件查询直播列表内容
+     */
+    @GetMapping(value = "searchListByParam")
+    public Object searchListByParam(FuzzySearchLiveBean fuzzySearchLiveBean) {
+
+        List<Live> liveList = liveService.searchListByParam(fuzzySearchLiveBean);
 
         return succeedRequest(liveList);
     }
