@@ -86,13 +86,18 @@ $(function () {
             let endDate = new Date((startTimes + times) * 1000);
             let endDateData = endDate.getFullYear() + '-' + double(endDate.getMonth() + 1) + '-' + double(endDate.getDate()) + ' ' + double(endDate.getHours()) + ':' + double(endDate.getMinutes()) + ':' + double(endDate.getSeconds());
             let postData = new FormData();
-            postData.append("title", $(".titleInputObj").val());//直播标题
-            postData.append("deptId", $(".deptObj").val());//科室id
-            postData.append("startDate", $(".startTimeObj").val() + ":00");//直播开始时间
-            postData.append("endDate", endDateData);//直播结束时间
-            postData.append("liveClassId", $(".classifyObj").val());//直播分类id
+            postData.append("liveName", $(".titleInputObj").val());//直播标题
+            postData.append("liveDescription", $(".textAreaObj").html());//直播描述
+            postData.append("liveBranch", $(".deptObj").val());//科室id
+            postData.append("liveStartTime", $(".startTimeObj").val() + ":00");//直播开始时间
+            postData.append("liveEndTime", endDateData);//直播结束时间
+            postData.append("livePeriod", times);//直播结束时间
+            postData.append("liveType", $(".classifyObj").val());//直播分类
+            postData.append("liveScope", $(".liveScopeObj").val());//发布范围
             postData.append("file", $(".coverInput")[0].files[0]);//封面图片
-            postData.append("liveDescribe", $(".textAreaObj").html());//直播描述
+            postData.append("liveMute", $(".liveMute").val());//静音
+            postData.append("liveRecord", $(".liveRecord").val());//自动录制
+            postData.append("liveStart", $(".liveStart").val());//开启直播
             function addLiveSuccess(result) {
                 console.log(result);
                 layer.open({
@@ -111,7 +116,7 @@ $(function () {
                 }, 2000)
             }
 
-            ajaxRequest("POST", "", postData, false, false, true, addLiveSuccess, null, null);
+            ajaxRequest("POST", createLive, postData, false, false, true, addLiveSuccess, null, null);
             return false;
         }
     })

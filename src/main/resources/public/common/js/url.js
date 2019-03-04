@@ -226,7 +226,11 @@ const saveVideoUrl = "/vod/addVideo"                //保存上传成功的视�
 const addClickCountUrl = "/vod/addClickCount"                //保存上传成功的视频信息
 
 
+/** 直播接口 */
 
+const createLive = "/live/create"                                              //申请创建直播接口
+const selectCountByParamUrl = "/live/selectCountByParam"                       //申请创建直播接口
+const selectListByParamUrl = "/live/selectListByParam"                         //申请创建直播接口
 
 
 

@@ -1,248 +1,302 @@
 body {
-    background-color: #efefef;
-    min-width: 1200px;
+  background-color: #efefef;
+  min-width: 1200px;
 }
 
 body .layui-layer {
-    // background: none !important;
+  // background: none !important;
 }
+
 body .laydate-day-mark {
-	background:#1937bc !important;
-	color:#fff;
+  background: #1937bc !important;
+  color: #fff;
 }
+
 body .laydate-day-mark:after {
-    background: none;
+  background: none;
 }
+
 body .layui-this {
-	background-color: #009688 !important;
-	.laydate-day-mark {
-		background: none !important;
-	}
+  background-color: #009688 !important;
+
+  .laydate-day-mark {
+    background: none !important;
+  }
 }
+
 .layui-unselect {
-    height: 30px;
+  height: 30px;
 }
 
 .fl {
-    float: left;
+  float: left;
 }
 
 .fr {
-    float: right;
+  float: right;
 }
 
 .cl {
-    clear: both;
+  clear: both;
 }
 
 .w18 {
-    width: 18px;
+  width: 18px;
 }
 
 .w20 {
-    width: 20px;
+  width: 20px;
 }
 
 .fw {
-    font-weight: bold;
-    font-size: 16px;
+  font-weight: bold;
+  font-size: 16px;
 }
 
 /* ------公共头部头部结束------- */
 
 // 主题部分 - start
 .container {
-    width: 1200px;
-    background: #fff;
-    margin: 100px auto 0;
-    padding-bottom: 15px;
-    padding: 40px 20px 100px; // 标题行
-    .titleBox {
-        padding-bottom: 50px;
-        >p {
-            display: inline;
-            font-size: 24px;
-            color: #666666;
-            font-weight: 500;
+  width: 1200px;
+  background: #fff;
+  margin: 100px auto 0;
+  padding-bottom: 15px;
+  padding: 40px 20px 100px; // 标题行
+  .titleBox {
+    padding-bottom: 50px;
+
+    > p {
+      display: inline;
+      font-size: 24px;
+      color: #666666;
+      font-weight: 500;
+    }
+
+    > img {
+      margin: 0 10px;
+    }
+  }
+
+  // 表单部分
+  .content {
+    // .itemBox:nth-child(2n) {
+    //     float: right;
+    // }
+    .left_content {
+      float: left;
+      width: 50%;
+    }
+
+    .right_content {
+      float: left;
+      width: 50%;
+
+    }
+
+    .itemBox {
+      position: relative;
+      //float: left;
+      //width: 50%;
+      margin-bottom: 20px;
+
+      > span {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: 14px;
+        color: #101010;
+        min-width: 65px;
+        max-width: 130px;
+        line-height: 30px;
+      }
+
+      .rightBox {
+        position: relative;
+        margin-left: 65px;
+        width: 480px;
+        height: 30px;
+
+        .startTime,
+        .durationTime {
+          border: 1px solid #dbdbdb;
+          padding: 0 9px;
+          width: 480px;
+          height: 30px;
         }
-        >img {
-            margin: 0 10px;
+
+        select {
+          width: 480px;
+          height: 30px;
+          border: 1px solid #dbdbdb;
+          border-radius: 4px;
         }
-    } // 表单部分
-    .content {
-        // .itemBox:nth-child(2n) {
-        //     float: right;
-        // }
-        .itemBox {
+      }
+      .checkItem{
+        position: relative;
+        margin-left: 130px;
+        width: 415px;
+        height: 30px;
+      }
+      // 输入框
+      .textBox {
+        box-sizing: border-box;
+        border: 1px solid #dbdbdb;
+        border-radius: 4px;
+        width: 480px;
+        height: 30px;
+
+        > input {
+          width: 100%;
+          line-height: 28px;
+          background: transparent;
+          padding: 0 9px;
+        }
+
+        .textNumBox {
+          position: absolute;
+          top: 0;
+          right: 10px;
+          line-height: 30px;
+          font-size: 14px;
+          color: #999999;
+
+          > i {
+            font-style: normal;
+          }
+        }
+      }
+
+      // 多行输入
+      .textArea {
+        position: relative;
+        width: 480px;
+        height: 196px;
+
+        > div {
+          width: 480px;
+          height: 196px; // overflow-y: scroll;
+          border: 1px solid #dbdbdb;
+          border-radius: 4px;
+          line-height: 30px;
+          font-size: 14px;
+          color: #101010;
+          padding: 0 9px;
+          outline: none;
+        }
+
+        .areaNumBox {
+          position: absolute;
+          bottom: 9px;
+          right: 9px;
+          font-size: 14px;
+          color: #999999;
+
+          > i {
+            font-style: normal;
+          }
+        }
+      }
+
+      // 封面box
+      .coverBox {
+        position: relative; // width: 220px;
+        height: 140px;
+
+        .coverImgBox {
+          background: url('/images/liveDefault.png') no-repeat;
+          background-size: 100%;
+          width: 220px;
+          height: 140px;
+
+          > img {
+            width: 220px;
+            height: 140px;
+            border: 1px solid #dbdbdb;
+            border-radius: 4px;
+          }
+        }
+
+        .coverBtnBox {
+          position: absolute;
+          bottom: 60px;
+          left: 230px;
+
+          .btnBox {
             position: relative;
-            float: left;
-            width: 50%;
-            margin-bottom: 20px;
-            >span {
-                position: absolute;
-                top: 0;
-                left: 0;
-                font-size: 14px;
-                color: #101010;
-                width: 65px;
-                line-height: 30px;
+            width: 120px;
+            height: 30px;
+
+            > a {
+              position: absolute;
+              top: 0;
+              left: 0;
             }
-            .rightBox {
-                position: relative;
-                margin-left: 65px;
-                width: 480px;
-                height: 30px;
-                .startTime,
-                .durationTime {
-                    border: 1px solid #dbdbdb;
-                    padding: 0 9px;
-                    width: 480px;
-                    height: 30px;
-                }
-                select {
-                    width: 480px;
-                    height: 30px;
-                    border: 1px solid #dbdbdb;
-                    border-radius: 4px;
-                }
-            } // 输入框
-            .textBox {
-                box-sizing: border-box;
-                border: 1px solid #dbdbdb;
-                border-radius: 4px;
-                width: 480px;
-                height: 30px;
-                >input {
-                    width: 100%;
-                    line-height: 28px;
-                    background: transparent;
-                    padding: 0 9px;
-                }
-                .textNumBox {
-                    position: absolute;
-                    top: 0;
-                    right: 10px;
-                    line-height: 30px;
-                    font-size: 14px;
-                    color: #999999;
-                    >i {
-                        font-style: normal;
-                    }
-                }
-            } // 多行输入
-            .textArea {
-                position: relative;
-                width: 480px;
-                height: 246px;
-                >div {
-                    width: 480px;
-                    height: 246px; // overflow-y: scroll;
-                    border: 1px solid #dbdbdb;
-                    border-radius: 4px;
-                    line-height: 30px;
-                    font-size: 14px;
-                    color: #101010;
-                    padding: 0 9px;
-                    outline: none;
-                }
-                .areaNumBox {
-                    position: absolute;
-                    bottom: 9px;
-                    right: 9px;
-                    font-size: 14px;
-                    color: #999999;
-                    >i {
-                        font-style: normal;
-                    }
-                }
-            } // 封面box
-            .coverBox {
-                position: relative; // width: 220px;
-                height: 140px;
-                .coverImgBox {
-                    background: url('/images/liveDefault.png') no-repeat;
-                    background-size: 100%;
-                    width: 220px;
-                    height: 140px;
-                    >img {
-                        width: 220px;
-                        height: 140px;
-                        border: 1px solid #dbdbdb;
-                        border-radius: 4px;
-                    }
-                }
-                .coverBtnBox {
-                    position: absolute;
-                    bottom: 60px;
-                    left: 230px;
-                    .btnBox {
-                        position: relative;
-                        width: 120px;
-                        height: 30px;
-                        >a {
-                            position: absolute;
-                            top: 0;
-                            left: 0;
-                        }
-                        >input {
-                            position: absolute;
-                            top: 0;
-                            left: 0;
-                            z-index: 9;
-                            display: block;
-                            width: 120px;
-                            height: 30px;
-                            background: red;
-                            opacity: 0;
-                            cursor: pointer;
-                        }
-                    }
-                }
+
+            > input {
+              position: absolute;
+              top: 0;
+              left: 0;
+              z-index: 9;
+              display: block;
+              width: 120px;
+              height: 30px;
+              background: red;
+              opacity: 0;
+              cursor: pointer;
             }
+          }
         }
+      }
     }
-    .optionContent {
-        margin: 170px 0 0;
-        text-align: center;
-        >a {
-            display: inline-block;
-            width: 200px;
-            height: 40px;
-            line-height: 40px;
-            border-radius: 10px;
-            font-size: 14px;
-            letter-spacing: 2px;
-            &.submitBtn {
-                background: #516dcf;
-                border: 1px solid #3249c2;
-                color: #ffffff;
-            }
-            &.cancelBtn {
-                border: 1px solid #bdbdbd;
-                color: #101010;
-            }
-        }
+  }
+
+  .optionContent {
+    margin: 170px 0 0;
+    text-align: center;
+
+    > a {
+      display: inline-block;
+      width: 200px;
+      height: 40px;
+      line-height: 40px;
+      border-radius: 10px;
+      font-size: 14px;
+      letter-spacing: 2px;
+
+      &.submitBtn {
+        background: #516dcf;
+        border: 1px solid #3249c2;
+        color: #ffffff;
+      }
+
+      &.cancelBtn {
+        border: 1px solid #bdbdbd;
+        color: #101010;
+      }
     }
+  }
 }
 
 // 主体部分 - end
 // 成功弹框
 .hintContent {
-    display: none;
-    width: 340px;
-    height: 200px;
-    box-sizing: border-box;
-    padding-top: 70px;
-    background: #f4f4f4;
-    border-radius: 10px;
-    text-align: center;
-    >img {
-        vertical-align: middle;
-        margin-right: 15px;
-    }
-    >span {
-        vertical-align: middle;
-        font-size: 22px;
-        color: #101010;
-    }
+  display: none;
+  width: 340px;
+  height: 200px;
+  box-sizing: border-box;
+  padding-top: 70px;
+  background: #f4f4f4;
+  border-radius: 10px;
+  text-align: center;
+
+  > img {
+    vertical-align: middle;
+    margin-right: 15px;
+  }
+
+  > span {
+    vertical-align: middle;
+    font-size: 22px;
+    color: #101010;
+  }
 }
