@@ -2,6 +2,7 @@ package com.sicmed.remote.yunqiyun.service;
 
 import com.alibaba.fastjson.JSON;
 import com.sicmed.remote.common.Constant;
+import com.sicmed.remote.common.util.FileUtils;
 import com.sicmed.remote.web.YoonaLtUtils.HttpClientUtils;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
 import com.sicmed.remote.web.service.BaseService;
@@ -296,7 +297,7 @@ public class YqyLiveService implements BaseService<YqyLive> {
         String fileName = UUID.randomUUID().toString() + contentType;
         String pictureUrl = "";
         try {
-            FileController.uploadFile(multipartFile.getBytes(), staticPathImage + "/coverUrl", fileName);
+            FileUtils.uploadFile(multipartFile.getBytes(), staticPathImage + "/coverUrl", fileName);
             pictureUrl = "coverUrl/" + fileName;
         } catch (Exception e) {
             e.printStackTrace();

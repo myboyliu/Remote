@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.service;
 
+import com.sicmed.remote.common.util.FileUtils;
 import com.sicmed.remote.web.controller.FileController;
 import com.sicmed.remote.web.entity.Banner;
 import com.sicmed.remote.web.mapper.BannerMapper;
@@ -69,7 +70,7 @@ public class BannerService implements BaseService <Banner> {
             String contentType = fileNameAndSuffixName.substring(fileNameAndSuffixName.lastIndexOf("."));
             String fileName = UUID.randomUUID( ).toString( ) + contentType;
             try {
-                FileController.uploadFile(multipartFile.getBytes( ), location + "/banner", fileName);
+                FileUtils.uploadFile(multipartFile.getBytes( ), location + "/banner", fileName);
                 pictureUrl = "banner/" + fileName;
             } catch (Exception e) {
                 e.printStackTrace();
