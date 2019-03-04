@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sicmed.remote.live.mapper.LiveMapper">
+    <resultMap id="BaseResultMap" type="com.sicmed.remote.live.entity.Live">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="live_id" jdbcType="VARCHAR" property="liveId"/>
+        <result column="live_name" jdbcType="VARCHAR" property="liveName"/>
+        <result column="live_number" jdbcType="VARCHAR" property="liveNumber"/>
+        <result column="live_cover_url" jdbcType="VARCHAR" property="liveCoverUrl"/>
+        <result column="live_description" jdbcType="VARCHAR" property="liveDescription"/>
+        <result column="live_start_time" jdbcType="TIMESTAMP" property="liveStartTime"/>
+        <result column="live_end_time" jdbcType="TIMESTAMP" property="liveEndTime"/>
+        <result column="live_branch" jdbcType="VARCHAR" property="liveBranch"/>
+        <result column="live_password" jdbcType="VARCHAR" property="livePassword"/>
+        <result column="live_type" jdbcType="VARCHAR" property="liveType"/>
+        <result column="live_period" jdbcType="VARCHAR" property="livePeriod"/>
+        <result column="live_url" jdbcType="VARCHAR" property="liveUrl"/>
+        <result column="live_scope" jdbcType="VARCHAR" property="liveScope"/>
+        <result column="live_user" jdbcType="VARCHAR" property="liveUser"/>
+        <result column="live_mute" jdbcType="BIT" property="liveMute"/>
+        <result column="live_record" jdbcType="BIT" property="liveRecord"/>
+        <result column="live_start" jdbcType="BIT" property="liveStart"/>
+        <result column="live_json" jdbcType="VARCHAR" property="liveJson"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="delete_user" jdbcType="VARCHAR" property="deleteUser"/>
+        <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime"/>
+        <result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, live_id, live_name, live_number, live_cover_url, live_description, live_start_time, 
+    live_end_time, live_branch, live_password, live_type, live_period, live_url, live_scope, 
+    live_user, live_mute, live_record, live_start, live_json, create_user, create_time, 
+    update_user, update_time, delete_user, delete_time, del_flag
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from _live
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from _live
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.sicmed.remote.live.entity.Live">
+        <selectKey keyProperty="id" resultType="java.lang.String"
+                   order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into _live (id, live_id, live_name,
+        live_number, live_cover_url, live_description,
+        live_start_time, live_end_time, live_branch,
+        live_password, live_type, live_period,
+        live_url, live_scope, live_user,
+        live_mute, live_record, live_start,
+        live_json, create_user, create_time,
+        update_user, update_time, delete_user,
+        delete_time, del_flag)
+        values (#{id,jdbcType=VARCHAR}, #{liveId,jdbcType=VARCHAR}, #{liveName,jdbcType=VARCHAR},
+        #{liveNumber,jdbcType=VARCHAR}, #{liveCoverUrl,jdbcType=VARCHAR}, #{liveDescription,jdbcType=VARCHAR},
+        #{liveStartTime,jdbcType=TIMESTAMP}, #{liveEndTime,jdbcType=TIMESTAMP}, #{liveBranch,jdbcType=VARCHAR},
+        #{livePassword,jdbcType=VARCHAR}, #{liveType,jdbcType=VARCHAR}, #{livePeriod,jdbcType=VARCHAR},
+        #{liveUrl,jdbcType=VARCHAR}, #{liveScope,jdbcType=VARCHAR}, #{liveUser,jdbcType=VARCHAR},
+        #{liveMute,jdbcType=BIT}, #{liveRecord,jdbcType=BIT}, #{liveStart,jdbcType=BIT},
+        #{liveJson,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR},
+        #{deleteTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.sicmed.remote.live.entity.Live">
+        <selectKey keyProperty="id" resultType="java.lang.String"
+                   order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into _live
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="liveId != null">
+                live_id,
+            </if>
+            <if test="liveName != null">
+                live_name,
+            </if>
+            <if test="liveNumber != null">
+                live_number,
+            </if>
+            <if test="liveCoverUrl != null">
+                live_cover_url,
+            </if>
+            <if test="liveDescription != null">
+                live_description,
+            </if>
+            <if test="liveStartTime != null">
+                live_start_time,
+            </if>
+            <if test="liveEndTime != null">
+                live_end_time,
+            </if>
+            <if test="liveBranch != null">
+                live_branch,
+            </if>
+            <if test="livePassword != null">
+                live_password,
+            </if>
+            <if test="liveType != null">
+                live_type,
+            </if>
+            <if test="livePeriod != null">
+                live_period,
+            </if>
+            <if test="liveUrl != null">
+                live_url,
+            </if>
+            <if test="liveScope != null">
+                live_scope,
+            </if>
+            <if test="liveUser != null">
+                live_user,
+            </if>
+            <if test="liveMute != null">
+                live_mute,
+            </if>
+            <if test="liveRecord != null">
+                live_record,
+            </if>
+            <if test="liveStart != null">
+                live_start,
+            </if>
+            <if test="liveJson != null">
+                live_json,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteUser != null">
+                delete_user,
+            </if>
+            <if test="deleteTime != null">
+                delete_time,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="liveId != null">
+                #{liveId,jdbcType=VARCHAR},
+            </if>
+            <if test="liveName != null">
+                #{liveName,jdbcType=VARCHAR},
+            </if>
+            <if test="liveNumber != null">
+                #{liveNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="liveCoverUrl != null">
+                #{liveCoverUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="liveDescription != null">
+                #{liveDescription,jdbcType=VARCHAR},
+            </if>
+            <if test="liveStartTime != null">
+                #{liveStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="liveEndTime != null">
+                #{liveEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="liveBranch != null">
+                #{liveBranch,jdbcType=VARCHAR},
+            </if>
+            <if test="livePassword != null">
+                #{livePassword,jdbcType=VARCHAR},
+            </if>
+            <if test="liveType != null">
+                #{liveType,jdbcType=VARCHAR},
+            </if>
+            <if test="livePeriod != null">
+                #{livePeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="liveUrl != null">
+                #{liveUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="liveScope != null">
+                #{liveScope,jdbcType=VARCHAR},
+            </if>
+            <if test="liveUser != null">
+                #{liveUser,jdbcType=VARCHAR},
+            </if>
+            <if test="liveMute != null">
+                #{liveMute,jdbcType=BIT},
+            </if>
+            <if test="liveRecord != null">
+                #{liveRecord,jdbcType=BIT},
+            </if>
+            <if test="liveStart != null">
+                #{liveStart,jdbcType=BIT},
+            </if>
+            <if test="liveJson != null">
+                #{liveJson,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.live.entity.Live">
+        update _live
+        <set>
+            <if test="liveId != null">
+                live_id = #{liveId,jdbcType=VARCHAR},
+            </if>
+            <if test="liveName != null">
+                live_name = #{liveName,jdbcType=VARCHAR},
+            </if>
+            <if test="liveNumber != null">
+                live_number = #{liveNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="liveCoverUrl != null">
+                live_cover_url = #{liveCoverUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="liveDescription != null">
+                live_description = #{liveDescription,jdbcType=VARCHAR},
+            </if>
+            <if test="liveStartTime != null">
+                live_start_time = #{liveStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="liveEndTime != null">
+                live_end_time = #{liveEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="liveBranch != null">
+                live_branch = #{liveBranch,jdbcType=VARCHAR},
+            </if>
+            <if test="livePassword != null">
+                live_password = #{livePassword,jdbcType=VARCHAR},
+            </if>
+            <if test="liveType != null">
+                live_type = #{liveType,jdbcType=VARCHAR},
+            </if>
+            <if test="livePeriod != null">
+                live_period = #{livePeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="liveUrl != null">
+                live_url = #{liveUrl,jdbcType=VARCHAR},
+            </if>
+            <if test="liveScope != null">
+                live_scope = #{liveScope,jdbcType=VARCHAR},
+            </if>
+            <if test="liveUser != null">
+                live_user = #{liveUser,jdbcType=VARCHAR},
+            </if>
+            <if test="liveMute != null">
+                live_mute = #{liveMute,jdbcType=BIT},
+            </if>
+            <if test="liveRecord != null">
+                live_record = #{liveRecord,jdbcType=BIT},
+            </if>
+            <if test="liveStart != null">
+                live_start = #{liveStart,jdbcType=BIT},
+            </if>
+            <if test="liveJson != null">
+                live_json = #{liveJson,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                delete_user = #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.live.entity.Live">
+    update _live
+    set live_id = #{liveId,jdbcType=VARCHAR},
+      live_name = #{liveName,jdbcType=VARCHAR},
+      live_number = #{liveNumber,jdbcType=VARCHAR},
+      live_cover_url = #{liveCoverUrl,jdbcType=VARCHAR},
+      live_description = #{liveDescription,jdbcType=VARCHAR},
+      live_start_time = #{liveStartTime,jdbcType=TIMESTAMP},
+      live_end_time = #{liveEndTime,jdbcType=TIMESTAMP},
+      live_branch = #{liveBranch,jdbcType=VARCHAR},
+      live_password = #{livePassword,jdbcType=VARCHAR},
+      live_type = #{liveType,jdbcType=VARCHAR},
+      live_period = #{livePeriod,jdbcType=VARCHAR},
+      live_url = #{liveUrl,jdbcType=VARCHAR},
+      live_scope = #{liveScope,jdbcType=VARCHAR},
+      live_user = #{liveUser,jdbcType=VARCHAR},
+      live_mute = #{liveMute,jdbcType=BIT},
+      live_record = #{liveRecord,jdbcType=BIT},
+      live_start = #{liveStart,jdbcType=BIT},
+      live_json = #{liveJson,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_user = #{deleteUser,jdbcType=VARCHAR},
+      delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+    <!-- 根据条件 查询数量 -->
+    <select id="selectCountByParam" parameterType="com.sicmed.remote.live.bean.GetLiveParamBean"
+            resultType="java.lang.Integer">
+        select
+        COUNT(id)
+        from _live
+        <where>
+            del_flag = '0'
+            <if test="liveType != null">
+                AND live_type = #{liveType,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+    <!-- 根据条件 查询列表 并排序 -->
+    <select id="selectListByParam" parameterType="com.sicmed.remote.live.bean.GetLiveParamBean"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from _live
+        <where>
+            del_flag = '0'
+            <if test="liveType != null">
+                AND live_type = #{liveType,jdbcType=VARCHAR}
+            </if>
+        </where>
+        ORDER BY
+        <if test="groupByTime != null">
+            create_time DESC ,
+        </if>
+        <if test="groupByHot != null">
+            playback DESC,
+        </if>
+        del_flag
+    </select>
+</mapper>
