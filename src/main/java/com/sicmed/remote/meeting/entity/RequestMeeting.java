@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class Meeting implements Serializable {
+public class RequestMeeting implements Serializable {
 
     private String mobile;              //手机号
 

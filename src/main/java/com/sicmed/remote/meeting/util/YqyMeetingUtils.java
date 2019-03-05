@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.sicmed.remote.common.Constant;
 import com.sicmed.remote.meeting.bean.MeetingBean;
-import com.sicmed.remote.meeting.entity.Meeting;
+import com.sicmed.remote.meeting.entity.RequestMeeting;
 import com.sicmed.remote.web.YoonaLtUtils.HttpClientUtils;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -30,33 +30,33 @@ public class YqyMeetingUtils {
 
     /**
      * 创建会议
-     * @param meeting
+     * @param requestMeeting
      * @return
      */
-    public static MeetingBean createMeeting(Meeting meeting) throws Exception{
+    public static MeetingBean createMeeting(RequestMeeting requestMeeting) throws Exception{
         //获取token
-        String accessToken = getToken(meeting.getMobile(),meeting.getRealName());
+        String accessToken = getToken(requestMeeting.getMobile(), requestMeeting.getRealName());
         if (accessToken == null){
             throw new CustomException("鉴权接口调用失败");
         }
         //调用云起云创建会议接口
-        String res = svocCreateInterface(accessToken, meeting.getAppointmentName(), meeting.getStartTime(),meeting.getEndTime(), meeting.isLive(), meeting.isMute(), meeting.isRecord(), meeting.getConcurrentNum());
+        String res = svocCreateInterface(accessToken, requestMeeting.getAppointmentName(), requestMeeting.getStartTime(), requestMeeting.getEndTime(), requestMeeting.isLive(), requestMeeting.isMute(), requestMeeting.isRecord(), requestMeeting.getConcurrentNum());
         return responseObject(res);
     }
 
     /**
      * 修改会议
-     * @param meeting
+     * @param requestMeeting
      * @return
      */
-    public static MeetingBean updateMeeting(Meeting meeting) throws Exception {
+    public static MeetingBean updateMeeting(RequestMeeting requestMeeting) throws Exception {
         //获取token
-        String accessToken = getToken(meeting.getMobile(),meeting.getRealName());
+        String accessToken = getToken(requestMeeting.getMobile(), requestMeeting.getRealName());
         if (accessToken == null){
             throw new CustomException("鉴权接口调用失败");
         }
         //调用修改接口
-        String res = svocUpdateInterface(accessToken, meeting.getAppointmentName(), meeting.getAppointmentId(),meeting.getHostPwd(), meeting.getLivePwd(), meeting.getStartTime(), meeting.getEndTime(), meeting.isLive(), meeting.isMute(), meeting.isRecord(), meeting.getConcurrentNum());
+        String res = svocUpdateInterface(accessToken, requestMeeting.getAppointmentName(), requestMeeting.getAppointmentId(), requestMeeting.getHostPwd(), requestMeeting.getLivePwd(), requestMeeting.getStartTime(), requestMeeting.getEndTime(), requestMeeting.isLive(), requestMeeting.isMute(), requestMeeting.isRecord(), requestMeeting.getConcurrentNum());
         return responseObject(res);
     }
 
@@ -64,28 +64,28 @@ public class YqyMeetingUtils {
      * 删除会议
      * @return
      */
-    public static MeetingBean deleteMeeting(Meeting meeting) throws Exception {
+    public static MeetingBean deleteMeeting(RequestMeeting requestMeeting) throws Exception {
         //获取token
-        String accessToken = getToken(meeting.getMobile(),meeting.getRealName());
+        String accessToken = getToken(requestMeeting.getMobile(), requestMeeting.getRealName());
         if (accessToken == null){
             throw new CustomException("鉴权接口调用失败");
         }
-        String res = svocDeleteInterface(accessToken,meeting.getAppointmentId());
+        String res = svocDeleteInterface(accessToken, requestMeeting.getAppointmentId());
         return responseObject(res);
     }
 
     /**
      * 根据会议号获取会议id,预约id
-     * @param meeting
+     * @param requestMeeting
      * @return
      */
-    public static MeetingBean getMeetingId(Meeting meeting) throws Exception {
+    public static MeetingBean getMeetingId(RequestMeeting requestMeeting) throws Exception {
         //获取token
-        String accessToken = getToken(meeting.getMobile(),meeting.getRealName());
+        String accessToken = getToken(requestMeeting.getMobile(), requestMeeting.getRealName());
         if (accessToken == null){
             throw new CustomException("鉴权接口调用失败");
         }
-        String res = svocGetInterface(accessToken,meeting.getAppointmentNumber());
+        String res = svocGetInterface(accessToken, requestMeeting.getAppointmentNumber());
         return responseObject(res);
     }
 
