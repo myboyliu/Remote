@@ -5,10 +5,7 @@ import com.sicmed.remote.common.Constant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.Charsets;
 import org.apache.http.*;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -64,7 +61,6 @@ public class HttpClientUtils {
             }
         } catch (Exception e) {
             log.error("远程调用失败,errorMsg={}", e.getMessage());
-            System.out.println("远程调用失败,errorMsg={}"+e.getMessage());
         }finally {
             try {
                 httpClient.close();
@@ -206,4 +202,43 @@ public class HttpClientUtils {
         return result;
     }
 
+    /**
+     * get请求
+     * @param roomNumber
+     * @param url
+     * @param accessToken
+     * @return
+     */
+    public static String getMeetingId(String roomNumber, String url, String accessToken) {
+        CloseableHttpClient client = null;
+        HttpGet httpGet = null;
+        String result = null;
+        try {
+            client = new SSLClient();
+            httpGet = new HttpGet(url + "/" + roomNumber);
+
+            httpGet.addHeader("Content-Type", "application/json");
+            httpGet.addHeader("Authorization", "Bearer" + accessToken);
+
+            CloseableHttpResponse response = client.execute(httpGet);
+            HttpEntity entity = response.getEntity();
+
+            if (entity != null) {
+                result = EntityUtils.toString(entity, "utf-8");
+                //释放流
+                EntityUtils.consume(entity);
+            }
+        } catch (Exception e) {
+            log.error("远程调用失败,errorMsg={}", e.getMessage());
+        } finally {
+            try {
+                client.close();
+                //关闭连接
+                httpGet.releaseConnection();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
 }
