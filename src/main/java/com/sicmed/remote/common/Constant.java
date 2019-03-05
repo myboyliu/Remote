@@ -34,6 +34,8 @@ public class Constant {
     public static final String DEFAULT_COVER_URL ="picture/default/default.png";
 
 
+
+
     /**
      * 云启云相关参数
      * 服务器url
@@ -43,7 +45,13 @@ public class Constant {
      */
     public static final String BASEPATH = "https://ent.uc.bjcyh.info:8443";
     public static final String CLIENTSECRET = "MIICXQIBAAKBgQCxwfRs7dncpWJ27OQ9rIjHeBbkaigRY4in+DEKBsbmT3lpb2C6JQyqgxl9C+l5zSbONp0OIibaAVsLPSbUPVwIDAQABAoGAK76VmKIuiI2fZJQbdq6oDQ";
-    public static final String AUTHTOKEN_URL = "/appapi/api/authToken";
+    public static final String AUTHTOKEN_URL = "/appapi/api/authToken/ylyw";
     public static final String APPOINTMENTS_URL = "/appapi/api/appointments";
+    public static final String CONFERENCES_URL = "/appapi/api/conferences";
+
+    /**
+     * 过期时间110分钟的毫秒值
+     */
+    public static final int EXPIRATION_DATE = 6600000;
 
 }
