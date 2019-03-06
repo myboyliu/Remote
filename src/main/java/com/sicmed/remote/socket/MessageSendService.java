@@ -9,17 +9,17 @@ import org.springframework.web.socket.WebSocketSession;
  * 消息分发工具类
  */
 @Slf4j
-public class MessageSendUtils {
+public class MessageSendService {
 
     @Autowired
-    private static SimpMessagingTemplate template;
+    private  SimpMessagingTemplate template;
 
     /**
      * 发送消息给指定用户
      * @param token 用户ID
      * @param messageJson 消息内容 JSON 字符串
      */
-    public static void sendUser(String token, String messageJson) {
+    public void sendUser(String token, String messageJson) {
         log.debug(token);
         log.debug(messageJson);
         //1.发送在线消息
@@ -40,7 +40,7 @@ public class MessageSendUtils {
      * 发送消息给所有用户
      * @param messageJson 消息内容 JSON 字符串
      */
-    public static void sendTopic(String messageJson) {
+    public void sendTopic(String messageJson) {
         log.debug(messageJson);
         //1.发送在线消息
         template.convertAndSend("/topic/sendTopic", messageJson);
