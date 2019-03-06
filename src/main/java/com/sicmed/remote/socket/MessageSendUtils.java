@@ -28,9 +28,9 @@ public class MessageSendUtils {
             /**
              * 主要防止broken pipe
              */
-            template.convertAndSendToUser(token, "/queue/sendUser", "您好");
+            template.convertAndSendToUser(token, "/queue/sendUser", messageJson);
         }
-
+        log.debug("获取 socket 用户 失败");
         //2.存储离线消息
 
 
@@ -43,7 +43,7 @@ public class MessageSendUtils {
     public static void sendTopic(String messageJson) {
         log.debug(messageJson);
         //1.发送在线消息
-        template.convertAndSend("/topic/sendTopic", "大家晚上好");
+        template.convertAndSend("/topic/sendTopic", messageJson);
         //2.存储离线消息
     }
 }
