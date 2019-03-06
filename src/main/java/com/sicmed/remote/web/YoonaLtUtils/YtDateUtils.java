@@ -2,10 +2,8 @@ package com.sicmed.remote.web.YoonaLtUtils;
 
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -30,11 +28,6 @@ public class YtDateUtils {
      * 十五分钟换算成毫秒
      */
     public static long FIFTEEN_MINUTES = 15 * 60 * 1000;
-
-    private static final SimpleDateFormat dayOfDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-    private static final SimpleDateFormat secondOfDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
 
     /**
      * Convert String format to Date format
@@ -121,9 +114,9 @@ public class YtDateUtils {
      * @param endDate   结束时间
      * @return
      */
-    public static float timeDifference(String startDate, String endDate) {
-        if (stringToDates(endDate).getTime() > stringToDates(startDate).getTime()) {
-            long date = stringToDates(endDate).getTime() - stringToDates(startDate).getTime();
+    public static float timeDifference(Date startDate, Date endDate) {
+        if (endDate.getTime() > startDate.getTime()) {
+            long date = endDate.getTime() - startDate.getTime();
             return (float) date / 3600000;
         } else {
             return 0;
