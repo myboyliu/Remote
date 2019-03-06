@@ -29,7 +29,12 @@ public class YtDateUtils {
     /**
      * 十五分钟换算成毫秒
      */
-    public static long FIFTEEN_MINUTES = 15*60*1000;
+    public static long FIFTEEN_MINUTES = 15 * 60 * 1000;
+
+    private static final SimpleDateFormat dayOfDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    private static final SimpleDateFormat secondOfDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 
     /**
      * Convert String format to Date format
@@ -138,12 +143,12 @@ public class YtDateUtils {
     /**
      * 判断开始时间和当前时间差大于十五分
      */
-    public static boolean compareDate(String startDate){
-        if (stringToDates(startDate).getTime()>System.currentTimeMillis()+FIFTEEN_MINUTES){
+    public static boolean compareDate(String startDate) {
+        if (stringToDates(startDate).getTime() > System.currentTimeMillis() + FIFTEEN_MINUTES) {
             System.out.println(stringToDates(startDate).getTime());
-            System.out.println(System.currentTimeMillis()+FIFTEEN_MINUTES);
+            System.out.println(System.currentTimeMillis() + FIFTEEN_MINUTES);
             return true;
-        }else {
+        } else {
             return false;
         }
     }
