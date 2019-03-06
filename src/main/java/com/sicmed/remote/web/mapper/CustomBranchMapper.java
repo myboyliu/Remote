@@ -36,4 +36,6 @@ public interface CustomBranchMapper {
     List<HospitalBean> selectHospitalBranchList(Hospital hospital);
 
     List<HospitalBean> getMasterHospitalBranchList(Hospital hospital);
+
+    List<CustomBranch> selectByHosId(String hospitalId);
 }

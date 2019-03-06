@@ -12,4 +12,6 @@ public class GetLiveParamBean extends PageEntity {
 
     private String groupByHot;
 
+    private String createUser;
+
 }

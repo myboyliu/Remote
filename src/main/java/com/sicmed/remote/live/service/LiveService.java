@@ -23,7 +23,7 @@ public class LiveService implements BaseService<Live> {
 
     @Override
     public int deleteByPrimaryKey(String id) {
-        return 0;
+        return liveMapper.deleteByPrimaryKey(id);
     }
 
     @Override
@@ -61,5 +61,13 @@ public class LiveService implements BaseService<Live> {
 
     public List<Live> searchListByParam(FuzzySearchLiveBean fuzzySearchLiveBean) {
         return liveMapper.searchListByParam(fuzzySearchLiveBean);
+    }
+
+    public int getCountByUser(String requestToken) {
+      return   liveMapper.getCountByUser(requestToken);
+    }
+
+    public List<Live> getListByUser(GetLiveParamBean getLiveParamBean) {
+        return liveMapper.getListByUser(getLiveParamBean);
     }
 }

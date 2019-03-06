@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.DoctorCertified;
+import com.sicmed.remote.meeting.util.YqyMeetingUtils;
 import com.sicmed.remote.web.bean.BranchBean;
 import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.bean.UserBean;
@@ -206,6 +207,8 @@ public class UserController extends BaseController {
         String userId = resultUserAccount.getId();
 //        UserDetail userDetail = userDetailService.getByPrimaryKey(userId);
         CurrentUserBean currentUserBean = userDetailService.selectCurrentUser(userId);
+        currentUserBean.setUserPhone(userAccount.getUserPhone());
+        YqyMeetingUtils.checkToken(userAccount.getUserPhone(),currentUserBean.getUserName());
 //        redisTemplate.opsForValue().set(userId, userDetail);
         redisTemplate.opsForValue().set(userId, currentUserBean);
 

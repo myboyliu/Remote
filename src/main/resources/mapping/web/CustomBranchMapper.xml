@@ -355,4 +355,14 @@
         WHERE
         customBranch.del_flag = "0" AND hospital.hospital_weight = 0
     </select>
+
+    <select id="selectByHosId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from custom_branch
+        WHERE
+        del_flag = "0"
+        AND hospital_id = #{hospitalId,jdbcType=VARCHAR}
+    </select>
+
 </mapper>

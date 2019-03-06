@@ -141,6 +141,16 @@ public class CustomBranchController extends BaseController {
     }
 
 
+    @GetMapping(value = "getLocalHospitalBranch")
+    public Object getLocalHospitalBranch() {
+
+
+        List<CustomBranch> customBranchList = customBranchService.selectByHosId(getCurrentUser().getHospitalId());
+
+        return succeedRequestOfSelect(customBranchList);
+    }
+
+
     /**
      * 查询所有专家类型列表
      *

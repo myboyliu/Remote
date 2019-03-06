@@ -3,6 +3,7 @@ package com.sicmed.remote.meeting.entity;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
 public class RequestMeeting implements Serializable {
@@ -31,9 +32,9 @@ public class RequestMeeting implements Serializable {
 
     private String livePwd;             //直播密码
 
-    private String startTime;           //会诊开始时间
+    private Date startTime;           //会诊开始时间
 
-    private String endTime;             //会诊结束时间(通过它计算时长)
+    private Date endTime;             //会诊结束时间(通过它计算时长)
 
     private int concurrentNum;          //所需并发数
 

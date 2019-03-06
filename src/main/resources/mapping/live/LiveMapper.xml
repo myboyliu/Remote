@@ -347,6 +347,29 @@
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
+
+    <resultMap id="ListResultMap" type="com.sicmed.remote.live.bean.LiveListBean">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="live_id" jdbcType="VARCHAR" property="liveId"/>
+        <result column="live_name" jdbcType="VARCHAR" property="liveName"/>
+        <result column="live_number" jdbcType="VARCHAR" property="liveNumber"/>
+        <result column="live_cover_url" jdbcType="VARCHAR" property="liveCoverUrl"/>
+        <result column="live_description" jdbcType="VARCHAR" property="liveDescription"/>
+        <result column="live_start_time" jdbcType="TIMESTAMP" property="liveStartTime"/>
+        <result column="live_end_time" jdbcType="TIMESTAMP" property="liveEndTime"/>
+        <result column="liveBranchName" jdbcType="VARCHAR" property="liveBranchName"/>
+        <result column="liveHospitalName" jdbcType="VARCHAR" property="liveHospitalName"/>
+        <result column="live_password" jdbcType="VARCHAR" property="livePassword"/>
+        <result column="live_type" jdbcType="VARCHAR" property="liveType"/>
+        <result column="live_period" jdbcType="VARCHAR" property="livePeriod"/>
+        <result column="live_url" jdbcType="VARCHAR" property="liveUrl"/>
+        <result column="live_scope" jdbcType="VARCHAR" property="liveScope"/>
+        <result column="live_user" jdbcType="VARCHAR" property="liveUser"/>
+        <result column="live_mute" jdbcType="BIT" property="liveMute"/>
+        <result column="live_record" jdbcType="BIT" property="liveRecord"/>
+        <result column="live_start" jdbcType="BIT" property="liveStart"/>
+        <result column="live_json" jdbcType="VARCHAR" property="liveJson"/>
+    </resultMap>
     <!-- 根据条件 查询数量 -->
     <select id="selectCountByParam" parameterType="com.sicmed.remote.live.bean.GetLiveParamBean"
             resultType="java.lang.Integer">
@@ -362,23 +385,88 @@
     </select>
     <!-- 根据条件 查询列表 并排序 -->
     <select id="selectListByParam" parameterType="com.sicmed.remote.live.bean.GetLiveParamBean"
-            resultMap="BaseResultMap">
+            resultMap="ListResultMap">
         select
-        <include refid="Base_Column_List"/>
-        from _live
+        live.id id, live_id, live_name, live_number, live_cover_url, live_description, live_start_time,
+        live_end_time, live_branch, live_password, live_type, live_period, live_url, live_scope,
+        live_user, live_mute, live_record, live_start, live_json,
+        customBranch.custom_name liveBranchName,hospital.hospital_name liveHospitalName
+        from _live live
+        LEFT JOIN custom_branch customBranch ON customBranch.id = live.live_branch
+        LEFT JOIN base_hospital hospital ON hospital.id = customBranch.hospital_id
         <where>
-            del_flag = '0'
+            live.del_flag = '0'
             <if test="liveType != null">
-                AND live_type = #{liveType,jdbcType=VARCHAR}
+                AND live.live_type = #{liveType,jdbcType=VARCHAR}
             </if>
         </where>
         ORDER BY
         <if test="groupByTime != null">
-            create_time DESC ,
+            live.create_time DESC ,
         </if>
-        <if test="groupByHot != null">
-            playback DESC,
-        </if>
-        del_flag
+        live.del_flag
+        limit #{beginNo,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}
     </select>
+    <!-- 模糊 查询数量 -->
+    <select id="searchCountByParam" parameterType="com.sicmed.remote.live.bean.FuzzySearchLiveBean"
+            resultType="java.lang.Integer">
+        select
+        COUNT(id)
+        from _live
+        <where>
+            live_name LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%')
+            AND del_flag = '0'
+        </where>
+    </select>
+    <!-- 模糊 查询列表 并排序 -->
+    <select id="searchListByParam" parameterType="com.sicmed.remote.live.bean.FuzzySearchLiveBean"
+            resultMap="ListResultMap">
+        select
+        live.id id, live_id, live_name, live_number, live_cover_url, live_description, live_start_time,
+        live_end_time, live_branch, live_password, live_type, live_period, live_url, live_scope,
+        live_user, live_mute, live_record, live_start, live_json,
+        customBranch.custom_name liveBranchName,hospital.hospital_name liveHospitalName
+        from _live live
+        LEFT JOIN custom_branch customBranch ON customBranch.id = live.live_branch
+        LEFT JOIN base_hospital hospital ON hospital.id = customBranch.hospital_id
+        <where>
+            live.live_name LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%')
+            AND live.del_flag = '0'
+        </where>
+        ORDER BY
+        live.create_time DESC , live.del_flag
+        limit #{beginNo,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}
+    </select>
+    <!-- 根据创建人 查询列表 数量 -->
+    <select id="getCountByUser" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select
+        COUNT(id)
+        from _live
+        <where>
+            del_flag = '0'
+            AND create_user = #{id,jdbcType=VARCHAR}
+        </where>
+    </select>
+    <!-- 根据创建人 查询列表 并排序 -->
+    <select id="getListByUser" parameterType="com.sicmed.remote.live.bean.GetLiveParamBean"
+            resultMap="ListResultMap">
+        select
+        live.id id, live_id, live_name, live_number, live_cover_url, live_description, live_start_time,
+        live_end_time, live_branch, live_password, live_type, live_period, live_url, live_scope,
+        live_user, live_mute, live_record, live_start, live_json,
+        customBranch.custom_name liveBranchName,hospital.hospital_name liveHospitalName
+        from _live live
+        LEFT JOIN custom_branch customBranch ON customBranch.id = live.live_branch
+        LEFT JOIN base_hospital hospital ON hospital.id = customBranch.hospital_id
+        <where>
+            live.create_user = #{createUser,jdbcType=VARCHAR}
+            AND live.del_flag = '0'
+        </where>
+        ORDER BY
+        live.create_time DESC , live.del_flag
+        limit #{beginNo,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}
+    </select>
+
+
 </mapper>

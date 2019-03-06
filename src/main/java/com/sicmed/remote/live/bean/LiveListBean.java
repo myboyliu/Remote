@@ -1,4 +1,4 @@
-package com.sicmed.remote.live.entity;
+package com.sicmed.remote.live.bean;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class Live {
+public class LiveListBean {
     private String id;
 
     private String liveId;
@@ -25,7 +25,9 @@ public class Live {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     private Date liveEndTime;
 
-    private String liveBranch;
+    private String liveBranchName;
+
+    private String liveHospitalName;
 
     private String livePassword;
 
@@ -46,20 +48,5 @@ public class Live {
     private Boolean liveStart;
 
     private String liveJson;
-
-    private String createUser;
-
-    private Date createTime;
-
-    private String updateUser;
-
-    private Date updateTime;
-
-    private String deleteUser;
-
-    private Date deleteTime;
-
-    private String delFlag;
-
 
 }

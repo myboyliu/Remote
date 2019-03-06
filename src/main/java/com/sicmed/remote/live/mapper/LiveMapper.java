@@ -28,4 +28,8 @@ public interface LiveMapper {
     int searchCountByParam(FuzzySearchLiveBean fuzzySearchLiveBean);
 
     List<Live> searchListByParam(FuzzySearchLiveBean fuzzySearchLiveBean);
+
+    int getCountByUser(String requestToken);
+
+    List<Live> getListByUser(GetLiveParamBean getLiveParamBean);
 }

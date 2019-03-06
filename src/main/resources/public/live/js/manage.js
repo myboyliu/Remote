@@ -1,128 +1,110 @@
-$(function () {
-    var countNum = 0;
-    var pageSize = 10;
-    var pageNo = 1;
-    var liveInfo = null;
+function getLiveList() {
+    ajaxRequest("GET", getCountByParamUrl, "", false, false, true, getCountSuccess, null, null);
+}
 
-
-    // 查询自己发出的预告总数量
-    function findMyAnnouncementCount(pageNo) {
-        $.ajax({
-            type: 'POST',
-            url: IP + 'live/findMyAnnouncementList',
-            dataType: 'json',
-            xhrFields: {
-                withCredentials: true
-            },
-            data: {
-                "pageNo": pageNo,
-                "pageSize": pageSize,
-            },
-            crossDomain: true,
-            success: function (data) {
-                console.log(data)
-                if (data.code == 1) {
-                    countNum = data.data.page;
-                    $(".listCountObj").html(countNum);
-                    // 分页
-                    layui.use('laypage', function () {
-                        var laypage = layui.laypage;
-                        //执行一个laypage实例
-                        laypage.render({
-                            elem: 'listBox',
-                            count: countNum,
-                            limit: pageSize,
-                            theme: '#f6c567',
-                            jump: function (obj, first) {
-                                findMyAnnouncementList(obj.curr);
-                            }
-                        });
-                    });
-                } else if (data.code == 250) {
-                    // 未登录操作
-                    window.location = '/yilaiyiwang/login/login.html';
-                } else {
-                    // 其他操作
+function getCountSuccess(liveCount) {
+    if (liveCount === 0) {
+        let _html = '<p style="text-align: center;">暂无数据</p>'
+        $(".videoList").html(_html);
+    } else {
+        $(".listCountObj").html(liveCount);
+        layui.use('laypage', function () {
+            var laypage = layui.laypage;
+            //执行一个laypage实例
+            laypage.render({
+                elem: 'listBox',
+                count: liveCount,
+                limit: pageSize,
+                theme: '#f6c567',
+                jump: function (obj, first) {
+                    pageNo = obj.curr;
+                    ajaxRequest("GET", getListByParamUrl, "", false, false, true, renderLiveList, null, null);
                 }
-            },
-            error: function (err) {
-                console.log(err);
-            },
+            });
         });
     }
-    // 查询自己发出的预告列表
-    function findMyAnnouncementList(pageNo) {
-        $.ajax({
-            type: 'POST',
-            url: IP + 'live/findMyAnnouncementList',
-            dataType: 'json',
-            xhrFields: {
-                withCredentials: true
-            },
-            data: {
-                "pageNo": pageNo,
-                "pageSize": pageSize,
-            },
-            crossDomain: true,
-            success: function (data) {
-                console.log(data)
-                if (data.code == 1) {
-                    var tempArr = data.data.liveBroadcastList;
-                    var _html = "";
-                    if (tempArr.length > 0) {
-                        for (var i = 0; i < tempArr.length; i++) {
-                            _html += '<li name="' + tempArr[i].id + '" liveRoomId="' + tempArr[i].liveRoomId + '" class="videoItem clearfix" coverUrl="' + imgIp + tempArr[i].liveCoverUrl + '">\
+}
+
+function renderLiveList(liveList) {
+    console.log(liveList);
+    let _html = "";
+    for (let i = 0; i < liveList.length; i++) {
+        sessionStorage.setItem(liveList[i].id, liveList[i].liveJson)
+        let isDone = false;
+        let isGoing = false;
+        if (new Date().getTime() > new Date(liveList[i].liveEndTime).getTime()) {
+            isDone = true;
+        }
+        if (new Date().getTime() > new Date(liveList[i].liveStartTime).getTime() && new Date().getTime() < new Date(liveList[i].liveEndTime).getTime()) {
+            isGoing = true;
+        }
+        _html += '<li name="' + liveList[i].id + '" liveRoomId="' + liveList[i].liveNumber + '" class="videoItem clearfix" coverUrl="' + baseUrl + "/" + liveList[i].liveCoverUrl + '">\
                             <div class="leftBox">\
                                 <div class="videoBox">\
-                                    <img src="'+ imgIp + tempArr[i].liveCoverUrl + '" alt="">'
-                            if (new Date().getTime() > new Date(tempArr[i].liveEndTime).getTime()) {
-                                _html += '<p class="videoTime"><img src="../img/liveOver.png" alt=""></p>'
-                            }
-                            _html += '</div>\
+                                    <img src="' + baseUrl + "/" + liveList[i].liveCoverUrl + '" alt="">';
+        if (isDone) {
+            _html += '<p class="videoTime"><img src="../live/img/liveOver.png" alt=""></p>';
+        }
+        _html += '</div>\
                             </div>\
                             <div class="centerBox">\
-                                <h2 class="videoName">'+ tempArr[i].liveName + '</h2>\
-                                <p class="">'+ tempArr[i].hospitalName + '-' + tempArr[i].deptName + '</p>\
-                                <p class="uploadTime">直播时间：'+ tempArr[i].liveStartTime + '</p>\
+                                <h2 class="videoName">' + liveList[i].liveName + '</h2>\
+                                <p class="">' + liveList[i].liveHospitalName + '-' + liveList[i].liveBranchName + '</p>\
+                                <p class="uploadTime">直播时间：' + liveList[i].liveStartTime + '</p>\
                                 <div class="popularBox">\
                                     <a href="javascript:;">\
-                                        <img src="../liveManage/follow.png" alt="">\
+                                        <img src="../live/img/follow.png" alt="">\
                                     </a>\
                                     <span>关注</span>\
-                                    <i>'+ tempArr[i].followNum + '</i>\
+                                    <i>' + 0 + '</i>\
                                 </div>\
-                            </div>\
-                            <div class="optionBox">\
-                                <a class="editBtn" href="javascript:;">编辑</a>\
-                                <a class="deleteBtn" href="javascript:;">删除</a>\
-                            </div>\
-                            <div class="optionBox" style="margin-right: 10px;">\
-                                <a class="getLiveInfoBtn" href="javascript:;">查看信息</a>\
-                            </div>\
-                        </li>';
-                        }
-                    } else {
-                        _html = '<p style="text-align: center;">暂无数据</p>'
-                    }
-                    $(".videoList").html(_html);
-                } else if (data.code == 250) {
-                    // 未登录操作
-                    window.location = '/yilaiyiwang/login/login.html';
-                } else {
-                    // 其他操作
-                }
-            },
-            error: function (err) {
-                console.log(err);
-            },
-        });
-    }
+                            </div>'
 
-    findMyAnnouncementList(pageNo);
-    findMyAnnouncementCount(pageNo);
+        if (!isDone) {
+            _html += '<div class="optionBox">\
+                        <a class="editBtn" href="javascript:;">编辑</a>\
+                        <a class="deleteBtn" href="javascript:;">删除</a>\
+                      </div>'
+        }
+        if (isDone && liveList[i].liveRecord) {
+            _html += '<div class="optionBox" style="margin-right: 10px;">\
+                    <a class="getLiveInfoBtn" href="javascript:;">播放视频</a>'
+        }
+        if (isGoing) {
+            _html += '<div class="optionBox" style="margin-right: 10px;">\
+                    <a class="getLiveInfoBtn" href="javascript:;">查看信息</a>\
+                    <a class="liveControlBtn" href="javascript:;">直播控制</a>\
+                   </div>\
+                  </li>'
+        }
+        _html += '</div>\
+                  </li>'
+    }
+    $(".videoList").html(_html);
+}
+
+/**
+ * 删除直播
+ * @param id
+ */
+function deleteLive(id) {
+    let deleteData = new FormData();
+    deleteData.append("liveId", id);
+    ajaxRequest("POST", deleteByIdUrl, deleteData, false, false, true, deleteLiveSuccess, null, null);
+
+    function deleteLiveSuccess(result) {
+        console.log(result)
+        getLiveList();
+    }
+}
+
+$(function () {
+    var liveInfo = null;
+    getLiveList();
+
     // 删除事件
     $(".videoList").delegate(".deleteBtn", "click", function () {
-        deleteAnnouncement($(this).parents(".videoItem").attr("name"), $(this).parents(".videoItem").attr("liveRoomId"), $(this).parents(".videoItem").attr("coverUrl"), $(this));
+        deleteLive($(this).parents(".videoItem").attr("name"));
         // layer.open({
         //     type: 1,
         //     title: '',
@@ -132,89 +114,115 @@ $(function () {
         //     content: $('.optionContent')
         // });
     })
-    function deleteAnnouncement(id, liveRoomId, coverUrl, obj) {
-        $.ajax({
-            type: 'POST',
-            url: IP + 'live/deleteAnnouncement',
-            dataType: 'json',
-            xhrFields: {
-                withCredentials: true
-            },
-            data: {
-                "id": id,
-                "liveRoomId": liveRoomId,
-                "coverUrl": coverUrl,
-            },
-            crossDomain: true,
-            success: function (data) {
-                console.log(data)
-                if (data.code == 1) {
-                    obj.remove();
-                    findMyAnnouncementList(1);
-                    findMyAnnouncementCount(1);
-                } else if (data.code == 250) {
-                    // 未登录操作
-                    window.location = '/yilaiyiwang/login/login.html';
-                } else {
-                    // 其他操作
-                }
-            },
-            error: function (err) {
-                console.log(err);
-            },
-        });
-    }
 
     // 编辑事件
     $(".videoList").delegate(".editBtn", "click", function () {
-        window.location = '/yilaiyiwang/liveEdit/edit.html?' + $(this).parents(".videoItem").attr("name")
+        window.location = '/live/edit.html?' + $(this).parents(".videoItem").attr("name")
     })
 
     // 查看直播详情
     $(".videoList").delegate(".getLiveInfoBtn", "click", function () {
-        $.ajax({
-            type: 'POST',
-            url: IP + 'live/getLiveMessage',
-            dataType: 'json',
-            xhrFields: {
-                withCredentials: true
-            },
-            data: {
-                "liveId": $(this).parents(".videoItem").attr("name"),
-            },
-            crossDomain: true,
-            success: function (data) {
-                console.log(data)
-                if (data.code == 1) {
-                    liveInfo = data;
-                    layer.open({
-                        type: 1,
-                        title: '',
-                        area: ['700px', '350px'],
-                        closeBtn: false,
-                        shadeClose: true,
-                        content: $('.liveInfoContent'),
-                        end: function () {
-                            $('.liveInfoContent').hide();
-                        }
-                    });
-                    $('.liveInfoContent').find(".loginAccount").html("云起云登录账号: " + data.data.username);
-                    $('.liveInfoContent').find(".openUrl").html("直播开启地址: " + data.data.adminUrl);
-                    $('.liveInfoContent').find(".openPasswrod").html("直播开启密码: " + data.data.adminPwd);
-                    $('.liveInfoContent').find(".watchUrl").html("观看直播: " + data.data.liveUrl);
-                } else if (data.code == 250) {
-                    // 未登录操作
-                    window.location = '/yilaiyiwang/login/login.html';
-                } else {
-                    // 其他操作
-                }
-            },
-            error: function (err) {
-                console.log(err);
-            },
+        let liveJson = JSON.parse(sessionStorage.getItem($(this).parents(".videoItem").attr("name")));
+        // http://www.qlxlm.com/#/webrtc/13812345678/1000021/9411/企业管理员
+        //     liveJson.account
+        // liveJson.appointmentNumber
+        // liveJson.hostPwd
+        // userInfo.userName
+        let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        $("#webrtcUrl").html("http://www.qlxlm.com/#/webrtc/" + liveJson.account + "/" + liveJson.appointmentNumber + "/" + liveJson.hostPwd + "/" + userInfo.userName)
+        $("#hostPwd").html(liveJson.hostPwd)
+        $("#liveUrl").html("http://www.qlxlm.com/#/page/watch-live/" + liveJson.appointmentId)
+
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['640px', '300px'],
+            closeBtn: false,
+            shade: [0.1, '#000000'],
+            shadeClose: true,
+            content: $('#liveInfoBox'),
+            end: function () {
+                $('#liveInfoBox').hide();
+            }
         });
+        $("#liveInfoBoxSubmitBtn").click(function () {
+            //新窗口打开直播控制功能
+            window.open($("#webrtcUrl").html().replace("https", "http"), "_blank");
+            return false;
+        })
+        // $.ajax({
+        //     type: 'POST',
+        //     url: IP + 'live/getLiveMessage',
+        //     dataType: 'json',
+        //     xhrFields: {
+        //         withCredentials: true
+        //     },
+        //     data: {
+        //         "liveId": $(this).parents(".videoItem").attr("name"),
+        //     },
+        //     crossDomain: true,
+        //     success: function (data) {
+        //         console.log(data)
+        //         if (data.code == 1) {
+        //             liveInfo = data;
+        //             layer.open({
+        //                 type: 1,
+        //                 title: '',
+        //                 area: ['700px', '350px'],
+        //                 closeBtn: false,
+        //                 shadeClose: true,
+        //                 content: $('.liveInfoContent'),
+        //                 end: function () {
+        //                     $('.liveInfoContent').hide();
+        //                 }
+        //             });
+        //             $('.liveInfoContent').find(".loginAccount").html("云起云登录账号: " + data.data.username);
+        //             $('.liveInfoContent').find(".openUrl").html("直播开启地址: " + data.data.adminUrl);
+        //             $('.liveInfoContent').find(".openPasswrod").html("直播开启密码: " + data.data.adminPwd);
+        //             $('.liveInfoContent').find(".watchUrl").html("观看直播: " + data.data.liveUrl);
+        //         } else if (data.code == 250) {
+        //             // 未登录操作
+        //             window.location = '/yilaiyiwang/login/login.html';
+        //         } else {
+        //             // 其他操作
+        //         }
+        //     },
+        //     error: function (err) {
+        //         console.log(err);
+        //     },
+        // });
     })
 
+    // 直播控制
+    $(".videoList").delegate(".liveControlBtn", "click", function () {
+        console.log($(this).parents(".videoItem").attr("name"));
+        let selectData = {"liveNumber": $(this).parents(".videoItem").attr("liveRoomId")}
+        console.log(selectData);
+        ajaxRequest("GET", getLiveUrl, selectData, true, "application/json", true, getLiveInfoSuccess, null, null);
+
+    })
+
+    function getLiveInfoSuccess(liveInfo) {
+        //新窗口打开直播控制功能
+        // window.open("http://www.qlxlm.com/#/to/" + liveInfo.account + "/meeting-control/" + liveInfo.cid, "_blank");
+        // return false;
+        //本窗口悬浮打开直播控制功能
+        $("#liveControlIframe").attr('src', "http://www.qlxlm.com/#/to/" + liveInfo.account + "/meeting-control/" + liveInfo.cid);
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['1566px', '768px'],
+            closeBtn: false,
+            shade: [0.7, '#000000'],
+            shadeClose: false,
+            content: $('#liveControlBox'),
+        });
+    }
+
+    $("#liveControlBoxCloseBtn").click(function () {
+        layer.closeAll();
+        $('#liveControlBox').hide();
+    })
     var clipboard = new ClipboardJS('.openBtn', {
         text: function () {
             return '【医来医往远程会诊】链接:' + liveInfo.data.adminUrl + '  密码:' + liveInfo.data.adminPwd + '';

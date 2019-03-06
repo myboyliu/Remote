@@ -13,6 +13,8 @@
     <link rel="stylesheet/less" href="../common/css/nav.less">
     <link rel="stylesheet/less" href="css/main.less"/>
     <script src="../common/js/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="../common/layui/layui.all.js"></script>
     <script src="../common/js/less.js"></script>
     <script src="../common/swiper/swiper.min.js"></script>
@@ -160,7 +162,15 @@
     Copyright © 2018 医来医往(北京)科技有限公司
 </div>
 <!-- 底部版权 - end -->
+<div id="livePlayBox">
+    <div class="rejectionLayer">
+        <iframe id="livePlayIframe" style="height: 100%; width: 100%" frameborder="0" src="">
 
+        </iframe>
+        <div id="livePlayBoxCloseBtn" class="closeBtn "><img src="../images/close.png" alt="">
+            <span>关闭</span></div>
+    </div>
+</div>
 </body>
 
 </html>

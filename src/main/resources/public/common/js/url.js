@@ -11,7 +11,10 @@ const baseUrl = "http://" + window.location.host; //服务地址
 const getPersonalInfoUrl = "/user/dorPersonalCenter";                           //查询医生详细信息
 const modifyPassword = "/user/modifyPassword";                                  //跟据旧密码修改密码
 const modifyPersonalInfo = "/user/modifyPersonal";                              //修改个人信息
-
+/**
+ * 基础数据接口
+ */
+const getLocalHospitalBranchUrl = "/custom/branch/getLocalHospitalBranch"       //查询本院二级科室列表
 /** 医政 管理中心接口 */
 const managementUpdateUser = "/user/managementUpdateUser";                      //医政修改医生信息
 
@@ -220,17 +223,24 @@ const removeVideoByUserUrl = "/vod/removeVideoByUser"
 const getVideoInfoUrl = "/vod/getVideoInfo"
 const updateVideoInfoUrl = "/vod/updateVideo"
 
-
 const getSignatureUrl = "/signature/video/getSignature"
 const saveVideoUrl = "/vod/addVideo"                //保存上传成功的视频信息
 const addClickCountUrl = "/vod/addClickCount"                //保存上传成功的视频信息
 
-
 /** 直播接口 */
+const createLive = "/live/create";                                           //申请创建直播接口
+const selectCountByParamUrl = "/live/selectCountByParam";                    //件筛选直播数量接口
+const selectListByParamUrl = "/live/selectListByParam";                      //条件筛选直播列表接口
+const searchCountByParamUrl = "/live/searchCountByParam";                    //模糊搜索直播数量接口
+const searchListByParamUrl = "/live/searchListByParam";                      //糊搜索直播列表接口
+const getCountByParamUrl = "/live/getCountByParam";                          //条件筛选个人创建的直播数量接口
+const getListByParamUrl = "/live/getListByParam";                            //条件筛选个人创建的直播列表接口
+const deleteByIdUrl = "/live/deleteById";                                    //删除直播接口
+const getLiveUrl = "/live/getLive";                                          //查询直播信息接口
 
-const createLive = "/live/create"                                              //申请创建直播接口
-const selectCountByParamUrl = "/live/selectCountByParam"                       //申请创建直播接口
-const selectListByParamUrl = "/live/selectListByParam"                         //申请创建直播接口
+/** 会议接口 */
+
+
 
 
 

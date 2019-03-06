@@ -1,7 +1,8 @@
 function renderBranchSelect(branchList) {
+    console.log(branchList);
     let _html = '<option value="">请选择</option>';
     for (let i = 0; i < branchList.length; i++) {
-        _html += '<option value="' + branchList[i].id + '">' + branchList[i].branchName + '</option>'
+        _html += '<option value="' + branchList[i].id + '">' + branchList[i].customName + '</option>'
     }
     $(".deptObj").html(_html);
 }
@@ -9,7 +10,7 @@ function renderBranchSelect(branchList) {
 $(function () {
 
     // 查询此医院下所有二级科室
-    ajaxRequest("GET", getSecondBranchList, "", false, false, false, renderBranchSelect, null, null);
+    ajaxRequest("GET", getLocalHospitalBranchUrl, "", false, false, false, renderBranchSelect, null, null);
 
     function double(n) {
         return n < 10 ? '0' + n : n;
