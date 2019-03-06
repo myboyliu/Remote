@@ -3,12 +3,14 @@ package com.sicmed.remote.socket;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
 /**
  * 消息分发工具类
  */
 @Slf4j
+@Service
 public class MessageSendService {
 
     @Autowired
