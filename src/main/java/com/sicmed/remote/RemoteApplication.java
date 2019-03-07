@@ -17,7 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableCaching
 @SpringBootApplication
 @EnableScheduling
-@MapperScan({"com.sicmed.remote.web.mapper", "com.sicmed.remote.tencent.mapper", "com.sicmed.remote.yunqiyun.mapper", "com.sicmed.remote.live.mapper", "com.sicmed.remote.meeting.mapper"})
+@MapperScan({"com.sicmed.remote.web.mapper", "com.sicmed.remote.tencent.mapper", "com.sicmed.remote.yunqiyun.mapper", "com.sicmed.remote.live.mapper", "com.sicmed.remote.meeting.mapper", "com.sicmed.remote.socket.mapper"})
 public class RemoteApplication {
 
 
