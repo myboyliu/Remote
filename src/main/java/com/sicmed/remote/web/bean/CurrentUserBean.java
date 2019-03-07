@@ -17,4 +17,6 @@ public class CurrentUserBean extends UserDetail implements Serializable {
 
     private String userPhone;
 
+    private String baseBranchId;
+
 }

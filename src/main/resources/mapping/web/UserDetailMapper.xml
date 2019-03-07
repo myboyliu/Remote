@@ -479,6 +479,7 @@ where ud.id = #{userId} and ud.del_flag = "0"
         <result column="telephone" jdbcType="VARCHAR" property="telephone"/>
         <result column="hospitalId" jdbcType="VARCHAR" property="hospitalId"/>
         <result column="branchId" jdbcType="VARCHAR" property="branchId"/>
+        <result column="baseBranchId" jdbcType="VARCHAR" property="baseBranchId"/>
         <result column="titleName" jdbcType="VARCHAR" property="titleName"/>
         <result column="specialistTypeId" jdbcType="VARCHAR" property="specialistTypeId"/>
         <result column="headImg" jdbcType="VARCHAR" property="headImg"/>
@@ -499,6 +500,7 @@ where ud.id = #{userId} and ud.del_flag = "0"
         user.consultation_picture_price consultation_picture_price, user.consultation_video_price consultation_video_price,
         hospital.hospital_name hospitalName,
         branch.custom_name branchName,
+        baseBranch.id baseBranchId,
         st.specialist_name specialistTypeName
     </sql>
     <select id="selectCurrentUser" parameterType="java.lang.String" resultMap="CurrentUserResultMap">
@@ -507,6 +509,7 @@ where ud.id = #{userId} and ud.del_flag = "0"
         from user_detail user
         LEFT JOIN base_hospital hospital ON hospital.id = user.hospital_id
         LEFT JOIN custom_branch branch ON branch.id = user.branch_id
+        LEFT JOIN base_branch baseBranch ON baseBranch.id = branch.branch_id
         LEFT JOIN specialist_type st ON st.id = user.specialist_type_id
         where user.id = #{id,jdbcType=VARCHAR}
     </select>
