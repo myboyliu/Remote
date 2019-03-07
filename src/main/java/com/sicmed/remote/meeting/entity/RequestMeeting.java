@@ -1,5 +1,7 @@
 package com.sicmed.remote.meeting.entity;
 
+import com.sicmed.remote.common.util.UserTokenManager;
+import com.sicmed.remote.live.entity.Live;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -37,5 +39,20 @@ public class RequestMeeting implements Serializable {
     private Date endTime;             //会诊结束时间(通过它计算时长)
 
     private int concurrentNum;          //所需并发数
+
+    public RequestMeeting() {
+        this.mobile = UserTokenManager.getCurrentUser().getUserPhone();
+        this.realName = UserTokenManager.getCurrentUser().getUserName();
+    }
+
+    public void setLive(Live live) {
+        this.appointmentName = live.getLiveName();
+        this.startTime = live.getLiveStartTime();
+        this.endTime = live.getLiveEndTime();
+        this.isLive = live.getLiveStart();
+        this.isMute = live.getLiveMute();
+        this.isRecord = live.getLiveRecord();
+        this.concurrentNum = 1;
+    }
 
 }
