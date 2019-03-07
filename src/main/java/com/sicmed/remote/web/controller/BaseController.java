@@ -1,7 +1,7 @@
 package com.sicmed.remote.web.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.sicmed.remote.web.bean.CurrentUserBean;
-import com.sicmed.remote.web.bean.UserBean;
 import com.sicmed.remote.web.entity.PageEntity;
 import com.sicmed.remote.web.service.ProcedureService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import java.util.Map;
 public abstract class BaseController {
 
     @Autowired
-    public RedisTemplate redisTemplate;
+    public RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     public StringRedisTemplate stringRedisTemplate;
@@ -51,11 +51,14 @@ public abstract class BaseController {
         String str = request.getHeader("token");
         return str;
     }
+
     public CurrentUserBean getCurrentUser() {
         HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
         String str = request.getHeader("token");
-        return (CurrentUserBean) redisTemplate.opsForValue().get(str);
+
+        return JSONObject.parseObject(redisTemplate.opsForValue().get(str), CurrentUserBean.class);
     }
+
     /**
      * 获取分页 参数
      *

@@ -64,7 +64,7 @@ public class ApplyController extends BaseController {
 
         String userId = getRequestToken();
         // 添加applyForm,applyStatus申请状态为草稿
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
         if (currentUserBean == null) {
             return badRequestOfArguments("获取医生详细信息失败");
         }
@@ -105,7 +105,7 @@ public class ApplyController extends BaseController {
      */
     private String getApplySummary(String userId) {
 //        String userId = getRequestToken();
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
         return "<" + currentUserBean.getUserName() + "/" + currentUserBean.getTitleName() + "/" + currentUserBean.getBranchName() + "/" + currentUserBean.getHospitalName() + ">";
     }
 
@@ -126,7 +126,7 @@ public class ApplyController extends BaseController {
             applyFormService.deleteApplyFormDraft(draftId);
         }
         String userId = getRequestToken();
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
         String applySummary = getApplySummary(userId);
         // 添加 转诊 申请表
         String applyType = String.valueOf(ApplyType.APPLY_REFERRAL);
@@ -201,7 +201,7 @@ public class ApplyController extends BaseController {
         }
 
         String userId = getRequestToken();
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
 
         // 添加 视频会诊 申请表
         String applyType = String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO);
@@ -284,7 +284,7 @@ public class ApplyController extends BaseController {
         }
 
         String userId = getRequestToken();
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
         applyForm.setApplySummary(getApplySummary(userId));
         // 添加 图文会诊 申请表
         applyForm.setApplyUserId(userId);

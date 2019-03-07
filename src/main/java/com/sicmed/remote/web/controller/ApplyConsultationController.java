@@ -180,7 +180,7 @@ public class ApplyConsultationController extends BaseController {
     public Map receiveSelect(List<String> statusList) {
 
         String userId = getRequestToken();
-        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = getCurrentUser();
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setConsultationTypeList(consultantTypeList);
@@ -318,7 +318,7 @@ public class ApplyConsultationController extends BaseController {
     public Map sirSendSelect(List<String> statusList, String msg) {
 
         String userId = getRequestToken();
-        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = getCurrentUser();
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setApplyHospitalId(userDetail.getHospitalId());
@@ -444,7 +444,7 @@ public class ApplyConsultationController extends BaseController {
 
         String userId = getRequestToken();
 
-        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = getCurrentUser();
 
         ApplyFormBean applyFormBean = new ApplyFormBean();
         applyFormBean.setConsultationTypeList(consultantTypeList);
@@ -593,7 +593,7 @@ public class ApplyConsultationController extends BaseController {
     public Map sendSelectAllCountSir() {
         procedureService.applyChecked();
         String userId = getRequestToken();
-        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = getCurrentUser();
         ConsultationStatusBean consultationStatusBean = applyFormService.sendSelectAllCount(null, userDetail.getHospitalId(), consultantTypeList);
 
         return succeedRequest(consultationStatusBean);
@@ -606,7 +606,7 @@ public class ApplyConsultationController extends BaseController {
     public Map receiveSelectAllCountDoctor() {
         procedureService.applyChecked();
         String userId = getRequestToken();
-        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = getCurrentUser();
 
         ConsultationStatusBean consultationStatusBean = caseConsultantService.receiveSelectAllCount(userId, userDetail.getBranchId(), null, consultantTypeList);
         ConsultationStatusBean halfMsg = caseConsultantService.receiveSelectHalfCount(userId, consultantTypeList);
@@ -623,7 +623,7 @@ public class ApplyConsultationController extends BaseController {
     public Map receiveSelectAllCountSir() {
         procedureService.applyChecked();
         String userId = getRequestToken();
-        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = getCurrentUser();
 
         ConsultationStatusBean consultationStatusBean = caseConsultantService.receiveSelectAllCountSir(userDetail.getHospitalId(), consultantTypeList);
         return succeedRequest(consultationStatusBean);

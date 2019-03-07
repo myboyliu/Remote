@@ -70,7 +70,7 @@ public class StatisticsSearchController extends BaseController {
     public Map sirSearchCount(String condition) {
 
         String userId = getRequestToken();
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
         String hospitalId = currentUserBean.getHospitalId();
 
         int i = applyFormService.sirSearchCount(hospitalId, condition);
@@ -85,7 +85,7 @@ public class StatisticsSearchController extends BaseController {
     public Map sirSearch(String condition) {
 
         String userId = getRequestToken();
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
         String hospitalId = currentUserBean.getHospitalId();
 
         List<ApplyFormBean> applyFormBeanList = applyFormService.sirSearchByRemark(hospitalId, condition);
@@ -100,7 +100,7 @@ public class StatisticsSearchController extends BaseController {
     public Map consultationStatistics(StatisticsSearchBean statisticsSearchBean) {
 
         String userId = getRequestToken();
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
 
         List<StatisticsSearchBean> statisticsSearchBeans = applyFormService.applyConsultationStatistics(
                 currentUserBean.getHospitalId(), consultationEndStatus, statisticsSearchBean);
@@ -115,7 +115,7 @@ public class StatisticsSearchController extends BaseController {
     public Map inviteStatistics(StatisticsSearchBean statisticsSearchBean) {
 
         String userId = getRequestToken();
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
 
         List<StatisticsSearchBean> statisticsSearchBeans = applyFormService.applyConsultationStatistics(
                 currentUserBean.getHospitalId(), inquiryEndStatus, statisticsSearchBean);
@@ -132,7 +132,7 @@ public class StatisticsSearchController extends BaseController {
     public Map advancedConsultationStatistics(StatisticsSearchBean statisticsSearchBean) {
 
         String userId = getRequestToken();
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
 
         List<StatisticsSearchBean> statisticsSearchBeans = applyFormService.advancedConsultationStatistics(currentUserBean.getHospitalId(), statisticsSearchBean);
 
@@ -146,7 +146,7 @@ public class StatisticsSearchController extends BaseController {
     public Map consultationPriceApplyStatistics(StatisticsSearchBean statisticsSearchBean) {
 
         String userId = getRequestToken();
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
 
         List<StatisticsSearchBean> statisticsSearchBeans = consultationPriceRecordService.consultationPriceApplyStatistics(
                 currentUserBean.getHospitalId(), consultationEndStatus, statisticsSearchBean
@@ -161,7 +161,7 @@ public class StatisticsSearchController extends BaseController {
     public Map consultationPriceInviteStatistics(StatisticsSearchBean statisticsSearchBean) {
 
         String userId = getRequestToken();
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
 
         List<StatisticsSearchBean> statisticsSearchBeans = consultationPriceRecordService.consultationPriceInviteStatistics(
                 currentUserBean.getHospitalId(), consultationEndStatus, statisticsSearchBean

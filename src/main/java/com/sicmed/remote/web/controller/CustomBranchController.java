@@ -67,7 +67,7 @@ public class CustomBranchController extends BaseController {
     @PostMapping(value = "update")
     public Object update(String customBranchStr) {
         String userId = getRequestToken();
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
         // json 解析
         List<UpdateCustomBranchBean> updateCustomBranchBeanList;
         updateCustomBranchBeanList = JSON.parseObject(customBranchStr, new TypeReference<List<UpdateCustomBranchBean>>() {
@@ -123,7 +123,7 @@ public class CustomBranchController extends BaseController {
 
         String userId = getRequestToken();
 
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
 
         List<BranchBean> customBranchList = customBranchService.selectByHospitalId(currentUserBean.getHospitalId());
 

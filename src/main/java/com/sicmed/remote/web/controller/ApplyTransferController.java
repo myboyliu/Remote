@@ -205,7 +205,7 @@ public class ApplyTransferController extends BaseController {
     public Map sirInquiryCheck() {
 
         String userId = getRequestToken();
-        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = getCurrentUser();
         String hospitalId = userDetail.getHospitalId();
 
         List<String> consultationStatusList = new ArrayList<>();
@@ -225,7 +225,7 @@ public class ApplyTransferController extends BaseController {
     public Map sirInquiryAccept() {
 
         String userId = getRequestToken();
-        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = getCurrentUser();
         String hospitalId = userDetail.getHospitalId();
 
         List<String> consultationStatusList = new ArrayList<>();
@@ -254,7 +254,7 @@ public class ApplyTransferController extends BaseController {
     public Map sirInquiryCheckDate() {
 
         String userId = getRequestToken();
-        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = getCurrentUser();
         String hospitalId = userDetail.getHospitalId();
 
         List<String> consultationStatusList = new ArrayList<>();
@@ -275,7 +275,7 @@ public class ApplyTransferController extends BaseController {
     @GetMapping(value = "sirInquiryDate")
     public Map sirInquiryDate() {
         String userId = getRequestToken();
-        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = getCurrentUser();
         String hospitalId = userDetail.getHospitalId();
 
         List<String> consultationStatusList = new ArrayList<>();
@@ -295,7 +295,7 @@ public class ApplyTransferController extends BaseController {
     @GetMapping(value = "sirInquiryReject")
     public Map sirInquiryReject() {
         String userId = getRequestToken();
-        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = getCurrentUser();
         String hospitalId = userDetail.getHospitalId();
 
         List<String> consultationStatusList = new ArrayList<>();
@@ -318,7 +318,7 @@ public class ApplyTransferController extends BaseController {
     public Map sirInquiryEnd() {
 
         String userId = getRequestToken();
-        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = getCurrentUser();
         String hospitalId = userDetail.getHospitalId();
 
         List<String> consultationStatusList = new ArrayList<>();
@@ -352,7 +352,7 @@ public class ApplyTransferController extends BaseController {
     public Map inquiryCsAllCountSir() {
         procedureService.referralChecked();
         String userId = getRequestToken();
-        CurrentUserBean userDetail = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean userDetail = getCurrentUser();
         InquiryStatusBean inquiryStatusBean = applyFormService.inquiryCreateSuccessAllCountSir(userDetail.getHospitalId(), consultationTypeListInquiry);
 
         return succeedRequest(inquiryStatusBean);

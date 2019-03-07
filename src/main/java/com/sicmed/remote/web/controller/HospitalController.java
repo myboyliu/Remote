@@ -146,7 +146,7 @@ public class HospitalController extends BaseController {
     public Map selectByUser() {
 
         String userId = getRequestToken();
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
         String hospitalId = currentUserBean.getHospitalId();
         Hospital hospital1 = hospitalService.getByPrimaryKey(hospitalId);
         return succeedRequest(hospital1);

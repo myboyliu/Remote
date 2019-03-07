@@ -1,6 +1,7 @@
 package com.sicmed.remote.web.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.DoctorCertified;
@@ -210,7 +211,7 @@ public class UserController extends BaseController {
         currentUserBean.setUserPhone(userAccount.getUserPhone());
         YqyMeetingUtils.checkToken(userAccount.getUserPhone(),currentUserBean.getUserName());
 //        redisTemplate.opsForValue().set(userId, userDetail);
-        redisTemplate.opsForValue().set(userId, currentUserBean);
+        redisTemplate.opsForValue().set(userId, JSONObject.toJSONString(currentUserBean));
 
         return succeedRequest(currentUserBean);
     }
@@ -255,7 +256,7 @@ public class UserController extends BaseController {
         if (StringUtils.isBlank(userId)) {
             return badRequestOfArguments("获取登录用户id失败");
         }
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
         UserControllerBean userControllerBean = userDetailService.selectPersonalCenter(userId);
         if (userControllerBean == null) {
             return badRequestOfSelect("个人中心查询信息失败");
@@ -401,7 +402,7 @@ public class UserController extends BaseController {
     public Map managementDoctor() {
 
         String userId = getRequestToken();
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
         if (currentUserBean == null) {
             return badRequestOfSelect("redis查询userId对应数据失败");
         }

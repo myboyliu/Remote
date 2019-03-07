@@ -53,7 +53,7 @@ public class SpecialistTypeController extends BaseController {
 
         String userId = getRequestToken();
 
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
         if (currentUserBean != null) {
             specialistType.setHospitalId(currentUserBean.getHospitalId());
         }
@@ -155,7 +155,7 @@ public class SpecialistTypeController extends BaseController {
 
         String userId = getRequestToken();
 
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = getCurrentUser();
 
         SpecialistType specialistType = new SpecialistType();
 
