@@ -141,7 +141,7 @@ public class YqyMeetingUtils {
         params.put("isLive", isLive);
         params.put("isMute", isMute);
         params.put("isRecord", isRecord);
-        params.put("livePwd", (int) ((Math.random() * 9 + 1) * 1000) + "");
+        params.put("livePwd", "");
         params.put("startTime", startDate.getTime());
         params.put("concurrentNum", concurrentNum);
         return HttpClientUtils.createMeeting(Constant.BASEPATH + Constant.APPOINTMENTS_URL, accessToken, params);
