@@ -2,7 +2,8 @@
  * 统一接口管理JS
  * @type {string}
  */
-const baseUrl = "http://" + window.location.host; //服务地址
+const NETWORK_PROTOCOL = 'https:' == document.location.protocol ? 'https://' : 'http://';
+const baseUrl = NETWORK_PROTOCOL + window.location.host; //服务地址
 /**
  * 公共接口
  */

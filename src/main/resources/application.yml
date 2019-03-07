@@ -1,5 +1,13 @@
-server:
+http:
   port: 80
+server:
+  port: 443
+  ssl:
+    key-store: classpath:www.qlxlm.com.jks
+    key-store-password: 123456
+    key-store-type: jks
+#    key-alias: remote
+#    enabled: true
 spring:
   profiles:
     active: dev
@@ -36,7 +44,7 @@ spring:
   mvc:
     static-path-pattern: /**
   resources:
-    static-locations: classpath:/META-INF/resources/,classpath:/resources/, classpath:/static/, classpath:/public/, file:${img.location}
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/, classpath:/static/, classpath:/public/, file:${img.location}, file:${img.location}/dist, file:${img.location}/dist/assets, file:${img.location}/app
   servlet:
     multipart:
       max-request-size: 1048576000
