@@ -49,16 +49,7 @@ public class LiveController extends BaseController {
         live.setLiveCoverUrl(fileName);
         live.setCreateUser(getRequestToken());
         RequestMeeting requestMeeting = new RequestMeeting();
-
-        requestMeeting.setMobile(getCurrentUser().getUserPhone());
-        requestMeeting.setRealName(getCurrentUser().getUserName());
-        requestMeeting.setAppointmentName(live.getLiveName());
-        requestMeeting.setStartTime(live.getLiveStartTime());
-        requestMeeting.setEndTime(live.getLiveEndTime());
-        requestMeeting.setLive(live.getLiveStart());
-        requestMeeting.setMute(live.getLiveMute());
-        requestMeeting.setRecord(live.getLiveRecord());
-        requestMeeting.setConcurrentNum(1);
+        requestMeeting.setLive(live);
 
         MeetingBean meetingBean = YqyMeetingUtils.createMeeting(requestMeeting);
 
@@ -77,7 +68,42 @@ public class LiveController extends BaseController {
     }
 
     /**
-     * 创建直播
+     * 修改直播信息
+     *
+     * @param live
+     * @return
+     */
+    @PostMapping(value = "update")
+    public Object updateLive(@RequestParam(value = "file", required = false) MultipartFile file, Live live) throws Exception {
+        String fileName = file.getOriginalFilename();
+        try {
+            FileUtils.uploadFile(file.getBytes(), location, fileName);
+        } catch (IOException e) {
+
+        }
+        live.setLiveCoverUrl(fileName);
+        live.setCreateUser(getRequestToken());
+        RequestMeeting requestMeeting = new RequestMeeting();
+        requestMeeting.setLive(live);
+
+        MeetingBean meetingBean = YqyMeetingUtils.updateMeeting(requestMeeting);
+
+        live.setLiveUrl(meetingBean.getLiveUrl());
+        live.setLivePassword(meetingBean.getLivePwd());
+        live.setLiveNumber(meetingBean.getAppointmentNumber());
+        live.setLiveUser(meetingBean.getAccount());
+        live.setLiveId(meetingBean.getAppointmentId());
+        live.setLiveId(meetingBean.getAppointmentId());
+        live.setLiveJson(JSONObject.toJSONString(meetingBean));
+
+        liveService.updateByPrimaryKeySelective(live);
+
+
+        return succeedRequest(live);
+    }
+
+    /**
+     * 查询已开始直播的会控ID
      *
      * @return
      */
