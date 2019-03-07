@@ -50,8 +50,13 @@ public class Constant {
     public static final String CONFERENCES_URL = "/appapi/api/conferences";
 
     /**
-     * 过期时间110分钟的毫秒值
+     * 过期时间90分钟的毫秒值
      */
-    public static final int EXPIRATION_DATE = 6600000;
+    public static final int EXPIRATION_DATE = 5400000;
+
+    /**
+     *  群发消息标记
+     */
+    public static final String MESSAGE_GRADE = "all";
 
 }
