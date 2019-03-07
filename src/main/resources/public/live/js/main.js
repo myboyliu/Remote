@@ -204,7 +204,7 @@ $(function () {
     $(".listContent").delegate(".playBtn", "click", function () {
         //新窗口打开直播页面
         let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-        window.open("http://www.qlxlm.com/#/to/" + userInfo.userPhone + "/watch-live/" + $(this).attr("liveRoomId"), "_blank");
+        window.open(baseUrl+"/#/to/" + userInfo.userPhone + "/watch-live/" + $(this).attr("liveRoomId"), "_blank");
         return false;
         //本窗口悬浮打开直播页面
         $("#livePlayIframe").attr('src', "http://www.qlxlm.com/#/page/watch-live/" + $(this).attr("liveRoomId"));

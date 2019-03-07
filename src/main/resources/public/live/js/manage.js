@@ -129,9 +129,9 @@ $(function () {
         // liveJson.hostPwd
         // userInfo.userName
         let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-        $("#webrtcUrl").html("http://www.qlxlm.com/#/webrtc/" + liveJson.account + "/" + liveJson.appointmentNumber + "/" + liveJson.hostPwd + "/" + userInfo.userName)
+        $("#webrtcUrl").html(  baseUrl + "/#/webrtc/" + liveJson.account + "/" + liveJson.appointmentNumber + "/" + liveJson.hostPwd + "/" + userInfo.userName)
         $("#hostPwd").html(liveJson.hostPwd)
-        $("#liveUrl").html("http://www.qlxlm.com/#/page/watch-live/" + liveJson.appointmentId)
+        $("#liveUrl").html(baseUrl+"/#/page/watch-live/" + liveJson.appointmentId)
 
         layer.open({
             type: 1,
@@ -147,7 +147,7 @@ $(function () {
         });
         $("#liveInfoBoxSubmitBtn").click(function () {
             //新窗口打开直播控制功能
-            window.open($("#webrtcUrl").html().replace("https", "http"), "_blank");
+            window.open($("#webrtcUrl").html(), "_blank");
             return false;
         })
         // $.ajax({
@@ -207,7 +207,7 @@ $(function () {
         // window.open("http://www.qlxlm.com/#/to/" + liveInfo.account + "/meeting-control/" + liveInfo.cid, "_blank");
         // return false;
         //本窗口悬浮打开直播控制功能
-        $("#liveControlIframe").attr('src', "http://www.qlxlm.com/#/to/" + liveInfo.account + "/meeting-control/" + liveInfo.cid);
+        $("#liveControlIframe").attr('src', baseUrl + "/#/to/" + liveInfo.account + "/meeting-control/" + liveInfo.cid);
         layer.open({
             type: 1,
             title: '',
