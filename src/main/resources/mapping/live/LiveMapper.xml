@@ -11,6 +11,7 @@
         <result column="live_start_time" jdbcType="TIMESTAMP" property="liveStartTime"/>
         <result column="live_end_time" jdbcType="TIMESTAMP" property="liveEndTime"/>
         <result column="live_branch" jdbcType="VARCHAR" property="liveBranch"/>
+        <result column="live_hospital" jdbcType="VARCHAR" property="liveHospital"/>
         <result column="live_password" jdbcType="VARCHAR" property="livePassword"/>
         <result column="live_type" jdbcType="VARCHAR" property="liveType"/>
         <result column="live_period" jdbcType="VARCHAR" property="livePeriod"/>
@@ -31,7 +32,7 @@
     </resultMap>
     <sql id="Base_Column_List">
     id, live_id, live_name, live_number, live_cover_url, live_description, live_start_time, 
-    live_end_time, live_branch, live_password, live_type, live_period, live_url, live_scope, 
+    live_end_time, live_branch,live_hospital, live_password, live_type, live_period, live_url, live_scope,
     live_user, live_mute, live_record, live_start, live_json, create_user, create_time, 
     update_user, update_time, delete_user, delete_time, del_flag
   </sql>
@@ -45,30 +46,6 @@
     delete from _live
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-    <insert id="insert" parameterType="com.sicmed.remote.live.entity.Live">
-        <selectKey keyProperty="id" resultType="java.lang.String"
-                   order="BEFORE">
-            select replace(uuid(),'-','') from dual
-        </selectKey>
-        insert into _live (id, live_id, live_name,
-        live_number, live_cover_url, live_description,
-        live_start_time, live_end_time, live_branch,
-        live_password, live_type, live_period,
-        live_url, live_scope, live_user,
-        live_mute, live_record, live_start,
-        live_json, create_user, create_time,
-        update_user, update_time, delete_user,
-        delete_time, del_flag)
-        values (#{id,jdbcType=VARCHAR}, #{liveId,jdbcType=VARCHAR}, #{liveName,jdbcType=VARCHAR},
-        #{liveNumber,jdbcType=VARCHAR}, #{liveCoverUrl,jdbcType=VARCHAR}, #{liveDescription,jdbcType=VARCHAR},
-        #{liveStartTime,jdbcType=TIMESTAMP}, #{liveEndTime,jdbcType=TIMESTAMP}, #{liveBranch,jdbcType=VARCHAR},
-        #{livePassword,jdbcType=VARCHAR}, #{liveType,jdbcType=VARCHAR}, #{livePeriod,jdbcType=VARCHAR},
-        #{liveUrl,jdbcType=VARCHAR}, #{liveScope,jdbcType=VARCHAR}, #{liveUser,jdbcType=VARCHAR},
-        #{liveMute,jdbcType=BIT}, #{liveRecord,jdbcType=BIT}, #{liveStart,jdbcType=BIT},
-        #{liveJson,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-        #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR},
-        #{deleteTime,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=VARCHAR})
-    </insert>
     <insert id="insertSelective" parameterType="com.sicmed.remote.live.entity.Live">
         <selectKey keyProperty="id" resultType="java.lang.String"
                    order="BEFORE">
@@ -102,6 +79,9 @@
             </if>
             <if test="liveBranch != null">
                 live_branch,
+            </if>
+            <if test="liveHospital != null">
+                live_hospital,
             </if>
             <if test="livePassword != null">
                 live_password,
@@ -183,6 +163,9 @@
             <if test="liveBranch != null">
                 #{liveBranch,jdbcType=VARCHAR},
             </if>
+            <if test="liveHospital != null">
+                #{liveHospital,jdbcType=VARCHAR},
+            </if>
             <if test="livePassword != null">
                 #{livePassword,jdbcType=VARCHAR},
             </if>
@@ -263,6 +246,9 @@
             <if test="liveBranch != null">
                 live_branch = #{liveBranch,jdbcType=VARCHAR},
             </if>
+            <if test="liveHospital != null">
+                live_hospital = #{liveHospital,jdbcType=VARCHAR},
+            </if>
             <if test="livePassword != null">
                 live_password = #{livePassword,jdbcType=VARCHAR},
             </if>
@@ -317,36 +303,6 @@
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.live.entity.Live">
-    update _live
-    set live_id = #{liveId,jdbcType=VARCHAR},
-      live_name = #{liveName,jdbcType=VARCHAR},
-      live_number = #{liveNumber,jdbcType=VARCHAR},
-      live_cover_url = #{liveCoverUrl,jdbcType=VARCHAR},
-      live_description = #{liveDescription,jdbcType=VARCHAR},
-      live_start_time = #{liveStartTime,jdbcType=TIMESTAMP},
-      live_end_time = #{liveEndTime,jdbcType=TIMESTAMP},
-      live_branch = #{liveBranch,jdbcType=VARCHAR},
-      live_password = #{livePassword,jdbcType=VARCHAR},
-      live_type = #{liveType,jdbcType=VARCHAR},
-      live_period = #{livePeriod,jdbcType=VARCHAR},
-      live_url = #{liveUrl,jdbcType=VARCHAR},
-      live_scope = #{liveScope,jdbcType=VARCHAR},
-      live_user = #{liveUser,jdbcType=VARCHAR},
-      live_mute = #{liveMute,jdbcType=BIT},
-      live_record = #{liveRecord,jdbcType=BIT},
-      live_start = #{liveStart,jdbcType=BIT},
-      live_json = #{liveJson,jdbcType=VARCHAR},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_user = #{updateUser,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      delete_user = #{deleteUser,jdbcType=VARCHAR},
-      delete_time = #{deleteTime,jdbcType=TIMESTAMP},
-      del_flag = #{delFlag,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-
 
     <resultMap id="ListResultMap" type="com.sicmed.remote.live.bean.LiveListBean">
         <id column="id" jdbcType="VARCHAR" property="id"/>
@@ -374,12 +330,18 @@
     <select id="selectCountByParam" parameterType="com.sicmed.remote.live.bean.GetLiveParamBean"
             resultType="java.lang.Integer">
         select
-        COUNT(id)
-        from _live
+        COUNT(live.id)
+        from _live live
+        LEFT JOIN custom_branch customBranch ON customBranch.id = live.live_branch
         <where>
-            del_flag = '0'
+            live.del_flag = '0'
+            AND live.live_end_time > CURRENT_TIMESTAMP()
+            AND ((live.live_branch = #{branchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_BRANCH")
+                OR (live.live_hospital = #{hospitalId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_HOSPITAL")
+                OR (customBranch.branch_id = #{sameBranchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_SAME_BRANCH")
+                OR (live.live_scope = "LIVE_ALL_HOSPITAL"))
             <if test="liveType != null">
-                AND live_type = #{liveType,jdbcType=VARCHAR}
+                AND live.live_type = #{liveType,jdbcType=VARCHAR}
             </if>
         </where>
     </select>
@@ -393,9 +355,14 @@
         customBranch.custom_name liveBranchName,hospital.hospital_name liveHospitalName
         from _live live
         LEFT JOIN custom_branch customBranch ON customBranch.id = live.live_branch
-        LEFT JOIN base_hospital hospital ON hospital.id = customBranch.hospital_id
+        LEFT JOIN base_hospital hospital ON hospital.id = live.live_hospital
         <where>
             live.del_flag = '0'
+            AND live.live_end_time > CURRENT_TIMESTAMP()
+            AND ((live.live_branch = #{branchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_BRANCH")
+                OR (live.live_hospital = #{hospitalId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_HOSPITAL")
+                OR (customBranch.branch_id = #{sameBranchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_SAME_BRANCH")
+                OR (live.live_scope = "LIVE_ALL_HOSPITAL"))
             <if test="liveType != null">
                 AND live.live_type = #{liveType,jdbcType=VARCHAR}
             </if>
@@ -411,11 +378,17 @@
     <select id="searchCountByParam" parameterType="com.sicmed.remote.live.bean.FuzzySearchLiveBean"
             resultType="java.lang.Integer">
         select
-        COUNT(id)
-        from _live
+        COUNT(live.id)
+        from _live live
+        LEFT JOIN custom_branch customBranch ON customBranch.id = live.live_branch
         <where>
-            live_name LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%')
-            AND del_flag = '0'
+            live.del_flag = '0'
+            AND live.live_end_time > CURRENT_TIMESTAMP()
+                AND ((live.live_branch = #{branchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_BRANCH")
+                OR (live.live_hospital = #{hospitalId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_HOSPITAL")
+                OR (customBranch.branch_id = #{sameBranchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_SAME_BRANCH")
+                OR (live.live_scope = "LIVE_ALL_HOSPITAL"))
+            AND live.live_name LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%')
         </where>
     </select>
     <!-- 模糊 查询列表 并排序 -->
@@ -428,10 +401,15 @@
         customBranch.custom_name liveBranchName,hospital.hospital_name liveHospitalName
         from _live live
         LEFT JOIN custom_branch customBranch ON customBranch.id = live.live_branch
-        LEFT JOIN base_hospital hospital ON hospital.id = customBranch.hospital_id
+        LEFT JOIN base_hospital hospital ON hospital.id = live.live_hospital
         <where>
-            live.live_name LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%')
-            AND live.del_flag = '0'
+            live.del_flag = '0'
+            AND live.live_end_time > CURRENT_TIMESTAMP()
+                AND ((live.live_branch = #{branchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_BRANCH")
+                OR (live.live_hospital = #{hospitalId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_HOSPITAL")
+                OR (customBranch.branch_id = #{sameBranchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_SAME_BRANCH")
+                OR (live.live_scope = "LIVE_ALL_HOSPITAL"))
+            AND live.live_name LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%')
         </where>
         ORDER BY
         live.create_time DESC , live.del_flag
@@ -446,6 +424,7 @@
         <where>
             del_flag = '0'
             AND create_user = #{id,jdbcType=VARCHAR}
+
         </where>
     </select>
     <!-- 根据创建人 查询列表 并排序 -->
@@ -458,15 +437,13 @@
         customBranch.custom_name liveBranchName,hospital.hospital_name liveHospitalName
         from _live live
         LEFT JOIN custom_branch customBranch ON customBranch.id = live.live_branch
-        LEFT JOIN base_hospital hospital ON hospital.id = customBranch.hospital_id
+        LEFT JOIN base_hospital hospital ON hospital.id = live.live_hospital
         <where>
-            live.create_user = #{createUser,jdbcType=VARCHAR}
-            AND live.del_flag = '0'
+            live.del_flag = '0'
+            AND live.create_user = #{createUser,jdbcType=VARCHAR}
         </where>
         ORDER BY
         live.create_time DESC , live.del_flag
         limit #{beginNo,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}
     </select>
-
-
 </mapper>

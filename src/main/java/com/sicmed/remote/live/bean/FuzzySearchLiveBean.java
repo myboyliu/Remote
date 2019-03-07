@@ -14,4 +14,11 @@ public class FuzzySearchLiveBean extends PageEntity {
     @NotBlank(message = "param is null")
     @Size(min = 1, message = "param 长度不合规")
     private String param;
+
+
+    private String branchId;
+
+    private String hospitalId;
+
+    private String sameBranchId;
 }

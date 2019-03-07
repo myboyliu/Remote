@@ -2,6 +2,7 @@ package com.sicmed.remote.live.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sicmed.remote.common.util.FileUtils;
+import com.sicmed.remote.common.util.UserTokenManager;
 import com.sicmed.remote.live.bean.FuzzySearchLiveBean;
 import com.sicmed.remote.live.bean.GetLiveParamBean;
 import com.sicmed.remote.live.entity.Live;
@@ -48,6 +49,7 @@ public class LiveController extends BaseController {
         }
         live.setLiveCoverUrl(fileName);
         live.setCreateUser(getRequestToken());
+        live.setCreateUser(UserTokenManager.getCurrentUser().getHospitalId());
         RequestMeeting requestMeeting = new RequestMeeting();
         requestMeeting.setLive(live);
 
@@ -82,7 +84,6 @@ public class LiveController extends BaseController {
 
         }
         live.setLiveCoverUrl(fileName);
-        live.setCreateUser(getRequestToken());
         RequestMeeting requestMeeting = new RequestMeeting();
         requestMeeting.setLive(live);
 
@@ -126,7 +127,9 @@ public class LiveController extends BaseController {
      */
     @GetMapping(value = "selectCountByParam")
     public Object selectCountByParam(GetLiveParamBean getLiveParamBean) {
-
+        getLiveParamBean.setBranchId(UserTokenManager.getCurrentUser().getBranchId());
+        getLiveParamBean.setHospitalId(UserTokenManager.getCurrentUser().getHospitalId());
+        getLiveParamBean.setSameBranchId(UserTokenManager.getCurrentUser().getBaseBranchId());
         int listCount = liveService.selectCountByParam(getLiveParamBean);
 
         return succeedRequest(listCount);
@@ -137,7 +140,9 @@ public class LiveController extends BaseController {
      */
     @GetMapping(value = "selectListByParam")
     public Object selectListByParam(GetLiveParamBean getLiveParamBean) {
-
+        getLiveParamBean.setBranchId(UserTokenManager.getCurrentUser().getBranchId());
+        getLiveParamBean.setHospitalId(UserTokenManager.getCurrentUser().getHospitalId());
+        getLiveParamBean.setSameBranchId(UserTokenManager.getCurrentUser().getBaseBranchId());
         List<Live> liveList = liveService.selectListByParam(getLiveParamBean);
 
         return succeedRequest(liveList);
@@ -148,7 +153,9 @@ public class LiveController extends BaseController {
      */
     @GetMapping(value = "searchCountByParam")
     public Object searchCountByParam(FuzzySearchLiveBean fuzzySearchLiveBean) {
-
+        fuzzySearchLiveBean.setBranchId(UserTokenManager.getCurrentUser().getBranchId());
+        fuzzySearchLiveBean.setHospitalId(UserTokenManager.getCurrentUser().getHospitalId());
+        fuzzySearchLiveBean.setSameBranchId(UserTokenManager.getCurrentUser().getBaseBranchId());
         int listCount = liveService.searchCountByParam(fuzzySearchLiveBean);
 
         return succeedRequest(listCount);
@@ -159,7 +166,9 @@ public class LiveController extends BaseController {
      */
     @GetMapping(value = "searchListByParam")
     public Object searchListByParam(FuzzySearchLiveBean fuzzySearchLiveBean) {
-
+        fuzzySearchLiveBean.setBranchId(UserTokenManager.getCurrentUser().getBranchId());
+        fuzzySearchLiveBean.setHospitalId(UserTokenManager.getCurrentUser().getHospitalId());
+        fuzzySearchLiveBean.setSameBranchId(UserTokenManager.getCurrentUser().getBaseBranchId());
         List<Live> liveList = liveService.searchListByParam(fuzzySearchLiveBean);
 
         return succeedRequest(liveList);

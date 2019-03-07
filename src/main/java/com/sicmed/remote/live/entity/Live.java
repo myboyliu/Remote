@@ -27,6 +27,8 @@ public class Live {
 
     private String liveBranch;
 
+    private String liveHospital;
+
     private String livePassword;
 
     private String liveType;

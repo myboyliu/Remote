@@ -14,4 +14,10 @@ public class GetLiveParamBean extends PageEntity {
 
     private String createUser;
 
+    private String branchId;
+
+    private String hospitalId;
+
+    private String sameBranchId;
+
 }
