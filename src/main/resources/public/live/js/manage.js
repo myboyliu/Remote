@@ -124,7 +124,7 @@ $(function () {
     // 查看直播详情
     $(".videoList").delegate(".getLiveInfoBtn", "click", function () {
         let liveJsonItem = JSON.parse(sessionStorage.getItem($(this).parents(".videoItem").attr("name")));
-        let liveJson = liveJsonItem.liveJson;
+        let liveJson = JSON.parse(liveJsonItem.liveJson);
         // http://www.qlxlm.com/#/webrtc/13812345678/1000021/9411/企业管理员
         //     liveJson.account
         // liveJson.appointmentNumber

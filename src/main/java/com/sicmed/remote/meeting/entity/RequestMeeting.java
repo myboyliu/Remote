@@ -58,4 +58,6 @@ public class RequestMeeting implements Serializable {
         this.concurrentNum = 1;
     }
 
+    public void setMeetingInfo(Meeting meeting) {
+    }
 }
