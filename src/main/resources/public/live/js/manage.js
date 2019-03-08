@@ -29,7 +29,7 @@ function renderLiveList(liveList) {
     console.log(liveList);
     let _html = "";
     for (let i = 0; i < liveList.length; i++) {
-        sessionStorage.setItem(liveList[i].id, liveList[i].liveJson)
+        sessionStorage.setItem(liveList[i].id, JSON.stringify(liveList[i]))
         let isDone = false;
         let isGoing = false;
         if (new Date().getTime() > new Date(liveList[i].liveEndTime).getTime()) {
@@ -60,7 +60,7 @@ function renderLiveList(liveList) {
                                 </div>\
                             </div>'
 
-        if (!isDone) {
+        if (!isDone && !isGoing) {
             _html += '<div class="optionBox">\
                         <a class="editBtn" href="javascript:;">编辑</a>\
                         <a class="deleteBtn" href="javascript:;">删除</a>\
@@ -122,16 +122,17 @@ $(function () {
 
     // 查看直播详情
     $(".videoList").delegate(".getLiveInfoBtn", "click", function () {
-        let liveJson = JSON.parse(sessionStorage.getItem($(this).parents(".videoItem").attr("name")));
+        let liveJsonItem = JSON.parse(sessionStorage.getItem($(this).parents(".videoItem").attr("name")));
+        let liveJson = liveJsonItem.liveJson;
         // http://www.qlxlm.com/#/webrtc/13812345678/1000021/9411/企业管理员
         //     liveJson.account
         // liveJson.appointmentNumber
         // liveJson.hostPwd
         // userInfo.userName
         let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-        $("#webrtcUrl").html(  baseUrl + "/#/webrtc/" + liveJson.account + "/" + liveJson.appointmentNumber + "/" + liveJson.hostPwd + "/" + userInfo.userName)
+        $("#webrtcUrl").html(baseUrl + "/#/webrtc/" + liveJson.account + "/" + liveJson.appointmentNumber + "/" + liveJson.hostPwd + "/" + userInfo.userName)
         $("#hostPwd").html(liveJson.hostPwd)
-        $("#liveUrl").html(baseUrl+"/#/page/watch-live/" + liveJson.appointmentId)
+        $("#liveUrl").html(baseUrl + "/#/page/watch-live/" + liveJson.appointmentId)
 
         layer.open({
             type: 1,

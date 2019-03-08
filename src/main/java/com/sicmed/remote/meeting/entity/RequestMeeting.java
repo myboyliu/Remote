@@ -3,10 +3,11 @@ package com.sicmed.remote.meeting.entity;
 import com.sicmed.remote.common.util.UserTokenManager;
 import com.sicmed.remote.live.entity.Live;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.util.Date;
-
+@Slf4j
 @Data
 public class RequestMeeting implements Serializable {
 
@@ -46,6 +47,8 @@ public class RequestMeeting implements Serializable {
     }
 
     public void setLive(Live live) {
+        log.debug(live.toString());
+        this.appointmentId = live.getLiveId() != null ? live.getLiveId() : null;
         this.appointmentName = live.getLiveName();
         this.startTime = live.getLiveStartTime();
         this.endTime = live.getLiveEndTime();

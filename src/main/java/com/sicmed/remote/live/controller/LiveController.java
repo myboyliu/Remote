@@ -1,6 +1,5 @@
 package com.sicmed.remote.live.controller;
 
-import com.alibaba.fastjson.JSONObject;
 import com.sicmed.remote.common.util.FileUtils;
 import com.sicmed.remote.common.util.UserTokenManager;
 import com.sicmed.remote.live.bean.FuzzySearchLiveBean;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -41,13 +39,11 @@ public class LiveController extends BaseController {
      */
     @PostMapping(value = "create")
     public Object createLive(@RequestParam(value = "file", required = false) MultipartFile file, Live live) throws Exception {
-        String fileName = file.getOriginalFilename();
-        try {
+        if (file != null) {
+            String fileName = file.getOriginalFilename();
+            live.setLiveCoverUrl(fileName);
             FileUtils.uploadFile(file.getBytes(), location, fileName);
-        } catch (IOException e) {
-
         }
-        live.setLiveCoverUrl(fileName);
         live.setCreateUser(getRequestToken());
         live.setLiveHospital(UserTokenManager.getCurrentUser().getHospitalId());
         RequestMeeting requestMeeting = new RequestMeeting();
@@ -55,16 +51,9 @@ public class LiveController extends BaseController {
 
         MeetingBean meetingBean = YqyMeetingUtils.createMeeting(requestMeeting);
 
-        live.setLiveUrl(meetingBean.getLiveUrl());
-        live.setLivePassword(meetingBean.getLivePwd());
-        live.setLiveNumber(meetingBean.getAppointmentNumber());
-        live.setLiveUser(meetingBean.getAccount());
-        live.setLiveId(meetingBean.getAppointmentId());
-        live.setLiveId(meetingBean.getAppointmentId());
-        live.setLiveJson(JSONObject.toJSONString(meetingBean));
+        live.setMeetingBean(meetingBean);
 
         liveService.insertSelective(live);
-
         // TODO 调用 定时 消息 服务 live.getId(); live.getLiveStartTime();
 
         return succeedRequest(live);
@@ -78,28 +67,24 @@ public class LiveController extends BaseController {
      */
     @PostMapping(value = "update")
     public Object updateLive(@RequestParam(value = "file", required = false) MultipartFile file, Live live) throws Exception {
-        String fileName = file.getOriginalFilename();
-        try {
+        if (file != null) {
+            String fileName = file.getOriginalFilename();
+            live.setLiveCoverUrl(fileName);
             FileUtils.uploadFile(file.getBytes(), location, fileName);
-        } catch (IOException e) {
-
         }
-        live.setLiveCoverUrl(fileName);
+
+
         RequestMeeting requestMeeting = new RequestMeeting();
         requestMeeting.setLive(live);
-
+        //调用云启云接口
         MeetingBean meetingBean = YqyMeetingUtils.updateMeeting(requestMeeting);
 
-        live.setLiveUrl(meetingBean.getLiveUrl());
-        live.setLivePassword(meetingBean.getLivePwd());
-        live.setLiveNumber(meetingBean.getAppointmentNumber());
-        live.setLiveUser(meetingBean.getAccount());
-        live.setLiveId(meetingBean.getAppointmentId());
-        live.setLiveId(meetingBean.getAppointmentId());
-        live.setLiveJson(JSONObject.toJSONString(meetingBean));
+        live.setMeetingBean(meetingBean);
 
         liveService.updateByPrimaryKeySelective(live);
+
         // TODO 调用 定时 消息 服务 live.getId(); live.getLiveStartTime();
+
         return succeedRequest(live);
     }
 

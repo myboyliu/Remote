@@ -1,6 +1,8 @@
 package com.sicmed.remote.live.entity;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sicmed.remote.meeting.bean.MeetingBean;
 import lombok.Data;
 
 import java.util.Date;
@@ -63,5 +65,13 @@ public class Live {
 
     private String delFlag;
 
+    public void setMeetingBean(MeetingBean meetingBean){
+        this.liveUrl = meetingBean.getLiveUrl();
+        this.livePassword = meetingBean.getLivePwd();
+        this.liveNumber = meetingBean.getAppointmentNumber();
+        this.liveUser = meetingBean.getAccount();
+        this.liveId = meetingBean.getAppointmentId();
+        this.liveJson = JSONObject.toJSONString(meetingBean);
+    }
 
 }

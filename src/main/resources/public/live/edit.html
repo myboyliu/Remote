@@ -95,63 +95,101 @@
     </div>
     <!-- form表部分 -->
     <div class="content layui-form clearfix">
-        <div class="itemBox">
-            <span>直播标题</span>
-            <div class="rightBox textBox">
-                <input class="titleInput titleInputObj" type="text" placeholder="请填写">
-                <p class="textNumBox"><i class="textInputNum">0</i>/20</p>
-            </div>
-        </div>
-        <div class="itemBox" style="float: right;">
-            <span>直播描述</span>
-            <div class="rightBox textArea">
-                <div class="textAreaObj" contenteditable="true"></div>
-                <p class="areaNumBox"><i class="textAreaNum">0</i>/100</p>
-            </div>
-        </div>
-        <div class="itemBox">
-            <span>直播时间</span>
-            <div class="rightBox">
-                <input type="text" class="startTime startTimeObj" placeholder="请选择">
-            </div>
-        </div>
-        <div class="itemBox">
-            <span>直播时长</span>
-            <div class="rightBox">
-                <input type="text" class="durationTime durationTimeObj" placeholder="请选择">
-            </div>
-        </div>
-        <div class="itemBox">
-            <span>直播科室</span>
-            <div class="rightBox">
-                <select name=""  class="deptObj">
-                    <!-- <option value="">请选择</option>
-                    <option value="2">其他科室</option> -->
-                </select>
-            </div>
-        </div>
-        <div class="itemBox">
-            <span>直播分类</span>
-            <div class="rightBox">
-                <select name="" id="" class="classifyObj">
-                    <!-- <option value="">请选择</option>
-                    <option value="1">其他</option> -->
-                </select>
-            </div>
-        </div>
-        <div class="itemBox" style="float: right;">
-            <span>上传封面</span>
-            <div class="rightBox coverBox">
-                <div class="coverImgBox">
-                    <img class="coverImgObj" src="" alt="">
+        <div class="left_content">
+
+            <div class="itemBox">
+                <span>直播标题</span>
+                <div class="rightBox textBox">
+                    <input class="titleInput titleInputObj" type="text" placeholder="请填写">
+                    <p class="textNumBox"><i class="textInputNum">0</i>/20</p>
                 </div>
-                <div class="coverBtnBox">
-                    <div class="btnBox">
-                        <a href="javascript:;">重新上传</a>
-                        <input class="coverInput" type="file">
+            </div>
+
+            <div class="itemBox">
+                <span>直播时间</span>
+                <div class="rightBox">
+                    <input type="text" class="startTime startTimeObj" placeholder="请选择">
+                </div>
+            </div>
+            <div class="itemBox">
+                <span>直播时长</span>
+                <div class="rightBox">
+                    <input type="text" class="durationTime durationTimeObj" placeholder="请选择">
+                </div>
+            </div>
+            <div class="itemBox">
+                <span>直播科室</span>
+                <div class="rightBox">
+                    <select name="" class="deptObj">
+                         <option value="">请选择</option>
+                        <option value="2">其他科室</option>
+                    </select>
+                </div>
+            </div>
+            <div class="itemBox">
+                <span>直播分类</span>
+                <div class="rightBox">
+                    <select name="" class="classifyObj">
+                        <option value="">请选择</option>
+                        <option value="LIVE_OPERATION">手术直播</option>
+                        <option value="LIVE_MEDICAL_DISCUSSION">病例讨论</option>
+                        <option value="LIVE_ACADEMIC_CONFERENCE">学术会议</option>
+                    </select>
+                </div>
+            </div>
+            <div class="itemBox">
+                <span>发布范围</span>
+                <div class="rightBox">
+                    <select name="" class="liveScopeObj">
+                        <option value="">请选择</option>
+                        <option value="LIVE_LOCAL_BRANCH">本科室</option>
+                        <option value="LIVE_SAME_BRANCH">同科室</option>
+                        <option value="LIVE_LOCAL_HOSPITAL">本院</option>
+                        <option value="LIVE_ALL_HOSPITAL">全部医院</option>
+                    </select>
+                </div>
+            </div>
+            <div class="itemBox">
+                <span>其他人进入时静音</span>
+                <div class="rightBox checkItem">
+                    <input type="checkbox" class="liveMute">
+                </div>
+            </div>
+            <div class="itemBox">
+                <span>自动录制</span>
+                <div class="rightBox checkItem">
+                    <input type="checkbox" class="liveRecord">
+                </div>
+            </div>
+            <div class="itemBox">
+                <span>开启直播</span>
+                <div class="rightBox checkItem">
+                    <input type="checkbox" class="liveStart">
+                </div>
+            </div>
+        </div>
+        <div class="right_content">
+            <div class="itemBox" style="float: right;">
+                <span>直播描述</span>
+                <div class="rightBox textArea">
+                    <div class="textAreaObj" contenteditable="true"></div>
+                    <p class="areaNumBox"><i class="textAreaNum">0</i>/100</p>
+                </div>
+            </div>
+            <div class="itemBox" style="float: right;">
+                <span>上传封面</span>
+                <div class="rightBox coverBox">
+                    <div class="coverImgBox">
+                        <img class="coverImgObj" src="" alt="">
                     </div>
-                    <div class="btnBox">
-                        <a class="defaultCoverBtn" href="javascript:;">使用系统默认封面</a>
+                    <div class="coverBtnBox">
+                        <div class="btnBox">
+                            <a href="javascript:;">重新上传</a>
+                            <input class="coverInput" type="file">
+                        </div>
+                        <div class="btnBox">
+                            <a class="defaultCoverBtn" href="javascript:;">使用系统默认封面</a>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -209,7 +209,9 @@ public class YqyMeetingUtils {
             return JSON.parseObject(response.get("data").toString(), new TypeReference<MeetingBean>() {
             });
         } else {
-            log.error(response.get("msg").toString());
+            log.error(resultJson);
+            log.error(String.valueOf(response.get("code")));
+            log.error(String.valueOf(response.get("msg")));
             throw new CustomException("云起云接口调用失败");
         }
     }

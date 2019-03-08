@@ -28,7 +28,7 @@ public class LiveService implements BaseService<Live> {
 
     @Override
     public int updateByPrimaryKeySelective(Live live) {
-        return 0;
+        return liveMapper.updateByPrimaryKeySelective(live);
     }
 
     @Override

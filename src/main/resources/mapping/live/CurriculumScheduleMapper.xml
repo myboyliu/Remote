@@ -26,7 +26,7 @@
         from curriculum_schedule
         where id = #{id,jdbcType=VARCHAR}
     </select>
-    <select id="findByCurriculumId" parameterType="java.lang.String" resultMap="java.lang.String">
+    <select id="findByCurriculumId" parameterType="java.lang.String" resultType="java.lang.String">
         select
         curriculum_id
         from curriculum_schedule

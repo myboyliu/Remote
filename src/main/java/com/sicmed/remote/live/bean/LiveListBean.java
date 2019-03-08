@@ -29,6 +29,8 @@ public class LiveListBean {
 
     private String liveBranchName;
 
+    private String liveBranchId;
+
     private String liveHospitalName;
 
     private String livePassword;

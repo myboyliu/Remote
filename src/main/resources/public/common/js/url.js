@@ -230,6 +230,7 @@ const addClickCountUrl = "/vod/addClickCount"                //保存上传成�
 
 /** 直播接口 */
 const createLive = "/live/create";                                           //申请创建直播接口
+const updateLiveUrl = "/live/update";                                           //申请创建直播接口
 const selectCountByParamUrl = "/live/selectCountByParam";                    //件筛选直播数量接口
 const selectListByParamUrl = "/live/selectListByParam";                      //条件筛选直播列表接口
 const searchCountByParamUrl = "/live/searchCountByParam";                    //模糊搜索直播数量接口

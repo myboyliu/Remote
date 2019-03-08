@@ -69,6 +69,8 @@ $(function () {
 
     // 发布按钮
     $(".submitBtn").click(function () {
+        console.log(1111)
+        console.log($(".liveMute").val())
         if ($(".titleInputObj").val() == '') {
             layer.msg("请填写直播标题");
         } else if ($(".titleInputObj").val().length > 20) {

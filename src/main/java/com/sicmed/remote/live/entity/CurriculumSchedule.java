@@ -1,5 +1,6 @@
 package com.sicmed.remote.live.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,8 +15,10 @@ public class CurriculumSchedule implements Serializable {
 
     private String curriculumType;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     private Date curriculumStartTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "GMT+8")
     private Date curriculumEndTime;
 
     private Integer curriculumDuration;

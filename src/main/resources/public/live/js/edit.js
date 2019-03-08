@@ -1,113 +1,59 @@
+function renderBranchSelect(branchList) {
+    console.log(branchList);
+    let _html = '<option value="">请选择</option>';
+    for (let i = 0; i < branchList.length; i++) {
+        _html += '<option value="' + branchList[i].id + '">' + branchList[i].customName + '</option>'
+    }
+    $(".deptObj").html(_html);
+}
+function updateLiveSuccess(){
+    layer.closeAll();
+    $('.optionContent').hide();
+    layer.open({
+        type: 1,
+        title: '',
+        area: ['340px', '200px'],
+        closeBtn: false,
+        shadeClose: false,
+        time: 2000,
+        content: $('.hintContent'),
+    });
+    setTimeout(function () {
+        layer.closeAll();
+        $(".hintContent").hide();
+        window.location = '../live/main.html';
+    }, 2000)
+}
+
 $(function () {
+    // 查询此医院下所有二级科室
+    ajaxRequest("GET", getLocalHospitalBranchUrl, "", false, false, false, renderBranchSelect, null, null);
+
     function double(n) {
         return n < 10 ? '0' + n : n;
     }
+
     // 查询直播信息
-    var liveInfo = {};
-    $.ajax({
-        type: 'POST',
-        url: IP + 'live/findLiveDetail',
-        dataType: 'json',
-        xhrFields: {
-            withCredentials: true
-        },
-        data: {
-            "liveId": window.location.href.split("?")[1],
-        },
-        async: false,
-        crossDomain: true,
-        success: function (data) {
-            console.log(data)
-            if (data.code == 1) {
-                liveInfo = data.data;
-            } else {
-                layer.msg("获取直播信息失败");
-            }
-        },
-        error: function (err) {
-            console.log(err);
-        },
-    });
+    let liveInfo = JSON.parse(sessionStorage.getItem(window.location.href.split("?")[1]));
     $(".titleInputObj").val(liveInfo.liveName);// 标题
     $(".textInputNum").html(liveInfo.liveName.length)
     $(".startTimeObj").val(liveInfo.liveStartTime);// 开始时间
-    $(".textAreaObj").html(liveInfo.liveDescribe);// 描述
-    $(".textAreaNum").html(liveInfo.liveDescribe.length);
-    $(".coverImgObj").attr('src', imgIp + liveInfo.liveCoverUrl)
+    $(".textAreaObj").html(liveInfo.liveDescription);// 描述
+    $(".textAreaNum").html(liveInfo.liveDescription.length);
+    $(".coverImgObj").attr('src', baseUrl + "/" + liveInfo.liveCoverUrl)
+    $(".classifyObj option[value='" + liveInfo.liveType + "']").attr("selected", "selected");
+    $(".deptObj option[value='" + liveInfo.liveBranchId + "']").attr("selected", "selected");
+    $(".liveScopeObj option[value='" + liveInfo.liveScope + "']").attr("selected", "selected");
+    $(".liveMute").attr("checked", liveInfo.liveMute);// 标题
+    $(".liveRecord").attr("checked", liveInfo.liveRecord);// 标题
+    $(".liveStart").attr("checked", liveInfo.liveStart);// 标题
     var times = (new Date(liveInfo.liveEndTime).getTime() - new Date(liveInfo.liveStartTime).getTime()) / 1000;
     var h = parseInt(times / 3600);
     times %= 3600;
     var m = parseInt(times / 60)
     var s = times %= 60;
     $(".durationTimeObj").val(double(h) + ':' + double(m) + ':' + double(s));
-    // 查询此医院下所有二级科室
-    $.ajax({
-        type: 'POST',
-        url: IP + 'hospitalDept/selectAllDeptList',
-        dataType: 'json',
-        xhrFields: {
-            withCredentials: true
-        },
-        data: {
-            "hospitalId": localStorage.getItem("hospitalId"),
-        },
-        async: false,
-        crossDomain: true,
-        success: function (data) {
-            console.log(data)
-            if (data.status == 200) {
-                var _html = '<option value="">请选择</option>';
-                var tempArr = data.hospitalDeptsList;
-                for (var i = 0; i < tempArr.length; i++) {
-                    if (liveInfo.dept.id == tempArr[i].hospitalDeptId) {
-                        _html += '<option selected="selected" value="' + tempArr[i].hospitalDeptId + '">' + tempArr[i].deptName + '</option>'
-                    } else {
-                        _html += '<option value="' + tempArr[i].hospitalDeptId + '">' + tempArr[i].deptName + '</option>'
-                    }
-                }
-                $(".deptObj").html(_html);
-            } else {
-                layer.msg("获取科室列表失败");
-            }
-        },
-        error: function (err) {
-            console.log(err);
-        },
-    });
-    // 查询直播分类列表
-    $.ajax({
-        type: 'GET',
-        url: IP + 'liveClass/findList',
-        dataType: 'json',
-        xhrFields: {
-            withCredentials: true
-        },
-        async: false,
-        crossDomain: true,
-        success: function (data) {
-            console.log(data)
-            if (data.code == 1) {
-                var _html = '<option value="">请选择</option>';
-                var tempArr = data.data;
-                for (var i = 0; i < tempArr.length; i++) {
-                    if (liveInfo.liveClass.id == tempArr[i].id) {
-                        _html += '<option selected="selected" value="' + tempArr[i].id + '">' + tempArr[i].liveClassName + '</option>'
-                    } else {
-                        _html += '<option value="' + tempArr[i].id + '">' + tempArr[i].liveClassName + '</option>'
-                    }
-                }
-                $(".classifyObj").html(_html);
-            } else if (data.code == 250) {
-                // 未登录操作
-                window.location = '/yilaiyiwang/login/login.html';
-            } else {
-                // 其他操作
-            }
-        },
-        error: function (err) {
-            console.log(err);
-        },
-    });
+
 
     // 标题输入 校验长度
     $(".titleInputObj")[0].oninput = function () {
@@ -161,26 +107,26 @@ $(function () {
         var postData = new FormData();
         postData.append("id", liveInfo.id);//直播预告id
         postData.append("path", liveInfo.liveCoverUrl);//原封面图片路径
-        $.ajax({
-            type: 'POST',
-            url: IP + 'live/defaultCover',
-            dataType: 'json',
-            xhrFields: {
-                withCredentials: true
-            },
-            data: postData,
-            crossDomain: true,
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType: "json",
-            success: function (data) {
-                console.log(data)
-            },
-            error: function (err) {
-                console.log(err);
-            },
-        });
+        // $.ajax({
+        //     type: 'POST',
+        //     url: IP + 'live/defaultCover',
+        //     dataType: 'json',
+        //     xhrFields: {
+        //         withCredentials: true
+        //     },
+        //     data: postData,
+        //     crossDomain: true,
+        //     cache: false,
+        //     contentType: false,
+        //     processData: false,
+        //     dataType: "json",
+        //     success: function (data) {
+        //         console.log(data)
+        //     },
+        //     error: function (err) {
+        //         console.log(err);
+        //     },
+        // });
     })
     // 发布按钮
     $(".submitBtn").click(function () {
@@ -209,66 +155,27 @@ $(function () {
         }
     })
     $('.optionContent').find(".yesBtn").click(function () {
-        var startTimes = new Date($(".startTimeObj").val()).getTime() / 1000;
-        var times = $(".durationTimeObj").val().split(":")[0] * 3600 + $(".durationTimeObj").val().split(":")[1] * 60 + $(".durationTimeObj").val().split(":")[2] * 1;
-        var endDate = new Date((startTimes + times) * 1000);
-        var endDateData = endDate.getFullYear() + '-' + double(endDate.getMonth() + 1) + '-' + double(endDate.getDate()) + ' ' + double(endDate.getHours()) + ':' + double(endDate.getMinutes()) + ':' + double(endDate.getSeconds());
-        var postData = new FormData();
+        let startTimes = new Date($(".startTimeObj").val()).getTime() / 1000;
+        let times = $(".durationTimeObj").val().split(":")[0] * 3600 + $(".durationTimeObj").val().split(":")[1] * 60 + $(".durationTimeObj").val().split(":")[2] * 1;
+        let endDate = new Date((startTimes + times) * 1000);
+        let endDateData = endDate.getFullYear() + '-' + double(endDate.getMonth() + 1) + '-' + double(endDate.getDate()) + ' ' + double(endDate.getHours()) + ':' + double(endDate.getMinutes()) + ':' + double(endDate.getSeconds());
+        let postData = new FormData();
         postData.append("id", window.location.href.split("?")[1]);//直播预告id
-        postData.append("title", $(".titleInputObj").val());//直播标题
-        postData.append("liveRoomId", liveInfo.liveRoomId);//直播室id	
-        postData.append("livePwd", liveInfo.adminPwd);//直播密码		
-        postData.append("deptId", $(".deptObj").val());//科室id
-        postData.append("startDate", $(".startTimeObj").val() + ":00");//直播开始时间
-        postData.append("endDate", endDateData);//直播结束时间
-        postData.append("liveClassId", $(".classifyObj").val());//直播分类id
+        postData.append("liveName", $(".titleInputObj").val());//直播标题
+        postData.append("liveDescription", $(".textAreaObj").html());//直播描述
+        postData.append("liveBranch", $(".deptObj").val());//科室id
+        postData.append("liveStartTime", $(".startTimeObj").val() + ":00");//直播开始时间
+        postData.append("liveEndTime", endDateData);//直播结束时间
+        postData.append("livePeriod", times);//直播结束时间
+        postData.append("liveType", $(".classifyObj").val());//直播分类
+        postData.append("liveScope", $(".liveScopeObj").val());//发布范围
+        postData.append("liveMute", $(".liveMute").val());//静音
+        postData.append("liveRecord", $(".liveRecord").val());//自动录制
+        postData.append("liveStart", $(".liveStart").val());//开启直播
+        postData.append("liveId", liveInfo.liveId);//开启直播
         $(".coverInput")[0].files[0] ? postData.append("file", $(".coverInput")[0].files[0]) : null;//封面图片
-        postData.append("liveDescribe", $(".textAreaObj").html());//直播描述
-        // 预告修改
-        $.ajax({
-            type: 'POST',
-            url: IP + 'live/updateAnnouncement',
-            dataType: 'json',
-            xhrFields: {
-                withCredentials: true
-            },
-            data: postData,
-            crossDomain: true,
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType: "json",
-            success: function (data) {
-                console.log(data)
-                if (data.code == 1) {
-                    layer.closeAll();
-                    $('.optionContent').hide();
-                    layer.open({
-                        type: 1,
-                        title: '',
-                        area: ['340px', '200px'],
-                        closeBtn: false,
-                        shadeClose: false,
-                        time: 2000,
-                        content: $('.hintContent'),
-                    });
-                    setTimeout(function () {
-                        layer.closeAll();
-                        $(".hintContent").hide();
-                        window.location = '/yilaiyiwang/liveMain/main.html';
-                    }, 2000)
-                } else if (data.code == 250) {
-                    // 未登录操作
-                    window.location = '/yilaiyiwang/login/login.html';
-                } else {
-                    // 其他操作
-                    layer.msg("请稍后重试")
-                }
-            },
-            error: function (err) {
-                console.log(err);
-            },
-        });
+
+        ajaxRequest("POST", updateLiveUrl, postData, false, false, true, updateLiveSuccess, null, null);
     })
     $('.optionContent').find(".noBtn").click(function () {
         layer.closeAll();

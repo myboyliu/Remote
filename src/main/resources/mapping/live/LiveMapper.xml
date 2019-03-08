@@ -220,6 +220,7 @@
             </if>
         </trim>
     </insert>
+
     <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.live.entity.Live">
         update _live
         <set>
@@ -315,6 +316,7 @@
         <result column="live_start_time" jdbcType="TIMESTAMP" property="liveStartTime"/>
         <result column="live_end_time" jdbcType="TIMESTAMP" property="liveEndTime"/>
         <result column="liveBranchName" jdbcType="VARCHAR" property="liveBranchName"/>
+        <result column="liveBranchId" jdbcType="VARCHAR" property="liveBranchId"/>
         <result column="liveHospitalName" jdbcType="VARCHAR" property="liveHospitalName"/>
         <result column="live_password" jdbcType="VARCHAR" property="livePassword"/>
         <result column="live_type" jdbcType="VARCHAR" property="liveType"/>
@@ -329,9 +331,15 @@
         <result column="subscription_number" jdbcType="VARCHAR" property="subscriptionNumber"/>
         <result column="curriculumScheduleId" jdbcType="VARCHAR" property="curriculumScheduleId"/>
     </resultMap>
+    <sql id="ListResult_Column_List">
+      live.id id, live_id, live_name, live_number, live_cover_url, live_description, live_start_time,
+        live_end_time, live_branch, live_password, live_type, live_period, live_url, live_scope,
+        live_user, live_mute, live_record, live_start, live_json,subscription_number,
+        customBranch.custom_name liveBranchName,customBranch.id liveBranchId,hospital.hospital_name liveHospitalName,
+        curriculumSchedule.id curriculumScheduleId
+  </sql>
     <!-- 根据条件 查询数量 -->
-    <select id="selectCountByParam" parameterType="com.sicmed.remote.live.bean.GetLiveParamBean"
-            resultType="java.lang.Integer">
+    <select id="selectCountByParam" parameterType="com.sicmed.remote.live.bean.GetLiveParamBean" resultType="java.lang.Integer">
         select
         COUNT(live.id)
         from _live live
@@ -352,11 +360,7 @@
     <select id="selectListByParam" parameterType="com.sicmed.remote.live.bean.GetLiveParamBean"
             resultMap="ListResultMap">
         select
-        live.id id, live_id, live_name, live_number, live_cover_url, live_description, live_start_time,
-        live_end_time, live_branch, live_password, live_type, live_period, live_url, live_scope,
-        live_user, live_mute, live_record, live_start, live_json,subscription_number,
-        customBranch.custom_name liveBranchName,hospital.hospital_name liveHospitalName,
-        curriculumSchedule.id curriculumScheduleId
+        <include refid="ListResult_Column_List"/>
         from _live live
         LEFT JOIN custom_branch customBranch ON customBranch.id = live.live_branch
         LEFT JOIN base_hospital hospital ON hospital.id = live.live_hospital
@@ -400,11 +404,7 @@
     <select id="searchListByParam" parameterType="com.sicmed.remote.live.bean.FuzzySearchLiveBean"
             resultMap="ListResultMap">
         select
-        live.id id, live_id, live_name, live_number, live_cover_url, live_description, live_start_time,
-        live_end_time, live_branch, live_password, live_type, live_period, live_url, live_scope,
-        live_user, live_mute, live_record, live_start, live_json,subscription_number,
-        customBranch.custom_name liveBranchName,hospital.hospital_name liveHospitalName,
-        curriculumSchedule.id curriculumScheduleId
+        <include refid="ListResult_Column_List"/>
         from _live live
         LEFT JOIN custom_branch customBranch ON customBranch.id = live.live_branch
         LEFT JOIN base_hospital hospital ON hospital.id = live.live_hospital
@@ -437,11 +437,7 @@
     <select id="getListByUser" parameterType="com.sicmed.remote.live.bean.GetLiveParamBean"
             resultMap="ListResultMap">
         select
-        live.id id, live_id, live_name, live_number, live_cover_url, live_description, live_start_time,
-        live_end_time, live_branch, live_password, live_type, live_period, live_url, live_scope,
-        live_user, live_mute, live_record, live_start, live_json,subscription_number,
-        customBranch.custom_name liveBranchName,hospital.hospital_name liveHospitalName,
-        curriculumSchedule.id curriculumScheduleId
+        <include refid="ListResult_Column_List"/>
         from _live live
         LEFT JOIN custom_branch customBranch ON customBranch.id = live.live_branch
         LEFT JOIN base_hospital hospital ON hospital.id = live.live_hospital
