@@ -4,8 +4,10 @@ package com.sicmed.remote.web.YoonaLtUtils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author YoonaLt
@@ -182,5 +184,78 @@ public class YtDateUtils {
             return null;
         }
     }
+
+    /**
+     * Data,Calendar格式转转
+     */
+    public static Calendar dataToCalendar(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
+    }
+
+    /**
+     * 获取传入日期前60分钟时间距现在毫秒数
+     */
+    public static long before60Time(Date date) {
+        Calendar calendar = dataToCalendar(date);
+        calendar.add(Calendar.MINUTE, -60);
+        Date resultDate = calendar.getTime();
+        long resultLong = resultDate.getTime();
+        long nowLong = new Date().getTime();
+        return resultLong - nowLong;
+//        return 20000;
+    }
+
+    /**
+     * 获取传入日期前15分钟时间距现在毫秒数
+     */
+    public static long before15Time(Date date) {
+        Calendar calendar = dataToCalendar(date);
+        calendar.add(Calendar.MINUTE, -15);
+        Date resultDate = calendar.getTime();
+        long resultLong = resultDate.getTime();
+        long nowLong = new Date().getTime();
+        return resultLong - nowLong;
+//        return 15000;
+    }
+
+    /**
+     * 获取传入日期前5分钟时间距现在毫秒数
+     */
+    public static long before5Time(Date date) {
+        Calendar calendar = dataToCalendar(date);
+        calendar.add(Calendar.MINUTE, -5);
+        Date resultDate = calendar.getTime();
+        long resultLong = resultDate.getTime();
+        long nowLong = new Date().getTime();
+        return resultLong - nowLong;
+//        return 10000;
+    }
+
+    /**
+     * 获取明日17:00:00
+     */
+    public static Date getTomorrow17Points() {
+        Date date = new Date();
+        List<String> l = Arrays.asList(dateToString(date).split("[-: ]"));
+        int year = Integer.parseInt(l.get(0));
+        int month = Integer.parseInt(l.get(1));
+        int day = Integer.parseInt(l.get(2));
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.set(year, month - 1, day + 1, 17, 0, 0);
+        return calendar.getTime();
+    }
+
+    /**
+     * 获取此时与明日17:00:00差的毫秒数
+     */
+    public static long distance17Points() {
+        long l1 = getTomorrow17Points().getTime();
+        long l2 = new Date().getTime();
+        return l1 - l2;
+    }
+
 
 }

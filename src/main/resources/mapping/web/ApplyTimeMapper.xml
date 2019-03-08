@@ -87,6 +87,12 @@
     update apply_time set del_flag = "1" where apply_form_id = #{applyFormId}
     </update>
 
+    <!--由已排期的applyFormId获取对应的applyTime-->
+    <select id="getByApplyFormId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from apply_time
+        where del_flag = "0" and apply_form_id = #{applyFormId}
+    </select>
+
     <insert id="insert" parameterType="com.sicmed.remote.web.entity.ApplyTime">
     insert into apply_time (id, apply_form_id, event_start_time, 
       event_end_time, apply_status, create_time, 

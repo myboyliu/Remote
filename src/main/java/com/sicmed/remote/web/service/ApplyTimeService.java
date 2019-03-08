@@ -34,6 +34,11 @@ public class ApplyTimeService implements BaseService<ApplyTime> {
         return applyTimeMapper.insertStartEndTimes(applyTimeBean);
     }
 
+    // 由已排期的applyFormId获取对应的applyTime
+    public ApplyTime getByApplyFormId(String applyFormId) {
+        return applyTimeMapper.getByApplyFormId(applyFormId);
+    }
+
     @Override
     public int insertSelective(ApplyTime applyTime) {
         return applyTimeMapper.insertSelective(applyTime);

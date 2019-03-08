@@ -3,6 +3,7 @@ package com.sicmed.remote.web.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
+import com.sicmed.remote.OtherConfiguration.StorageRedisKey;
 import com.sicmed.remote.common.ApplyNodeConstant;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
@@ -64,6 +65,10 @@ public class ApplyDisposeController extends BaseController {
     @PostMapping(value = "sirUpdateDoctor")
     public Map sirUpdateDoctor(ApplyForm applyForm, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport) {
 
+        // 若为已排期修改,删除原redis对应时限key
+        StorageRedisKey storageRedisKey = new StorageRedisKey();
+        storageRedisKey.delTimeBoundKey(applyForm.getId());
+
         String userId = getRequestToken();
 
         applyForm.setUpdateUser(userId);
@@ -97,6 +102,9 @@ public class ApplyDisposeController extends BaseController {
         if (applyTime == null) {
             return badRequestOfArguments("传入参数有误");
         }
+        // 若为已排期修改,删除原redis对应时限key
+        StorageRedisKey storageRedisKey = new StorageRedisKey();
+        storageRedisKey.delTimeBoundKey(applyTime.getApplyFormId());
 
         int j = applyTimeService.delByApplyForm(applyTime.getApplyFormId());
         if (j < 0) {
@@ -305,6 +313,11 @@ public class ApplyDisposeController extends BaseController {
         applyTime.setApplyFormId(applyFormId);
         applyTime.setUpdateUser(userId);
         applyTimeService.updateStatus(applyTime);
+
+        // 添加对应redis时限key
+        StorageRedisKey storageRedisKey = new StorageRedisKey();
+        storageRedisKey.timeBoundKey(applyFormId);
+
         return succeedRequest(applyForm);
     }
 
@@ -318,6 +331,10 @@ public class ApplyDisposeController extends BaseController {
         String applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
         String msg1 = "受邀会诊收诊医政排期审核接受,form修改失败";
         String msg2 = "受邀会诊收诊医政排期审核接受,time修改失败";
+
+        // 添加对应redis时限key
+        StorageRedisKey storageRedisKey = new StorageRedisKey();
+        storageRedisKey.timeBoundKey(applyFormId);
 
         return updateStatus(applyFormId, null, applyStatus, msg1, msg2, null);
     }
@@ -361,6 +378,11 @@ public class ApplyDisposeController extends BaseController {
         applyTime.setApplyFormId(applyFormId);
         applyTime.setUpdateUser(userId);
         applyTimeService.updateStatus(applyTime);
+
+        // 添加对应redis时限key
+        StorageRedisKey storageRedisKey = new StorageRedisKey();
+        storageRedisKey.timeBoundKey(applyFormId);
+
         return succeedRequest(applyForm);
     }
 
