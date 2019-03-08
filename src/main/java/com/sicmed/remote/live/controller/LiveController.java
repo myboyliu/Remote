@@ -186,8 +186,13 @@ public class LiveController extends BaseController {
      * 根据ID 删除一条直播信息
      */
     @PostMapping(value = "deleteById")
-    public Object deleteById(String liveId) {
-        int i = liveService.deleteByPrimaryKey(liveId);
+    public Object deleteById(String id, String liveId) throws Exception{
+
+        int i = liveService.deleteByPrimaryKey(id);
+
+        RequestMeeting requestMeeting = new RequestMeeting();
+        requestMeeting.setAppointmentId(liveId);
+        YqyMeetingUtils.deleteMeeting(requestMeeting);
 
         return succeedRequest(i);
     }

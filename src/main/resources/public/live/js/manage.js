@@ -38,7 +38,7 @@ function renderLiveList(liveList) {
         if (new Date().getTime() > new Date(liveList[i].liveStartTime).getTime() && new Date().getTime() < new Date(liveList[i].liveEndTime).getTime()) {
             isGoing = true;
         }
-        _html += '<li name="' + liveList[i].id + '" liveRoomId="' + liveList[i].liveNumber + '" class="videoItem clearfix" coverUrl="' + baseUrl + "/" + liveList[i].liveCoverUrl + '">\
+        _html += '<li liveId="' + liveList[i].liveId + '" name="' + liveList[i].id + '" liveRoomId="' + liveList[i].liveNumber + '" class="videoItem clearfix" coverUrl="' + baseUrl + "/" + liveList[i].liveCoverUrl + '">\
                             <div class="leftBox">\
                                 <div class="videoBox">\
                                     <img src="' + baseUrl + "/" + liveList[i].liveCoverUrl + '" alt="">';
@@ -87,9 +87,10 @@ function renderLiveList(liveList) {
  * 删除直播
  * @param id
  */
-function deleteLive(id) {
+function deleteLive(id,liveId) {
     let deleteData = new FormData();
-    deleteData.append("liveId", id);
+    deleteData.append("id", id);
+    deleteData.append("liveId", liveId);
     ajaxRequest("POST", deleteByIdUrl, deleteData, false, false, true, deleteLiveSuccess, null, null);
 
     function deleteLiveSuccess(result) {
@@ -104,7 +105,7 @@ $(function () {
 
     // 删除事件
     $(".videoList").delegate(".deleteBtn", "click", function () {
-        deleteLive($(this).parents(".videoItem").attr("name"));
+        deleteLive($(this).parents(".videoItem").attr("name"),$(this).parents(".videoItem").attr("liveId"));
         // layer.open({
         //     type: 1,
         //     title: '',
@@ -151,47 +152,6 @@ $(function () {
             window.open($("#webrtcUrl").html(), "_blank");
             return false;
         })
-        // $.ajax({
-        //     type: 'POST',
-        //     url: IP + 'live/getLiveMessage',
-        //     dataType: 'json',
-        //     xhrFields: {
-        //         withCredentials: true
-        //     },
-        //     data: {
-        //         "liveId": $(this).parents(".videoItem").attr("name"),
-        //     },
-        //     crossDomain: true,
-        //     success: function (data) {
-        //         console.log(data)
-        //         if (data.code == 1) {
-        //             liveInfo = data;
-        //             layer.open({
-        //                 type: 1,
-        //                 title: '',
-        //                 area: ['700px', '350px'],
-        //                 closeBtn: false,
-        //                 shadeClose: true,
-        //                 content: $('.liveInfoContent'),
-        //                 end: function () {
-        //                     $('.liveInfoContent').hide();
-        //                 }
-        //             });
-        //             $('.liveInfoContent').find(".loginAccount").html("云起云登录账号: " + data.data.username);
-        //             $('.liveInfoContent').find(".openUrl").html("直播开启地址: " + data.data.adminUrl);
-        //             $('.liveInfoContent').find(".openPasswrod").html("直播开启密码: " + data.data.adminPwd);
-        //             $('.liveInfoContent').find(".watchUrl").html("观看直播: " + data.data.liveUrl);
-        //         } else if (data.code == 250) {
-        //             // 未登录操作
-        //             window.location = '/yilaiyiwang/login/login.html';
-        //         } else {
-        //             // 其他操作
-        //         }
-        //     },
-        //     error: function (err) {
-        //         console.log(err);
-        //     },
-        // });
     })
 
     // 直播控制
@@ -254,32 +214,33 @@ $(function () {
 
     // 发布直播按钮
     $(".releaseBtn").click(function () {
+        window.location = '../live/release.html';
         // 检测是否有发布直播的权限
-        $.ajax({
-            type: 'GET',
-            url: IP + 'live/testPermissions',
-            dataType: 'json',
-            xhrFields: {
-                withCredentials: true
-            },
-            crossDomain: true,
-            dataType: "json",
-            async: false,
-            success: function (data) {
-                console.log(data)
-                if (data.status == 200) {
-                    window.location = '/yilaiyiwang/liveRelease/release.html';
-                } else if (data.status == 251) {
-                    layer.msg("您没有发布直播的权限");
-                    return false;
-                } else {
-                    layer.msg("请稍后重试");
-                    return false;
-                }
-            },
-            error: function (err) {
-                console.log(err);
-            },
-        });
+        // $.ajax({
+        //     type: 'GET',
+        //     url: IP + 'live/testPermissions',
+        //     dataType: 'json',
+        //     xhrFields: {
+        //         withCredentials: true
+        //     },
+        //     crossDomain: true,
+        //     dataType: "json",
+        //     async: false,
+        //     success: function (data) {
+        //         console.log(data)
+        //         if (data.status == 200) {
+        //             window.location = '/yilaiyiwang/liveRelease/release.html';
+        //         } else if (data.status == 251) {
+        //             layer.msg("您没有发布直播的权限");
+        //             return false;
+        //         } else {
+        //             layer.msg("请稍后重试");
+        //             return false;
+        //         }
+        //     },
+        //     error: function (err) {
+        //         console.log(err);
+        //     },
+        // });
     })
 })
