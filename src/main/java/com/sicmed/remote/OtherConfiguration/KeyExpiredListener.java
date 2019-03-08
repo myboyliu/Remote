@@ -37,30 +37,19 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
          */
         String key = message.toString();
         String type = key.substring(0, 2);
-        String identifyingId = key.substring(3, 35);
-        List<String> idLists = Arrays.asList(key.substring(36).split("-"));
-        String resultMessage = "";
+        String resultMessage;
         switch (type) {
             case "01":
-                resultMessage = "您预约了60分钟后进行视频会诊" + identifyingId;
-                // 获取发送用户Id,并发送信息
-                for (String userId : idLists) {
-                    messageSendService.sendUser(userId, resultMessage);
-                }
+                resultMessage = "您预约了60分钟后进行视频会诊" + key.substring(3, 35);
+                sendOperation(key, resultMessage);
                 break;
             case "02":
-                resultMessage = "您预约了15分钟后进行视频会诊，请提前5分钟进入会诊室做准备" + identifyingId;
-                // 获取发送用户Id,并发送信息
-                for (String userId : idLists) {
-                    messageSendService.sendUser(userId, resultMessage);
-                }
+                resultMessage = "您预约了15分钟后进行视频会诊，请提前5分钟进入会诊室做准备" + key.substring(3, 35);
+                sendOperation(key, resultMessage);
                 break;
             case "03":
-                resultMessage = "您预约的会诊室已激活，如还未进入，请通知相关人员尽快加入。如已准备妥当请忽略本消息" + identifyingId;
-                // 获取发送用户Id,并发送信息
-                for (String userId : idLists) {
-                    messageSendService.sendUser(userId, resultMessage);
-                }
+                resultMessage = "您预约的会诊室已激活，如还未进入，请通知相关人员尽快加入。如已准备妥当请忽略本消息" + key.substring(3, 35);
+                sendOperation(key, resultMessage);
                 break;
 //            case "04": //定时器中执行此功能
 //                resultMessage = "有新内容了！上周更新的课程都在这里，点击立即去观看";
@@ -70,15 +59,23 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
                 messageSendService.sendTopic(resultMessage);
                 break;
             case "06":
-                resultMessage = "您关注的直播“直播名称”即将开始，请及时查看" + identifyingId;
+                resultMessage = "您关注的直播“直播名称”即将开始，请及时查看";
                 // 获取关注人id,并向其发送消息
-                List<String> curriculumIdList = curriculumScheduleService.findByCurriculumId(identifyingId);
+                List<String> curriculumIdList = curriculumScheduleService.findByCurriculumId(key.substring(3, 35));
                 for (String userId : curriculumIdList) {
                     messageSendService.sendUser(userId, resultMessage);
                 }
                 break;
             default:
                 break;
+        }
+    }
+
+    public void sendOperation(String key, String resultMessage) {
+        List<String> idLists = Arrays.asList(key.substring(36).split("-"));
+        // 获取发送用户Id,并发送信息
+        for (String userId : idLists) {
+            messageSendService.sendUser(userId, resultMessage);
         }
     }
 }
