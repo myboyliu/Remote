@@ -26,6 +26,12 @@
         from curriculum_schedule
         where id = #{id,jdbcType=VARCHAR}
     </select>
+    <select id="findByCurriculumId" parameterType="java.lang.String" resultMap="java.lang.String">
+        select
+        curriculum_id
+        from curriculum_schedule
+        where curriculum_id = #{curriculumId,jdbcType=VARCHAR}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from curriculum_schedule
     where id = #{id,jdbcType=VARCHAR}

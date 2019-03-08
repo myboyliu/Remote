@@ -164,8 +164,8 @@ $(function () {
         } else {
             let addData = new FormData();
             addData.append("curriculumId", $(this).attr("name"))
-            addData.append("liveStartTime", $(this).attr("liveStartTime"))
-            addData.append("liveEndTime", $(this).attr("liveEndTime"))
+            addData.append("curriculumStartTime", $(this).attr("liveStartTime"))
+            addData.append("curriculumEndTime", $(this).attr("liveEndTime"))
             addData.append("curriculumDuration", $(this).attr("livePeriod"))
             addData.append("curriculumType", "CURRICULUM_LIVE")
             ajaxRequest("POST", addSubscriptionUrl, addData, false, false, true, addSubscriptionSuccess, null, null);

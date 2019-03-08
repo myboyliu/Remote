@@ -44,6 +44,15 @@ public class CurriculumScheduleService implements BaseService<CurriculumSchedule
         return null;
     }
 
+    /**
+     * 根据课程ID 查询关注 用户ID 列表
+     * @param curriculumId 课程ID
+     * @return
+     */
+    public List<String> findByCurriculumId(String curriculumId) {
+        return curriculumScheduleMapper.findByCurriculumId(curriculumId);
+    }
+
     public int deleteByUser(CurriculumSchedule curriculumSchedule) {
         return curriculumScheduleMapper.deleteByUser(curriculumSchedule);
     }

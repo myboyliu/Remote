@@ -65,6 +65,7 @@ public class LiveController extends BaseController {
 
         liveService.insertSelective(live);
 
+        // TODO 调用 定时 消息 服务 live.getId(); live.getLiveStartTime();
 
         return succeedRequest(live);
     }
@@ -98,8 +99,7 @@ public class LiveController extends BaseController {
         live.setLiveJson(JSONObject.toJSONString(meetingBean));
 
         liveService.updateByPrimaryKeySelective(live);
-
-
+        // TODO 调用 定时 消息 服务 live.getId(); live.getLiveStartTime();
         return succeedRequest(live);
     }
 
