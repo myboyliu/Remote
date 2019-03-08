@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sicmed.remote.live.mapper.CurriculumScheduleMapper">
+    <resultMap id="BaseResultMap" type="com.sicmed.remote.live.entity.CurriculumSchedule">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="curriculum_id" jdbcType="VARCHAR" property="curriculumId"/>
+        <result column="curriculum_type" jdbcType="VARCHAR" property="curriculumType"/>
+        <result column="curriculum_start_time" jdbcType="TIMESTAMP" property="curriculumStartTime"/>
+        <result column="curriculum_end_time" jdbcType="TIMESTAMP" property="curriculumEndTime"/>
+        <result column="curriculum_duration" jdbcType="INTEGER" property="curriculumDuration"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="delete_user" jdbcType="VARCHAR" property="deleteUser"/>
+        <result column="delete_time" jdbcType="TIMESTAMP" property="deleteTime"/>
+        <result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, curriculum_id, curriculum_type, curriculum_start_time, curriculum_end_time, curriculum_duration, 
+    create_user, create_time, update_user, update_time, delete_user, delete_time, del_flag
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from curriculum_schedule
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from curriculum_schedule
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="insertSelective" parameterType="com.sicmed.remote.live.entity.CurriculumSchedule">
+        <selectKey keyProperty="id" resultType="java.lang.String"
+                   order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into curriculum_schedule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="curriculumId != null">
+                curriculum_id,
+            </if>
+            <if test="curriculumType != null">
+                curriculum_type,
+            </if>
+            <if test="curriculumStartTime != null">
+                curriculum_start_time,
+            </if>
+            <if test="curriculumEndTime != null">
+                curriculum_end_time,
+            </if>
+            <if test="curriculumDuration != null">
+                curriculum_duration,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="deleteUser != null">
+                delete_user,
+            </if>
+            <if test="deleteTime != null">
+                delete_time,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="curriculumId != null">
+                #{curriculumId,jdbcType=VARCHAR},
+            </if>
+            <if test="curriculumType != null">
+                #{curriculumType,jdbcType=VARCHAR},
+            </if>
+            <if test="curriculumStartTime != null">
+                #{curriculumStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="curriculumEndTime != null">
+                #{curriculumEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="curriculumDuration != null">
+                #{curriculumDuration,jdbcType=INTEGER},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.live.entity.CurriculumSchedule">
+        update curriculum_schedule
+        <set>
+            <if test="curriculumId != null">
+                curriculum_id = #{curriculumId,jdbcType=VARCHAR},
+            </if>
+            <if test="curriculumType != null">
+                curriculum_type = #{curriculumType,jdbcType=VARCHAR},
+            </if>
+            <if test="curriculumStartTime != null">
+                curriculum_start_time = #{curriculumStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="curriculumEndTime != null">
+                curriculum_end_time = #{curriculumEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="curriculumDuration != null">
+                curriculum_duration = #{curriculumDuration,jdbcType=INTEGER},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                delete_user = #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.live.entity.CurriculumSchedule">
+    update curriculum_schedule
+    set curriculum_id = #{curriculumId,jdbcType=VARCHAR},
+      curriculum_type = #{curriculumType,jdbcType=VARCHAR},
+      curriculum_start_time = #{curriculumStartTime,jdbcType=TIMESTAMP},
+      curriculum_end_time = #{curriculumEndTime,jdbcType=TIMESTAMP},
+      curriculum_duration = #{curriculumDuration,jdbcType=INTEGER},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      delete_user = #{deleteUser,jdbcType=VARCHAR},
+      delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+      del_flag = #{delFlag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+    <delete id="deleteByUser" parameterType="com.sicmed.remote.live.entity.CurriculumSchedule">
+    delete from curriculum_schedule
+    where  curriculum_id = #{curriculumId,jdbcType=VARCHAR}
+    AND  create_user = #{createUser,jdbcType=VARCHAR}
+  </delete>
+</mapper>

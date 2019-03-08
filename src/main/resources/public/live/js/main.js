@@ -58,7 +58,6 @@ function selectLiveList() {
     let countData = {};
     if ($(".classifyObj > a.active").attr("name") !== "LIVE_ALL") {
         countData["liveType"] = $(".classifyObj > a.active").attr("name");
-
     }
     ajaxRequest("GET", selectCountByParamUrl, countData, true, "application/json", true, selectCountSuccess, null, null);
 }
@@ -83,6 +82,7 @@ function selectCountSuccess(liveCount) {
                     if ($(".classifyObj > a.active").attr("name") !== "LIVE_ALL") {
                         listData["liveType"] = $(".classifyObj > a.active").attr("name")
                     }
+                    listData[$(".sortObj > a.active").attr("name")] = "1";
                     ajaxRequest("GET", selectListByParamUrl, listData, true, "application/json", true, renderLiveList, null, null);
                 }
             });
@@ -110,10 +110,10 @@ function renderLiveList(liveList) {
                                 </div>'
         if (isGoing) {
             _html += '<a id="playBtn" liveRoomId="' + liveList[i].liveId + '" class="playBtn" href="javascript:;">播放</a>'
-        } else if (liveList[i].isFollow) {
-            _html += '<a class="followBtn active" href="javascript:;">已关注</a>'
+        } else if (liveList[i].curriculumScheduleId) {
+            _html += '<a class="followBtn active" href="javascript:;"  name="' + liveList[i].id + '"  >已关注</a>'
         } else {
-            _html += '<a class="followBtn" href="javascript:;">关注</a>'
+            _html += '<a class="followBtn" href="javascript:;" liveStartTime="' + liveList[i].liveStartTime + '" liveEndTime="' + liveList[i].liveEndTime + '" name="' + liveList[i].id + '"  livePeriod="' + liveList[i].livePeriod + '" >关注</a>'
         }
         _html += '<p class="videoDesc">简介：' + liveList[i].liveDescription + '</p>\
                                 <div class="popularBox">\
@@ -121,12 +121,22 @@ function renderLiveList(liveList) {
                                         <img src="/live/img/follow.png" alt="">\
                                     </a>\
                                     <span>关注</span>\
-                                    <i class="playNum">' + 0 + '</i>\
+                                    <i class="playNum">' + liveList[i].subscriptionNumber + '</i>\
                                 </div>\
                             </div>';
     }
 
     $(".listContent").html(_html);
+}
+
+/** 添加关注 */
+function addSubscriptionSuccess() {
+    selectLiveList();
+}
+
+/** 取消关注*/
+function cancelSubscriptionSuccess() {
+    selectLiveList();
 }
 
 $(function () {
@@ -145,45 +155,20 @@ $(function () {
         selectLiveList();
     })
 
-    // 关注、取消关注
-    function toggleFollow(liveId, status, obj) {
-        console.log(liveId)
-        console.log(status)
-        // $.ajax({
-        //     type: 'POST',
-        //     url: IP + 'follow/switchFollow',
-        //     dataType: 'json',
-        //     xhrFields: {
-        //         withCredentials: true
-        //     },
-        //     data: {
-        //         "liveId": liveId,
-        //         "status": status,
-        //     },
-        //     crossDomain: true,
-        //     success: function (data) {
-        //         console.log(data)
-        //         if (data.code == 1) {
-        //             getListData($(".classifyObj > a.active").attr("name"), $(".sortObj > a.active").html(), pageNo);
-        //         } else if (data.code == 250) {
-        //             // 未登录操作
-        //             window.location = '/yilaiyiwang/login/login.html';
-        //         } else {
-        //             // 其他操作
-        //         }
-        //     },
-        //     error: function (err) {
-        //         console.log(err);
-        //     },
-        // });
-    }
-
     // 关注、取消关注事件
     $(".listContent").delegate(".followBtn", "click", function () {
         if ($(this).hasClass("active")) {
-            toggleFollow($(this).parents(".itemBox").attr("name"), true, $(this));
+            let cancelData = new FormData();
+            cancelData.append("curriculumId", $(this).attr("name"))
+            ajaxRequest("POST", cancelSubscriptionUrl, cancelData, false, false, true, cancelSubscriptionSuccess, null, null);
         } else {
-            toggleFollow($(this).parents(".itemBox").attr("name"), false, $(this));
+            let addData = new FormData();
+            addData.append("curriculumId", $(this).attr("name"))
+            addData.append("liveStartTime", $(this).attr("liveStartTime"))
+            addData.append("liveEndTime", $(this).attr("liveEndTime"))
+            addData.append("curriculumDuration", $(this).attr("livePeriod"))
+            addData.append("curriculumType", "CURRICULUM_LIVE")
+            ajaxRequest("POST", addSubscriptionUrl, addData, false, false, true, addSubscriptionSuccess, null, null);
         }
     })
 
@@ -204,7 +189,7 @@ $(function () {
     $(".listContent").delegate(".playBtn", "click", function () {
         //新窗口打开直播页面
         let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-        window.open(baseUrl+"/#/to/" + userInfo.userPhone + "/watch-live/" + $(this).attr("liveRoomId"), "_blank");
+        window.open(baseUrl + "/#/to/" + userInfo.userPhone + "/watch-live/" + $(this).attr("liveRoomId"), "_blank");
         return false;
         //本窗口悬浮打开直播页面
         $("#livePlayIframe").attr('src', "http://www.qlxlm.com/#/page/watch-live/" + $(this).attr("liveRoomId"));

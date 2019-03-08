@@ -47,7 +47,7 @@ public class LiveService implements BaseService<Live> {
     }
 
     public int selectCountByParam(GetLiveParamBean getLiveParamBean) {
-       return liveMapper.selectCountByParam(getLiveParamBean);
+        return liveMapper.selectCountByParam(getLiveParamBean);
     }
 
     public List<Live> selectListByParam(GetLiveParamBean getLiveParamBean) {
@@ -64,10 +64,18 @@ public class LiveService implements BaseService<Live> {
     }
 
     public int getCountByUser(String requestToken) {
-      return   liveMapper.getCountByUser(requestToken);
+        return liveMapper.getCountByUser(requestToken);
     }
 
     public List<Live> getListByUser(GetLiveParamBean getLiveParamBean) {
         return liveMapper.getListByUser(getLiveParamBean);
+    }
+
+    public int addSubscriptionNumber(String curriculumId) {
+        return liveMapper.addSubscriptionNumber(curriculumId);
+    }
+
+    public int lessSubscriptionNumber(String curriculumId) {
+        return liveMapper.lessSubscriptionNumber(curriculumId);
     }
 }

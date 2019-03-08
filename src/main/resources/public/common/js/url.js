@@ -238,6 +238,8 @@ const getCountByParamUrl = "/live/getCountByParam";                          //�
 const getListByParamUrl = "/live/getListByParam";                            //条件筛选个人创建的直播列表接口
 const deleteByIdUrl = "/live/deleteById";                                    //删除直播接口
 const getLiveUrl = "/live/getLive";                                          //查询直播信息接口
+const addSubscriptionUrl = "/curriculum/schedule/add";                       //添加关注接口
+const cancelSubscriptionUrl = "/curriculum/schedule/delete";                 //取消关注接口
 
 /** 会议接口 */
 

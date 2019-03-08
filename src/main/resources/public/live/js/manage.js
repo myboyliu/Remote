@@ -56,7 +56,7 @@ function renderLiveList(liveList) {
                                         <img src="../live/img/follow.png" alt="">\
                                     </a>\
                                     <span>关注</span>\
-                                    <i>' + 0 + '</i>\
+                                    <i>' + liveList[i].subscriptionNumber + '</i>\
                                 </div>\
                             </div>'
 

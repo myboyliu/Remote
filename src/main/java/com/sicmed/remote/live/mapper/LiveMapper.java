@@ -32,4 +32,8 @@ public interface LiveMapper {
     int getCountByUser(String requestToken);
 
     List<Live> getListByUser(GetLiveParamBean getLiveParamBean);
+
+    int addSubscriptionNumber(String curriculumId);
+
+    int lessSubscriptionNumber(String curriculumId);
 }

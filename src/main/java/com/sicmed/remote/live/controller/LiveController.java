@@ -49,7 +49,7 @@ public class LiveController extends BaseController {
         }
         live.setLiveCoverUrl(fileName);
         live.setCreateUser(getRequestToken());
-        live.setCreateUser(UserTokenManager.getCurrentUser().getHospitalId());
+        live.setLiveHospital(UserTokenManager.getCurrentUser().getHospitalId());
         RequestMeeting requestMeeting = new RequestMeeting();
         requestMeeting.setLive(live);
 

@@ -22,6 +22,7 @@
         <result column="live_record" jdbcType="BIT" property="liveRecord"/>
         <result column="live_start" jdbcType="BIT" property="liveStart"/>
         <result column="live_json" jdbcType="VARCHAR" property="liveJson"/>
+        <result column="subscription_number" jdbcType="VARCHAR" property="subscriptionNumber"/>
         <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
@@ -33,7 +34,7 @@
     <sql id="Base_Column_List">
     id, live_id, live_name, live_number, live_cover_url, live_description, live_start_time, 
     live_end_time, live_branch,live_hospital, live_password, live_type, live_period, live_url, live_scope,
-    live_user, live_mute, live_record, live_start, live_json, create_user, create_time, 
+    live_user, live_mute, live_record, live_start, live_json,subscription_number, create_user, create_time,
     update_user, update_time, delete_user, delete_time, del_flag
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -325,6 +326,8 @@
         <result column="live_record" jdbcType="BIT" property="liveRecord"/>
         <result column="live_start" jdbcType="BIT" property="liveStart"/>
         <result column="live_json" jdbcType="VARCHAR" property="liveJson"/>
+        <result column="subscription_number" jdbcType="VARCHAR" property="subscriptionNumber"/>
+        <result column="curriculumScheduleId" jdbcType="VARCHAR" property="curriculumScheduleId"/>
     </resultMap>
     <!-- 根据条件 查询数量 -->
     <select id="selectCountByParam" parameterType="com.sicmed.remote.live.bean.GetLiveParamBean"
@@ -337,9 +340,9 @@
             live.del_flag = '0'
             AND live.live_end_time > CURRENT_TIMESTAMP()
             AND ((live.live_branch = #{branchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_BRANCH")
-                OR (live.live_hospital = #{hospitalId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_HOSPITAL")
-                OR (customBranch.branch_id = #{sameBranchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_SAME_BRANCH")
-                OR (live.live_scope = "LIVE_ALL_HOSPITAL"))
+            OR (live.live_hospital = #{hospitalId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_HOSPITAL")
+            OR (customBranch.branch_id = #{sameBranchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_SAME_BRANCH")
+            OR (live.live_scope = "LIVE_ALL_HOSPITAL"))
             <if test="liveType != null">
                 AND live.live_type = #{liveType,jdbcType=VARCHAR}
             </if>
@@ -351,25 +354,27 @@
         select
         live.id id, live_id, live_name, live_number, live_cover_url, live_description, live_start_time,
         live_end_time, live_branch, live_password, live_type, live_period, live_url, live_scope,
-        live_user, live_mute, live_record, live_start, live_json,
-        customBranch.custom_name liveBranchName,hospital.hospital_name liveHospitalName
+        live_user, live_mute, live_record, live_start, live_json,subscription_number,
+        customBranch.custom_name liveBranchName,hospital.hospital_name liveHospitalName,
+        curriculumSchedule.id curriculumScheduleId
         from _live live
         LEFT JOIN custom_branch customBranch ON customBranch.id = live.live_branch
         LEFT JOIN base_hospital hospital ON hospital.id = live.live_hospital
+        LEFT JOIN curriculum_schedule curriculumSchedule ON curriculumSchedule.curriculum_id = live.id
         <where>
             live.del_flag = '0'
             AND live.live_end_time > CURRENT_TIMESTAMP()
             AND ((live.live_branch = #{branchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_BRANCH")
-                OR (live.live_hospital = #{hospitalId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_HOSPITAL")
-                OR (customBranch.branch_id = #{sameBranchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_SAME_BRANCH")
-                OR (live.live_scope = "LIVE_ALL_HOSPITAL"))
+            OR (live.live_hospital = #{hospitalId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_HOSPITAL")
+            OR (customBranch.branch_id = #{sameBranchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_SAME_BRANCH")
+            OR (live.live_scope = "LIVE_ALL_HOSPITAL"))
             <if test="liveType != null">
                 AND live.live_type = #{liveType,jdbcType=VARCHAR}
             </if>
         </where>
         ORDER BY
         <if test="groupByTime != null">
-            live.create_time DESC ,
+            live_start_time ASC,
         </if>
         live.del_flag
         limit #{beginNo,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}
@@ -384,10 +389,10 @@
         <where>
             live.del_flag = '0'
             AND live.live_end_time > CURRENT_TIMESTAMP()
-                AND ((live.live_branch = #{branchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_BRANCH")
-                OR (live.live_hospital = #{hospitalId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_HOSPITAL")
-                OR (customBranch.branch_id = #{sameBranchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_SAME_BRANCH")
-                OR (live.live_scope = "LIVE_ALL_HOSPITAL"))
+            AND ((live.live_branch = #{branchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_BRANCH")
+            OR (live.live_hospital = #{hospitalId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_HOSPITAL")
+            OR (customBranch.branch_id = #{sameBranchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_SAME_BRANCH")
+            OR (live.live_scope = "LIVE_ALL_HOSPITAL"))
             AND live.live_name LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%')
         </where>
     </select>
@@ -397,22 +402,24 @@
         select
         live.id id, live_id, live_name, live_number, live_cover_url, live_description, live_start_time,
         live_end_time, live_branch, live_password, live_type, live_period, live_url, live_scope,
-        live_user, live_mute, live_record, live_start, live_json,
-        customBranch.custom_name liveBranchName,hospital.hospital_name liveHospitalName
+        live_user, live_mute, live_record, live_start, live_json,subscription_number,
+        customBranch.custom_name liveBranchName,hospital.hospital_name liveHospitalName,
+        curriculumSchedule.id curriculumScheduleId
         from _live live
         LEFT JOIN custom_branch customBranch ON customBranch.id = live.live_branch
         LEFT JOIN base_hospital hospital ON hospital.id = live.live_hospital
+        LEFT JOIN curriculum_schedule curriculumSchedule ON curriculumSchedule.curriculum_id = live.id
         <where>
             live.del_flag = '0'
             AND live.live_end_time > CURRENT_TIMESTAMP()
-                AND ((live.live_branch = #{branchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_BRANCH")
-                OR (live.live_hospital = #{hospitalId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_HOSPITAL")
-                OR (customBranch.branch_id = #{sameBranchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_SAME_BRANCH")
-                OR (live.live_scope = "LIVE_ALL_HOSPITAL"))
+            AND ((live.live_branch = #{branchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_BRANCH")
+            OR (live.live_hospital = #{hospitalId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_LOCAL_HOSPITAL")
+            OR (customBranch.branch_id = #{sameBranchId,jdbcType=VARCHAR} AND live.live_scope = "LIVE_SAME_BRANCH")
+            OR (live.live_scope = "LIVE_ALL_HOSPITAL"))
             AND live.live_name LIKE CONCAT(CONCAT('%',#{param,jdbcType=VARCHAR}),'%')
         </where>
         ORDER BY
-        live.create_time DESC , live.del_flag
+        live.live_start_time ASC, live.del_flag
         limit #{beginNo,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}
     </select>
     <!-- 根据创建人 查询列表 数量 -->
@@ -424,7 +431,6 @@
         <where>
             del_flag = '0'
             AND create_user = #{id,jdbcType=VARCHAR}
-
         </where>
     </select>
     <!-- 根据创建人 查询列表 并排序 -->
@@ -433,17 +439,35 @@
         select
         live.id id, live_id, live_name, live_number, live_cover_url, live_description, live_start_time,
         live_end_time, live_branch, live_password, live_type, live_period, live_url, live_scope,
-        live_user, live_mute, live_record, live_start, live_json,
-        customBranch.custom_name liveBranchName,hospital.hospital_name liveHospitalName
+        live_user, live_mute, live_record, live_start, live_json,subscription_number,
+        customBranch.custom_name liveBranchName,hospital.hospital_name liveHospitalName,
+        curriculumSchedule.id curriculumScheduleId
         from _live live
         LEFT JOIN custom_branch customBranch ON customBranch.id = live.live_branch
         LEFT JOIN base_hospital hospital ON hospital.id = live.live_hospital
+        LEFT JOIN curriculum_schedule curriculumSchedule ON curriculumSchedule.curriculum_id = live.id
         <where>
             live.del_flag = '0'
             AND live.create_user = #{createUser,jdbcType=VARCHAR}
         </where>
         ORDER BY
-        live.create_time DESC , live.del_flag
+        live.live_start_time DESC , live.del_flag
         limit #{beginNo,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}
     </select>
+
+
+    <update id="addSubscriptionNumber" parameterType="java.lang.String">
+        update _live
+        <set>
+            subscription_number = subscription_number + 1
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="lessSubscriptionNumber" parameterType="java.lang.String">
+        update _live
+        <set>
+            subscription_number = subscription_number - 1
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
 </mapper>

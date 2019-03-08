@@ -1,11 +1,13 @@
 package com.sicmed.remote.live.bean;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LiveListBean {
     private String id;
 
@@ -48,5 +50,9 @@ public class LiveListBean {
     private Boolean liveStart;
 
     private String liveJson;
+
+    private String subscriptionNumber;
+
+    private String curriculumScheduleId;
 
 }
