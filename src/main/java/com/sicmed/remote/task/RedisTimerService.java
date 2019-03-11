@@ -2,6 +2,8 @@ package com.sicmed.remote.task;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.tomcat.util.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -18,15 +20,15 @@ public class RedisTimerService {
     /**
      * 初始化一个Redis定时器
      *
-     * @param key
      * @param time
      */
-    public RedisTimer init(String key, long time, JSONObject jsonObject) {
+    public RedisTimer init(long time, JSONObject jsonObject) {
         RedisTimer redisTimer = new RedisTimer();
-        redisTimer.setKey(key);
+        String key = RandomStringUtils.random(16);
+        redisTimer.setKey("REDIS_TIMER_" + key.toUpperCase());
         redisTimer.setTime(time);
         redisTimer.setJsonObject(jsonObject);
-        TaskManager.add(key, redisTimer);
+        TaskManager.add("REDIS_TIMER_" + key, redisTimer);
 
         return redisTimer;
     }
@@ -50,8 +52,8 @@ public class RedisTimerService {
      * @param key
      */
     public void destroy(String key) {
-        TaskManager.remove(key);
         redisTemplate.delete(key);
+        TaskManager.remove(key);
     }
 
     /**
@@ -79,6 +81,6 @@ public class RedisTimerService {
         long before60Time = YtDateUtils.before60Time(consultationStartTime);
         long before15Time = YtDateUtils.before15Time(consultationStartTime);
         long before5Time = YtDateUtils.before5Time(consultationStartTime);
-        this.init(stringBuffer.toString(), before60Time, jsonObject);
+        this.init(before60Time, jsonObject);
     }
 }

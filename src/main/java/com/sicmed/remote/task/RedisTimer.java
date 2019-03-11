@@ -12,6 +12,8 @@ public class RedisTimer implements Serializable {
 
     private long time;
 
+    private String timerType;
+
     private JSONObject jsonObject;
 
 }
