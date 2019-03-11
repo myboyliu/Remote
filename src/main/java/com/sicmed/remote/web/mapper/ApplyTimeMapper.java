@@ -26,4 +26,5 @@ public interface ApplyTimeMapper {
 
     ApplyTime getByApplyFormId(String applyFormId);
 
+    ApplyTime getFinalTime(String applyFormId);
 }
