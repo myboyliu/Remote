@@ -71,12 +71,14 @@ public class ApplyDisposeController extends BaseController {
 
         String userId = getRequestToken();
 
+        // 修改apply_form相关
         applyForm.setUpdateUser(userId);
         int i = applyFormService.updateByPrimaryKeySelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("修改applyForm失败");
         }
 
+        // 医生重新分配,修改case_consultant相关
         CaseConsultant caseConsultant = new CaseConsultant();
         caseConsultant.setId(applyForm.getId());
         caseConsultant.setConsultantUserList(consultantUserList);
@@ -85,11 +87,11 @@ public class ApplyDisposeController extends BaseController {
         caseConsultant.setInviteUserId(applyForm.getInviteUserId());
         caseConsultant.setConsultantReport(consultantReport);
         caseConsultant.setUpdateUser(userId);
-
         int k = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
         if (k < 1) {
             return badRequestOfArguments("添加失败");
         }
+
         return succeedRequest(applyForm);
     }
 
@@ -106,24 +108,25 @@ public class ApplyDisposeController extends BaseController {
         StorageRedisKey storageRedisKey = new StorageRedisKey();
         storageRedisKey.delTimeBoundKey(applyTime.getApplyFormId());
 
+        String userId = getRequestToken();
+
+        // 由applyFormId删除原apply_time中选定的时间段,并添加修改的时间
         int j = applyTimeService.delByApplyForm(applyTime.getApplyFormId());
         if (j < 0) {
             return badRequestOfArguments("删除原applyTime失败");
         }
-
-        String userId = getRequestToken();
-
-        CaseConsultant caseConsultant = new CaseConsultant();
-        caseConsultant.setConsultantStartTime(applyTime.getEventStartTime());
-        caseConsultant.setConsultantEndTime(applyTime.getEventEndTime());
-        caseConsultant.setId(applyTime.getApplyFormId());
-        caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
-
         applyTime.setCreateUser(userId);
         int k = applyTimeService.insertSelective(applyTime);
         if (k < 1) {
             return badRequestOfArguments("确认时间,time修改失败");
         }
+
+        // case_consultant的时间段修改为对应的时间
+        CaseConsultant caseConsultant = new CaseConsultant();
+        caseConsultant.setConsultantStartTime(applyTime.getEventStartTime());
+        caseConsultant.setConsultantEndTime(applyTime.getEventEndTime());
+        caseConsultant.setId(applyTime.getApplyFormId());
+        caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
 
         return succeedRequest(applyTime);
     }
@@ -137,6 +140,7 @@ public class ApplyDisposeController extends BaseController {
             return badRequestOfArguments("startEndTime is null");
         }
 
+        // 传入时间格式为 {开始时间:结束时间},解析(解析为consultationTimeBeanList?)
         Map<String, String> resultMap = new LinkedHashMap<>();
         List<ConsultationTimeBean> consultationTimeBeanList;
         try {
@@ -182,7 +186,6 @@ public class ApplyDisposeController extends BaseController {
         applyTimeBean.setStartEndTime(resultMap);
         applyTimeBean.setCreateUser(userId);
         applyTimeBean.setApplyStatus(applyStatus);
-
         int i = applyTimeService.insertStartEndTimes(applyTimeBean);
         if (i < 1) {
             return badRequestOfArguments("添加申请时间失败");
@@ -212,14 +215,23 @@ public class ApplyDisposeController extends BaseController {
         Date date = new Date();
 
         ApplyForm applyForm = new ApplyForm();
+        applyForm.setId(applyFormId);
+
+        // 判断applyForm属性applyStatus,做不同操作
         if (InquiryStatus.INQUIRY_APPLY_REJECT.toString().equals(applyStatus)) {
+            // 转诊申请审核已拒绝,病例状态变为草稿,并删除与之对应apply_time相关
             applyForm.setApplyType(ApplyType.APPLY_DRAFT.toString());
+            int j = applyTimeService.delByApplyForm(applyFormId);
+            if (j < 1) {
+                return badRequestOfArguments(msg2);
+            }
         }
         if (ConsultationStatus.CONSULTATION_APPLY_ACCEDE.toString().equals(applyStatus)) {
+            // 会诊申请审核通过,添加申请时间
             applyForm.setConsultantApplyTime(date);
         }
-        applyForm.setId(applyFormId);
         if (StringUtils.isNotBlank(refuseRemark)) {
+            // 备注不为空,添加备注
             applyForm.setRefuseRemark(refuseRemark);
         }
         if (StringUtils.isNotBlank(orderNumber)) {
@@ -230,13 +242,7 @@ public class ApplyDisposeController extends BaseController {
             return badRequestOfArguments(msg1);
         }
 
-        if (ApplyType.APPLY_REFERRAL.toString().equals(applyForm.getApplyType())
-                && InquiryStatus.INQUIRY_APPLY_REJECT.toString().equals(applyStatus)) {
-            int j = applyTimeService.delByApplyForm(applyFormId);
-            if (j < 1) {
-                return badRequestOfArguments(msg2);
-            }
-        }
+        // 非图文会诊需要更新与之相关的apply_time中的 apply_status属性
         applyForm = applyFormService.getByPrimaryKey(applyFormId);
         if (!ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyForm.getApplyType())) {
             ApplyTime applyTime = new ApplyTime();
@@ -249,6 +255,7 @@ public class ApplyDisposeController extends BaseController {
             }
         }
 
+        // 由apply_status添加对应的时间节点
         if (applyStatus == ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString()) {
             applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已接诊.toString());
         } else if (applyStatus == "CONSULTATION_DATETIME_LOCKED") {
@@ -256,6 +263,7 @@ public class ApplyDisposeController extends BaseController {
         } else if (applyStatus == ConsultationStatus.CONSULTATION_MASTER_REJECT.toString()) {
             applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已拒收.toString());
         }
+
         return succeedRequest(applyForm);
     }
 
@@ -467,12 +475,15 @@ public class ApplyDisposeController extends BaseController {
         }
 
         String userId = getRequestToken();
+
+        // 删除原设定的转诊时间
         int j = applyTimeService.delByApplyForm(applyFormId);
         if (j < 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return badRequestOfArguments("删除原时间失败");
         }
 
+        // 解析传入的startEndTime为{开始时间:结束时间}格式
         List<String> lists;
         LinkedHashMap<String, String> resultMap = new LinkedHashMap<>();
         try {
@@ -638,7 +649,7 @@ public class ApplyDisposeController extends BaseController {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED);
         String userId = getRequestToken();
 
-        // 若修改时间
+        // 如果修改时间
         if (StringUtils.isNotBlank(inquiryDatetime)) {
 
             LinkedHashMap<String, String> resultMap = new LinkedHashMap<>();
@@ -647,11 +658,11 @@ public class ApplyDisposeController extends BaseController {
             String end = YtDateUtils.dateToString(YtDateUtils.intradayEnd(date));
             resultMap.put(start, end);
 
+            // 删除原时间并添加新时间
             int j = applyTimeService.delByApplyForm(applyFormId);
             if (j < 1) {
                 return badRequestOfArguments("转诊医政待收诊同意,time修改失败");
             }
-
             ApplyTimeBean applyTimeBean = new ApplyTimeBean();
             applyTimeBean.setApplyFormId(applyFormId);
             applyTimeBean.setStartEndTime(resultMap);
@@ -716,10 +727,12 @@ public class ApplyDisposeController extends BaseController {
         CaseConsultant caseConsultant = new CaseConsultant();
         caseConsultant.setId(applyFormId);
         if (StringUtils.isNotBlank(consultantFeedback)) {
+            // 添加会诊反馈
             caseConsultant.setConsultantFeedback(consultantFeedback);
         }
 
         if (consultantReportBean == null || StringUtils.isNotBlank(consultantReportBean.getReport())) {
+            // 添加会诊报告
             String oldReport = caseConsultantService.selectReport(applyFormId);
             List<ConsultantReportBean> newConsultantReportBeanList = new ArrayList<>();
             List<ConsultantReportBean> consultantReportBeanList = JSON.parseObject(oldReport, new TypeReference<List<ConsultantReportBean>>() {
@@ -798,6 +811,7 @@ public class ApplyDisposeController extends BaseController {
             return badRequestOfArguments("form修改失败");
         }
 
+        // 非图文会诊需要修改状态
         applyForm = applyFormService.getByPrimaryKey(applyFormId);
         if (!ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyForm.getApplyType())) {
             ApplyTime applyTime = new ApplyTime();
@@ -810,6 +824,7 @@ public class ApplyDisposeController extends BaseController {
             }
         }
 
+        // 添加操作时间节点
         if (applyStatus == ConsultationStatus.CONSULTATION_REPORT_SUBMITTED.toString()) {
             applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已提交会诊报告.toString());
         } else if (applyStatus == ConsultationStatus.CONSULTATION_END.toString()) {
@@ -890,6 +905,7 @@ public class ApplyDisposeController extends BaseController {
         applyForm.setInviteSummary(inviteSummary);
         applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
         if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(type)) {
+            // 图文会诊接收后状态立即变为会诊中
             applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_BEGIN.toString());
         }
         applyForm.setUpdateUser(userId);
@@ -923,7 +939,7 @@ public class ApplyDisposeController extends BaseController {
 
         }
 
-        // 更新caseConsultant相关
+        // 更新caseConsultant相关,接收人改变,与之相关需要更新
         ConsultantReportBean consultantReportBean = new ConsultantReportBean();
         consultantReportBean.setDoctorName(currentUserBean.getUserName());
         consultantReportBean.setDoctorId(userId);
