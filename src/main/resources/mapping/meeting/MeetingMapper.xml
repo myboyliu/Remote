@@ -47,29 +47,11 @@
     delete from _meeting
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sicmed.remote.meeting.entity.Meeting">
-    insert into _meeting (id, meet_id, meet_name, 
-      meet_number, meet_cover_url, meet_description, 
-      meet_start_time, meet_end_time, meet_user, 
-      meet_branch, meet_hospital, meet_url, 
-      meet_password, meet_type, meet_period, 
-      meet_scope, meet_mute, meet_record, 
-      meet_start, meet_json, subscription_number, 
-      create_user, create_time, update_user, 
-      update_time, delete_user, delete_time, 
-      del_flag)
-    values (#{id,jdbcType=VARCHAR}, #{meetId,jdbcType=VARCHAR}, #{meetName,jdbcType=VARCHAR}, 
-      #{meetNumber,jdbcType=VARCHAR}, #{meetCoverUrl,jdbcType=VARCHAR}, #{meetDescription,jdbcType=VARCHAR}, 
-      #{meetStartTime,jdbcType=TIMESTAMP}, #{meetEndTime,jdbcType=TIMESTAMP}, #{meetUser,jdbcType=VARCHAR}, 
-      #{meetBranch,jdbcType=VARCHAR}, #{meetHospital,jdbcType=VARCHAR}, #{meetUrl,jdbcType=VARCHAR}, 
-      #{meetPassword,jdbcType=VARCHAR}, #{meetType,jdbcType=VARCHAR}, #{meetPeriod,jdbcType=VARCHAR}, 
-      #{meetScope,jdbcType=VARCHAR}, #{meetMute,jdbcType=BIT}, #{meetRecord,jdbcType=BIT}, 
-      #{meetStart,jdbcType=BIT}, #{meetJson,jdbcType=VARCHAR}, #{subscriptionNumber,jdbcType=INTEGER}, 
-      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR}, #{deleteTime,jdbcType=TIMESTAMP}, 
-      #{delFlag,jdbcType=VARCHAR})
-  </insert>
   <insert id="insertSelective" parameterType="com.sicmed.remote.meeting.entity.Meeting">
+    <selectKey keyProperty="id" resultType="java.lang.String"
+               order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
     insert into _meeting
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -329,37 +311,6 @@
         del_flag = #{delFlag,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.meeting.entity.Meeting">
-    update _meeting
-    set meet_id = #{meetId,jdbcType=VARCHAR},
-      meet_name = #{meetName,jdbcType=VARCHAR},
-      meet_number = #{meetNumber,jdbcType=VARCHAR},
-      meet_cover_url = #{meetCoverUrl,jdbcType=VARCHAR},
-      meet_description = #{meetDescription,jdbcType=VARCHAR},
-      meet_start_time = #{meetStartTime,jdbcType=TIMESTAMP},
-      meet_end_time = #{meetEndTime,jdbcType=TIMESTAMP},
-      meet_user = #{meetUser,jdbcType=VARCHAR},
-      meet_branch = #{meetBranch,jdbcType=VARCHAR},
-      meet_hospital = #{meetHospital,jdbcType=VARCHAR},
-      meet_url = #{meetUrl,jdbcType=VARCHAR},
-      meet_password = #{meetPassword,jdbcType=VARCHAR},
-      meet_type = #{meetType,jdbcType=VARCHAR},
-      meet_period = #{meetPeriod,jdbcType=VARCHAR},
-      meet_scope = #{meetScope,jdbcType=VARCHAR},
-      meet_mute = #{meetMute,jdbcType=BIT},
-      meet_record = #{meetRecord,jdbcType=BIT},
-      meet_start = #{meetStart,jdbcType=BIT},
-      meet_json = #{meetJson,jdbcType=VARCHAR},
-      subscription_number = #{subscriptionNumber,jdbcType=INTEGER},
-      create_user = #{createUser,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_user = #{updateUser,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      delete_user = #{deleteUser,jdbcType=VARCHAR},
-      delete_time = #{deleteTime,jdbcType=TIMESTAMP},
-      del_flag = #{delFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

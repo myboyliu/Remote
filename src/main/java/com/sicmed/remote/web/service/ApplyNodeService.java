@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.service;
 
+import com.sicmed.remote.common.util.UserTokenManager;
 import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.ApplyNode;
 import com.sicmed.remote.web.mapper.ApplyNodeMapper;
@@ -52,9 +53,7 @@ public class ApplyNodeService implements BaseService<ApplyNode> {
     }
 
     private String getNodeOperator() {
-        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
-        String userId = request.getHeader("token");
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = UserTokenManager.getCurrentUser();
         return "<" + currentUserBean.getUserName() + "/" + currentUserBean.getTitleName() + "/" + currentUserBean.getBranchName() + "/" + currentUserBean.getHospitalName() + ">";
     }
 

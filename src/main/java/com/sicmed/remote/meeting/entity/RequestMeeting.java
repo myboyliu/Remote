@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.util.Date;
+
 @Slf4j
 @Data
 public class RequestMeeting implements Serializable {
@@ -59,5 +60,14 @@ public class RequestMeeting implements Serializable {
     }
 
     public void setMeetingInfo(Meeting meeting) {
+
+        this.appointmentId = meeting.getMeetId() != null ? meeting.getMeetId() : null;
+        this.appointmentName = meeting.getMeetName();
+        this.startTime = meeting.getMeetStartTime();
+        this.endTime = meeting.getMeetEndTime();
+        this.isLive = meeting.getMeetStart();
+        this.isMute = meeting.getMeetMute();
+        this.isRecord = meeting.getMeetRecord();
+        this.concurrentNum = 1;
     }
 }

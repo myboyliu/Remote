@@ -15,6 +15,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
      registry.addViewController("/app/").setViewName("forward:/app/index.html");
      registry.addViewController("/page").setViewName("forward:/page/login.html");
      registry.addViewController("/page/").setViewName("forward:/page/login.html");
+     registry.addViewController("/").setViewName("forward:/page/login.html");
+     registry.addViewController("").setViewName("forward:/page/login.html");
       }
 
 

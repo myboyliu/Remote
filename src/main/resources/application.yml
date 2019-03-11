@@ -6,8 +6,6 @@ server:
     key-store: classpath:www.qlxlm.com.jks
     key-store-password: 123456
     key-store-type: jks
-#    key-alias: remote
-#    enabled: true
 spring:
   profiles:
     active: dev

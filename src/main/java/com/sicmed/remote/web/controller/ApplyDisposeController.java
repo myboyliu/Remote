@@ -3,11 +3,13 @@ package com.sicmed.remote.web.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
-import com.sicmed.remote.OtherConfiguration.StorageRedisKey;
 import com.sicmed.remote.common.ApplyNodeConstant;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
+import com.sicmed.remote.common.util.UserTokenManager;
+import com.sicmed.remote.meeting.mapper.MeetingMapper;
+import com.sicmed.remote.meeting.service.MeetingService;
 import com.sicmed.remote.web.YoonaLtUtils.OrderNumUtils;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
 import com.sicmed.remote.web.bean.ApplyTimeBean;
@@ -58,16 +60,15 @@ public class ApplyDisposeController extends BaseController {
     @Autowired
     private ConsultationPriceRecordService consultationPriceRecordService;
 
+
+    @Autowired
+    private MeetingService meetingService;
     /**
      * 医政 工作台 重新分配医生
      */
     @Transactional
     @PostMapping(value = "sirUpdateDoctor")
     public Map sirUpdateDoctor(ApplyForm applyForm, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport) {
-
-        // 若为已排期修改,删除原redis对应时限key
-        StorageRedisKey storageRedisKey = new StorageRedisKey();
-        storageRedisKey.delTimeBoundKey(applyForm.getId());
 
         String userId = getRequestToken();
 
@@ -104,9 +105,6 @@ public class ApplyDisposeController extends BaseController {
         if (applyTime == null) {
             return badRequestOfArguments("传入参数有误");
         }
-        // 若为已排期修改,删除原redis对应时限key
-        StorageRedisKey storageRedisKey = new StorageRedisKey();
-        storageRedisKey.delTimeBoundKey(applyTime.getApplyFormId());
 
         String userId = getRequestToken();
 
@@ -259,6 +257,7 @@ public class ApplyDisposeController extends BaseController {
         if (applyStatus == ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString()) {
             applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已接诊.toString());
         } else if (applyStatus == "CONSULTATION_DATETIME_LOCKED") {
+            meetingService.createMeeting(applyFormId);
             applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已排期.toString());
         } else if (applyStatus == ConsultationStatus.CONSULTATION_MASTER_REJECT.toString()) {
             applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已拒收.toString());
@@ -322,9 +321,6 @@ public class ApplyDisposeController extends BaseController {
         applyTime.setUpdateUser(userId);
         applyTimeService.updateStatus(applyTime);
 
-        // 添加对应redis时限key
-        StorageRedisKey storageRedisKey = new StorageRedisKey();
-        storageRedisKey.timeBoundKey(applyFormId);
 
         return succeedRequest(applyForm);
     }
@@ -340,9 +336,6 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "受邀会诊收诊医政排期审核接受,form修改失败";
         String msg2 = "受邀会诊收诊医政排期审核接受,time修改失败";
 
-        // 添加对应redis时限key
-        StorageRedisKey storageRedisKey = new StorageRedisKey();
-        storageRedisKey.timeBoundKey(applyFormId);
 
         return updateStatus(applyFormId, null, applyStatus, msg1, msg2, null);
     }
@@ -387,9 +380,6 @@ public class ApplyDisposeController extends BaseController {
         applyTime.setUpdateUser(userId);
         applyTimeService.updateStatus(applyTime);
 
-        // 添加对应redis时限key
-        StorageRedisKey storageRedisKey = new StorageRedisKey();
-        storageRedisKey.timeBoundKey(applyFormId);
 
         return succeedRequest(applyForm);
     }
@@ -896,19 +886,18 @@ public class ApplyDisposeController extends BaseController {
 
         String type = applyFormService.getByPrimaryKey(applyFormId).getApplyType();
         // 更新applyForm相关
-        String userId = getRequestToken();
-        CurrentUserBean currentUserBean = (CurrentUserBean) redisTemplate.opsForValue().get(userId);
+        CurrentUserBean currentUserBean = UserTokenManager.getCurrentUser();
         String inviteSummary = "<" + currentUserBean.getUserName() + "/" + currentUserBean.getTitleName() + "/" + currentUserBean.getBranchName() + "/" + currentUserBean.getHospitalName() + ">";
         ApplyForm applyForm = new ApplyForm();
         applyForm.setId(applyFormId);
-        applyForm.setInviteUserId(userId);
+        applyForm.setInviteUserId(getRequestToken());
         applyForm.setInviteSummary(inviteSummary);
         applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
         if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(type)) {
             // 图文会诊接收后状态立即变为会诊中
             applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_BEGIN.toString());
         }
-        applyForm.setUpdateUser(userId);
+        applyForm.setUpdateUser(getRequestToken());
         int i = applyFormService.inviteeConsent(applyForm);
         if (i < 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -930,7 +919,7 @@ public class ApplyDisposeController extends BaseController {
             ApplyTimeBean applyTimeBean = new ApplyTimeBean();
             applyTimeBean.setApplyFormId(applyFormId);
             applyTimeBean.setStartEndTime(resultMap);
-            applyTimeBean.setCreateUser(userId);
+            applyTimeBean.setCreateUser(getRequestToken());
             applyTimeBean.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
             int m = applyTimeService.insertStartEndTimes(applyTimeBean);
             if (m < 1) {
@@ -942,7 +931,7 @@ public class ApplyDisposeController extends BaseController {
         // 更新caseConsultant相关,接收人改变,与之相关需要更新
         ConsultantReportBean consultantReportBean = new ConsultantReportBean();
         consultantReportBean.setDoctorName(currentUserBean.getUserName());
-        consultantReportBean.setDoctorId(userId);
+        consultantReportBean.setDoctorId(getRequestToken());
         consultantReportBean.setReport("");
         consultantReportBean.setReportStatus("1");
         List<ConsultantReportBean> consultantReportBeanList = new LinkedList<>();
@@ -952,7 +941,7 @@ public class ApplyDisposeController extends BaseController {
         Map<String, String> userMap = new LinkedHashMap<>();
         String doctorPrice = null;
         userMap.put("doctorName", inviteSummary);
-        userMap.put("doctorId", userId);
+        userMap.put("doctorId", getRequestToken());
         if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(type)) {
             doctorPrice = currentUserBean.getConsultationPicturePrice();
             userMap.put("price", currentUserBean.getConsultationPicturePrice());
@@ -971,10 +960,10 @@ public class ApplyDisposeController extends BaseController {
         BigDecimal consultantPrice = hospitalPrice.add(resultDoctorPrice);
 
         caseConsultant.setId(applyFormId);
-        caseConsultant.setInviteUserId(userId);
+        caseConsultant.setInviteUserId(getRequestToken());
         caseConsultant.setConsultantUserList(jsonUser);
         caseConsultant.setConsultantReport(jsonReport);
-        caseConsultant.setUpdateUser(userId);
+        caseConsultant.setUpdateUser(getRequestToken());
         caseConsultant.setConsultantPrice(consultantPrice);
         int k = caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
         if (k < 1) {

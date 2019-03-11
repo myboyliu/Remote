@@ -1,7 +1,9 @@
 package com.sicmed.remote.meeting.entity;
 
+import com.alibaba.fastjson.JSONObject;
 import com.sicmed.remote.meeting.bean.MeetingBean;
 import com.sicmed.remote.web.entity.ApplyForm;
+import com.sicmed.remote.web.entity.ApplyTime;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -66,10 +68,22 @@ public class Meeting implements Serializable {
     private String delFlag;
 
 
-    public void setApplyForm(ApplyForm applyForm) {
+    public void setApplyTime(ApplyTime applyTime) {
+        this.meetName = applyTime.getApplyFormId();
+        this.meetStartTime = applyTime.getEventStartTime();
+        this.meetEndTime = applyTime.getEventEndTime();
+        this.meetMute = false;
+        this.meetRecord = false;
+        this.meetStart = false;
 
     }
 
     public void setMeetingBean(MeetingBean meetingBean) {
+        this.meetUrl = meetingBean.getWebrtcUrl();
+        this.meetPassword = meetingBean.getHostPwd();
+        this.meetNumber = meetingBean.getAppointmentNumber();
+        this.meetUser = meetingBean.getAccount();
+        this.meetId = meetingBean.getAppointmentId();
+        this.meetJson = JSONObject.toJSONString(meetingBean);
     }
 }
