@@ -64,7 +64,7 @@ public class MeetingService {
         meetingMapper.insertSelective(meeting);
         log.debug("----------------------创建定时任务开始------------------------");
         //5.调用 定时 提醒服务
-        redisTimerService.init(applyTime.getId(),applyTime.getEventStartTime());
+        redisTimerService.createVideoRemind(applyTime.getApplyFormId(),applyTime.getEventStartTime());
         log.debug("----------------------创建定时任务结束------------------------");
         log.debug("----------------------创建视频会议结束------------------------");
     }
@@ -103,6 +103,7 @@ public class MeetingService {
         meetingMapper.updateByPrimaryKeySelective(meeting);
 
         //5.调用 定时 提醒服务
-        redisTimerService.init(applyTime.getId(),applyTime.getEventStartTime());
+        redisTimerService.createVideoRemind(applyTime.getApplyFormId(),applyTime.getEventStartTime());
+
     }
 }

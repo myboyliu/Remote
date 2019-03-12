@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.sicmed.remote.socket.mapper.NewMessageMapper" >
-  <resultMap id="BaseResultMap" type="com.sicmed.remote.socket.entity.NewMessage" >
-    <id column="id" property="id" jdbcType="VARCHAR" />
-    <result column="msg_type" property="msgType" jdbcType="VARCHAR" />
-    <result column="msg_title" property="msgTitle" jdbcType="VARCHAR" />
-    <result column="msg_id" property="msgId" jdbcType="VARCHAR" />
-    <result column="msg_details" property="msgDetails" jdbcType="VARCHAR" />
-    <result column="read_sign" property="readSign" jdbcType="VARCHAR" />
-    <result column="apply_form_id" property="applyFormId" jdbcType="VARCHAR" />
-    <result column="invite_user_id" property="inviteUserId" jdbcType="VARCHAR" />
-    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
-    <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP" />
-    <result column="delete_user" property="deleteUser" jdbcType="VARCHAR" />
-    <result column="del_flag" property="delFlag" jdbcType="VARCHAR" />
-  </resultMap>
+<mapper namespace="com.sicmed.remote.socket.mapper.NewMessageMapper">
+    <resultMap id="BaseResultMap" type="com.sicmed.remote.socket.entity.NewMessage">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="msg_type" property="msgType" jdbcType="VARCHAR"/>
+        <result column="msg_title" property="msgTitle" jdbcType="VARCHAR"/>
+        <result column="msg_id" property="msgId" jdbcType="VARCHAR"/>
+        <result column="msg_details" property="msgDetails" jdbcType="VARCHAR"/>
+        <result column="read_sign" property="readSign" jdbcType="VARCHAR"/>
+        <result column="apply_form_id" property="applyFormId" jdbcType="VARCHAR"/>
+        <result column="invite_user_id" property="inviteUserId" jdbcType="VARCHAR"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+        <result column="delete_time" property="deleteTime" jdbcType="TIMESTAMP"/>
+        <result column="delete_user" property="deleteUser" jdbcType="VARCHAR"/>
+        <result column="del_flag" property="delFlag" jdbcType="VARCHAR"/>
+    </resultMap>
 
 
-  <resultMap id="NewMessageMap" type="com.sicmed.remote.socket.bean.NewMessageBean" >
-    <id column="id" property="id" jdbcType="VARCHAR" />
-    <result column="msg_type" property="msgType" jdbcType="VARCHAR" />
-    <result column="msg_title" property="msgTitle" jdbcType="VARCHAR" />
-    <result column="msg_details" property="msgDetails" jdbcType="VARCHAR" />
-    <result column="read_sign" property="readSign" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-  </resultMap>
+    <resultMap id="NewMessageMap" type="com.sicmed.remote.socket.bean.NewMessageBean">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="msg_type" property="msgType" jdbcType="VARCHAR"/>
+        <result column="msg_title" property="msgTitle" jdbcType="VARCHAR"/>
+        <result column="msg_details" property="msgDetails" jdbcType="VARCHAR"/>
+        <result column="read_sign" property="readSign" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
 
-  <!-- 查询我的消息 -->
-  <select id="findMyMessage" resultMap="NewMessageMap" parameterType="com.sicmed.remote.socket.entity.NewMessage">
+    <!-- 查询我的消息 -->
+    <select id="findMyMessage" resultMap="NewMessageMap" parameterType="com.sicmed.remote.socket.entity.NewMessage">
     SELECT id,msg_details,read_sign,msg_title,msg_type ,create_time
     FROM (
         SELECT id,msg_details,read_sign,msg_title,msg_type,msg_id,create_time
@@ -41,15 +41,15 @@
     limit #{pageNo,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
   </select>
 
-  <!-- 根据id查询新消息 -->
-  <select id="findMsgById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <!-- 根据id查询新消息 -->
+    <select id="findMsgById" parameterType="java.lang.String" resultMap="BaseResultMap">
         SELECT id,msg_details,read_sign,msg_title,msg_type,invite_user_id,apply_form_id
         FROM new_message
         WHERE id = #{id,jdbcType=VARCHAR} AND del_flag = 0
     </select>
 
-  <!-- 根据条件查询新消息 -->
-  <select id="findNewsByNews" resultMap="BaseResultMap" parameterType="com.sicmed.remote.socket.entity.NewMessage">
+    <!-- 根据条件查询新消息 -->
+    <select id="findNewsByNews" resultMap="BaseResultMap" parameterType="com.sicmed.remote.socket.entity.NewMessage">
         SELECT id,msg_details,read_sign,msg_title,msg_type
         FROM new_message
         WHERE invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
@@ -57,29 +57,29 @@
           AND del_flag = 0
     </select>
 
-  <!-- 修改未读标记 -->
-  <update id="updateUnreadMark" parameterType="com.sicmed.remote.socket.entity.NewMessage" >
+    <!-- 修改未读标记 -->
+    <update id="updateUnreadMark" parameterType="com.sicmed.remote.socket.entity.NewMessage">
   update new_message
   set read_sign = #{readSign,jdbcType=VARCHAR}
   where id = #{id,jdbcType=VARCHAR}
   </update>
 
 
-  <sql id="Base_Column_List" >
+    <sql id="Base_Column_List">
     id, msg_type, msg_title, msg_details, read_sign, apply_form_id, invite_user_id, create_user, 
     create_time, update_time, update_user, delete_time, delete_user, del_flag
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from new_message
-    where id = #{id,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from new_message
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from new_message
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sicmed.remote.socket.entity.NewMessage" >
+    <insert id="insert" parameterType="com.sicmed.remote.socket.entity.NewMessage">
     insert into new_message (id, msg_type, msg_title, 
       msg_details, read_sign, apply_form_id, 
       invite_user_id, create_user, create_time, 
@@ -91,251 +91,312 @@
       #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{deleteTime,jdbcType=TIMESTAMP}, 
       #{deleteUser,jdbcType=VARCHAR}, #{delFlag,jdbcType=VARCHAR})
   </insert>
-  <!-- 添加新消息 -->
-  <insert id="insertMessage" parameterType="com.sicmed.remote.socket.entity.NewMessage" >
-    <selectKey keyProperty="id" resultType="java.lang.String"
-               order="BEFORE">
-      select replace(uuid(),'-','') from dual
-    </selectKey>
-    insert into new_message
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="msgId != null" >
-        msg_id,
-      </if>
-      <if test="msgType != null" >
-        msg_type,
-      </if>
-      <if test="msgTitle != null" >
-        msg_title,
-      </if>
-      <if test="msgDetails != null" >
-        msg_details,
-      </if>
-      <if test="readSign != null" >
-        read_sign,
-      </if>
-      <if test="applyFormId != null" >
-        apply_form_id,
-      </if>
-      <if test="inviteUserId != null" >
-        invite_user_id,
-      </if>
-      <if test="createUser != null" >
-        create_user,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-      <if test="updateUser != null" >
-        update_user,
-      </if>
-      <if test="deleteTime != null" >
-        delete_time,
-      </if>
-      <if test="deleteUser != null" >
-        delete_user,
-      </if>
-      <if test="delFlag != null" >
-        del_flag,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=VARCHAR},
-      </if>
-      <if test="msgId != null" >
-        #{msgId,jdbcType=VARCHAR},
-      </if>
-      <if test="msgType != null" >
-        #{msgType,jdbcType=VARCHAR},
-      </if>
-      <if test="msgTitle != null" >
-        #{msgTitle,jdbcType=VARCHAR},
-      </if>
-      <if test="msgDetails != null" >
-        #{msgDetails,jdbcType=VARCHAR},
-      </if>
-      <if test="readSign != null" >
-        #{readSign,jdbcType=VARCHAR},
-      </if>
-      <if test="applyFormId != null" >
-        #{applyFormId,jdbcType=VARCHAR},
-      </if>
-      <if test="inviteUserId != null" >
-        #{inviteUserId,jdbcType=VARCHAR},
-      </if>
-      <if test="createUser != null" >
-        #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null" >
-        #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="deleteTime != null" >
-        #{deleteTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteUser != null" >
-        #{deleteUser,jdbcType=VARCHAR},
-      </if>
-      <if test="delFlag != null" >
-        #{delFlag,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
+    <!-- 添加新消息 -->
+    <insert id="insertMessage" parameterType="com.sicmed.remote.socket.entity.NewMessage">
+        <selectKey keyProperty="id" resultType="java.lang.String"
+                   order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into new_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="msgId != null">
+                msg_id,
+            </if>
+            <if test="msgType != null">
+                msg_type,
+            </if>
+            <if test="msgTitle != null">
+                msg_title,
+            </if>
+            <if test="msgDetails != null">
+                msg_details,
+            </if>
+            <if test="readSign != null">
+                read_sign,
+            </if>
+            <if test="applyFormId != null">
+                apply_form_id,
+            </if>
+            <if test="inviteUserId != null">
+                invite_user_id,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+            <if test="deleteTime != null">
+                delete_time,
+            </if>
+            <if test="deleteUser != null">
+                delete_user,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="msgId != null">
+                #{msgId,jdbcType=VARCHAR},
+            </if>
+            <if test="msgType != null">
+                #{msgType,jdbcType=VARCHAR},
+            </if>
+            <if test="msgTitle != null">
+                #{msgTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="msgDetails != null">
+                #{msgDetails,jdbcType=VARCHAR},
+            </if>
+            <if test="readSign != null">
+                #{readSign,jdbcType=VARCHAR},
+            </if>
+            <if test="applyFormId != null">
+                #{applyFormId,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteUserId != null">
+                #{inviteUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
 
-  <insert id="insertSelective" parameterType="com.sicmed.remote.socket.entity.NewMessage" >
-    <selectKey keyProperty="id" resultType="java.lang.String"
-               order="BEFORE">
-      select replace(uuid(),'-','') from dual
-    </selectKey>
-    insert into new_message
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,msg_id,
-      </if>
-      <if test="msgType != null" >
-        msg_type,
-      </if>
-      <if test="msgTitle != null" >
-        msg_title,
-      </if>
-      <if test="msgDetails != null" >
-        msg_details,
-      </if>
-      <if test="readSign != null" >
-        read_sign,
-      </if>
-      <if test="applyFormId != null" >
-        apply_form_id,
-      </if>
-      <if test="inviteUserId != null" >
-        invite_user_id,
-      </if>
-      <if test="createUser != null" >
-        create_user,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-      <if test="updateUser != null" >
-        update_user,
-      </if>
-      <if test="deleteTime != null" >
-        delete_time,
-      </if>
-      <if test="deleteUser != null" >
-        delete_user,
-      </if>
-      <if test="delFlag != null" >
-        del_flag,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=VARCHAR}
-      </if>
-      ,#{id,jdbcType=VARCHAR},
-      <if test="msgType != null" >
-        #{msgType,jdbcType=VARCHAR},
-      </if>
-      <if test="msgTitle != null" >
-        #{msgTitle,jdbcType=VARCHAR},
-      </if>
-      <if test="msgDetails != null" >
-        #{msgDetails,jdbcType=VARCHAR},
-      </if>
-      <if test="readSign != null" >
-        #{readSign,jdbcType=VARCHAR},
-      </if>
-      <if test="applyFormId != null" >
-        #{applyFormId,jdbcType=VARCHAR},
-      </if>
-      <if test="inviteUserId != null" >
-        #{inviteUserId,jdbcType=VARCHAR},
-      </if>
-      <if test="createUser != null" >
-        #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null" >
-        #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="deleteTime != null" >
-        #{deleteTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteUser != null" >
-        #{deleteUser,jdbcType=VARCHAR},
-      </if>
-      <if test="delFlag != null" >
-        #{delFlag,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.socket.entity.NewMessage" >
-    update new_message
-    <set >
-      <if test="msgType != null" >
-        msg_type = #{msgType,jdbcType=VARCHAR},
-      </if>
-      <if test="msgTitle != null" >
-        msg_title = #{msgTitle,jdbcType=VARCHAR},
-      </if>
-      <if test="msgDetails != null" >
-        msg_details = #{msgDetails,jdbcType=VARCHAR},
-      </if>
-      <if test="readSign != null" >
-        read_sign = #{readSign,jdbcType=VARCHAR},
-      </if>
-      <if test="applyFormId != null" >
-        apply_form_id = #{applyFormId,jdbcType=VARCHAR},
-      </if>
-      <if test="inviteUserId != null" >
-        invite_user_id = #{inviteUserId,jdbcType=VARCHAR},
-      </if>
-      <if test="createUser != null" >
-        create_user = #{createUser,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateUser != null" >
-        update_user = #{updateUser,jdbcType=VARCHAR},
-      </if>
-      <if test="deleteTime != null" >
-        delete_time = #{deleteTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="deleteUser != null" >
-        delete_user = #{deleteUser,jdbcType=VARCHAR},
-      </if>
-      <if test="delFlag != null" >
-        del_flag = #{delFlag,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.socket.entity.NewMessage" >
+    <insert id="insertSelective" parameterType="com.sicmed.remote.socket.entity.NewMessage">
+        <selectKey keyProperty="id" resultType="java.lang.String"
+                   order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into new_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,msg_id,
+            </if>
+            <if test="msgType != null">
+                msg_type,
+            </if>
+            <if test="msgTitle != null">
+                msg_title,
+            </if>
+            <if test="msgDetails != null">
+                msg_details,
+            </if>
+            <if test="readSign != null">
+                read_sign,
+            </if>
+            <if test="applyFormId != null">
+                apply_form_id,
+            </if>
+            <if test="inviteUserId != null">
+                invite_user_id,
+            </if>
+            <if test="createUser != null">
+                create_user,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="updateUser != null">
+                update_user,
+            </if>
+            <if test="deleteTime != null">
+                delete_time,
+            </if>
+            <if test="deleteUser != null">
+                delete_user,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR}
+            </if>
+            ,#{id,jdbcType=VARCHAR},
+            <if test="msgType != null">
+                #{msgType,jdbcType=VARCHAR},
+            </if>
+            <if test="msgTitle != null">
+                #{msgTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="msgDetails != null">
+                #{msgDetails,jdbcType=VARCHAR},
+            </if>
+            <if test="readSign != null">
+                #{readSign,jdbcType=VARCHAR},
+            </if>
+            <if test="applyFormId != null">
+                #{applyFormId,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteUserId != null">
+                #{inviteUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <insert id="insertSelectiveByJSONObject" parameterType="com.alibaba.fastjson.JSONObject">
+        <!--insert into new_message(id,msg_id,msg_type,msg_title,msg_details,apply_form_id,invite_user_id)-->
+        <!--values-->
+        <!--<foreach collection="userList" item="item" separator="," index="">-->
+            <!--( (select replace(uuid(), '-', '') as id from dual),-->
+            <!--#{recordId,jdbcType=VARCHAR},-->
+            <!--#{createUser,jdbcType=VARCHAR},-->
+            <!--#{item.contentRemark},-->
+            <!--#{item.orderWeight},-->
+            <!--#{item.contentPath},-->
+            <!--#{item})-->
+        <!--</foreach>-->
+        <!--insert into new_message-->
+        <!--<trim prefix="(" suffix=")" suffixOverrides=",">-->
+            <!--<if test="id != null">-->
+                <!--id,-->
+            <!--</if>-->
+            <!--<if test="id != null">-->
+                <!--msg_id,-->
+            <!--</if>-->
+            <!--<if test="msgType != null">-->
+                <!--msg_type,-->
+            <!--</if>-->
+            <!--<if test="msgTitle != null">-->
+                <!--msg_title,-->
+            <!--</if>-->
+            <!--<if test="msgDetails != null">-->
+                <!--msg_details,-->
+            <!--</if>-->
+            <!--<if test="applyFormId != null">-->
+                <!--apply_form_id,-->
+            <!--</if>-->
+            <!--<if test="inviteUserId != null">-->
+                <!--invite_user_id,-->
+            <!--</if>-->
+        <!--</trim>-->
+        <!--<trim prefix="values (" suffix=")" suffixOverrides=",">-->
+            <!--<if test="id != null">-->
+                <!--#{id,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="id != null">-->
+                <!--#{id,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="msgType != null">-->
+                <!--#{msgType,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="msgTitle != null">-->
+                <!--#{msgTitle,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="msgDetails != null">-->
+                <!--#{msgDetails,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="applyFormId != null">-->
+                <!--#{applyFormId,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="inviteUserId != null">-->
+                <!--#{inviteUserId,jdbcType=VARCHAR},-->
+            <!--</if>-->
+        <!--</trim>-->
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.socket.entity.NewMessage">
+        update new_message
+        <set>
+            <if test="msgType != null">
+                msg_type = #{msgType,jdbcType=VARCHAR},
+            </if>
+            <if test="msgTitle != null">
+                msg_title = #{msgTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="msgDetails != null">
+                msg_details = #{msgDetails,jdbcType=VARCHAR},
+            </if>
+            <if test="readSign != null">
+                read_sign = #{readSign,jdbcType=VARCHAR},
+            </if>
+            <if test="applyFormId != null">
+                apply_form_id = #{applyFormId,jdbcType=VARCHAR},
+            </if>
+            <if test="inviteUserId != null">
+                invite_user_id = #{inviteUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="deleteTime != null">
+                delete_time = #{deleteTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleteUser != null">
+                delete_user = #{deleteUser,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.socket.entity.NewMessage">
     update new_message
     set msg_type = #{msgType,jdbcType=VARCHAR},
       msg_title = #{msgTitle,jdbcType=VARCHAR},

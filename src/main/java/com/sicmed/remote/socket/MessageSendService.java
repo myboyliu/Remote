@@ -18,11 +18,13 @@ public class MessageSendService {
 
     @Autowired
     private SimpMessagingTemplate template;
+    @Autowired
+    private NewMessageMapper messageMapper;
 
     /**
      * 发送消息给指定用户
      */
-    public void sendToUserList(JSONObject jsonObject) {
+    public void send(JSONObject jsonObject) {
         log.debug("===============================发送消息给用户开始===========================================");
         //1.获取接收用户列表
         JSONArray userList = jsonObject.getJSONArray("userList");
@@ -31,23 +33,29 @@ public class MessageSendService {
         message.append(jsonObject.getString("prefix"));
         message.append(jsonObject.getString("fill"));
         message.append(jsonObject.getString("suffix"));
+
         //3.发送在线消息
-        new Thread(() -> {
-            WebSocketSession webSocketSession;
-            for (int i = 0; i < userList.size(); i++) {
-                String token = userList.getString(i);
-                webSocketSession = SocketManager.get(token);
-                if (webSocketSession != null) {
-                    /**
-                     * 主要防止broken pipe
-                     */
-                    template.convertAndSendToUser(token, "/queue/sendUser", message.toString());
-                    log.debug("发送消息:"+message.toString()+"---TO:"+token+"---成功");
-                    break;
+        if (userList != null && userList.size() > 1) {
+            new Thread(() -> {
+                WebSocketSession webSocketSession;
+                for (int i = 0; i < userList.size(); i++) {
+                    String token = userList.getString(i);
+                    webSocketSession = SocketManager.get(token);
+                    if (webSocketSession != null) {
+                        /**
+                         * 主要防止broken pipe
+                         */
+                        template.convertAndSendToUser(token, "/queue/sendUser", message.toString());
+                        log.debug("发送消息:" + message.toString() + "---TO:" + token + "---成功");
+                        break;
+                    }
                 }
-            }
-        }).start();
+            }).start();
+        }else{
+            template.convertAndSend("/topic/sendTopic",  jsonObject.toJSONString());
+        }
         //4.添加消息记录
+        messageMapper.insertSelectiveByJSONObject(jsonObject);
         jsonObject.getString("id");
         jsonObject.getString("type");
         jsonObject.getString("prefix");

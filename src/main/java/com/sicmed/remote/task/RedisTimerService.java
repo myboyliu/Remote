@@ -2,13 +2,13 @@ package com.sicmed.remote.task;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.tomcat.util.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -17,44 +17,6 @@ public class RedisTimerService {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    /**
-     * 初始化一个Redis定时器
-     *
-     * @param time
-     */
-    public RedisTimer init(long time, JSONObject jsonObject) {
-        RedisTimer redisTimer = new RedisTimer();
-        String key = RandomStringUtils.random(16);
-        redisTimer.setKey("REDIS_TIMER_" + key.toUpperCase());
-        redisTimer.setTime(time);
-        redisTimer.setJsonObject(jsonObject);
-        TaskManager.add("REDIS_TIMER_" + key, redisTimer);
-
-        return redisTimer;
-    }
-
-    /**
-     * 启动Redis定时器
-     *
-     * @param key
-     */
-    public void start(String key) {
-        RedisTimer redisTimer = TaskManager.get(key);
-        if (redisTimer.getTime() > 5000) {
-            redisTemplate.opsForValue().set(redisTimer.getKey(), "", redisTimer.getTime(), TimeUnit.MILLISECONDS);
-        }
-
-    }
-
-    /**
-     * 销毁Redis定时器
-     *
-     * @param key
-     */
-    public void destroy(String key) {
-        redisTemplate.delete(key);
-        TaskManager.remove(key);
-    }
 
     /**
      * 新直播推送
@@ -73,14 +35,32 @@ public class RedisTimerService {
 
     }
 
-    public void ss(String applyFormId, Date consultationStartTime) {
+    public void createVideoRemind(String applyFormId, Date consultationStartTime, List<String> userList) {
 
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("01:" + applyFormId);
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", UUID.randomUUID().toString().replace("-",""));
+        jsonObject.put("type","视频会诊");
+
+        jsonObject.put("fill","");
+        jsonObject.put("linked",applyFormId);
+        jsonObject.put("userList",userList);
         long before60Time = YtDateUtils.before60Time(consultationStartTime);
+        if (before60Time > 5000) {
+            jsonObject.put("prefix","您预约了60分钟后进行视频会诊");
+            jsonObject.put("suffix","");
+            new RedisTimer(applyFormId, before60Time, jsonObject).start();
+        }
         long before15Time = YtDateUtils.before15Time(consultationStartTime);
+        if (before15Time > 5000) {
+            jsonObject.put("prefix","您预约了15分钟后进行视频会诊，请提前5分钟进入会诊室做准备");
+            jsonObject.put("suffix","");
+            new RedisTimer(applyFormId, before15Time, jsonObject).start();
+        }
         long before5Time = YtDateUtils.before5Time(consultationStartTime);
-        this.init(before60Time, jsonObject);
+        if (before5Time > 5000) {
+            jsonObject.put("prefix","您预约的会诊室已激活，如还未进入，请通知相关人员尽快加入。如已准备妥当请忽略本消息");
+            jsonObject.put("suffix","");
+            new RedisTimer(applyFormId, before5Time, jsonObject).start();
+        }
     }
 }

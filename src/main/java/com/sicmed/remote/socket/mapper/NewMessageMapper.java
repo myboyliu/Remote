@@ -1,5 +1,6 @@
 package com.sicmed.remote.socket.mapper;
 
+import com.alibaba.fastjson.JSONObject;
 import com.sicmed.remote.socket.bean.NewMessageBean;
 import com.sicmed.remote.socket.entity.NewMessage;
 
@@ -27,4 +28,6 @@ public interface NewMessageMapper {
     int updateUnreadMark(NewMessage msg);
 
     int insertMessage(NewMessage msg);
+
+    int insertSelectiveByJSONObject(JSONObject jsonObject);
 }

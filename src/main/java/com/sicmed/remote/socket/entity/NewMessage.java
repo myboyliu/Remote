@@ -1,5 +1,6 @@
 package com.sicmed.remote.socket.entity;
 
+import com.alibaba.fastjson.JSONObject;
 import com.sicmed.remote.web.entity.PageEntity;
 import lombok.Data;
 
@@ -52,5 +53,9 @@ public class NewMessage extends PageEntity implements Serializable {
 
     /** 删除标记 */
     private String delFlag;
+
+    public void setJSONObject(JSONObject jsonObject){
+        this.id = jsonObject.getString("id");
+    }
 
 }

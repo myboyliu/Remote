@@ -1,5 +1,6 @@
 package com.sicmed.remote.OtherConfiguration;
 
+import com.sicmed.remote.task.RedisTimerListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +27,7 @@ public class RedisConfiguration {
     }
 
     @Bean
-    public KeyExpiredListener keyExpiredListener() {
-        return new KeyExpiredListener(this.redisMessageListenerContainer());
+    public RedisTimerListener keyExpiredListener() {
+        return new RedisTimerListener(this.redisMessageListenerContainer());
     }
 }

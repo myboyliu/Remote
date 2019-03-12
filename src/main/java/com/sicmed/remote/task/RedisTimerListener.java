@@ -27,12 +27,13 @@ public class RedisTimerListener extends KeyExpirationEventMessageListener {
         //1.获取任务内容
         RedisTimer redisTimer = TaskManager.get(message.toString());
         //2.判断任务是否存在
-        if (redisTimer == null)
+        if (redisTimer == null){
             return;
+        }
         //3.获取任务内容
         JSONObject jsonObject = redisTimer.getJsonObject();
         //4.处理任务
-        messageSendService.sendToUserList(jsonObject);
+        messageSendService.send(jsonObject);
 
     }
 
