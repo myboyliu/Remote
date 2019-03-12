@@ -4,6 +4,7 @@ import com.sicmed.remote.socket.bean.NewMessageBean;
 import com.sicmed.remote.socket.service.NewMessageService;
 import com.sicmed.remote.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,17 +49,26 @@ public class NewMessageController extends BaseController {
     /**
      * 查询我的消息
      */
-    @PostMapping(value = "findMyMessage")
+    @GetMapping(value = "findMyMessage")
     public Object findMyMessage(){
         List<NewMessageBean> newsList = newMessageService.findMyMessage(getRequestToken());
-        return newsList;
+        return succeedRequest(newsList);
+    }
+
+    /**
+     * 查询我的消息数量
+     */
+    @GetMapping(value = "getMyMessageCount")
+    public Object getMyMessageCount(){
+        String messageCount = newMessageService.getMyMessageCount(getRequestToken());
+        return succeedRequest(messageCount);
     }
 
     /**
      * 读取未读消息(修改成已读,如果是公共消息,需要重新创建一条个人的已读消息)
      * @return
      */
-    @PostMapping(value = "lookGroupMessage")
+    @GetMapping(value = "lookGroupMessage")
     public Object lookGroupMessage(String id){
         int i = newMessageService.lookGroupMessage(id,getRequestToken());
         if (i > 0){

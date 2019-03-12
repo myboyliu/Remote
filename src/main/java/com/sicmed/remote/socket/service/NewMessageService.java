@@ -50,6 +50,7 @@ public class NewMessageService implements BaseService<NewMessage> {
 
     /**
      * 指定用户发送
+     *
      * @param type
      * @param title
      * @param detail
@@ -71,6 +72,7 @@ public class NewMessageService implements BaseService<NewMessage> {
 
     /**
      * 群发
+     *
      * @param type
      * @param title
      * @param detail
@@ -92,6 +94,7 @@ public class NewMessageService implements BaseService<NewMessage> {
 
     /**
      * 查询我的消息
+     *
      * @param id 登录用户id
      * @return
      */
@@ -106,31 +109,41 @@ public class NewMessageService implements BaseService<NewMessage> {
 
     /**
      * 读取未读消息
-     * @param id        消息id
-     * @param userId    登录用户id
+     *
+     * @param id     消息id
+     * @param userId 登录用户id
      * @return
      */
-    public int lookGroupMessage(String id,String userId) {
+    public int lookGroupMessage(String id, String userId) {
         //根据id查询消息
         NewMessage msg = newMessageMapper.findMsgById(id);
         int i = 0;
         //判断如果是发给所有人
-        if (Constant.MESSAGE_GRADE.equals(msg.getInviteUserId())){
+        if (Constant.MESSAGE_GRADE.equals(msg.getInviteUserId())) {
             msg.setMsgId(id);
             msg.setInviteUserId(userId);
             //判断如果没有记录,添一条已读标记的新消息,防止重复操作创建多条
             NewMessage newsByNews = newMessageMapper.findNewsByNews(msg);
             System.out.println(newsByNews);
-            if (newsByNews==null){
+            if (newsByNews == null) {
                 msg.setReadSign("1");
                 msg.setId(null);
                 msg.setCreateTime(new Date());
                 i = newMessageMapper.insertMessage(msg);
             }
-        }else {
+        } else {
             msg.setReadSign("1");
             i = newMessageMapper.updateUnreadMark(msg);
         }
         return i;
+    }
+
+    public String getMyMessageCount(String id) {
+        NewMessage newMessage = new NewMessage();
+        PageEntity pageEntity = new PageEntity();
+        newMessage.setId(id);
+        newMessage.setPageNo(pageEntity.getPageNo());
+        newMessage.setPageSize(pageEntity.getPageSize());
+        return newMessageMapper.getMyMessageCount(newMessage);
     }
 }

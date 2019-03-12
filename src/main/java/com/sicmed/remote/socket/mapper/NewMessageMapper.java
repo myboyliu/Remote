@@ -30,4 +30,6 @@ public interface NewMessageMapper {
     int insertMessage(NewMessage msg);
 
     int insertSelectiveByJSONObject(JSONObject jsonObject);
+
+    String getMyMessageCount(NewMessage newMessage);
 }

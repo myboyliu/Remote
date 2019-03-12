@@ -8,12 +8,18 @@ function connectServer(token) {
         //监听的路径以及回调
         stompClient.subscribe('/user/queue/sendUser', function (response) {
             console.log("个人信息");
-            console.log(response.body);
+            layer.msg(response.body, {
+                offset: 't',
+                anim: 6
+            });
         });
         //监听的路径以及回调
         stompClient.subscribe('/topic/sendTopic', function (response) {
             console.log("公告消息");
-            console.log(response.body);
+            layer.msg(response.body, {
+                offset: 't',
+                anim: 6
+            });
         });
     });
 }

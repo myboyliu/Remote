@@ -56,6 +56,14 @@
           AND msg_id = #{msgId,jdbcType=VARCHAR}
           AND del_flag = 0
     </select>
+    <!-- 根据条件查询新消息数量 -->
+    <select id="getMyMessageCount" resultType="java.lang.String" parameterType="com.sicmed.remote.socket.entity.NewMessage">
+        SELECT COUNT(id)
+        FROM new_message
+        WHERE invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
+          AND msg_id = #{msgId,jdbcType=VARCHAR}
+          AND del_flag = 0
+    </select>
 
     <!-- 修改未读标记 -->
     <update id="updateUnreadMark" parameterType="com.sicmed.remote.socket.entity.NewMessage">
