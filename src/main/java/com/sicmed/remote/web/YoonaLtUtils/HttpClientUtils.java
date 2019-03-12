@@ -2,6 +2,7 @@ package com.sicmed.remote.web.YoonaLtUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.sicmed.remote.common.Constant;
+import com.sicmed.remote.meeting.util.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.Charsets;
 import org.apache.http.*;
@@ -55,6 +56,8 @@ public class HttpClientUtils {
                 if (map1.get("code") != null && "200".equals(map1.get("code").toString())) {
                     Map <String, String> map2 = (Map) JSON.parse(map1.get("data").toString());
                     result =  map2.get("accessToken").toString();
+                }else {
+                    log.error("远程调用失败,云起云状态异常--"+map1.toString());
                 }
                 //释放流
                 EntityUtils.consume(httpEntity);
