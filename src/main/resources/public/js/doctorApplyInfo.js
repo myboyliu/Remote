@@ -69,7 +69,7 @@ function renderLeftNavigation(data) {
         _html += '<li class="oneLevelItem patientInfo">\
                         <p class="oneLevelName">会诊排期</p>\
                     </li>'
-    }else if (isReferral){
+    } else if (isReferral) {
         _html += '<li class="oneLevelItem patientInfo">\
                         <p class="oneLevelName">转诊排期</p>\
                     </li>'
@@ -287,10 +287,10 @@ function getApplyInfo() {
         isBranchDoctor = userInfo.branchId === applyInfo.inviteBranchId ? true : false;
         if (applyInfo.consultantUserList) {
             isInvite = applyInfo.consultantUserList.indexOf(userInfo.id) > 0 ? true : false;
-        }else{
+        } else {
             isInvite = userInfo.id === applyInfo.inviteUserId ? true : false;
         }
-        if(applyInfo.applyStatus === "CONSULTATION_APPLY_ACCEDE"){
+        if (applyInfo.applyStatus === "CONSULTATION_APPLY_ACCEDE") {
             isInvite = isBranchDoctor;
         }
 
@@ -690,5 +690,15 @@ $(function () {
     /** 返回按钮 */
     $('.getBack').click(function () {
         window.location = '../page/morkbench.html'
+    })
+
+
+    $("#entryConsultationRoomBtn").click(function () {
+        console.log("111");
+        let meetInfo = JSON.parse(applyInfo.meetJson);
+        //新窗口打开直播页面
+        let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        window.open(baseUrl + "/#/webrtc/" + userInfo.userPhone + "/" + meetInfo.appointmentNumber + "/" + meetInfo.hostPwd + "/" + userInfo.userName, "_blank");
+        console.log(meetInfo);
     })
 })

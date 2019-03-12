@@ -15,10 +15,4 @@ import org.springframework.web.bind.annotation.RestController;
 public class MeetingController extends BaseController {
 
 
-    @PostMapping(value = "create")
-    public Object createMeeting(){
-
-        return succeedRequest("SUCCESS");
-    }
-
 }

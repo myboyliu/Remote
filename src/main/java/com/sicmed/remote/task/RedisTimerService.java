@@ -1,5 +1,6 @@
 package com.sicmed.remote.task;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,31 +36,39 @@ public class RedisTimerService {
 
     }
 
-    public void createVideoRemind(String applyFormId, Date consultationStartTime, List<String> userList) {
+    public void createVideoRemind(String applyFormId, Date consultationStartTime, JSONArray jsonArray) {
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", UUID.randomUUID().toString().replace("-",""));
         jsonObject.put("type","视频会诊");
-
         jsonObject.put("fill","");
         jsonObject.put("linked",applyFormId);
-        jsonObject.put("userList",userList);
+        jsonObject.put("userList",jsonArray);
+
+        //创建60分钟提醒
         long before60Time = YtDateUtils.before60Time(consultationStartTime);
         if (before60Time > 5000) {
             jsonObject.put("prefix","您预约了60分钟后进行视频会诊");
             jsonObject.put("suffix","");
+            jsonObject.put("message","您您预约了60分钟后进行视频会诊");
             new RedisTimer(applyFormId, before60Time, jsonObject).start();
         }
+
+        //创建15分钟提醒
         long before15Time = YtDateUtils.before15Time(consultationStartTime);
         if (before15Time > 5000) {
             jsonObject.put("prefix","您预约了15分钟后进行视频会诊，请提前5分钟进入会诊室做准备");
             jsonObject.put("suffix","");
+            jsonObject.put("message","您预约了15分钟后进行视频会诊，请提前5分钟进入会诊室做准备");
             new RedisTimer(applyFormId, before15Time, jsonObject).start();
         }
+
+        //创建5分钟提醒
         long before5Time = YtDateUtils.before5Time(consultationStartTime);
         if (before5Time > 5000) {
             jsonObject.put("prefix","您预约的会诊室已激活，如还未进入，请通知相关人员尽快加入。如已准备妥当请忽略本消息");
             jsonObject.put("suffix","");
+            jsonObject.put("message","您预约的会诊室已激活，如还未进入，请通知相关人员尽快加入。如已准备妥当请忽略本消息");
+
             new RedisTimer(applyFormId, before5Time, jsonObject).start();
         }
     }

@@ -1,23 +1,27 @@
 package com.sicmed.remote.meeting.service;
 
-import com.sicmed.remote.OtherConfiguration.StorageRedisKey;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.meeting.bean.MeetingBean;
 import com.sicmed.remote.meeting.entity.Meeting;
 import com.sicmed.remote.meeting.entity.RequestMeeting;
 import com.sicmed.remote.meeting.mapper.MeetingMapper;
 import com.sicmed.remote.meeting.util.YqyMeetingUtils;
 import com.sicmed.remote.task.RedisTimerService;
-import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.ApplyTime;
-import com.sicmed.remote.web.mapper.ApplyFormMapper;
+import com.sicmed.remote.web.entity.CaseConsultant;
 import com.sicmed.remote.web.mapper.ApplyTimeMapper;
+import com.sicmed.remote.web.service.CaseConsultantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -32,10 +36,13 @@ public class MeetingService {
     @Autowired
     private RedisTimerService redisTimerService;
 
+    @Autowired
+    private CaseConsultantService caseConsultantService;
+
     /**
      * 根据 视频会诊ID 创建 会议
      */
-    public void createMeeting(String applyFormId){
+    public void createMeeting(String applyFormId) {
         //1.查询视频会诊信息
         ApplyTime applyTime = applyTimeMapper.getFinalTime(applyFormId);
         try {
@@ -53,6 +60,7 @@ public class MeetingService {
         log.debug("----------------------创建视频会议开始------------------------");
         //1.创建视频会议
         Meeting meeting = new Meeting();
+        meeting.setId(applyTime.getId());
         meeting.setApplyTime(applyTime);
         log.debug("----------------------调用云启云业务开始------------------------");
         //2.调用云启云视频会议 接口 创建视频会议
@@ -67,7 +75,20 @@ public class MeetingService {
         meetingMapper.insertSelective(meeting);
         log.debug("----------------------创建定时任务开始------------------------");
         //5.调用 定时 提醒服务
-        redisTimerService.createVideoRemind(applyTime.getApplyFormId(), applyTime.getEventStartTime(), new ArrayList<>());
+        CaseConsultant caseConsultant = caseConsultantService.getByPrimaryKey(applyTime.getApplyFormId());
+        String userListString = caseConsultant.getConsultantUserList();
+        List<Map<String, String>> mapList;
+        mapList = JSON.parseObject(userListString, new TypeReference<List<Map<String, String>>>() {
+        }, Feature.OrderedField);
+        JSONArray jsonArray = new JSONArray();
+        for (Map map : mapList) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", map.get("doctorId"));
+            jsonObject.put("messageId", UUID.randomUUID().toString().replace("-", ""));
+            jsonArray.add(jsonObject);
+        }
+
+        redisTimerService.createVideoRemind(applyTime.getApplyFormId(), applyTime.getEventStartTime(), jsonArray);
         log.debug("----------------------创建定时任务结束------------------------");
         log.debug("----------------------创建视频会议结束------------------------");
     }
@@ -75,7 +96,7 @@ public class MeetingService {
     /**
      * 根据 视频会诊ID 修改 会议
      */
-    public void updateMeeting(String applyFormId){
+    public void updateMeeting(String applyFormId) {
         //1.查询视频会诊信息
         ApplyTime applyTime = applyTimeMapper.getFinalTime(applyFormId);
         try {
@@ -106,7 +127,11 @@ public class MeetingService {
         meetingMapper.updateByPrimaryKeySelective(meeting);
 
         //5.调用 定时 提醒服务
-        redisTimerService.createVideoRemind(applyTime.getApplyFormId(),applyTime.getEventStartTime(), new ArrayList<>());
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
+        jsonArray.add(jsonObject);
+
+        redisTimerService.createVideoRemind(applyTime.getApplyFormId(), applyTime.getEventStartTime(), jsonArray);
 
     }
 }

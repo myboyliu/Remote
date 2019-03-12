@@ -48,10 +48,6 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insertSelective" parameterType="com.sicmed.remote.meeting.entity.Meeting">
-    <selectKey keyProperty="id" resultType="java.lang.String"
-               order="BEFORE">
-      select replace(uuid(),'-','') from dual
-    </selectKey>
     insert into _meeting
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

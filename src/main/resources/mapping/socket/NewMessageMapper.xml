@@ -292,64 +292,16 @@
     </insert>
 
     <insert id="insertSelectiveByJSONObject" parameterType="com.alibaba.fastjson.JSONObject">
-        <!--insert into new_message(id,msg_id,msg_type,msg_title,msg_details,apply_form_id,invite_user_id)-->
-        <!--values-->
-        <!--<foreach collection="userList" item="item" separator="," index="">-->
-            <!--( (select replace(uuid(), '-', '') as id from dual),-->
-            <!--#{recordId,jdbcType=VARCHAR},-->
-            <!--#{createUser,jdbcType=VARCHAR},-->
-            <!--#{item.contentRemark},-->
-            <!--#{item.orderWeight},-->
-            <!--#{item.contentPath},-->
-            <!--#{item})-->
-        <!--</foreach>-->
-        <!--insert into new_message-->
-        <!--<trim prefix="(" suffix=")" suffixOverrides=",">-->
-            <!--<if test="id != null">-->
-                <!--id,-->
-            <!--</if>-->
-            <!--<if test="id != null">-->
-                <!--msg_id,-->
-            <!--</if>-->
-            <!--<if test="msgType != null">-->
-                <!--msg_type,-->
-            <!--</if>-->
-            <!--<if test="msgTitle != null">-->
-                <!--msg_title,-->
-            <!--</if>-->
-            <!--<if test="msgDetails != null">-->
-                <!--msg_details,-->
-            <!--</if>-->
-            <!--<if test="applyFormId != null">-->
-                <!--apply_form_id,-->
-            <!--</if>-->
-            <!--<if test="inviteUserId != null">-->
-                <!--invite_user_id,-->
-            <!--</if>-->
-        <!--</trim>-->
-        <!--<trim prefix="values (" suffix=")" suffixOverrides=",">-->
-            <!--<if test="id != null">-->
-                <!--#{id,jdbcType=VARCHAR},-->
-            <!--</if>-->
-            <!--<if test="id != null">-->
-                <!--#{id,jdbcType=VARCHAR},-->
-            <!--</if>-->
-            <!--<if test="msgType != null">-->
-                <!--#{msgType,jdbcType=VARCHAR},-->
-            <!--</if>-->
-            <!--<if test="msgTitle != null">-->
-                <!--#{msgTitle,jdbcType=VARCHAR},-->
-            <!--</if>-->
-            <!--<if test="msgDetails != null">-->
-                <!--#{msgDetails,jdbcType=VARCHAR},-->
-            <!--</if>-->
-            <!--<if test="applyFormId != null">-->
-                <!--#{applyFormId,jdbcType=VARCHAR},-->
-            <!--</if>-->
-            <!--<if test="inviteUserId != null">-->
-                <!--#{inviteUserId,jdbcType=VARCHAR},-->
-            <!--</if>-->
-        <!--</trim>-->
+        insert into new_message (id,msg_type,msg_title,msg_details,apply_form_id,invite_user_id)
+        values
+        <foreach collection="userList" item="item" separator="," index="">
+            (#{item.messageId,jdbcType=VARCHAR},
+            #{type,jdbcType=VARCHAR},
+            #{message,jdbcType=VARCHAR},
+            #{item.messageId},
+            #{item.messageId},
+            #{item.userId,jdbcType=VARCHAR})
+        </foreach>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.socket.entity.NewMessage">
         update new_message

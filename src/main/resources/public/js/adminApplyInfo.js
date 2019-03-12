@@ -697,5 +697,11 @@ $(function () {
     $('.getBack').click(function () {
         window.location = '../page/administrator.html'
     });
+
+    $("#entryConsultationRoomBtn").click(function () {
+        console.log("111");
+        let meetInfo = JSON.parse(applyInfo.meetJson);
+       console.log(meetInfo);
+    })
     renderViewByRole(applyStatus);
 });

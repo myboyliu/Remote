@@ -33,13 +33,15 @@ public class MessageSendService {
         message.append(jsonObject.getString("prefix"));
         message.append(jsonObject.getString("fill"));
         message.append(jsonObject.getString("suffix"));
-
         //3.发送在线消息
-        if (userList != null && userList.size() > 1) {
+        if (userList != null && userList.size() > 0) {
             new Thread(() -> {
                 WebSocketSession webSocketSession;
+                for (Object o : userList) {
+
+                }
                 for (int i = 0; i < userList.size(); i++) {
-                    String token = userList.getString(i);
+                    String token = userList.getJSONObject(i).getString("userId");
                     webSocketSession = SocketManager.get(token);
                     if (webSocketSession != null) {
                         /**
@@ -47,12 +49,11 @@ public class MessageSendService {
                          */
                         template.convertAndSendToUser(token, "/queue/sendUser", message.toString());
                         log.debug("发送消息:" + message.toString() + "---TO:" + token + "---成功");
-                        break;
                     }
                 }
             }).start();
-        }else{
-            template.convertAndSend("/topic/sendTopic",  jsonObject.toJSONString());
+        } else {
+            template.convertAndSend("/topic/sendTopic", jsonObject.toJSONString());
         }
         //4.添加消息记录
         messageMapper.insertSelectiveByJSONObject(jsonObject);

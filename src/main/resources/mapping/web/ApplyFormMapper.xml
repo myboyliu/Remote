@@ -263,6 +263,7 @@
         <result column="cctconsultantPrice" jdbcType="VARCHAR" property="consultantPrice"/>
         <result column="ccthospitalPrice" jdbcType="VARCHAR" property="hospitalPrice"/>
         <result column="consultantUserList" jdbcType="VARCHAR" property="consultantUserList"/>
+        <result column="meetJson" jdbcType="VARCHAR" property="meetJson"/>
 
         <collection property="applyTimeList" ofType="com.sicmed.remote.web.entity.ApplyTime" javaType="ArrayList">
             <result column="ayteventStartTime" jdbcType="TIMESTAMP" property="eventStartTime"/>
@@ -307,7 +308,8 @@
         an.id applyNodeId,
         an.node_name applyNodeName,
         an.node_time applyNodeTime,
-        an.node_operator applyNodeOperator
+        an.node_operator applyNodeOperator,
+        meeting.meet_json meetJson
 
     </sql>
     <select id="detailById" parameterType="java.lang.String" resultMap="BeanResultMap">
@@ -320,6 +322,7 @@
         left join apply_time ayt on ayt.apply_form_id = ayf.id AND ayt.del_flag = "0"
         left join case_content cc on cc.record_id = cr.id AND cc.del_flag = "0"
         left join apply_node an on an.apply_id = ayf.id
+        left join _meeting meeting on meeting.id = ayf.id
         where ayf.id = #{id} and ayf.del_flag= "0" order by cc.order_weight,an.node_time,ayt.event_start_time
     </select>
 
