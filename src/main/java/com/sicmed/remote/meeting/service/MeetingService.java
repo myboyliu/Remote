@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Service
 public class MeetingService {
@@ -64,7 +67,7 @@ public class MeetingService {
         meetingMapper.insertSelective(meeting);
         log.debug("----------------------创建定时任务开始------------------------");
         //5.调用 定时 提醒服务
-        redisTimerService.createVideoRemind(applyTime.getApplyFormId(),applyTime.getEventStartTime());
+        redisTimerService.createVideoRemind(applyTime.getApplyFormId(), applyTime.getEventStartTime(), new ArrayList<>());
         log.debug("----------------------创建定时任务结束------------------------");
         log.debug("----------------------创建视频会议结束------------------------");
     }
@@ -103,7 +106,7 @@ public class MeetingService {
         meetingMapper.updateByPrimaryKeySelective(meeting);
 
         //5.调用 定时 提醒服务
-        redisTimerService.createVideoRemind(applyTime.getApplyFormId(),applyTime.getEventStartTime());
+        redisTimerService.createVideoRemind(applyTime.getApplyFormId(),applyTime.getEventStartTime(), new ArrayList<>());
 
     }
 }
