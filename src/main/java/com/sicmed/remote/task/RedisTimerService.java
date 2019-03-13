@@ -39,36 +39,43 @@ public class RedisTimerService {
 
     public void createVideoRemind(String applyFormId, Date consultationStartTime, JSONArray jsonArray) {
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("type", MessageConstant.MEETING_ALERT_MESSAGE);
-        jsonObject.put("fill","");
-        jsonObject.put("linked",applyFormId);
-        jsonObject.put("userList",jsonArray);
 
         //创建60分钟提醒
         long before60Time = YtDateUtils.before60Time(consultationStartTime);
         if (before60Time > 5000) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("type", MessageConstant.MEETING_ALERT_MESSAGE);
+            jsonObject.put("aboutId",applyFormId);
+            jsonObject.put("userList",jsonArray);
             jsonObject.put("prefix","您预约了60分钟后进行视频会诊");
             jsonObject.put("suffix","");
-            jsonObject.put("message","您您预约了60分钟后进行视频会诊");
+            jsonObject.put("title","您您预约了60分钟后进行视频会诊");
             new RedisTimer(applyFormId, before60Time, jsonObject).start();
         }
 
         //创建15分钟提醒
         long before15Time = YtDateUtils.before15Time(consultationStartTime);
         if (before15Time > 5000) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("type", MessageConstant.MEETING_ALERT_MESSAGE);
+            jsonObject.put("aboutId",applyFormId);
+            jsonObject.put("userList",jsonArray);
             jsonObject.put("prefix","您预约了15分钟后进行视频会诊，请提前5分钟进入会诊室做准备");
             jsonObject.put("suffix","");
-            jsonObject.put("message","您预约了15分钟后进行视频会诊，请提前5分钟进入会诊室做准备");
+            jsonObject.put("title","您预约了15分钟后进行视频会诊，请提前5分钟进入会诊室做准备");
             new RedisTimer(applyFormId, before15Time, jsonObject).start();
         }
 
         //创建5分钟提醒
         long before5Time = YtDateUtils.before5Time(consultationStartTime);
         if (before5Time > 5000) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("type", MessageConstant.MEETING_ALERT_MESSAGE);
+            jsonObject.put("aboutId",applyFormId);
+            jsonObject.put("userList",jsonArray);
             jsonObject.put("prefix","您预约的会诊室已激活，如还未进入，请通知相关人员尽快加入。如已准备妥当请忽略本消息");
             jsonObject.put("suffix","");
-            jsonObject.put("message","您预约的会诊室已激活，如还未进入，请通知相关人员尽快加入。如已准备妥当请忽略本消息");
+            jsonObject.put("title","您预约的会诊室已激活，如还未进入，请通知相关人员尽快加入。如已准备妥当请忽略本消息");
 
             new RedisTimer(applyFormId, before5Time, jsonObject).start();
         }

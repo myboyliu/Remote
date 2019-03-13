@@ -27,13 +27,14 @@
         <result column="msg_details" property="msgDetails" jdbcType="VARCHAR"/>
         <result column="read_sign" property="readSign" jdbcType="VARCHAR"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="apply_form_id" property="aboutId" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <!-- 查询我的消息 -->
     <select id="findMyMessage" resultMap="NewMessageMap" parameterType="com.sicmed.remote.socket.entity.NewMessage">
-    SELECT id,msg_details,read_sign,msg_title,msg_type ,create_time
+    SELECT id,msg_details,read_sign,msg_title,msg_type ,create_time,apply_form_id
     FROM (
-        SELECT id,msg_details,read_sign,msg_title,msg_type,msg_id,create_time
+        SELECT id,msg_details,read_sign,msg_title,msg_type,msg_id,create_time,apply_form_id
         FROM new_message
         WHERE invite_user_id =  #{inviteUserId,jdbcType=VARCHAR} OR invite_user_id = 'all'
         ORDER BY create_time DESC ) s
@@ -302,15 +303,15 @@
     </insert>
 
     <insert id="insertSelectiveByJSONObject" parameterType="com.alibaba.fastjson.JSONObject">
-        insert into new_message (id,msg_type,msg_title,msg_details,apply_form_id,invite_user_id)
+        insert into new_message (id,msg_id,msg_type,msg_title,apply_form_id,invite_user_id)
         values
         <foreach collection="userList" item="item" separator="," index="">
-            (#{item.messageId,jdbcType=VARCHAR},
+            ((select replace(uuid(), '-', '') as id from dual),
+            (select replace(uuid(), '-', '') as id from dual),
             #{type,jdbcType=VARCHAR},
-            #{message,jdbcType=VARCHAR},
-            #{item.messageId},
-            #{item.messageId},
-            #{item.userId,jdbcType=VARCHAR})
+            #{title,jdbcType=VARCHAR},
+            #{aboutId},
+            #{item,jdbcType=VARCHAR})
         </foreach>
     </insert>
     <insert id="insertByJSONObject" parameterType="com.alibaba.fastjson.JSONObject">

@@ -4,6 +4,8 @@ package com.sicmed.remote.message.bean;
  * 消息 类型
  */
 public enum MessageConstant {
+    //新医生注册 提醒消息
+    NEW_DOCTOR_REGISTER_ALERT_MESSAGE,
     //系统 提醒消息
     SYSTEM_ALERT_MESSAGE,
     //系统 推送消息

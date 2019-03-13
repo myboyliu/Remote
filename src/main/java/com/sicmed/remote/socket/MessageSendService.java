@@ -39,7 +39,7 @@ public class MessageSendService {
             new Thread(() -> {
                 WebSocketSession webSocketSession;
                 for (int i = 0; i < userList.size(); i++) {
-                    String token = userList.getJSONObject(i).getString("userId");
+                    String token = userList.getString(i);
                     webSocketSession = SocketManager.get(token);
                     if (webSocketSession != null) {
                         /**

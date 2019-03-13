@@ -20,28 +20,30 @@ public class NewMessageController extends BaseController {
 
     /**
      * 给指定用户发送消息
+     *
      * @return
      */
     @PostMapping(value = "insertMessage")
-    public String insertMessage(String type,String title,String detail,String inviteUserId){
-        int i = newMessageService.insertMessage(type,title,detail,inviteUserId,getRequestToken());
-        if (i>0){
+    public String insertMessage(String type, String title, String detail, String inviteUserId) {
+        int i = newMessageService.insertMessage(type, title, detail, inviteUserId, getRequestToken());
+        if (i > 0) {
             return "成功";
-        }else {
+        } else {
             return "失败";
         }
     }
 
     /**
      * 群发消息
+     *
      * @return
      */
     @PostMapping(value = "sendGroupMessage")
-    public String sendGroupMessage(String type,String title,String detail){
-        int i = newMessageService.insertMessage(type,title,detail,getRequestToken());
-        if (i>0){
+    public String sendGroupMessage(String type, String title, String detail) {
+        int i = newMessageService.insertMessage(type, title, detail, getRequestToken());
+        if (i > 0) {
             return "成功";
-        }else {
+        } else {
             return "失败";
         }
     }
@@ -50,7 +52,7 @@ public class NewMessageController extends BaseController {
      * 查询我的消息
      */
     @GetMapping(value = "findMyMessage")
-    public Object findMyMessage(){
+    public Object findMyMessage() {
         List<NewMessageBean> newsList = newMessageService.findMyMessage(getRequestToken());
         return succeedRequest(newsList);
     }
@@ -59,22 +61,23 @@ public class NewMessageController extends BaseController {
      * 查询我的消息数量
      */
     @GetMapping(value = "getMyMessageCount")
-    public Object getMyMessageCount(){
+    public Object getMyMessageCount() {
         String messageCount = newMessageService.getMyMessageCount(getRequestToken());
         return succeedRequest(messageCount);
     }
 
     /**
      * 读取未读消息(修改成已读,如果是公共消息,需要重新创建一条个人的已读消息)
+     *
      * @return
      */
     @GetMapping(value = "lookGroupMessage")
-    public Object lookGroupMessage(String id){
-        int i = newMessageService.lookGroupMessage(id,getRequestToken());
-        if (i > 0){
-            return "成功";
-        }else {
-            return "失败";
+    public Object lookGroupMessage(String id) {
+        int i = newMessageService.lookGroupMessage(id, getRequestToken());
+        if (i > 0) {
+            return succeedRequest("成功");
+        } else {
+            return badRequestOfArguments("失败");
         }
     }
 

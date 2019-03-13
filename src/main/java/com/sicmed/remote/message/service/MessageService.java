@@ -28,7 +28,7 @@ public class MessageService {
         JSONArray userArray = userRoleMapper.getUserByParam(userRole);
         //2.添加消息记录
         JSONObject msgJson = new JSONObject();
-        msgJson.put("type", MessageConstant.SYSTEM_ALERT_MESSAGE);
+        msgJson.put("type", MessageConstant.NEW_DOCTOR_REGISTER_ALERT_MESSAGE);
         msgJson.put("title", messageTitle);
         msgJson.put("doctorId", doctorId);
         msgJson.put("userList", userArray);

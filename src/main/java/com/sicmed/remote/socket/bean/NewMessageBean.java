@@ -23,6 +23,8 @@ public class NewMessageBean {
     /** 0未读 1已读 */
     private String readSign;
 
+    private String aboutId;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "GMT+8")
     private Date createTime;  // 创建时间
 

@@ -23,8 +23,9 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class YqyMeetingUtils {
+    private static int reTryNumber = 0;
 
-    static private RedisTemplate redisTemplate = null;
+    static private RedisTemplate redisTemplate = SpringUtil.getBean(StringRedisTemplate.class);
 
 
     /**
@@ -33,12 +34,10 @@ public class YqyMeetingUtils {
      * @param requestMeeting
      * @return
      */
-    public static MeetingBean createMeeting(RequestMeeting requestMeeting) throws Exception {
+    public static MeetingBean createMeeting(RequestMeeting requestMeeting){
         //获取token
         String accessToken = getToken(requestMeeting.getMobile(), requestMeeting.getRealName());
-        if (accessToken == null) {
-            throw new CustomException("鉴权接口调用失败");
-        }
+
         //调用云起云创建会议接口
         String res = svocCreateInterface(accessToken, requestMeeting.getAppointmentName(), requestMeeting.getStartTime(), requestMeeting.getEndTime(), requestMeeting.isLive(), requestMeeting.isMute(), requestMeeting.isRecord(), requestMeeting.getConcurrentNum());
         return responseObject(res);
@@ -53,9 +52,7 @@ public class YqyMeetingUtils {
     public static MeetingBean updateMeeting(RequestMeeting requestMeeting) throws Exception {
         //获取token
         String accessToken = getToken(requestMeeting.getMobile(), requestMeeting.getRealName());
-        if (accessToken == null) {
-            throw new CustomException("鉴权接口调用失败");
-        }
+
         //调用修改接口
         String res = svocUpdateInterface(accessToken, requestMeeting.getAppointmentName(), requestMeeting.getAppointmentId(), requestMeeting.getHostPwd(), requestMeeting.getLivePwd(), requestMeeting.getStartTime(), requestMeeting.getEndTime(), requestMeeting.isLive(), requestMeeting.isMute(), requestMeeting.isRecord(), requestMeeting.getConcurrentNum());
         return responseObject(res);
@@ -101,7 +98,6 @@ public class YqyMeetingUtils {
      * @return
      */
     private static String getToken(String phone, String realName) {
-        YqyMeetingUtils.redisTemplate = SpringUtil.getBean(StringRedisTemplate.class);
         Object authToken = redisTemplate.opsForValue().get("yqy:" + phone);
         String token;
         if (authToken == null) {
@@ -203,7 +199,8 @@ public class YqyMeetingUtils {
      * @param resultJson
      * @return
      */
-    private static MeetingBean responseObject(String resultJson) throws CustomException {
+
+    private static MeetingBean responseObject(String resultJson){
         Map<String, Object> response = (Map) JSON.parse(resultJson);
         if (response.get("code") != null && "200".equals(response.get("code").toString())) {
             return JSON.parseObject(response.get("data").toString(), new TypeReference<MeetingBean>() {
@@ -212,7 +209,7 @@ public class YqyMeetingUtils {
             log.error(resultJson);
             log.error(String.valueOf(response.get("code")));
             log.error(String.valueOf(response.get("msg")));
-            throw new CustomException("云起云接口调用失败");
+            return null;
         }
     }
 
