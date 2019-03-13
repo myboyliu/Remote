@@ -321,6 +321,9 @@ public class ApplyDisposeController extends BaseController {
         applyTime.setUpdateUser(userId);
         applyTimeService.updateStatus(applyTime);
 
+        if(applyType.equals(String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO))){
+            meetingService.createMeeting(applyFormId);
+        }
 
         return succeedRequest(applyForm);
     }
@@ -380,6 +383,9 @@ public class ApplyDisposeController extends BaseController {
         applyTime.setUpdateUser(userId);
         applyTimeService.updateStatus(applyTime);
 
+        if(applyType.equals(String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO))){
+            meetingService.createMeeting(applyFormId);
+        }
 
         return succeedRequest(applyForm);
     }
