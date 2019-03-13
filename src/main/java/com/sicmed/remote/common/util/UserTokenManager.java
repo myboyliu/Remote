@@ -17,11 +17,13 @@ public class UserTokenManager {
     private static RedisTemplate<String, String> redisTemplate = SpringUtil.getBean(StringRedisTemplate.class);
 
     public static CurrentUserBean getCurrentUser() {
-
-        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
-        String str = request.getHeader("token");
+        String str = getCurrentUserId();
         return JSONObject.parseObject(redisTemplate.opsForValue().get(str), CurrentUserBean.class);
 
     }
 
+    public static String getCurrentUserId() {
+        HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest();
+        return request.getHeader("token");
+    }
 }
