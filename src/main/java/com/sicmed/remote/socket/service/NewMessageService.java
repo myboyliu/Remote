@@ -1,5 +1,6 @@
 package com.sicmed.remote.socket.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.sicmed.remote.common.Constant;
 import com.sicmed.remote.socket.bean.NewMessageBean;
 import com.sicmed.remote.socket.entity.NewMessage;
@@ -101,8 +102,8 @@ public class NewMessageService implements BaseService<NewMessage> {
     public List<NewMessageBean> findMyMessage(String id) {
         NewMessage newMessage = new NewMessage();
         PageEntity pageEntity = new PageEntity();
-        newMessage.setId(id);
-        newMessage.setPageNo(pageEntity.getPageNo());
+        newMessage.setInviteUserId(id);
+        newMessage.setPageNo(pageEntity.getBeginNo());
         newMessage.setPageSize(pageEntity.getPageSize());
         return newMessageMapper.findMyMessage(newMessage);
     }
@@ -140,10 +141,13 @@ public class NewMessageService implements BaseService<NewMessage> {
 
     public String getMyMessageCount(String id) {
         NewMessage newMessage = new NewMessage();
-        PageEntity pageEntity = new PageEntity();
-        newMessage.setId(id);
-        newMessage.setPageNo(pageEntity.getPageNo());
-        newMessage.setPageSize(pageEntity.getPageSize());
+        newMessage.setInviteUserId(id);
         return newMessageMapper.getMyMessageCount(newMessage);
+    }
+
+
+    public int insertSelectiveByJSONObject(JSONObject jsonObject) {
+
+        return newMessageMapper.insertByJSONObject(jsonObject);
     }
 }

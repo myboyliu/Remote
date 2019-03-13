@@ -1,6 +1,7 @@
 package com.sicmed.remote.socket.entity;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sicmed.remote.web.entity.PageEntity;
 import lombok.Data;
 
@@ -37,6 +38,7 @@ public class NewMessage extends PageEntity implements Serializable {
     private String createUser;
 
     /**  */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;
 
     /**  */

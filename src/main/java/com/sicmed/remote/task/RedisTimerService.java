@@ -2,6 +2,7 @@ package com.sicmed.remote.task;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.sicmed.remote.message.bean.MessageConstant;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -39,7 +40,7 @@ public class RedisTimerService {
     public void createVideoRemind(String applyFormId, Date consultationStartTime, JSONArray jsonArray) {
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("type","视频会诊");
+        jsonObject.put("type", MessageConstant.MEETING_ALERT_MESSAGE);
         jsonObject.put("fill","");
         jsonObject.put("linked",applyFormId);
         jsonObject.put("userList",jsonArray);

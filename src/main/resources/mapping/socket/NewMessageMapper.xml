@@ -35,7 +35,7 @@
     FROM (
         SELECT id,msg_details,read_sign,msg_title,msg_type,msg_id,create_time
         FROM new_message
-        WHERE invite_user_id =  #{id,jdbcType=VARCHAR} OR invite_user_id = 'all'
+        WHERE invite_user_id =  #{inviteUserId,jdbcType=VARCHAR} OR invite_user_id = 'all'
         ORDER BY create_time DESC ) s
     GROUP BY s.msg_id ORDER BY s.create_time DESC
     limit #{pageNo,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
@@ -57,12 +57,14 @@
           AND del_flag = 0
     </select>
     <!-- 根据条件查询新消息数量 -->
-    <select id="getMyMessageCount" resultType="java.lang.String" parameterType="com.sicmed.remote.socket.entity.NewMessage">
-        SELECT COUNT(id)
-        FROM new_message
-        WHERE invite_user_id = #{inviteUserId,jdbcType=VARCHAR}
-          AND msg_id = #{msgId,jdbcType=VARCHAR}
-          AND del_flag = 0
+    <select id="getMyMessageCount" resultType="java.lang.String"
+            parameterType="com.sicmed.remote.socket.entity.NewMessage">
+        SELECT COUNT(s.id)
+         FROM (SELECT id
+                FROM new_message
+                WHERE invite_user_id =  #{inviteUserId,jdbcType=VARCHAR} OR invite_user_id = 'all'
+                GROUP BY msg_id ) s
+
     </select>
 
     <!-- 修改未读标记 -->
@@ -254,9 +256,9 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
-                #{id,jdbcType=VARCHAR}
+                #{id,jdbcType=VARCHAR},
+                #{id,jdbcType=VARCHAR},
             </if>
-            ,#{id,jdbcType=VARCHAR},
             <if test="msgType != null">
                 #{msgType,jdbcType=VARCHAR},
             </if>
@@ -311,6 +313,19 @@
             #{item.userId,jdbcType=VARCHAR})
         </foreach>
     </insert>
+    <insert id="insertByJSONObject" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into new_message (id,msg_id,msg_type,msg_title,apply_form_id,invite_user_id)
+        values
+        <foreach collection="userList" item="item" separator="," index="">
+            ((select replace(uuid(), '-', '') as id from dual),
+            (select replace(uuid(), '-', '') as id from dual),
+            #{type,jdbcType=VARCHAR},
+            #{title,jdbcType=VARCHAR},
+            #{doctorId,jdbcType=VARCHAR},
+            #{item,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
     <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.socket.entity.NewMessage">
         update new_message
         <set>

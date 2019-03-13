@@ -6,6 +6,9 @@ import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.DoctorCertified;
 import com.sicmed.remote.meeting.util.YqyMeetingUtils;
+import com.sicmed.remote.message.service.MessageService;
+import com.sicmed.remote.rbac.service.UserRoleService;
+import com.sicmed.remote.socket.service.NewMessageService;
 import com.sicmed.remote.web.bean.BranchBean;
 import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.bean.UserBean;
@@ -57,6 +60,13 @@ public class UserController extends BaseController {
     @Autowired
     private UserSignService userSignService;
 
+    @Autowired
+    private UserRoleService userRoleService;
+    @Autowired
+    private NewMessageService newMessageService;
+    @Autowired
+    private MessageService messageService;
+
     /**
      * 判断注册手机号是否可用
      *
@@ -102,23 +112,15 @@ public class UserController extends BaseController {
             return badRequestOfArguments("账号已存在");
         }
 
-        LinkedHashMap<String, String> resultMap;
-        try {
-            resultMap = JSON.parseObject(idTypeName, new TypeReference<LinkedHashMap<String, String>>() {
-            }, Feature.OrderedField);
-        } catch (Exception e) {
-            return badRequestOfArguments("idTypeName 格式错误");
-        }
+        LinkedHashMap<String, String> resultMap = JSON.parseObject(idTypeName, new TypeReference<LinkedHashMap<String, String>>() {
+        }, Feature.OrderedField);
 
         // 添加UserAccount使用md5将随机生成的32位字母数字salt与password混合加密
         String salt = RandomStringUtils.randomAlphanumeric(32);
         String encryptionPassWord = DigestUtils.md5DigestAsHex((userAccount.getUserPassword() + salt).getBytes());
         userAccount.setUserPassword(encryptionPassWord);
         userAccount.setSalt(salt);
-        int i = userAccountService.insertSelective(userAccount, httpServletRequest);
-        if (i < 1) {
-            return badRequestOfInsert("添加UserAccount失败");
-        }
+        userAccountService.insertSelective(userAccount, httpServletRequest);
 
         // 病例类型id列表
         List<String> idList = new ArrayList<>();
@@ -142,26 +144,22 @@ public class UserController extends BaseController {
             for (String id : idList) {
                 userCaseTypeMap.put(id, userId);
             }
-            int k = userCaseTypeService.insertMulitple(userCaseTypeMap);
-            if (k < 1) {
-                return badRequestOfInsert("添加UserCaseType失败");
-            }
+            userCaseTypeService.insertMulitple(userCaseTypeMap);
+
         }
 
 
         // 添加UserDetail
         userDetail.setId(userId);
-        int j = userDetailService.insertSelective(userDetail);
-        if (j < 1) {
-            return badRequestOfInsert("添加UserDetail失败");
-        }
+        userDetailService.insertSelective(userDetail);
+
 
         // 添加UserSign
         userSign.setId(userId);
-        int l = userSignService.insertSelective(userSign);
-        if (l < 1) {
-            return badRequestOfInsert("添加UserSign失败");
-        }
+        userSignService.insertSelective(userSign);
+
+        //创建消息 推送给医政
+        messageService.sendRegistAlertToHospitalAdmin(userId, userDetail.getUserName(), userDetail.getHospitalId());
 
         return succeedRequest("注册成功");
     }
@@ -209,7 +207,7 @@ public class UserController extends BaseController {
 //        UserDetail userDetail = userDetailService.getByPrimaryKey(userId);
         CurrentUserBean currentUserBean = userDetailService.selectCurrentUser(userId);
         currentUserBean.setUserPhone(userAccount.getUserPhone());
-        YqyMeetingUtils.checkToken(userAccount.getUserPhone(),currentUserBean.getUserName());
+        YqyMeetingUtils.checkToken(userAccount.getUserPhone(), currentUserBean.getUserName());
 //        redisTemplate.opsForValue().set(userId, userDetail);
         redisTemplate.opsForValue().set(userId, JSONObject.toJSONString(currentUserBean));
 
@@ -556,6 +554,8 @@ public class UserController extends BaseController {
         userSign.setApproveStatus(DoctorCertified.AUTHENTICATION_ACCEDE.toString());
         int i = userSignService.updateByPrimaryKeySelective(userSign);
         if (i > 0) {
+            //创建消息 推送给医生
+            messageService.sendRegistSuccessAlertToDoctor(userId);
             return succeedRequest("审核通过");
         }
 

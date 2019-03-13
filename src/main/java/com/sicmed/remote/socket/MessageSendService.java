@@ -18,6 +18,7 @@ public class MessageSendService {
 
     @Autowired
     private SimpMessagingTemplate template;
+
     @Autowired
     private NewMessageMapper messageMapper;
 
@@ -37,9 +38,6 @@ public class MessageSendService {
         if (userList != null && userList.size() > 0) {
             new Thread(() -> {
                 WebSocketSession webSocketSession;
-                for (Object o : userList) {
-
-                }
                 for (int i = 0; i < userList.size(); i++) {
                     String token = userList.getJSONObject(i).getString("userId");
                     webSocketSession = SocketManager.get(token);
