@@ -60,7 +60,7 @@ public class MeetingService {
         log.debug("----------------------创建视频会议开始------------------------");
         //1.创建视频会议
         Meeting meeting = new Meeting();
-        meeting.setId(applyTime.getId());
+        meeting.setId(applyTime.getApplyFormId());
         meeting.setApplyTime(applyTime);
         log.debug("----------------------调用云启云业务开始------------------------");
         //2.调用云启云视频会议 接口 创建视频会议
