@@ -83,6 +83,7 @@ public class MeetingService {
         List<Map<String, String>> mapList = JSON.parseObject(userListString, new TypeReference<List<Map<String, String>>>() {
         }, Feature.OrderedField);
         JSONArray jsonArray = new JSONArray();
+        jsonArray.add(caseConsultant.getApplyUserId());
         for (Map map : mapList) {
             jsonArray.add(map.get("doctorId"));
         }
