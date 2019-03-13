@@ -25,9 +25,39 @@ spring:
       max-wait: 60000
       time-between-eviction-runs-millis: 60000
       min-evictable-idle-time-millis: 300000
+  redis:
+    lettuce:
+      pool:
+        MaxTotal: 50
+        minIdle: 1
+        maxWaitMillis: 5000
+        maxIdle: 5
+        testOnBorrow: true
+        testOnReturn: true
+        testWhileIdle: true
+    redis-a:
+      database: 0
+      hostName: 172.21.0.6
+      port: 6379
+      password: crs-rgs3lnbs:Qlxlm123456
+      timeout: 5000
+    redis-b:
+      database: 1
+      hostName: ${spring.redis.redis-a.hostName}
+      port: ${spring.redis.redis-a.port}
+      password: ${spring.redis.redis-a.password}
+      timeout: ${spring.redis.redis-a.timeout}
+    redis-c:
+      database: 2
+      hostName: ${spring.redis.redis-a.hostName}
+      port: ${spring.redis.redis-a.port}
+      password: ${spring.redis.redis-a.password}
+      timeout: ${spring.redis.redis-a.timeout}
 #  redis:
 #    #################redis基础配置#################
-#    database: 6
+#    database: 0
+##    host: 192.168.20.100
+##    password:
 #    host: 172.21.0.6
 #    password: crs-rgs3lnbs:Qlxlm123456
 #    port: 6379
@@ -53,5 +83,5 @@ logging:
   level:
     root: debug
 img:
-  location: d:/mypicture
-#  location: /home/mypicture
+#  location: d:/mypicture
+  location: /home/mypicture
