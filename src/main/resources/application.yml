@@ -37,9 +37,11 @@ spring:
         testWhileIdle: true
     redis-a:
       database: 0
-      hostName: 172.21.0.6
+      hostName: 192.168.20.100
+      password:
+#      hostName: 172.21.0.6
+#      password: crs-rgs3lnbs:Qlxlm123456
       port: 6379
-      password: crs-rgs3lnbs:Qlxlm123456
       timeout: 5000
     redis-b:
       database: 1
@@ -53,22 +55,6 @@ spring:
       port: ${spring.redis.redis-a.port}
       password: ${spring.redis.redis-a.password}
       timeout: ${spring.redis.redis-a.timeout}
-#  redis:
-#    #################redis基础配置#################
-#    database: 0
-##    host: 192.168.20.100
-##    password:
-#    host: 172.21.0.6
-#    password: crs-rgs3lnbs:Qlxlm123456
-#    port: 6379
-#    timeout: 5000
-#    #################redis线程池设置#################
-#    jedis:
-#      pool:
-#        max-idle: 500
-#        min-idle: 50
-#        max-active: 2000
-#        max-wait: 1000
   mvc:
     static-path-pattern: /**
   resources:
@@ -83,5 +69,5 @@ logging:
   level:
     root: debug
 img:
-#  location: d:/mypicture
-  location: /home/mypicture
+  location: d:/mypicture
+#  location: /home/mypicture

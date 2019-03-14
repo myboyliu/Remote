@@ -88,7 +88,7 @@ public class MeetingService {
             jsonArray.add(map.get("doctorId"));
         }
 
-        redisTimerService.createVideoRemind(applyTime.getApplyFormId(), applyTime.getEventStartTime(), jsonArray);
+        redisTimerService.createMeetingRemind(applyTime.getApplyFormId(), applyTime.getEventStartTime(), jsonArray);
         log.debug("----------------------创建定时任务结束------------------------");
         log.debug("----------------------创建视频会议结束------------------------");
     }
@@ -131,7 +131,7 @@ public class MeetingService {
         JSONObject jsonObject = new JSONObject();
         jsonArray.add(jsonObject);
 
-        redisTimerService.createVideoRemind(applyTime.getApplyFormId(), applyTime.getEventStartTime(), jsonArray);
+        redisTimerService.createMeetingRemind(applyTime.getApplyFormId(), applyTime.getEventStartTime(), jsonArray);
 
     }
 }

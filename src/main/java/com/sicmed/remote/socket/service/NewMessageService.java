@@ -121,7 +121,7 @@ public class NewMessageService implements BaseService<NewMessage> {
         int i = 0;
         //判断如果是发给所有人
         if (Constant.MESSAGE_GRADE.equals(msg.getInviteUserId())) {
-            msg.setMsgId(id);
+            msg.setMsgId(msg.getMsgId());
             msg.setInviteUserId(userId);
             //判断如果没有记录,添一条已读标记的新消息,防止重复操作创建多条
             NewMessage newsByNews = newMessageMapper.findNewsByNews(msg);

@@ -9,6 +9,7 @@ import com.sicmed.remote.live.service.LiveService;
 import com.sicmed.remote.meeting.bean.MeetingBean;
 import com.sicmed.remote.meeting.entity.RequestMeeting;
 import com.sicmed.remote.meeting.util.YqyMeetingUtils;
+import com.sicmed.remote.task.RedisTimerService;
 import com.sicmed.remote.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,8 @@ public class LiveController extends BaseController {
 
     @Autowired
     private LiveService liveService;
+    @Autowired
+    private RedisTimerService redisTimerService;
     @Value("${img.location}")
     private String location;
 
@@ -56,6 +59,7 @@ public class LiveController extends BaseController {
         liveService.insertSelective(live);
         // TODO 调用 定时 消息 服务 live.getId(); live.getLiveStartTime();
 
+        redisTimerService.createLiveRemind(live.getId(),live.getLiveName(),live.getLiveStartTime());
         return succeedRequest(live);
     }
 
