@@ -44,7 +44,7 @@
 
     <!-- 根据id查询新消息 -->
     <select id="findMsgById" parameterType="java.lang.String" resultMap="BaseResultMap">
-        SELECT id,msg_details,read_sign,msg_title,msg_type,invite_user_id,apply_form_id
+        SELECT id,msg_id,msg_details,read_sign,msg_title,msg_type,invite_user_id,apply_form_id
         FROM new_message
         WHERE id = #{id,jdbcType=VARCHAR} AND del_flag = 0
     </select>
@@ -325,6 +325,18 @@
             #{doctorId,jdbcType=VARCHAR},
             #{item,jdbcType=VARCHAR})
         </foreach>
+    </insert>
+    <insert id="insertPushMsgByJSONObject" parameterType="com.alibaba.fastjson.JSONObject">
+        <selectKey keyProperty="id" resultType="java.lang.String"
+                   order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into new_message (id,msg_id,msg_type,msg_title)
+        values (#{cid,jdbcType=VARCHAR},
+        #{id,jdbcType=VARCHAR},
+        #{type,jdbcType=VARCHAR},
+        #{title,jdbcType=VARCHAR})
+        on DUPLICATE KEY UPDATE msg_id=#{id,jdbcType=VARCHAR},create_time = now();
     </insert>
 
     <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.socket.entity.NewMessage">

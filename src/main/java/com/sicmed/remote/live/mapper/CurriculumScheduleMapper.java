@@ -1,5 +1,6 @@
 package com.sicmed.remote.live.mapper;
 
+import com.alibaba.fastjson.JSONArray;
 import com.sicmed.remote.live.entity.CurriculumSchedule;
 
 import java.util.List;
@@ -20,5 +21,5 @@ public interface CurriculumScheduleMapper {
 
     int deleteByUser(CurriculumSchedule curriculumSchedule);
 
-    List<String> findByCurriculumId(String curriculumId);
+    JSONArray findByCurriculumId(String curriculumId);
 }

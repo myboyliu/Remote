@@ -60,7 +60,7 @@ public class MeetingService {
         log.debug("----------------------创建视频会议开始------------------------");
         //1.创建视频会议
         Meeting meeting = new Meeting();
-        meeting.setId(applyTime.getId());
+        meeting.setId(applyTime.getApplyFormId());
         meeting.setApplyTime(applyTime);
         log.debug("----------------------调用云启云业务开始------------------------");
         //2.调用云启云视频会议 接口 创建视频会议
@@ -83,11 +83,12 @@ public class MeetingService {
         List<Map<String, String>> mapList = JSON.parseObject(userListString, new TypeReference<List<Map<String, String>>>() {
         }, Feature.OrderedField);
         JSONArray jsonArray = new JSONArray();
+        jsonArray.add(caseConsultant.getApplyUserId());
         for (Map map : mapList) {
             jsonArray.add(map.get("doctorId"));
         }
 
-        redisTimerService.createVideoRemind(applyTime.getApplyFormId(), applyTime.getEventStartTime(), jsonArray);
+        redisTimerService.createMeetingRemind(applyTime.getApplyFormId(), applyTime.getEventStartTime(), jsonArray);
         log.debug("----------------------创建定时任务结束------------------------");
         log.debug("----------------------创建视频会议结束------------------------");
     }
@@ -130,7 +131,7 @@ public class MeetingService {
         JSONObject jsonObject = new JSONObject();
         jsonArray.add(jsonObject);
 
-        redisTimerService.createVideoRemind(applyTime.getApplyFormId(), applyTime.getEventStartTime(), jsonArray);
+        redisTimerService.createMeetingRemind(applyTime.getApplyFormId(), applyTime.getEventStartTime(), jsonArray);
 
     }
 }

@@ -34,4 +34,6 @@ public interface NewMessageMapper {
     String getMyMessageCount(NewMessage newMessage);
 
     int insertByJSONObject(JSONObject jsonObject);
+
+    int insertPushMsgByJSONObject(JSONObject jsonObject);
 }

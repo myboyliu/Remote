@@ -1,5 +1,6 @@
 package com.sicmed.remote.live.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.sicmed.remote.live.entity.CurriculumSchedule;
 import com.sicmed.remote.live.mapper.CurriculumScheduleMapper;
 import com.sicmed.remote.web.service.BaseService;
@@ -49,7 +50,7 @@ public class CurriculumScheduleService implements BaseService<CurriculumSchedule
      * @param curriculumId 课程ID
      * @return
      */
-    public List<String> findByCurriculumId(String curriculumId) {
+    public JSONArray findByCurriculumId(String curriculumId) {
         return curriculumScheduleMapper.findByCurriculumId(curriculumId);
     }
 

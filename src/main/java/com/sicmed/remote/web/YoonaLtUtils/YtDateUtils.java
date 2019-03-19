@@ -236,25 +236,24 @@ public class YtDateUtils {
     /**
      * 获取明日17:00:00
      */
-    public static Date getTomorrow17Points() {
-        Date date = new Date();
+    public static Date getBefor17Points(Date date) {
         List<String> l = Arrays.asList(dateToString(date).split("[-: ]"));
         int year = Integer.parseInt(l.get(0));
         int month = Integer.parseInt(l.get(1));
         int day = Integer.parseInt(l.get(2));
         Calendar calendar = Calendar.getInstance();
         calendar.clear();
-        calendar.set(year, month - 1, day + 1, 17, 0, 0);
+        calendar.set(year, month - 1, day - 1, 17, 0, 0);
         return calendar.getTime();
     }
 
     /**
      * 获取此时与明日17:00:00差的毫秒数
      */
-    public static long distance17Points() {
-        long l1 = getTomorrow17Points().getTime();
+    public static long distance17Points(Date date) {
+        long l1 = getBefor17Points(date).getTime();
         long l2 = new Date().getTime();
-        return l1 - l2;
+        return l2 - l1;
     }
 
 

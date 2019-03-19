@@ -30,10 +30,7 @@ public class MessageSendService {
         //1.获取接收用户列表
         JSONArray userList = jsonObject.getJSONArray("userList");
         //2.获取消息内容
-        StringBuffer message = new StringBuffer();
-        message.append(jsonObject.getString("prefix"));
-        message.append(jsonObject.getString("fill"));
-        message.append(jsonObject.getString("suffix"));
+        String message = jsonObject.getString("title");
         //3.发送在线消息
         if (userList != null && userList.size() > 0) {
             new Thread(() -> {
@@ -45,8 +42,8 @@ public class MessageSendService {
                         /**
                          * 主要防止broken pipe
                          */
-                        template.convertAndSendToUser(token, "/queue/sendUser", message.toString());
-                        log.debug("发送消息:" + message.toString() + "---TO:" + token + "---成功");
+                        template.convertAndSendToUser(token, "/queue/sendUser", message);
+                        log.debug("发送消息:" + message + "---TO:" + token + "---成功");
                     }
                 }
             }).start();
@@ -55,12 +52,6 @@ public class MessageSendService {
         }
         //4.添加消息记录
         messageMapper.insertSelectiveByJSONObject(jsonObject);
-        jsonObject.getString("id");
-        jsonObject.getString("type");
-        jsonObject.getString("prefix");
-        jsonObject.getString("suffix");
-        jsonObject.getString("fill");
-        jsonObject.getString("linked");
         log.debug("===============================发送消息给用户结束===========================================");
 
     }
@@ -90,12 +81,12 @@ public class MessageSendService {
     /**
      * 发送消息给所有用户
      *
-     * @param messageJson 消息内容 JSON 字符串
      */
-    public void sendTopic(String messageJson) {
-        log.debug(messageJson);
+    public void sendTopic(JSONObject jsonObject) {
+        log.debug(jsonObject.toJSONString());
         //1.发送在线消息
-        template.convertAndSend("/topic/sendTopic", messageJson);
+        template.convertAndSend("/topic/sendTopic", jsonObject.get("title"));
         //2.存储离线消息
+        messageMapper.insertPushMsgByJSONObject(jsonObject);
     }
 }

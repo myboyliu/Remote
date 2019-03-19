@@ -28,7 +28,7 @@
     </select>
     <select id="findByCurriculumId" parameterType="java.lang.String" resultType="java.lang.String">
         select
-        curriculum_id
+        create_user
         from curriculum_schedule
         where curriculum_id = #{curriculumId,jdbcType=VARCHAR}
     </select>
