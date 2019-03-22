@@ -16,7 +16,7 @@ public class SchedulingTimer {
     private MessageSendService messageSendService;
 
     // 新课程推送每周一早上8点触发
-    @Scheduled(cron = "0 40 14 * * ?")
+    @Scheduled(cron = "0 0 8 * * MON")
     public void pushMessage() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("cid", "VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");

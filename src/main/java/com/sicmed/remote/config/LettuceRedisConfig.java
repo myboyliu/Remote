@@ -21,29 +21,29 @@ import java.time.Duration;
 
 @Configuration
 public class LettuceRedisConfig {
- 
+
     @Bean
     @ConfigurationProperties(prefix = "spring.redis.lettuce.pool")
     @Scope(value = "prototype")
-    public GenericObjectPoolConfig redisPool(){
+    public GenericObjectPoolConfig redisPool() {
         return new GenericObjectPoolConfig();
     }
- 
+
     @Bean
     @ConfigurationProperties(prefix = "spring.redis.redis-a")
-    public RedisStandaloneConfiguration redisConfigA(){
+    public RedisStandaloneConfiguration redisConfigA() {
         return new RedisStandaloneConfiguration();
     }
- 
+
     @Bean
     @ConfigurationProperties(prefix = "spring.redis.redis-b")
-    public RedisStandaloneConfiguration redisConfigB(){
+    public RedisStandaloneConfiguration redisConfigB() {
         return new RedisStandaloneConfiguration();
     }
 
     @Bean
     @ConfigurationProperties(prefix = "spring.redis.redis-c")
-    public RedisStandaloneConfiguration redisConfigC(){
+    public RedisStandaloneConfiguration redisConfigC() {
         return new RedisStandaloneConfiguration();
     }
 
@@ -52,49 +52,49 @@ public class LettuceRedisConfig {
 
     @Bean
     @Primary
-    public LettuceConnectionFactory factoryA(GenericObjectPoolConfig config, RedisStandaloneConfiguration redisConfigA){
+    public LettuceConnectionFactory factoryA(GenericObjectPoolConfig config, RedisStandaloneConfiguration redisConfigA) {
         LettuceClientConfiguration clientConfiguration = LettucePoolingClientConfiguration.builder()
                 .poolConfig(config).commandTimeout(Duration.ofMillis(config.getMaxWaitMillis())).build();
         return new LettuceConnectionFactory(redisConfigA, clientConfiguration);
     }
- 
+
     @Bean
-    public LettuceConnectionFactory factoryB(GenericObjectPoolConfig config, RedisStandaloneConfiguration redisConfigB){
+    public LettuceConnectionFactory factoryB(GenericObjectPoolConfig config, RedisStandaloneConfiguration redisConfigB) {
         LettuceClientConfiguration clientConfiguration = LettucePoolingClientConfiguration.builder()
                 .poolConfig(config).commandTimeout(Duration.ofMillis(config.getMaxWaitMillis())).build();
         return new LettuceConnectionFactory(redisConfigB, clientConfiguration);
     }
- 
+
     @Bean
-    public LettuceConnectionFactory factoryC(GenericObjectPoolConfig config, RedisStandaloneConfiguration redisConfigC){
+    public LettuceConnectionFactory factoryC(GenericObjectPoolConfig config, RedisStandaloneConfiguration redisConfigC) {
         LettuceClientConfiguration clientConfiguration = LettucePoolingClientConfiguration.builder()
                 .poolConfig(config).commandTimeout(Duration.ofMillis(config.getMaxWaitMillis())).build();
         return new LettuceConnectionFactory(redisConfigC, clientConfiguration);
     }
- 
+
     @Bean
     @Primary
-    public StringRedisTemplate redisTemplateA(LettuceConnectionFactory factoryA){
+    public StringRedisTemplate redisTemplateA(LettuceConnectionFactory factoryA) {
         StringRedisTemplate template = getRedisTemplate();
         template.setConnectionFactory(factoryA);
         return template;
     }
- 
+
     @Bean
-    public StringRedisTemplate redisTemplateB(LettuceConnectionFactory factoryB){
+    public StringRedisTemplate redisTemplateB(LettuceConnectionFactory factoryB) {
         StringRedisTemplate template = getRedisTemplate();
         template.setConnectionFactory(factoryB);
         return template;
     }
- 
+
     @Bean
-    public StringRedisTemplate redisTemplateC(LettuceConnectionFactory factoryC){
+    public StringRedisTemplate redisTemplateC(LettuceConnectionFactory factoryC) {
         StringRedisTemplate template = getRedisTemplate();
         template.setConnectionFactory(factoryC);
         return template;
     }
- 
-    private StringRedisTemplate getRedisTemplate(){
+
+    private StringRedisTemplate getRedisTemplate() {
         StringRedisTemplate template = new StringRedisTemplate();
         template.setValueSerializer(new GenericFastJsonRedisSerializer());
         template.setValueSerializer(new StringRedisSerializer());
