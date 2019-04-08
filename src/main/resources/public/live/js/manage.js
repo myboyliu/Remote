@@ -38,10 +38,17 @@ function renderLiveList(liveList) {
         if (new Date().getTime() > new Date(liveList[i].liveStartTime).getTime() && new Date().getTime() < new Date(liveList[i].liveEndTime).getTime()) {
             isGoing = true;
         }
-        _html += '<li liveId="' + liveList[i].liveId + '" name="' + liveList[i].id + '" liveRoomId="' + liveList[i].liveNumber + '" class="videoItem clearfix" coverUrl="' + baseUrl + "/" + liveList[i].liveCoverUrl + '">\
+        if(liveList[i].liveCoverUrl){
+            _html += '<li liveId="' + liveList[i].liveId + '" name="' + liveList[i].id + '" liveRoomId="' + liveList[i].liveNumber + '" class="videoItem clearfix" coverUrl="' + baseUrl + "/" + liveList[i].liveCoverUrl + '">\
                             <div class="leftBox">\
                                 <div class="videoBox">\
                                     <img src="' + baseUrl + "/" + liveList[i].liveCoverUrl + '" alt="">';
+        }else {
+            _html += '<li liveId="' + liveList[i].liveId + '" name="' + liveList[i].id + '" liveRoomId="' + liveList[i].liveNumber + '" class="videoItem clearfix" coverUrl="' + baseUrl + '/images/liveDefault.png ">\
+                            <div class="leftBox">\
+                                <div class="videoBox">\
+                                    <img src="' + baseUrl + '/images/liveDefault.png " alt="">';
+        }
         if (isDone) {
             _html += '<p class="videoTime"><img src="../live/img/liveOver.png" alt=""></p>';
         }

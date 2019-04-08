@@ -101,13 +101,17 @@ function renderLiveList(liveList) {
         if (new Date().getTime() > new Date(liveList[i].liveStartTime).getTime() && new Date().getTime() < new Date(liveList[i].liveEndTime).getTime()) {
             isGoing = true;
         }
-        _html += '<div name="' + liveList[i].id + '" class="itemBox">\
-                                <img src="' + baseUrl + "/" + liveList[i].liveCoverUrl + '" alt="">\
-                                <div class="rightBox">\
-                                    <h2 class="videoTitle">' + liveList[i].liveName + '</h2>\
-                                    <p class="videoInfo">' + liveList[i].liveHospitalName + '-' + liveList[i].liveBranchName + '</p>\
-                                    <p class="lievTime">' + liveList[i].liveStartTime + '</p>\
-                                </div>'
+        _html += '<div name="' + liveList[i].id + '" class="itemBox">';
+        if( liveList[i].liveCoverUrl){
+            _html += '<img src="' + baseUrl + "/" + liveList[i].liveCoverUrl + '" alt="">'
+        }else{
+            _html += '<img src="' + baseUrl + '/images/liveDefault.png " alt="">'
+        }
+        _html += '<div class="rightBox">\
+            <h2 class="videoTitle">' + liveList[i].liveName + '</h2>\
+            <p class="videoInfo">' + liveList[i].liveHospitalName + '-' + liveList[i].liveBranchName + '</p>\
+            <p class="lievTime">' + liveList[i].liveStartTime + '</p>\
+        </div>'
         if (isGoing) {
             _html += '<a id="playBtn" liveRoomId="' + liveList[i].liveId + '" class="playBtn" href="javascript:;">播放</a>'
         } else if (liveList[i].curriculumScheduleId) {
