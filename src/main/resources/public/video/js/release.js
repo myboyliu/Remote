@@ -96,14 +96,25 @@ $(function () {
     $(".submitBtn").click(function () {
         if ($(".titleInputObj").val() == '') {
             layer.msg("请填写课程标题");
+            return false;
         } else if ($(".titleInputObj").val().length > 20) {
             layer.msg("课程标题过长");
+            return false;
+        } if ($(".textAreaObj").html() == '') {
+            layer.msg("请填写课程描述");
+            return false;
+        } else if ($(".textAreaObj").html().length > 100) {
+            layer.msg("课程描述过长");
+            return false;
         } else if ($(".deptObj").val() == '') {
             layer.msg("请选择录课科室");
+            return false;
         } else if ($(".classifyObj").val() == '') {
             layer.msg("请选择直播类型");
+            return false;
         } else if (videoInfo == null || !videoInfo.fileId) {
-            layer.msg("请等待视频上传完成")
+            layer.msg("请等待视频上传完成");
+            return false;
         } else {
             var postData = new FormData();
             postData.append("videoFileId", videoInfo.fileId);//视频id
