@@ -150,4 +150,8 @@ public class NewMessageService implements BaseService<NewMessage> {
 
         return newMessageMapper.insertByJSONObject(jsonObject);
     }
+
+    public String getUnReadMsgCount(String requestToken) {
+        return newMessageMapper.getUnReadMsgCount(requestToken);
+    }
 }

@@ -36,4 +36,6 @@ public interface NewMessageMapper {
     int insertByJSONObject(JSONObject jsonObject);
 
     int insertPushMsgByJSONObject(JSONObject jsonObject);
+
+    String getUnReadMsgCount(String requestToken);
 }

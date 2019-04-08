@@ -249,7 +249,8 @@ const cancelSubscriptionUrl = "/curriculum/schedule/delete";                 //�
 
 
 /** 系统消息 接口　*/
-const getMyMessageCountUrl = "/message/getMyMessageCount";                 //取消关注接口
+const getUnReadMsgCountUrl = "/message/getUnReadMsgCount";                 //查询未读消息数量接口
+const getMyMessageCountUrl = "/message/getMyMessageCount";                 //查询所有消息数量接口
 const findMyMessageUrl = "/message/findMyMessage";                 //取消关注接口
 const lookGroupMessageUrl = "/message/lookGroupMessage";                 //取消关注接口
 

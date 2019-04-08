@@ -58,14 +58,21 @@ public class NewMessageController extends BaseController {
     }
 
     /**
-     * 查询我的消息数量
+     * 查询所有消息数量
      */
     @GetMapping(value = "getMyMessageCount")
     public Object getMyMessageCount() {
         String messageCount = newMessageService.getMyMessageCount(getRequestToken());
         return succeedRequest(messageCount);
     }
-
+    /**
+     * 查询未读消息数量
+     */
+    @GetMapping(value = "getUnReadMsgCount")
+    public Object getUnReadMsgCount() {
+        String messageCount = newMessageService.getUnReadMsgCount(getRequestToken());
+        return succeedRequest(messageCount);
+    }
     /**
      * 读取未读消息(修改成已读,如果是公共消息,需要重新创建一条个人的已读消息)
      *

@@ -1,5 +1,10 @@
 ﻿let stompClient = null;
 
+/**
+ *
+ * socket 连接服务
+ * @param token
+ */
 function connectServer(token) {
     //地址+端点路径，构建websocket链接地址,注意，对应config配置里的addEndpoint
     let socket = new SockJS(baseUrl + "/myUrl?token=" + token);
@@ -8,6 +13,7 @@ function connectServer(token) {
         //监听的路径以及回调
         stompClient.subscribe('/user/queue/sendUser', function (response) {
             console.log("个人信息");
+            $('.topInfoArea .news').addClass('newNews');
             layer.msg(response.body, {
                 offset: 't',
                 anim: 6
@@ -16,6 +22,7 @@ function connectServer(token) {
         //监听的路径以及回调
         stompClient.subscribe('/topic/sendTopic', function (response) {
             console.log("公告消息");
+            $('.topInfoArea .news').addClass('newNews');
             layer.msg(response.body, {
                 offset: 't',
                 anim: 6
@@ -70,7 +77,12 @@ function double(num) {
     var str = Number(num) < 10 ? '0' + num : '' + num;
     return str;
 }
-
+function renderMsgIcon(msgCount){
+    console.log("未读消息数量" + msgCount)
+    if(msgCount > 0){
+        $('.topInfoArea .news').addClass('newNews');
+    }
+}
 // nav
 $(function () {
     if (!localStorage.getItem('token')) {
@@ -128,6 +140,8 @@ $(function () {
             window.location = '../page/seek.html';
         }
     });
-
     connectServer(localStorage.getItem('token'));
+
+    //未读消息数量查询
+    ajaxRequest("GET", getUnReadMsgCountUrl, "", false, false, true, renderMsgIcon, null, null);
 });
