@@ -362,6 +362,7 @@
             AND vod.del_flag = '0'
             AND vod.trans_code = '1'
         </where>
+        limit #{beginNo,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}
     </select>
 
 
@@ -404,6 +405,7 @@
             vod.playback DESC,
         </if>
         vod.del_flag
+        limit #{beginNo,jdbcType=VARCHAR}, #{pageSize,jdbcType=VARCHAR}
     </select>
     <update id="addClickCount" parameterType="java.lang.String">
         update video_on_demand

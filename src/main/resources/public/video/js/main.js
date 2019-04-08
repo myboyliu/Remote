@@ -89,7 +89,7 @@ let groupRule = {
 }
 
 // 获取列表数据
-function getListData(pageNo) {
+function getListData() {
 
     let typeName = $(".classifyObj > a.active").attr("name");
     let groupBy = $(".sortObj > a.active").attr("name");
@@ -105,6 +105,7 @@ function getListData(pageNo) {
 }
 
 function getVideoListCountSuccess(videoListCount) {
+    pageSize = 6;
     if (videoListCount === 0) {
         let _html = '<p style="text-align: center;margin-top: 30px;">暂无数据</p>';
         $(".listContent").html(_html);
@@ -144,7 +145,7 @@ function getVideoListCountSuccess(videoListCount) {
 }
 
 // 获取搜索结果总条数，渲染分页器
-function getSearchCount(typeName, pageNo) {
+function getSearchCount(typeName) {
     let requestData = {param: $(".videoSearchInput").val()};
     ajaxRequest("GET", fuzzySearchVideoListCount, requestData, true, "application/json", true, getSearchCountSuccess, null, null);
 }
@@ -152,9 +153,10 @@ function getSearchCount(typeName, pageNo) {
 $(function () {
     // 筛选部分
     $(".classifyObj").delegate("a", "click", function () {
+        pageNo = 1;
         $(".videoSearchInput").val("");
         $(this).addClass("active").siblings("a").removeClass("active");
-        getListData($(".classifyObj > a.active").attr("name"), $(".sortObj > a.active").attr("name"), pageNo);
+        getListData();
     });
     // 最新 关注度 搜索
     $(".sortObj").delegate("a", "click", function () {
@@ -169,13 +171,14 @@ $(function () {
 
     // 搜索回车确定事件
     $('.videoSearchInput').keydown(function (event) {
+
         if (event.keyCode == 13) {
             // 处理筛选选项
             $(".classifyObj > a").removeClass("active").eq(0).addClass("active");
             $(".sortObj > a").removeClass("active").eq(0).addClass("active");
-            page = 1;
+            pageNo = 1;
             // 调用搜索接口
-            getSearchCount($(".sortObj a.active").html(), page);
+            getSearchCount($(".sortObj a.active").html());
         }
     });
     let player;
