@@ -852,7 +852,7 @@ public class ApplyDisposeController extends BaseController {
         String msg1 = "受邀医生待收诊拒收,form修改失败";
         String msg2 = "受邀医生待收诊拒收,time修改失败";
         ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
-        applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已拒收.toString(), applyForm.getApplySummary());
+        applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已拒收.toString(), applyForm.getInviteSummary());
         return updateStatus(applyFormId, null, applyStatus, msg1, msg2, refuseRemark);
     }
 
