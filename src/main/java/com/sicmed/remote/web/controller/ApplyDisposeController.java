@@ -63,6 +63,7 @@ public class ApplyDisposeController extends BaseController {
 
     @Autowired
     private MeetingService meetingService;
+
     /**
      * 医政 工作台 重新分配医生
      */
@@ -321,7 +322,7 @@ public class ApplyDisposeController extends BaseController {
         applyTime.setUpdateUser(userId);
         applyTimeService.updateStatus(applyTime);
 
-        if(applyType.equals(String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO))){
+        if (applyType.equals(String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO))) {
             meetingService.createMeeting(applyFormId);
         }
 
@@ -383,7 +384,7 @@ public class ApplyDisposeController extends BaseController {
         applyTime.setUpdateUser(userId);
         applyTimeService.updateStatus(applyTime);
 
-        if(applyType.equals(String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO))){
+        if (applyType.equals(String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO))) {
             meetingService.createMeeting(applyFormId);
         }
 
@@ -863,7 +864,7 @@ public class ApplyDisposeController extends BaseController {
     public Map doctorTransDateCheck(String applyFormId, String inquiryDatetime) {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_SLAVE_ACCEDE);
         ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
-        applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已接诊.toString(), applyForm.getApplySummary());
+        applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已接诊.toString(), applyForm.getInviteSummary());
         return transferDateSure(applyFormId, applyStatus, inquiryDatetime);
     }
 
@@ -875,7 +876,7 @@ public class ApplyDisposeController extends BaseController {
     public Map doctorTransDateSure(String applyFormId, String inquiryDatetime) {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED);
         ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
-        applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已排期.toString(), applyForm.getApplySummary());
+        applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已排期.toString(), applyForm.getInviteSummary());
         return transferDateSure(applyFormId, applyStatus, inquiryDatetime);
     }
 
