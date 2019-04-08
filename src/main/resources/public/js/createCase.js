@@ -223,7 +223,7 @@ function updateDraftCaseData(successCallBack) {
     data.append("detailAddress", $('#address').val());
     //病历信息
     data.append("caseRecordId", caseRecordId);
-    data.append("patientAge", $('#age').val());// + $('.choiceAge').val()
+    data.append("patientAge", patientAge);// + $('.choiceAge').val()
     data.append("patientSex", patientSex);
     data.append("patientHeight", $('#high').val());
     data.append("patientWeight", Number($('#weight').val()) * 1000);
