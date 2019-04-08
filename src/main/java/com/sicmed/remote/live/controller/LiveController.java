@@ -53,7 +53,9 @@ public class LiveController extends BaseController {
         requestMeeting.setLive(live);
 
         MeetingBean meetingBean = YqyMeetingUtils.createMeeting(requestMeeting);
-
+        if (null == meetingBean){
+            return badRequestOfArguments("创建直播失败");
+        }
         live.setMeetingBean(meetingBean);
 
         liveService.insertSelective(live);

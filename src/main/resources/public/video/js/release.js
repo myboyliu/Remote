@@ -144,7 +144,7 @@ $(function () {
         });
         layer.closeAll();
         $(".optionContent").hide();
-        window.location = '/yilaiyiwang/premierCourseRelease/release.html'
+        window.location = '../video/release.html'
     })
     $(".optionContent").find(".noBtn").click(function () {
         layer.closeAll();

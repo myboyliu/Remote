@@ -101,7 +101,7 @@ $(function () {
             postData.append("liveStart", $(".liveStart").is(':checked'));//开启直播
 
             function addLiveSuccess(result) {
-                console.log(result);
+                $("#createMsg").html("发布成功");
                 layer.open({
                     type: 1,
                     title: '',
@@ -118,7 +118,19 @@ $(function () {
                 }, 2000)
             }
 
-            ajaxRequest("POST", createLive, postData, false, false, true, addLiveSuccess, null, null);
+            function createLiceFailed(){
+                $("#createMsg").html("发布失败");
+                layer.open({
+                    type: 1,
+                    title: '',
+                    area: ['340px', '200px'],
+                    closeBtn: false,
+                    shadeClose: false,
+                    time: 2000,
+                    content: $('.hintContent'),
+                });
+            }
+            ajaxRequest("POST", createLive, postData, false, false, true, addLiveSuccess, createLiceFailed, null);
             return false;
         }
     })
