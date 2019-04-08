@@ -694,7 +694,6 @@ $(function () {
 
 
     $("#entryConsultationRoomBtn").click(function () {
-        console.log("111");
         let meetInfo = JSON.parse(applyInfo.meetJson);
         //新窗口打开直播页面
         let userInfo = JSON.parse(localStorage.getItem("userInfo"));

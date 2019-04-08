@@ -541,8 +541,10 @@ $(function () {
         } else {
             data.append('inviteHospitalId', hospitalInfo.id);
             data.append('inviteBranchId', hospitalInfo.branchId);
+            data.append('inviteUserId', "");
             data.append("inviteSummary", "<" + hospitalInfo.hospitalName + ">");
-
+            data.append("consultantReport", "");
+            data.append('consultantUserList',"");
             if (isVideo) {
                 price = Number(hospitalInfo.hospitalVideoPrice)
                 data.append('hospitalPrice', hospitalInfo.hospitalVideoPrice); // 医院图文基本价格
