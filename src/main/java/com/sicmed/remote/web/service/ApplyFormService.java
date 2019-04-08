@@ -3,10 +3,7 @@ package com.sicmed.remote.web.service;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
-import com.sicmed.remote.web.bean.ApplyFormBean;
-import com.sicmed.remote.web.bean.ConsultationStatusBean;
-import com.sicmed.remote.web.bean.InquiryStatusBean;
-import com.sicmed.remote.web.bean.StatisticsSearchBean;
+import com.sicmed.remote.web.bean.*;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.CaseRecord;
 import com.sicmed.remote.web.mapper.ApplyFormMapper;
@@ -289,5 +286,9 @@ public class ApplyFormService implements BaseService<ApplyForm> {
 
     public int updateInviteDoctorByPrimaryKeySelective(ApplyForm applyForm) {
         return applyFormMapper.updateInviteDoctorByPrimaryKeySelective(applyForm);
+    }
+
+    public List<String> selectTimeByParam(ScheduledParam scheduledParam) {
+        return applyFormMapper.selectTimeByParam(scheduledParam);
     }
 }

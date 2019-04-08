@@ -143,16 +143,28 @@ public class CustomBranchController extends BaseController {
 
     @GetMapping(value = "getLocalHospitalBranch")
     public Object getLocalHospitalBranch() {
-
-
         List<CustomBranch> customBranchList = customBranchService.selectByHosId(getCurrentUser().getHospitalId());
 
         return succeedRequestOfSelect(customBranchList);
     }
 
+    /**
+     *  查询 当前登陆用户所属医院二级联动科室列表
+     *
+     *  select Tow-level linkage branch list by current login user hospital
+     *
+     * @return
+     */
+    @GetMapping(value = "getTwoLevelLinkageBranch")
+    public Object getTwoLevelLinkageBranch() {
+        List<BranchBean> twoLevelLinkageBranchList = customBranchService.selectTwoLevelLinkageBranch(getCurrentUser().getHospitalId());
+
+        return succeedRequestOfSelect(twoLevelLinkageBranchList);
+    }
+
 
     /**
-     * 查询所有专家类型列表
+     *
      *
      * @return
      */

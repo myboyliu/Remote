@@ -4,6 +4,7 @@ import com.sicmed.remote.live.bean.FuzzySearchLiveBean;
 import com.sicmed.remote.live.bean.GetLiveParamBean;
 import com.sicmed.remote.live.entity.Live;
 import com.sicmed.remote.live.mapper.LiveMapper;
+import com.sicmed.remote.web.bean.ScheduledParam;
 import com.sicmed.remote.web.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,5 +78,13 @@ public class LiveService implements BaseService<Live> {
 
     public int lessSubscriptionNumber(String curriculumId) {
         return liveMapper.lessSubscriptionNumber(curriculumId);
+    }
+
+    public List<String> selectTimeByParam(ScheduledParam scheduledParam) {
+        return liveMapper.selectTimeByParam(scheduledParam);
+    }
+
+    public List<String> selectScheduledByParam(ScheduledParam scheduledParam) {
+        return liveMapper.selectScheduledByParam(scheduledParam);
     }
 }

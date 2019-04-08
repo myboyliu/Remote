@@ -38,4 +38,6 @@ public interface CustomBranchMapper {
     List<HospitalBean> getMasterHospitalBranchList(Hospital hospital);
 
     List<CustomBranch> selectByHosId(String hospitalId);
+
+    List<BranchBean> selectTwoLevelLinkageBranch(String hospitalId);
 }

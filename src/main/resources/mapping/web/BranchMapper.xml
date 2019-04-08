@@ -291,7 +291,15 @@
             </if>
         </where>
     </select>
-
+    <select id="getFirstList" parameterType="com.sicmed.remote.web.entity.Branch" resultMap="BaseResultMap">
+        select
+        id, branch_name
+        from base_branch
+        <where>
+            del_flag = "0"
+            AND parent_id is null
+        </where>
+    </select>
     <select id="getSecondList" parameterType="com.sicmed.remote.web.entity.Branch" resultMap="BaseResultMap">
         select
         id, branch_name

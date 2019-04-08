@@ -3,6 +3,7 @@ package com.sicmed.remote.live.mapper;
 import com.sicmed.remote.live.bean.FuzzySearchLiveBean;
 import com.sicmed.remote.live.bean.GetLiveParamBean;
 import com.sicmed.remote.live.entity.Live;
+import com.sicmed.remote.web.bean.ScheduledParam;
 
 import java.util.List;
 
@@ -36,4 +37,8 @@ public interface LiveMapper {
     int addSubscriptionNumber(String curriculumId);
 
     int lessSubscriptionNumber(String curriculumId);
+
+    List<String> selectTimeByParam(ScheduledParam scheduledParam);
+
+    List<String> selectScheduledByParam(ScheduledParam scheduledParam);
 }

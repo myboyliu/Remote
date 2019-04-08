@@ -107,6 +107,12 @@
             <artifactId>tencentcloud-sdk-java</artifactId>
             <version>3.0.51</version>
         </dependency>
+        <!-- DICOM -->
+        <!--<dependency>-->
+            <!--<groupId>org.dcm4che</groupId>-->
+            <!--<artifactId>dcm4che-core</artifactId>-->
+            <!--<version>5.14.0</version>-->
+        <!--</dependency>-->
     </dependencies>
 
 
@@ -129,6 +135,24 @@
                 </configuration>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <excludes>
+                    <exclude>com/sicmed/remote/dicom/*.java</exclude>
+                    <exclude>com/sicmed/remote/dicom/entity/*.java</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!--打包时排除哪些内容-->
+                <!--<excludes>-->
+                    <!--<exclude>public/**</exclude>-->
+                    <!--<exclude>static/**</exclude>-->
+                <!--</excludes>-->
+            </resource>
+        </resources>
     </build>
 
 

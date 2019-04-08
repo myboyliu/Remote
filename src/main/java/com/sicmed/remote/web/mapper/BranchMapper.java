@@ -24,4 +24,6 @@ public interface BranchMapper {
     List<BranchBean> findMultilevelListByDynamicParam(Branch branch);
 
     List<Branch> getSecondList();
+
+    List<Branch> getFirstList();
 }

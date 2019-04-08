@@ -34,7 +34,7 @@ function renderDateRightContent() {
 function redrawDate(dateTempList) {
     let markJson = {};
     for (let i = 0; i < dateTempList.length; i++) {
-        markJson[dateTempList[i].date] = ''
+        markJson[dateTempList[i].date] = 'ssss'
     }
     // 渲染日历控件
     $('#timeBox').html('');

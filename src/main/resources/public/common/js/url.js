@@ -16,6 +16,7 @@ const modifyPersonalInfo = "/user/modifyPersonal";                              
  * 基础数据接口
  */
 const getLocalHospitalBranchUrl = "/custom/branch/getLocalHospitalBranch"       //查询本院二级科室列表
+const getTwoLevelLinkageBranchUrl = "/custom/branch/getTwoLevelLinkageBranch"   //查询本院两级联动科室列表
 /** 医政 管理中心接口 */
 const managementUpdateUser = "/user/managementUpdateUser";                      //医政修改医生信息
 
@@ -56,6 +57,8 @@ const getBranchListByCurrentUserUrl = "/custom/branch/getByCurrentUser";        
 const updateCustomBranchListUrl = "/custom/branch/update";                      //根据当前登陆的医政用户修改医院信息
 
 const getBranchListByParentIdUrl = "/branch/findByParam";                       //根据父级科室ID查询科室列表
+
+const getFirstListList = "/branch/getFirstList";                                //查询所有系统一级科室列表
 
 const getSecondBranchList = "/branch/getSecondList";                            //查询所有系统二级科室列表
 
@@ -250,4 +253,8 @@ const getMyMessageCountUrl = "/message/getMyMessageCount";                 //取
 const findMyMessageUrl = "/message/findMyMessage";                 //取消关注接口
 const lookGroupMessageUrl = "/message/lookGroupMessage";                 //取消关注接口
 
+/**
+ * 科室日历
+ */
 
+const findSchedulingUrl = "/worksheet/findScheduling"

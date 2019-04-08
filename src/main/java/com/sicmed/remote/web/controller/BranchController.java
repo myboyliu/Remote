@@ -150,4 +150,18 @@ public class BranchController extends BaseController {
 
         return succeedRequestOfSelect(branchList);
     }
+
+
+    /**
+     * 查询所有二级科室列表
+     *
+     * @return
+     */
+    @GetMapping(value = "getFirstList")
+    public Object getFirstList() {
+
+        List<Branch> branchList = branchService.getFirstList();
+
+        return succeedRequestOfSelect(branchList);
+    }
 }

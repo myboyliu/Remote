@@ -21,6 +21,7 @@
         </layout>
     </appender>
 
+
     <!-- test 测试环境 输出到文件 info-->
     <appender name="INFO_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!--如果只是想要 Info 级别的日志，只是过滤 info 还是会输出 Error 日志，因为 Error 的级别高，
@@ -95,7 +96,7 @@
     </springProfile>
 
 
-    <root level="INFO">
+    <root level="ERROR">
         <!--<appender-ref ref="SQL_CONSOLE_LOG"/>-->
         <!--<appender-ref ref="fileInfoLog"/>-->
         <!--<appender-ref ref="fileErrorLog"/>-->

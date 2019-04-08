@@ -365,4 +365,13 @@
         AND hospital_id = #{hospitalId,jdbcType=VARCHAR}
     </select>
 
+    <select id="selectTwoLevelLinkageBranch" parameterType="java.lang.String"
+            resultMap="BeanResultMap">
+        select
+        <include refid="Bean_Column_List"/>
+        from base_branch baseBranch
+        <include refid="Bean_Left_Join"/>
+        WHERE
+        baseBranch.parent_id is NULL
+    </select>
 </mapper>

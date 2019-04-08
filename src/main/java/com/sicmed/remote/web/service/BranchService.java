@@ -56,4 +56,8 @@ public class BranchService implements BaseService<Branch> {
     public List<Branch> getSecondList() {
        return branchMapper.getSecondList();
     }
+
+    public List<Branch> getFirstList() {
+        return branchMapper.getFirstList();
+    }
 }

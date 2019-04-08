@@ -39,8 +39,6 @@ spring:
       database: 0
       hostName: 192.168.20.100
       password:
-#      hostName: 172.21.0.6
-#      password: crs-rgs3lnbs:Qlxlm123456
       port: 6379
       timeout: 5000
     redis-b:
@@ -71,3 +69,7 @@ logging:
 img:
   location: d:/mypicture
 #  location: /home/mypicture
+#static:
+#  resource: /root/web
+#  windows:
+#  linux: /root/web

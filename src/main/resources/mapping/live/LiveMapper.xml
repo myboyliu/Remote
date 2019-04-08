@@ -466,4 +466,30 @@
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
+    <select id="selectTimeByParam" parameterType="com.sicmed.remote.web.bean.ScheduledParam" resultType="java.lang.String">
+        select
+        DATE_FORMAT(live_start_time,'%Y-%m-%d')
+        from _live
+        <where>
+            del_flag = '0'
+            AND live_branch = #{branchId,jdbcType=VARCHAR}
+            AND live_hospital = #{hospitalId,jdbcType=VARCHAR}
+            AND DATE_FORMAT(live_start_time,'%Y-%m') = #{date,jdbcType=VARCHAR}
+        </where>
+        group by  DATE_FORMAT(live_start_time,'%Y-%m-%d')
+    </select>
+    <select id="selectScheduledByParam" parameterType="com.sicmed.remote.web.bean.ScheduledParam" resultType="java.lang.String">
+        select
+        id, live_id, live_name, live_number, live_cover_url, live_description, live_start_time,
+        live_end_time, live_branch,live_hospital, live_password, live_type, live_period, live_url, live_scope,
+        live_user, live_mute, live_record, live_start, live_json,subscription_number, create_user, create_time,
+        update_user, update_time, delete_user, delete_time, del_flag
+        from _live
+        <where>
+            del_flag = '0'
+            AND live_branch = #{branchId,jdbcType=VARCHAR}
+            AND live_hospital = #{hospitalId,jdbcType=VARCHAR}
+            AND DATE_FORMAT(live_start_time,'%Y-%m-%d') = #{date,jdbcType=VARCHAR}
+        </where>
+    </select>
 </mapper>

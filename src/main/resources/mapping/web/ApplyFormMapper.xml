@@ -1248,5 +1248,20 @@
         </if>
         group by dates
     </select>
+    <select id="selectTimeByParam" parameterType="com.sicmed.remote.web.bean.ScheduledParam" resultType="java.lang.String">
+        select
+        DATE_FORMAT(applyTime.event_start_time,'%Y-%m-%d')
+        from apply_form applyForm
+        LEFT JOIN apply_time applyTime ON applyTime.apply_form_id = applyForm.id AND applyTime.del_flag = '0'
+        <where>
+            applyForm.del_flag = '0'
+            AND (applyForm.apply_branch_id = #{branchId,jdbcType=VARCHAR}
+            OR applyForm.invite_branch_id = #{branchId,jdbcType=VARCHAR})
+            AND (applyForm.apply_hospital_id = #{hospitalId,jdbcType=VARCHAR}
+            OR applyForm.invite_hospital_id = #{hospitalId,jdbcType=VARCHAR})
+            AND DATE_FORMAT(applyTime.event_start_time,'%Y-%m') = #{date,jdbcType=VARCHAR}
+        </where>
+        group by  DATE_FORMAT(applyTime.event_start_time,'%Y-%m-%d')
+    </select>
 </mapper>
 

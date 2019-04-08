@@ -71,4 +71,9 @@ public class CustomBranchService implements BaseService<CustomBranch> {
     public List<CustomBranch> selectByHosId(String hospitalId) {
         return customBranchMapper.selectByHosId(hospitalId);
     }
+
+    public List<BranchBean> selectTwoLevelLinkageBranch(String hospitalId) {
+
+        return customBranchMapper.selectTwoLevelLinkageBranch(hospitalId);
+    }
 }
