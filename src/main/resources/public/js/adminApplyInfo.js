@@ -54,7 +54,9 @@ function renderApplyMasterConsultationView(applyStatus) {
         $(".progressBar li:nth-child(1)").addClass("libg");
         $(".progressBar li:nth-child(2)").addClass("libg");
         $(".progressBar li:nth-child(3)").addClass("libg");
-
+        if (isVideo) {
+            $("#entryConsultationRoomBtn").show();
+        }
     } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
         //待反馈
         $(".progressBar li:nth-child(1)").addClass("libg");
@@ -699,9 +701,10 @@ $(function () {
     });
 
     $("#entryConsultationRoomBtn").click(function () {
-        console.log("111");
         let meetInfo = JSON.parse(applyInfo.meetJson);
-       console.log(meetInfo);
+        //新窗口打开直播页面
+        let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        window.open(baseUrl + "/#/webrtc/" + userInfo.userPhone + "/" + meetInfo.appointmentNumber + "/" + meetInfo.hostPwd + "/" + userInfo.userName, "_blank");
     })
     renderViewByRole(applyStatus);
 });

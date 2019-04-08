@@ -739,7 +739,26 @@ $(function () {
     //
     //     }
     // });
-    // //  校验身份证号
+    //  校验身份证号
+    $('#idCard').blur(function () {
+        // 账号的验证 手机号验证
+        if ($('#idCard').val().length === 0) {
+            layer.msg('身份证号不能为空');
+        } else if (!RegExpObj.Reg_IDCardNo.test($('#idCard').val())) {
+            layer.msg('输入内容格式有误，请修改');
+        } else {
+            discriCard($(this).val());
+            $('#age').val(idCardInfo.age);
+            $('.choiceAge').val(idCardInfo.unit);
+            // $('#address').val(idCardInfo.city);
+            //获取性别
+            if (idCardInfo.sex % 2 == 1) {
+                $('#man').addClass('active').siblings('a').removeClass('active');
+            } else {
+                $('#woman').addClass('active').siblings('a').removeClass('active');
+            }
+        }
+    });
     // $('#idCard').blur(function () {
     //     // 账号的验证 手机号验证
     //     if ($('#idCard').val().length === 0) {
