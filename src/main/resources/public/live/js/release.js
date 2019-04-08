@@ -69,8 +69,6 @@ $(function () {
 
     // 发布按钮
     $(".submitBtn").click(function () {
-        console.log(1111)
-        console.log($(".liveMute").val())
         if ($(".titleInputObj").val() == '') {
             layer.msg("请填写直播标题");
         } else if ($(".titleInputObj").val().length > 20) {
@@ -98,9 +96,10 @@ $(function () {
             postData.append("liveType", $(".classifyObj").val());//直播分类
             postData.append("liveScope", $(".liveScopeObj").val());//发布范围
             postData.append("file", $(".coverInput")[0].files[0]);//封面图片
-            postData.append("liveMute", $(".liveMute").val());//静音
-            postData.append("liveRecord", $(".liveRecord").val());//自动录制
-            postData.append("liveStart", $(".liveStart").val());//开启直播
+            postData.append("liveMute", $(".liveMute").is(':checked'));//静音
+            postData.append("liveRecord", $(".liveRecord").is(':checked'));//自动录制
+            postData.append("liveStart", $(".liveStart").is(':checked'));//开启直播
+
             function addLiveSuccess(result) {
                 console.log(result);
                 layer.open({
