@@ -29,6 +29,8 @@
 </head>
 
 <body>
+<!--<input style="display: none;" type="text" name="h">-->
+<!--<input style="height: 0px;" type="password" name="h">-->
 <div class="header">
     <div class="infoArea clearfix">
         <h1 class="logo">
@@ -50,6 +52,7 @@
                 </ul>
             </div>
             <a class="news" href="../page/newInformation.html">新信息</a>
+
             <div class="searchBox"><input class="searchInput" type="text" placeholder="请在这里搜索已结束的订单">
                 <img class="searchBtn" src="../images/search.png" alt="">
             </div>
@@ -137,7 +140,7 @@
             </div>
             <div>
                 <p style="padding-top: 0">旧密码</p>
-                <input maxlength="16" type="password" value="" class="oldPassword">
+                <input maxlength="16" type="password" class="oldPassword"  autocomplete='new-password' >
                 <p>
                     <span>新密码</span>
                     <span class="cPasswold">确认新密码</span>

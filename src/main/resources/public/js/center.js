@@ -8,6 +8,8 @@ let userCaseTypeIsModify = false;
 let _$ = layui.jquery;
 
 function renderUserInfo() {
+
+
     $('.name').val(userInfo.userName);
     $('.userName').val(userInfo.userPhone);
     $('.rolesName').val(userInfo.rolesName);
@@ -271,3 +273,7 @@ $(function () {
     })
 
 });
+$().ready(function(){
+    $('.searchInput').val("");
+    $('.password').val("");
+})
