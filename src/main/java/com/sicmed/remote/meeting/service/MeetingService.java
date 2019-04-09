@@ -5,15 +5,20 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
+import com.sicmed.remote.meeting.bean.MasterDoctorBean;
 import com.sicmed.remote.meeting.bean.MeetingBean;
 import com.sicmed.remote.meeting.entity.Meeting;
 import com.sicmed.remote.meeting.entity.RequestMeeting;
 import com.sicmed.remote.meeting.mapper.MeetingMapper;
 import com.sicmed.remote.meeting.util.YqyMeetingUtils;
 import com.sicmed.remote.task.RedisTimerService;
+import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.ApplyTime;
 import com.sicmed.remote.web.entity.CaseConsultant;
+import com.sicmed.remote.web.entity.UserDetail;
+import com.sicmed.remote.web.mapper.ApplyFormMapper;
 import com.sicmed.remote.web.mapper.ApplyTimeMapper;
+import com.sicmed.remote.web.mapper.UserDetailMapper;
 import com.sicmed.remote.web.service.CaseConsultantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +39,14 @@ public class MeetingService {
     private ApplyTimeMapper applyTimeMapper;
 
     @Autowired
+    private ApplyFormMapper applyFormMapper;
+
+    @Autowired
     private RedisTimerService redisTimerService;
 
     @Autowired
     private CaseConsultantService caseConsultantService;
+
 
     /**
      * 根据 视频会诊ID 创建 会议
@@ -58,6 +67,10 @@ public class MeetingService {
      */
     public void createMeeting(ApplyTime applyTime){
         log.debug("----------------------创建视频会议开始------------------------");
+
+        //查询 主会诊医生信息
+        MasterDoctorBean masterDoctorBean = applyFormMapper.getMasterDoctorById(applyTime.getApplyFormId());
+
         //1.创建视频会议
         Meeting meeting = new Meeting();
         meeting.setId(applyTime.getApplyFormId());
@@ -66,7 +79,9 @@ public class MeetingService {
         //2.调用云启云视频会议 接口 创建视频会议
         RequestMeeting requestMeeting = new RequestMeeting();
         requestMeeting.setMeetingInfo(meeting);
-
+        log.debug(masterDoctorBean.toString());
+        requestMeeting.setMobile(masterDoctorBean.getDoctorPhone());
+        requestMeeting.setRealName(masterDoctorBean.getDoctorName());
         MeetingBean meetingBean = YqyMeetingUtils.createMeeting(requestMeeting);
         if(meetingBean == null){
             int i = 1/0;

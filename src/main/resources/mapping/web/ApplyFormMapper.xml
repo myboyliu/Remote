@@ -1263,5 +1263,16 @@
         </where>
         group by  DATE_FORMAT(applyTime.event_start_time,'%Y-%m-%d')
     </select>
+    <select id="getMasterDoctorById" parameterType="java.lang.String" resultType="com.sicmed.remote.meeting.bean.MasterDoctorBean">
+        select
+        userDetail.user_name doctorName,
+        userAccount.user_phone doctorPhone
+        from apply_form applyForm
+        LEFT JOIN user_detail userDetail ON userDetail.id = applyForm.invite_user_id
+        LEFT JOIN user_account userAccount ON userAccount.id = userDetail.id
+        <where>
+            applyForm.id = #{id,jdbcType=VARCHAR}
+        </where>
+    </select>
 </mapper>
 

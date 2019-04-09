@@ -1,7 +1,9 @@
 package com.sicmed.remote.web.mapper;
 
+import com.sicmed.remote.meeting.bean.MasterDoctorBean;
 import com.sicmed.remote.web.bean.*;
 import com.sicmed.remote.web.entity.ApplyForm;
+import com.sicmed.remote.web.entity.UserDetail;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -73,4 +75,6 @@ public interface ApplyFormMapper {
     List<StatisticsSearchBean> advancedConsultationStatistics(StatisticsSearchBean statisticsSearchBean);
 
     List<String> selectTimeByParam(ScheduledParam scheduledParam);
+
+    MasterDoctorBean getMasterDoctorById(String applyFormId);
 }
