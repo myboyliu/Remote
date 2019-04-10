@@ -1,5 +1,5 @@
 ﻿let stompClient = null;
-
+const currentDate = new   Date();
 /**
  *
  * socket 连接服务

@@ -54,7 +54,8 @@ function renderApplyMasterConsultationView(applyStatus) {
         $(".progressBar li:nth-child(1)").addClass("libg");
         $(".progressBar li:nth-child(2)").addClass("libg");
         $(".progressBar li:nth-child(3)").addClass("libg");
-        if (isVideo) {
+        let  endDate = new  Date(Date.parse(applyTimeList[0].eventEndTime .replace(/-/g,"/")));
+        if (isVideo  && endDate > currentDate) {
             $("#entryConsultationRoomBtn").show();
         }
     } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
@@ -190,7 +191,8 @@ function renderInviteyMasterConsultationView(applyStatus) {
         $(".progressBar li:nth-child(3)").addClass("libg");
         $(".modifier2").show();
         $("#refuseConsultationBtn").show();
-        if (isVideo) {
+        let  endDate = new  Date(Date.parse(applyTimeList[0].eventEndTime .replace(/-/g,"/")));
+        if (isVideo && endDate > currentDate) {
             $("#entryConsultationRoomBtn").show();
         }
     } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {

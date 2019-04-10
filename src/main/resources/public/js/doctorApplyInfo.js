@@ -332,8 +332,12 @@ function renderViewByRole() {
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".compileReport").show();
-            if (isVideo) {
-                $(".entrance").show();
+            let  endDate = new  Date(Date.parse(applyTimeList[0].eventEndTime .replace(/-/g,"/")));
+            if (isMainDoctor && endDate > currentDate) {
+                    $("#meetingControlBtn").show();
+            }
+            if (isVideo && endDate > currentDate) {
+                    $(".entrance").show();
             }
         } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
             //待反馈
@@ -700,4 +704,29 @@ $(function () {
         window.open(baseUrl + "/#/webrtc/" + userInfo.userPhone + "/" + meetInfo.appointmentNumber + "/" + meetInfo.hostPwd + "/" + userInfo.userName, "_blank");
         console.log(meetInfo);
     })
+
+
+    /** 直播控制 */
+    $("#meetingControlBtn").click(function () {
+        let meetInfo = JSON.parse(applyInfo.meetJson);
+        let selectData = {"liveNumber": meetInfo.appointmentNumber};
+        ajaxRequest("GET", getLiveUrl, selectData, true, "application/json", true, getLiveInfoSuccess, null, null);
+    })
+
+    function getLiveInfoSuccess(liveInfo) {
+        //新窗口打开直播控制功能
+        window.open(baseUrl+"/#/to/" + liveInfo.account + "/meeting-control/" + liveInfo.cid, "_blank");
+        return false;
+        //本窗口悬浮打开直播控制功能
+        // $("#liveControlIframe").attr('src', baseUrl + "/#/to/" + liveInfo.account + "/meeting-control/" + liveInfo.cid);
+        // layer.open({
+        //     type: 1,
+        //     title: '',
+        //     area: ['1566px', '768px'],
+        //     closeBtn: false,
+        //     shade: [0.7, '#000000'],
+        //     shadeClose: false,
+        //     content: $('#liveControlBox'),
+        // });
+    }
 })
