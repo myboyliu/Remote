@@ -202,6 +202,7 @@ function layerRender() {
             laydate.render({
                 elem: this,
                 type: 'datetime',
+                min: "0",
                 format: 'yyyy/MM/dd HH:mm',
             });
         });
