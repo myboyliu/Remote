@@ -54,6 +54,9 @@ public class ApplyNodeService implements BaseService<ApplyNode> {
 
     private String getNodeOperator() {
         CurrentUserBean currentUserBean = UserTokenManager.getCurrentUser();
+        if (null ==  currentUserBean.getBranchName()){
+            return "<" + currentUserBean.getUserName() + "/" + currentUserBean.getTitleName() + "/" + currentUserBean.getHospitalName() + ">";
+        }
         return "<" + currentUserBean.getUserName() + "/" + currentUserBean.getTitleName() + "/" + currentUserBean.getBranchName() + "/" + currentUserBean.getHospitalName() + ">";
     }
 
