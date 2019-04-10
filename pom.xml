@@ -107,6 +107,12 @@
             <artifactId>tencentcloud-sdk-java</artifactId>
             <version>3.0.51</version>
         </dependency>
+        <!--腾讯云短信-->
+        <dependency>
+            <groupId>com.github.qcloudsms</groupId>
+            <artifactId>qcloudsms</artifactId>
+            <version>1.0.5</version>
+        </dependency>
         <!-- DICOM -->
         <!--<dependency>-->
             <!--<groupId>org.dcm4che</groupId>-->

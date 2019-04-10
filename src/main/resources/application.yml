@@ -73,3 +73,8 @@ img:
 #  resource: /root/web
 #  windows:
 #  linux: /root/web
+#腾讯云服务配置信息
+qcloud:
+  appid: 1400091903
+  secretkey: 5aec8ead3060edd9278730217587053d
+  smssign: 腾讯云
