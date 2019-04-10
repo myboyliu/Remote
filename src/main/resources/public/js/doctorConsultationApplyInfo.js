@@ -40,6 +40,10 @@ $(function () {
     })
     /* 编辑会诊报告提交按钮 */
     $('.refer').click(function () {
+        if($('#textarea').val().trim().replace(/\s/g,"").length < 1){
+            layer.msg('会诊报告不能为空', {icon: 0,time:1000});
+            return false;
+        }
         for (let i = 1, len = consultantReport.length; i < len; i++) {
             if (isMainDoctor && consultantReport[i].reportStatus === "1") {
                 // $('#consultantReportIframe').css('display', 'none');
@@ -111,6 +115,10 @@ $(function () {
     /* 编辑会诊报告暂存按钮 */
     $('.hold').click(function () {
         let data = new FormData();
+        if($('#textarea').val().trim().replace(/\s/g,"").length < 1){
+            layer.msg('会诊报告不能为空', {icon: 0,time:1000});
+            return false;
+        }
         for (const item of consultantReport) {
             if (item.doctorId === userInfo.id) {
                 data.append("doctorName", item.doctorName);
