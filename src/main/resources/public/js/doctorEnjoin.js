@@ -539,7 +539,7 @@ function doctorEnjoinBuilder(feedBackFunction) {
             return a.timeNum < b.timeNum ? -1 : 1;
         });
         dataJson["longTimeArr"] = oneTempArr;
-        if ($(".longTimeAreaObj").html().length < 200) {
+        if ($(".longTimeAreaObj").html().length <= 200) {
             dataJson["longTimeArea"] = $(".longTimeAreaObj").html();// 长期医嘱备注
         } else {
             layer.msg("备注限200字以内");
@@ -579,7 +579,7 @@ function doctorEnjoinBuilder(feedBackFunction) {
         }
         dataJson["temporaryTreatArr"] = oneTempArr;
     }
-    if ($(".temporaryAreaObj").html().length < 200) {
+    if ($(".temporaryAreaObj").html().length <= 200) {
         dataJson["temporaryArea"] = $(".temporaryAreaObj").html();// 临时医嘱备注
     } else {
         layer.msg("备注限200字以内");
@@ -597,7 +597,7 @@ function doctorEnjoinBuilder(feedBackFunction) {
             })
         }
         dataJson["surgeryArr"] = oneTempArr;
-        if ($(".surgeryAreaObj").html().length < 200) {
+        if ($(".surgeryAreaObj").html().length <= 200) {
             dataJson["surgeryArea"] = $(".surgeryAreaObj").html();// 器械备注
         } else {
             layer.msg("备注限200字以内");
