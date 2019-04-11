@@ -601,7 +601,9 @@ public class ApplyDisposeController extends BaseController {
         if (k < 1) {
             return badRequestOfArguments("重新添加申请时间失败");
         }
-
+        if (String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED).equals(applyStatus)){
+            redisTimerService.createReferralEndListener(applyFormId,end,userId);
+        }
         return succeedRequest(applyForm);
     }
 
@@ -669,6 +671,12 @@ public class ApplyDisposeController extends BaseController {
             if (k < 1) {
                 return badRequestOfArguments("添加申请时间失败");
             }
+            redisTimerService.createReferralEndListener(applyFormId,end,userId);
+        }else{
+            ApplyTime applyTime = applyTimeService.getByApplyFormId(applyFormId);
+            String endTime = YtDateUtils.dateToString(applyTime.getEventEndTime());
+            redisTimerService.createReferralEndListener(applyFormId,endTime,userId);
+
         }
 
         ApplyForm applyForm = new ApplyForm();
@@ -877,6 +885,7 @@ public class ApplyDisposeController extends BaseController {
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_DATETIME_LOCKED);
         ApplyForm applyForm = applyFormService.getByPrimaryKey(applyFormId);
         applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已排期.toString(), applyForm.getInviteSummary());
+
         return transferDateSure(applyFormId, applyStatus, inquiryDatetime);
     }
 

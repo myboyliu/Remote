@@ -77,4 +77,6 @@ public interface ApplyFormMapper {
     List<String> selectTimeByParam(ScheduledParam scheduledParam);
 
     MasterDoctorBean getMasterDoctorById(String applyFormId);
+
+    int updateReferralStatusToEnd(String applyFormId);
 }

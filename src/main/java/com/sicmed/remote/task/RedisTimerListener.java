@@ -18,6 +18,8 @@ public class RedisTimerListener extends KeyExpirationEventMessageListener {
 
     @Autowired
     private CurriculumScheduleService curriculumScheduleService;
+    @Autowired
+    private TaskService taskService;
 
     public RedisTimerListener(RedisMessageListenerContainer listenerContainer) {
         super(listenerContainer);
@@ -33,21 +35,32 @@ public class RedisTimerListener extends KeyExpirationEventMessageListener {
         }
         //3.获取任务内容
         JSONObject jsonObject = redisTimer.getJsonObject();
-        //4.处理任务
-        switch (jsonObject.getString("type")) {
-            case "LIVE_ALERT_MESSAGE":
-                JSONArray jsonArray = curriculumScheduleService.findByCurriculumId(jsonObject.getString("aboutId"));
-                jsonObject.put("userList", jsonArray);
-                messageSendService.send(jsonObject);
+        switch (redisTimer.getTimerType()){
+            case "REFERRAL_END_LISTENER":
+                //TODO
+                taskService.executeReferralEndTask(jsonObject);
                 break;
-            case "LIVE_PUSH_MESSAGE":
-                jsonObject.put("userList", null);
-                messageSendService.sendTopic(jsonObject);
+            case "CONSULTATION_START_LISTENER":
+                //TODO
+
                 break;
             default:
-                messageSendService.send(jsonObject);
+                //4.处理任务
+                switch (jsonObject.getString("type")) {
+                    case "LIVE_ALERT_MESSAGE":
+                        JSONArray jsonArray = curriculumScheduleService.findByCurriculumId(jsonObject.getString("aboutId"));
+                        jsonObject.put("userList", jsonArray);
+                        messageSendService.send(jsonObject);
+                        break;
+                    case "LIVE_PUSH_MESSAGE":
+                        jsonObject.put("userList", null);
+                        messageSendService.sendTopic(jsonObject);
+                        break;
+                    default:
+                        messageSendService.send(jsonObject);
+                        break;
+                }
                 break;
-
         }
 
     }

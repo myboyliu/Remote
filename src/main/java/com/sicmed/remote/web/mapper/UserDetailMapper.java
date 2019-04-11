@@ -5,9 +5,10 @@ import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.bean.UserBean;
 import com.sicmed.remote.web.bean.UserControllerBean;
 import com.sicmed.remote.web.entity.UserDetail;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+@Repository
 public interface UserDetailMapper {
     int deleteByPrimaryKey(String id);
 

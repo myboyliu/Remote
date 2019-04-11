@@ -124,7 +124,29 @@ public class YtDateUtils {
             return 0;
         }
     }
+    /**
+     * 计算两个时间差,返回秒
+     *
+     * @param endDateStr   结束时间
+     * @return
+     */
 
+    public static long timeDifferenceMt(String endDateStr) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date endDate = null;
+        try {
+            endDate = simpleDateFormat.parse(endDateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Date currentDate = new Date();
+        if (endDate.getTime() > currentDate.getTime()) {
+            long date = endDate.getTime() -  currentDate.getTime();
+            return date;
+        } else {
+            return 0;
+        }
+    }
     /**
      * 带年月日时分秒
      *

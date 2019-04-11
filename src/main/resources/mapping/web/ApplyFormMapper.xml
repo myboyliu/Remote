@@ -1248,7 +1248,8 @@
         </if>
         group by dates
     </select>
-    <select id="selectTimeByParam" parameterType="com.sicmed.remote.web.bean.ScheduledParam" resultType="java.lang.String">
+    <select id="selectTimeByParam" parameterType="com.sicmed.remote.web.bean.ScheduledParam"
+            resultType="java.lang.String">
         select
         DATE_FORMAT(applyTime.event_start_time,'%Y-%m-%d')
         from apply_form applyForm
@@ -1261,9 +1262,10 @@
             OR applyForm.invite_hospital_id = #{hospitalId,jdbcType=VARCHAR})
             AND DATE_FORMAT(applyTime.event_start_time,'%Y-%m') = #{date,jdbcType=VARCHAR}
         </where>
-        group by  DATE_FORMAT(applyTime.event_start_time,'%Y-%m-%d')
+        group by DATE_FORMAT(applyTime.event_start_time,'%Y-%m-%d')
     </select>
-    <select id="getMasterDoctorById" parameterType="java.lang.String" resultType="com.sicmed.remote.meeting.bean.MasterDoctorBean">
+    <select id="getMasterDoctorById" parameterType="java.lang.String"
+            resultType="com.sicmed.remote.meeting.bean.MasterDoctorBean">
         select
         userDetail.user_name doctorName,
         userAccount.user_phone doctorPhone
@@ -1274,5 +1276,15 @@
             applyForm.id = #{id,jdbcType=VARCHAR}
         </where>
     </select>
+
+
+    <update id="updateReferralStatusToEnd" parameterType="java.lang.String">
+       update apply_form
+        set
+          apply_status = "INQUIRY_END",
+          update_time = now()
+        where id = #{id,jdbcType=VARCHAR}
+        AND apply_status = "INQUIRY_DATETIME_LOCKED"
+    </update>
 </mapper>
 

@@ -337,7 +337,6 @@ public class ApplyTransferController extends BaseController {
      */
     @GetMapping(value = "inquiryCsAllCountDr")
     public Map inquiryCsAllCountDr() {
-        procedureService.referralChecked();
         String userId = getRequestToken();
 
         InquiryStatusBean inquiryStatusBean = applyFormService.inquiryCreateSuccessAllCountDr(userId, consultationTypeListInquiry);
@@ -350,7 +349,6 @@ public class ApplyTransferController extends BaseController {
      */
     @GetMapping(value = "inquiryCsAllCountSir")
     public Map inquiryCsAllCountSir() {
-        procedureService.referralChecked();
         String userId = getRequestToken();
         CurrentUserBean userDetail = getCurrentUser();
         InquiryStatusBean inquiryStatusBean = applyFormService.inquiryCreateSuccessAllCountSir(userDetail.getHospitalId(), consultationTypeListInquiry);

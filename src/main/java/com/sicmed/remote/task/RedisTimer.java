@@ -34,6 +34,18 @@ public class RedisTimer implements Serializable {
         this.jsonObject = jsonObject;
         TaskManager.add(this.key, this);
     }
+    /**
+     * 初始化一个带任务类型的Redis定时器
+     *
+     * @param time
+     */
+    public RedisTimer(String key, long time, String timerType, JSONObject jsonObject) {
+        this.key = "REDIS_TIMER:" + key + ":" + time;
+        this.time = time;
+        this.timerType = timerType;
+        this.jsonObject = jsonObject;
+        TaskManager.add(this.key, this);
+    }
 
     /**
      * 启动Redis定时器

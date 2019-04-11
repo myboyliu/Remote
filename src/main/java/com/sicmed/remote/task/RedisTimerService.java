@@ -2,14 +2,18 @@ package com.sicmed.remote.task;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.sicmed.remote.common.util.UserTokenManager;
 import com.sicmed.remote.message.bean.MessageConstant;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
+import com.sicmed.remote.web.bean.CurrentUserBean;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+@Slf4j
 @Service
 public class RedisTimerService {
 
@@ -103,5 +107,30 @@ public class RedisTimerService {
         }
     }
 
+    /**
+     * 创建 转诊结束监听任务
+     *
+     * @param applyFormId
+     * @param endDateStr
+     */
+    public void createReferralEndListener(String applyFormId, String endDateStr, String userId) {
+        String nodeOperator = "";
+        CurrentUserBean currentUserBean = UserTokenManager.getCurrentUser();
+        if (null ==  currentUserBean.getBranchName()){
+            nodeOperator += "<" + currentUserBean.getUserName() + "/" + currentUserBean.getTitleName() + "/" + currentUserBean.getHospitalName() + ">";
+        }
+        nodeOperator +=  "<" + currentUserBean.getUserName() + "/" + currentUserBean.getTitleName() + "/" + currentUserBean.getBranchName() + "/" + currentUserBean.getHospitalName() + ">";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("aboutId", applyFormId);
+        jsonObject.put("nodeOperator", nodeOperator);
+        log.debug("=======================================================");
+        log.debug(endDateStr);
+        log.debug(jsonObject.toJSONString());
+        log.debug(applyFormId);
+        log.debug(String.valueOf(YtDateUtils.timeDifferenceMt(endDateStr)));
+        log.debug(String.valueOf(TaskTypeConstant.REFERRAL_END_LISTENER));
+        log.debug("=======================================================");
+        new RedisTimer(applyFormId, YtDateUtils.timeDifferenceMt(endDateStr), String.valueOf(TaskTypeConstant.REFERRAL_END_LISTENER), jsonObject).start();
+    }
 
 }

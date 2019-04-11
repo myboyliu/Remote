@@ -13,6 +13,10 @@ public enum TaskTypeConstant {
     //        05新直播推送提醒
     LIVE_PUSH,
     //        06已关注直播提醒
-    REMIND_LIVE
+    REMIND_LIVE,
+    //转诊结束监听
+    REFERRAL_END_LISTENER,
+    //会诊开始监听
+    CONSULTATION_START_LISTENER
 
 }
