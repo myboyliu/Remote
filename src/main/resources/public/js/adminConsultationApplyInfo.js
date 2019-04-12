@@ -78,6 +78,7 @@ $(function () {
             }, 2000)
         }
     });
+
     /** 会诊医政接收弹窗*/
     $("#receiveConsultationBtn").click(function () {
         layer.open({
@@ -244,6 +245,7 @@ $(function () {
             $('.font').hide();
         }
     });
+
     $('.font').click(function () {
         $(this).hide();
         $('textarea').focus();

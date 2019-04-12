@@ -20,6 +20,7 @@ let isReferral = false;
 let isConsultation = false; //true: 会诊订单 false: 不是会诊订单
 const statusArr = ["已拒收", '待收诊', '已排期', '会诊中', '待反馈', '已完成'];
 const referralStatusArr = ["已拒收", '待收诊', '已排期', '已完成'];
+let editDateForm = new FormData();
 
 //渲染 发起医政 会诊 详情页面
 function renderApplyMasterConsultationView(applyStatus) {
@@ -481,31 +482,42 @@ function renderCaseContentView(data) {
 
 /**修改会诊排期*/
 function updateApplyTime(dateList) {
+    editDateForm = new FormData();
     if (isInvite) {
-        let data = new FormData();
-        data.append("eventStartTime", dateList[0].startTime);
-        data.append("eventEndTime", dateList[0].endTime);
-        data.append("applyFormId", applyFormId);
-        ajaxRequest("POST", sirUpdateDate, data, false, false, true, sirUpdateDateSuccess, null, null)
+        editDateForm.append("eventStartTime", dateList[0].startTime);
+        editDateForm.append("eventEndTime", dateList[0].endTime);
+        editDateForm.append("applyFormId", applyFormId);
+        //1.弹出会议选项
+        layer.closeAll();
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['400px', '200px'],
+            closeBtn: false,
+            shade: [0.1, '#000000'],
+            shadeClose: false,
+            content: _$('#choiceMeetingAttributeBox')
+        });
     } else {
-        let data = new FormData();
-        data.append("startEndTime", JSON.stringify(dateList));
-        data.append("applyFormId", applyFormId);
+        editDateForm.append("startEndTime", JSON.stringify(dateList));
+        editDateForm.append("applyFormId", applyFormId);
         ajaxRequest("POST", sirSendUpdateDate, data, false, false, true, sirUpdateDateSuccess, null, null)
     }
+}
 
-    function sirUpdateDateSuccess(result) {
-        console.log(result);
-        let data = {"applyFormId": applyFormId};
-        ajaxRequest("GET", getApplyInfoUrl, data, true, "application/json", true, getApplyInfoSuccess, null, null);
+/** 会诊时间修改成功 回调函数*/
+function sirUpdateDateSuccess(result) {
+    layer.closeAll();
+    // $("#alertText").html("会诊时间修改成功");
+    // alertMessage();
+    let data = {"applyFormId": applyFormId};
+    ajaxRequest("GET", getApplyInfoUrl, data, true, "application/json", true, getApplyInfoSuccess, null, null);
 
-        function getApplyInfoSuccess(result) {
-            localStorage.setItem('applyInfo', JSON.stringify(result));
-            applyTimeList = result.applyTimeList;
-            renderApplyTimeView(applyTimeList);
-        }
+    function getApplyInfoSuccess(result) {
+        localStorage.setItem('applyInfo', JSON.stringify(result));
+        applyTimeList = result.applyTimeList;
+        renderApplyTimeView(applyTimeList);
     }
-
 }
 
 /** 查询订单详情 */
@@ -591,6 +603,12 @@ $(function () {
     $('.recipientsInfo').html(applyInfo.applySummary);
     // 收件人信息
     $('.addresserInfo').html(applyInfo.inviteSummary);
+
+    //会议属性回显
+    $("#meetMute").attr("checked", applyInfo.meetMute);
+    $("#meetRecord").attr("checked", applyInfo.meetRecord);
+    $("#meetStart").attr("checked", applyInfo.meetStart);
+
     renderApplyTimeView(applyTimeList);
     /**会诊报告*/
     if (applyInfo.consultantReport) {
@@ -687,6 +705,14 @@ $(function () {
         $(this).toggleClass("foundBtn");
         $('.schedule_modules').toggle(500);
     });
+    // 修改视频会诊 会议属性确认按钮事件
+    $("#choiceMeetingAttributeBoxYesBtn").click(function () {
+        editDateForm.append("meetMute", $("#meetMute").is(':checked'));
+        editDateForm.append("meetRecord", $("#meetRecord").is(':checked'));
+        editDateForm.append("meetStart", $("#meetStart").is(':checked'))
+        //2.修改时间
+        ajaxRequest("POST", sirUpdateDate, editDateForm, false, false, true, sirUpdateDateSuccess, null, null)
+    })
     // 修改排期
     $('#updateConsultationDateTimeBtn').click(function () {
         if (isInvite) {

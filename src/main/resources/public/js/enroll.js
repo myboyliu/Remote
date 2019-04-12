@@ -63,8 +63,8 @@ function renderRegistrationSuccessful() {
 
 $(function () {
     var Name = $('#registerUserName'); // 账号（手机号）
-    var passWord = $('#registerPassWord'); // 密码
-    var passwords = $('#registerPasswords'); // 确认密码
+    var passWord = $('.registerPassWord'); // 密码
+    var passwords = $('.registerPasswords'); // 确认密码
     var photo1 = [];
     var photo2 = [];
     Name.html("")
@@ -224,7 +224,7 @@ $(function () {
 
             data.append("userName", $('.name').val());
             data.append("userPhone", $('#registerUserName').val());
-            data.append("userPassword", $('#registerPassWord').val());
+            data.append("userPassword", $('.registerPassWord').val());
             data.append("telephone", $('.phone').val());
             data.append("hospitalId", $('.quiz1').val());
             data.append("rolesId", $('.quiz2').val());

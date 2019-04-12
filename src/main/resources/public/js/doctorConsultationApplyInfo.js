@@ -38,7 +38,7 @@ $(function () {
             });
         }
     })
-    /* 编辑会诊报告提交按钮 */
+    /** 编辑会诊报告提交按钮 */
     $('.refer').click(function () {
         if($('#textarea').val().trim().replace(/\s/g,"").length < 1){
             layer.msg('会诊报告不能为空', {icon: 0,time:1000});
@@ -112,7 +112,7 @@ $(function () {
             $('.working').html('提交失败')
         }
     })
-    /* 编辑会诊报告暂存按钮 */
+    /** 编辑会诊报告暂存按钮 */
     $('.hold').click(function () {
         let data = new FormData();
         if($('#textarea').val().trim().replace(/\s/g,"").length < 1){
@@ -261,7 +261,7 @@ $(function () {
         $('textarea').focus();
     })
     let viewText = '建议多学科会诊:';
-    /* 建议多学科会诊按钮点击事件  */
+    /** 建议多学科会诊按钮点击事件  */
     $('.suggest').click(function () {
         $(this).css({
             'background': '#516dcf',
@@ -270,7 +270,7 @@ $(function () {
         $('.otherCause').removeAttr('style');
         viewText = '建议多学科会诊:';
     })
-    /* 其他原因按钮点击事件  */
+    /** 其他原因按钮点击事件  */
     $('.otherCause').click(function () {
         $(this).css({
             'background': '#516dcf',
@@ -355,15 +355,32 @@ $(function () {
         let data = new FormData();
         data.append("applyFormId", applyFormId);
         data.append("startEndTime", JSON.stringify(dateList));
-        if (isMainDoctor) {
-            ajaxRequest("POST", mainDoctorAccede, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
-        } else if (isBranchDoctor) {
-            ajaxRequest("POST", doctorAcceptOther, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
-        }
-
+        //1.弹出会议选项
+        layer.closeAll();
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['400px', '200px'],
+            closeBtn: false,
+            shade: [0.1, '#000000'],
+            shadeClose: false,
+            content: _$('#choiceMeetingAttributeBox'),
+        });
+        $("#choiceMeetingAttributeBoxYesBtn").click(function () {
+            data.append("meetMute", $("#meetMute").is(':checked'));
+            data.append("meetRecord", $("#meetRecord").is(':checked'));
+            data.append("meetStart", $("#meetStart").is(':checked'));
+            //2.修改时间
+            if (isMainDoctor) {
+                ajaxRequest("POST", mainDoctorAccede, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
+            } else if (isBranchDoctor) {
+                ajaxRequest("POST", doctorAcceptOther, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
+            }
+        })
     })
 
     function sirUpdateDateSuccess(result) {
+        layer.closeAll();
         $("#alertText").html("接收成功");
         alertMessage();
         setTimeout(function () {

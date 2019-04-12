@@ -32,14 +32,14 @@ public class CaseContentService implements BaseService<CaseContent> {
     public int insertByMap(CaseContentBean caseContentBean) {
 
         caseContentBean.getCasePatient().setCreateUser(caseContentBean.getCreateUser());
-        CasePatient rel = casePatientMapper.selectByCard(caseContentBean.getCasePatient().getPatientCard());
-        if (rel == null) {
+//        CasePatient rel = casePatientMapper.selectByCard(caseContentBean.getCasePatient().getPatientCard());
+//        if (rel == null) {
             casePatientMapper.insertSelective(caseContentBean.getCasePatient());
-        }
-        if (rel != null) {
-            caseContentBean.getCasePatient().setId(rel.getId());
-            casePatientMapper.updateByCard(caseContentBean.getCasePatient());
-        }
+//        }
+//        if (rel != null) {
+//            caseContentBean.getCasePatient().setId(rel.getId());
+//            casePatientMapper.updateByCard(caseContentBean.getCasePatient());
+//        }
 
         caseContentBean.getCaseRecord().setCreateUser(caseContentBean.getCreateUser());
         caseContentBean.getCaseRecord().setPatientId(caseContentBean.getCasePatient().getId());

@@ -8,7 +8,7 @@ import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.common.util.UserTokenManager;
-import com.sicmed.remote.meeting.mapper.MeetingMapper;
+import com.sicmed.remote.meeting.entity.Meeting;
 import com.sicmed.remote.meeting.service.MeetingService;
 import com.sicmed.remote.web.YoonaLtUtils.OrderNumUtils;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
@@ -47,6 +47,9 @@ public class ApplyDisposeController extends BaseController {
     private ApplyFormService applyFormService;
 
     @Autowired
+    private MeetingService meetingService;
+
+    @Autowired
     private ApplyTimeService applyTimeService;
 
     @Autowired
@@ -60,9 +63,6 @@ public class ApplyDisposeController extends BaseController {
     @Autowired
     private ConsultationPriceRecordService consultationPriceRecordService;
 
-
-    @Autowired
-    private MeetingService meetingService;
 
     /**
      * 医政 工作台 重新分配医生
@@ -102,7 +102,7 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "sirUpdateDate")
-    public Map sirUpdateDate(ApplyTime applyTime) {
+    public Map sirUpdateDate(ApplyTime applyTime,Meeting meeting) {
         if (applyTime == null) {
             return badRequestOfArguments("传入参数有误");
         }
@@ -126,6 +126,9 @@ public class ApplyDisposeController extends BaseController {
         caseConsultant.setConsultantEndTime(applyTime.getEventEndTime());
         caseConsultant.setId(applyTime.getApplyFormId());
         caseConsultantService.updateByPrimaryKeySelective(caseConsultant);
+
+        meeting.setId(applyTime.getApplyFormId());
+        meetingService.updateMeeting(meeting);
 
         return succeedRequest(applyTime);
     }
@@ -894,7 +897,7 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "doctorAcceptOther")
-    public Map doctorAcceptOther(String applyFormId, String startEndTime) {
+    public Map doctorAcceptOther(String applyFormId, String startEndTime,Meeting meeting) {
 
         if (StringUtils.isBlank(applyFormId)) {
             return badRequestOfArguments("传入applyFormId为空");
@@ -938,6 +941,8 @@ public class ApplyDisposeController extends BaseController {
             applyTimeBean.setCreateUser(getRequestToken());
             applyTimeBean.setApplyStatus(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString());
             int m = applyTimeService.insertStartEndTimes(applyTimeBean);
+
+            meetingService.createMeeting(meeting);
             if (m < 1) {
                 return badRequestOfArguments("添加申请时间失败");
             }
@@ -985,6 +990,7 @@ public class ApplyDisposeController extends BaseController {
         if (k < 1) {
             return badRequestOfArguments("更新CaseConsultant失败");
         }
+        meeting.setId(applyFormId);
         applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
         return succeedRequest("已接收");
     }
@@ -994,7 +1000,7 @@ public class ApplyDisposeController extends BaseController {
      */
     @Transactional
     @PostMapping(value = "mainDoctorAccede")
-    public Map mainDoctorAccede(String applyFormId, String startEndTime) {
+    public Map mainDoctorAccede(String applyFormId, String startEndTime, Meeting meeting) {
         if (StringUtils.isBlank(applyFormId) || StringUtils.isBlank(startEndTime)) {
             return badRequestOfArguments("applyFormId or startEndTime is null");
         }
@@ -1033,6 +1039,8 @@ public class ApplyDisposeController extends BaseController {
         if (i < 1) {
             return badRequestOfArguments("添加申请时间失败");
         }
+        meeting.setId(applyFormId);
+        meetingService.createMeeting(meeting);
         applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
         return succeedRequest(applyTimeBean);
     }

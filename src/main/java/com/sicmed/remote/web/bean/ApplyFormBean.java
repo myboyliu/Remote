@@ -48,6 +48,9 @@ public class ApplyFormBean extends ApplyForm implements Serializable {
 
     private String detailAddress;
 
+    private boolean meetMute;
+    private boolean meetRecord;
+    private boolean meetStart;
     private String meetJson;
 
 }

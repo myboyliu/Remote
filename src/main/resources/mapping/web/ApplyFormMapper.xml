@@ -263,6 +263,9 @@
         <result column="cctconsultantPrice" jdbcType="VARCHAR" property="consultantPrice"/>
         <result column="ccthospitalPrice" jdbcType="VARCHAR" property="hospitalPrice"/>
         <result column="consultantUserList" jdbcType="VARCHAR" property="consultantUserList"/>
+        <result column="meetMute" jdbcType="BIT" property="meetMute"/>
+        <result column="meetRecord" jdbcType="BIT" property="meetRecord"/>
+        <result column="meetStart" jdbcType="BIT" property="meetStart"/>
         <result column="meetJson" jdbcType="VARCHAR" property="meetJson"/>
 
         <collection property="applyTimeList" ofType="com.sicmed.remote.web.entity.ApplyTime" javaType="ArrayList">
@@ -309,6 +312,9 @@
         an.node_name applyNodeName,
         an.node_time applyNodeTime,
         an.node_operator applyNodeOperator,
+        meeting.meet_mute meetMute,
+        meeting.meet_record meetRecord,
+        meeting.meet_start meetStart,
         meeting.meet_json meetJson
 
     </sql>

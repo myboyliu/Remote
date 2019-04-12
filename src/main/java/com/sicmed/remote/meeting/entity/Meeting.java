@@ -72,9 +72,9 @@ public class Meeting implements Serializable {
         this.meetName = applyTime.getApplyFormId();
         this.meetStartTime = applyTime.getEventStartTime();
         this.meetEndTime = applyTime.getEventEndTime();
-        this.meetMute = false;
-        this.meetRecord = false;
-        this.meetStart = false;
+//        this.meetMute = false;
+//        this.meetRecord = false;
+//        this.meetStart = false;
 
     }
 

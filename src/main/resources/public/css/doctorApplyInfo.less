@@ -420,6 +420,7 @@ main {
       width: 200px;
       display: none;
     }
+
     .editClinicalFeedback {
       width: 200px;
       background-color: #f6c567;
@@ -818,6 +819,7 @@ main {
 //会诊反馈 弹窗
 #consultationFeedbackBox {
   display: none;
+
   .rejectionLayer {
     width: 1060px;
     height: 480px;
@@ -825,6 +827,7 @@ main {
     position: relative;
     border-radius: 10px;
   }
+
   .feed_SM,
   .feed_TS {
     width: 200px;
@@ -941,7 +944,6 @@ main {
   display: none;
   z-index: 999;
 }
-
 
 
 .hold,
@@ -1286,6 +1288,7 @@ main {
   background: #dbdbdb;
   color: #666;
 }
+
 //会诊报告 弹窗
 #consultantReportIframe {
   display: none;
@@ -1386,9 +1389,11 @@ main {
     color: #fff;
   }
 }
+
 //拒绝会诊申请弹窗样式
 #rejectIframe {
   display: none;
+
   .rejectionLayer {
     width: 1060px;
     height: 480px;
@@ -1538,6 +1543,7 @@ main {
     color: #fff;
   }
 }
+
 //转诊拒绝弹窗样式
 #refuseReferralBox {
   display: none;
@@ -1648,6 +1654,70 @@ main {
 
     > span {
       float: left;
+    }
+  }
+}
+
+
+#choiceMeetingAttributeBox {
+  display: none;
+  box-sizing: border-box;
+  width: 400px;
+  height: 200px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px 0 0;
+  .attrNameBox{
+    width: 70%;
+    float: left;
+    > div{
+      margin: 10px 0 0 40%;
+    }
+  }
+  .attrCheckBox{
+    width: 30%;
+    float: right;
+    > div{
+      margin: 10px 0 0;
+    }
+  }
+  > div {
+    //text-align: center;
+    margin: 10px 0 0;
+    font-size: 18px;
+
+
+  }
+
+  > p {
+    text-align: center;
+    font-size: 18px;
+    color: #101010;
+  }
+
+  .btnBox {
+    clear:both;
+    margin: 120px 0 0;
+    text-align: center;
+
+    > a {
+      display: inline-block;
+      box-sizing: border-box;
+      width: 200px;
+      height: 40px;
+      line-height: 40px;
+      border: 1px solid #3249c2;
+      text-align: center;
+      color: #fff;
+      border-radius: 10px;
+    }
+
+    .yesBtn {
+      background: #1937bc;
+    }
+
+    .noBtn {
+      background: #516dcf;
     }
   }
 }

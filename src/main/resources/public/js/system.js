@@ -93,9 +93,9 @@ function renderSpecialistTypeView(array) {
     var _html = '';
     for (var i = 0; i < array.length; i++) {
         _html += '<tr name="' + array[i].id + '">\
-                        <td><input maxlength="10" class="nameInput" readonly="readonly" type="text" value="' + array[i].specialistName + '" placeholder="请输入"></td>\
-                        <td><input maxlength="9" class="imgPicInput" readonly="readonly" type="text" value="' + array[i].consultationPicturePrice + '" placeholder="请输入"></td>\
-                        <td><input maxlength="9" class="videoPicInput" readonly="readonly" type="text" value="' + array[i].consultationVideoPrice + '" placeholder="请输入"></td>\
+                        <td><input maxlength="10" class="nameInput" disabled="disabled" type="text" value="' + array[i].specialistName + '" placeholder="请输入"></td>\
+                        <td><input maxlength="9" class="imgPicInput" disabled="disabled" type="text" value="' + array[i].consultationPicturePrice + '" placeholder="请输入"></td>\
+                        <td><input maxlength="9" class="videoPicInput" disabled="disabled" type="text" value="' + array[i].consultationVideoPrice + '" placeholder="请输入"></td>\
                         <td>\
                             <a class="delBtn" href="javascript:;">删除</a>\
                             <a class="modifyBtn" href="javascript:;">修改</a>\
@@ -993,11 +993,11 @@ $(function () {
             newName = $(this).parents('tr').find('input.nameInput').val();
             newMoney = $(this).parents('tr').find('input.imgPicInput').val();
             newMoneyVideo = $(this).parents('tr').find('input.videoPicInput').val();
-            $(this).html('取消').parents('tr').find('input').addClass('revisability').removeAttr('readonly');
-            $(this).parents('tr').siblings('tr').find('input').removeClass('revisability').attr('readonly', 'readonly');
+            $(this).html('取消').parents('tr').find('input').addClass('revisability').removeAttr('disabled');
+            $(this).parents('tr').siblings('tr').find('input').removeClass('revisability').attr('disabled', 'disabled');
             $(this).parents('tr').siblings('tr').find('.modifyBtn').html('修改');
         } else {
-            $(this).html('修改').parents('tr').find('input').removeClass('revisability').attr('readonly', 'readonly');
+            $(this).html('修改').parents('tr').find('input').removeClass('revisability').attr('disabled', 'disabled');
             $(this).parents('tr').find('input.nameInput').val(oldName);
             $(this).parents('tr').find('input.imgPicInput').val(oldMoney);
             $(this).parents('tr').find('input.videoPicInput').val(oldMoneyVideo);
@@ -1118,7 +1118,7 @@ $(function () {
             function addSpecialistTypeSuccess() {
                 ajaxRequest("GET", getSpecialistTypeByCurrentUser, null, false, false, true, renderSpecialistTypeView, null, null);
                 layer.closeAll();
-                $('.expertTypeTbody > tr').eq(operationIndex).find('input').removeClass('revisability').attr('readonly', 'readonly');
+                $('.expertTypeTbody > tr').eq(operationIndex).find('input').removeClass('revisability').attr('disabled', 'disabled');
                 $('.expertTypeTbody > tr').eq(operationIndex).find('.modifyBtn').show().html('修改');
             }
         } else {
@@ -1134,7 +1134,7 @@ $(function () {
                 /** 重新渲染专家类型列表 */
                 ajaxRequest("GET", getSpecialistTypeByCurrentUser, null, false, false, true, renderSpecialistTypeView, null, null);
                 layer.closeAll();
-                $('.expertTypeTbody > tr').eq(operationIndex).find('input').removeClass('revisability').attr('readonly', 'readonly');
+                $('.expertTypeTbody > tr').eq(operationIndex).find('input').removeClass('revisability').attr('disabled', 'disabled');
                 $('.expertTypeTbody > tr').eq(operationIndex).find('.modifyBtn').html('修改');
             }
         }

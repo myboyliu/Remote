@@ -61,6 +61,14 @@ public class MeetingService {
         }
     }
 
+    /**
+     * 根据 视频会诊ID 创建 会议
+     */
+    public void createMeeting(Meeting meeting) {
+
+        meetingMapper.insertSelective(meeting);
+
+    }
 
     /**
      * 根据 视频会诊记录 创建 会议
@@ -72,8 +80,8 @@ public class MeetingService {
         MasterDoctorBean masterDoctorBean = applyFormMapper.getMasterDoctorById(applyTime.getApplyFormId());
 
         //1.创建视频会议
-        Meeting meeting = new Meeting();
-        meeting.setId(applyTime.getApplyFormId());
+        Meeting meeting = meetingMapper.selectByPrimaryKey(applyTime.getApplyFormId());
+        //meeting.setId(applyTime.getApplyFormId());
         meeting.setApplyTime(applyTime);
         log.debug("----------------------调用云启云业务开始------------------------");
         //2.调用云启云视频会议 接口 创建视频会议
@@ -90,7 +98,7 @@ public class MeetingService {
         //3.云启云视频会议 接口 调用 结果处理
         meeting.setMeetingBean(meetingBean);
         //4.视频会议信息插入数据库
-        meetingMapper.insertSelective(meeting);
+        meetingMapper.updateByPrimaryKeySelective(meeting);
         log.debug("----------------------创建定时任务开始------------------------");
         //5.调用 定时 提醒服务
         CaseConsultant caseConsultant = caseConsultantService.getByPrimaryKey(applyTime.getApplyFormId());
@@ -119,6 +127,12 @@ public class MeetingService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    /**
+     * 根据 视频会诊ID 修改 会议
+     */
+    public void updateMeeting(Meeting meeting) {
+        meetingMapper.updateByPrimaryKeySelective(meeting);
     }
 
     /**
