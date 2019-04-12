@@ -264,17 +264,17 @@ $(function () {
     /** 获取医院信息 */
     ajaxRequest("GET", getHospitalByCurrentUserUrl, null, false, false, true, renderHospitalView, emptyResult, null);
 
-    /** 获取科室列表信息 */
-    ajaxRequest("GET", getBranchListByCurrentUserUrl, null, false, false, true, renderBranchListView, emptyResult, null);
-
-    /** 获取专家类型与诊费 */
-    ajaxRequest("GET", getSpecialistTypeByCurrentUser, null, false, false, true, renderSpecialistTypeView, emptyResult, null);
-
-    /** 查询医生管理页面左侧导航医生列表 */
-    ajaxRequest("GET", getDoctorListByCurrentUserUrl, null, false, false, true, renderDoctorListView, emptyResult, null);
-
-    /**获取医生信息页面科室下拉列表数据*/
-    ajaxRequest("GET", getBranchListByCurrentUserUrl, null, false, false, true, renderBranchSelect, emptyResult, null);
+    // /** 获取科室列表信息 */
+    // ajaxRequest("GET", getBranchListByCurrentUserUrl, null, false, false, true, renderBranchListView, emptyResult, null);
+    //
+    // /** 获取专家类型与诊费 */
+    // ajaxRequest("GET", getSpecialistTypeByCurrentUser, null, false, false, true, renderSpecialistTypeView, emptyResult, null);
+    //
+    // /** 查询医生管理页面左侧导航医生列表 */
+    // ajaxRequest("GET", getDoctorListByCurrentUserUrl, null, false, false, true, renderDoctorListView, emptyResult, null);
+    //
+    // /**获取医生信息页面科室下拉列表数据*/
+    // ajaxRequest("GET", getBranchListByCurrentUserUrl, null, false, false, true, renderBranchSelect, emptyResult, null);
 
     // 获取权限类型
     // ajaxRequest("GET", getRolesListUrl, null, false, false, true, renderRolesSelect, null, null);
@@ -294,8 +294,31 @@ $(function () {
         var _index = $(this).index();
         $(this).addClass('active').siblings('a').removeClass('active');
         $('.mainContent > div').hide().eq(_index).show();
-        if (_index == 3) {
-            $('.doctorTitleList').css('height', $('body,html').height() - $('.doctorTitleList').offset().top - 70)
+        console.log(_index);
+        switch (_index) {
+            case 0:
+                /** 获取医院信息 */
+                ajaxRequest("GET", getHospitalByCurrentUserUrl, null, false, false, true, renderHospitalView, emptyResult, null);
+                break;
+            case 1:
+                /** 获取科室列表信息 */
+                ajaxRequest("GET", getBranchListByCurrentUserUrl, null, false, false, true, renderBranchListView, emptyResult, null);
+                break;
+            case 2:
+                /** 查询医生管理页面左侧导航医生列表 */
+                ajaxRequest("GET", getDoctorListByCurrentUserUrl, null, false, false, true, renderDoctorListView, emptyResult, null);
+                /**获取医生信息页面科室下拉列表数据*/
+                ajaxRequest("GET", getBranchListByCurrentUserUrl, null, false, false, true, renderBranchSelect, emptyResult, null);
+                break;
+            case 3:
+                $('.doctorTitleList').css('height', $('body,html').height() - $('.doctorTitleList').offset().top - 70)
+                break;
+            case 4:
+                /** 获取专家类型与诊费 */
+                ajaxRequest("GET", getSpecialistTypeByCurrentUser, null, false, false, true, renderSpecialistTypeView, emptyResult, null);
+                break;
+            default:
+                break;
         }
     })
     // 判断是否是从新消息过来的
