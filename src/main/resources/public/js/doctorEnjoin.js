@@ -616,11 +616,11 @@ function cacheReportEnjoin(doctorEnjoinJson) {
     let data = new FormData();
     for (const item of reportEnjoin) {
         if (item.doctorId === currentUserInfo.id) {
-            data.append("doctorName",item.doctorName);
-            data.append("doctorId",item.doctorId);
-            data.append("report",$('.verdictArea').val());
-            data.append("reportStatus","1");
-            data.append("doctorEnjoin",doctorEnjoinJson);
+            data.append("doctorName", item.doctorName);
+            data.append("doctorId", item.doctorId);
+            data.append("report", $('.verdictArea').val());
+            data.append("reportStatus", "1");
+            data.append("doctorEnjoin", doctorEnjoinJson);
         }
     }
     data.append("applyFormId", applyFormId);
@@ -643,7 +643,7 @@ function cacheReportEnjoin(doctorEnjoinJson) {
     }
 
     function cacheReportEnjoinFailed() {
-        $('.working').html('暂存失败')
+        $('.working').html('暂存失败');
         layer.open({
             type: 1,
             title: '',
@@ -674,7 +674,7 @@ function submitReportEnjoin(doctorEnjoinJson) {
             });
             setTimeout(function () {
                 $('.promptText').hide();
-            }, 3000)
+            }, 3000);
             return false;
         }
     }
@@ -682,11 +682,11 @@ function submitReportEnjoin(doctorEnjoinJson) {
 
     for (const item of reportEnjoin) {
         if (item.doctorId === currentUserInfo.id) {
-            data.append("doctorName",item.doctorName);
-            data.append("doctorId",item.doctorId);
-            data.append("report",$(".verdictArea").val());
-            data.append("reportStatus","0");
-            data.append("doctorEnjoin",doctorEnjoinJson);
+            data.append("doctorName", item.doctorName);
+            data.append("doctorId", item.doctorId);
+            data.append("report", $(".verdictArea").val());
+            data.append("reportStatus", "0");
+            data.append("doctorEnjoin", doctorEnjoinJson);
         }
     }
     data.append("applyFormId", applyFormId);
@@ -710,7 +710,7 @@ function submitReportEnjoin(doctorEnjoinJson) {
     }
 
     function submitReportEnjoinFailed() {
-        $('.working').html('提交失败')
+        $('.working').html('提交失败');
         layer.open({
             type: 1,
             title: '',
@@ -737,6 +737,7 @@ function getReportEnjoin() {
         render();
     }
 }
+
 /** 查询会诊报告 + 医嘱 */
 function getCheckReportEnjoin() {
     applyFormId = localStorage.getItem('applyFormId');
@@ -747,8 +748,9 @@ function getCheckReportEnjoin() {
         reportEnjoin = JSON.parse(data);
     }
 }
+
 $(function () {
-    getReportEnjoin()
+    getReportEnjoin();
     // 长期医嘱 药物搜索按钮
     $(".longDrugBtn").click(function () {
         pageNo = 1;
@@ -1185,9 +1187,70 @@ $(function () {
                             <option value="ug">ug</option>\
                             <option value="ml">ml</option>\
                         </select>\
-                    </div>\
-                </div>\
-            </div>';
+                    </div>';
+            if ($(".listItem.active").parents(".itemBox").index() == 0) {
+                objHtml += '<div class="layui-input-inline" style="width:116px;margin-right: 20px;">\
+                                <select class="mustValue frequencyObj" lay-verify="" lay-search="">\
+                                    <option value="">每日用次</option>\
+                                    <option value="q.1/2h">q.1/2h</option>\
+                                    <option value="q.h">q.h</option>\
+                                    <option value="q.2h">q.2h</option>\
+                                    <option value="q.3h">q.3h</option>\
+                                    <option value="q.4h">q.4h</option>\
+                                    <option value="q.6h">q.6h</option>\
+                                    <option value="q.8h">q.8h</option>\
+                                    <option value="q.12h">q.12h</option>\
+                                    <option value="q.72h.">q.72h.</option>\
+                                    <option value="q.d.">q.d.</option>\
+                                    <option value="b.i.d.">b.i.d.</option>\
+                                    <option value="t.i.d.">t.i.d.</option>\
+                                    <option value="q.i.d.">q.i.d.</option>\
+                                    <option value="Quingid">Quingid</option>\
+                                    <option value="q.n.">q.n.</option>\
+                                    <option value="q.o.d.">q.o.d.</option>\
+                                    <option value="q.3d">q.3d</option>\
+                                    <option value="q.w.">q.w.</option>\
+                                    <option value="Biw">Biw</option>\
+                                    <option value="Tiw">Tiw</option>\
+                                    <option value="q.o.w.">q.o.w.</option>\
+                                    <option value="2W">2W</option>\
+                                    <option value="3W">3W</option>\
+                                    <option value="4W">4W</option>\
+                                    <option value="q.m.">q.m.</option>\
+                                    <option value="b.i.m.">b.i.m.</option>\
+                                    <option value="once">once</option>\
+                                    <option value="St.">St.</option>\
+                                    <option value="p.r.n.">p.r.n.</option>\
+                                    <option value="s.o.s.">s.o.s.</option>\
+                                    <option value="DC">DC</option>\
+                                    <option value="12n">12n</option>\
+                                    <option value="12mn">12mn</option>\
+                                    <option value="a.c.">a.c.</option>\
+                                    <option value="p.c.">p.c.</option>\
+                                    <option value="t.i.d. a.c.">t.i.d. a.c.</option>\
+                                    <option value="hs">hs</option>\
+                                </select>\
+                            </div>'
+            }
+                 objHtml += '<div class="layui-input-inline" style="width:116px;margin-right: 20px;">\
+                                <select name="" class="mustValue meansObj" lay-verify="" lay-search="">\
+                                    <option value="">给药途径</option>\
+                                    <option value="gtt">gtt</option>\
+                                    <option value="id">id</option>\
+                                    <option value="ih">ih</option>\
+                                    <option value="im/m.">im/m.</option>\
+                                    <option value="iv">iv</option>\
+                                    <option value="ip">ip</option>\
+                                    <option value="ivgtt">ivgtt</option>\
+                                    <option value="p.o.">p.o.</option>\
+                                    <option value="ad us.int.">ad us.int.</option>\
+                                    <option value="ad us.ext.">ad us.ext.</option>\
+                                    <option value="lnhal">lnhal</option>\
+                                    <option value="ig">ig</option>\
+                                </select>\
+                            </div>\
+                        </div>\
+                    </div>';
             $(".listItem.active").parents(".dataItem").prev("li.dataItem").find(".listBottomBox").append(objHtml);
             if ($(".listItem.active").parents(".listBottomBox").children().length > 2) {
                 $(".listItem.active").remove();
