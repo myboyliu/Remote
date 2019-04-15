@@ -63,6 +63,9 @@ $(function () {
     /** 接收按钮 */
     $("#receiveReferralBtn").click(function () {
         isOnly = true;
+        for (let applyTime of applyTimeList) {
+            markReferralJson[applyTime.eventStartTime.split(" ")[0]] = "";
+        }
         showDateView();
     })
     $("#checkDateBoxYesBtn").click(function () {

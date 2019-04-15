@@ -32,6 +32,7 @@ function referralSelectRender() {
             showBottom: false,
             min: 0,
             value: initValue,
+            // theme: '#1937bc',
             mark: markReferralJson,
             change: function (value, date) { //监听日期被切换
                 if (date.date == initDay && date.month != initMonth || date.year != initYear) {
