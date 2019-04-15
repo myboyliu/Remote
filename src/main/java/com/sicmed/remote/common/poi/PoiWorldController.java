@@ -61,69 +61,72 @@ public class PoiWorldController {
      * @param orderId
      * @param request
      * @param response
+     * https://127.0.0.1/download/statOrder?orderId=3ebd3e2d5cd211e98ede487b6bd31bf7
      */
-//    @GetMapping(value = "statOrder")
-//    public void StatOrder(@NotEmpty @Length(min = 32, max = 32, message = "请求参数有误") String orderId, HttpServletRequest request, HttpServletResponse response) {
-//        ApplyFormBean applyFormBean = applyFormService.detailById(orderId);
-//
-////        Map<String, Object> orderMap = (Map) JSON.parse();
-//        JSONObject jsonObject = JSONObject.parseObject(applyFormBean.getConsultantReport());
-//        JSONObject doctorEnjoin = jsonObject.getJSONObject("doctorEnjoin");
-//
-//        JSONArray shortArray = doctorEnjoin.getJSONArray("longTimeArr");
-//        Map<String, Object> params = new HashMap<>();
-//        for (int i = 1; i < 25; i++) {
-//            params.put("date" + i, "_");
-//            params.put("time" + i, "_");
-//            params.put("orders" + i, "_");
-//            params.put("doctor" + i, "_");
-//        }
-//
-//        //记录诊疗条数
-//        int number = shortArray.size();
-//        //诊疗
-//        for (int i = 1; i <= shortArray.size(); i++) {
-//            JSONObject jsonObject1 = shortArray.getJSONObject(i + 1);
-//            Map<String, String> shortArr = (Map) JSON.parse(shortArray.get(i - 1).toString());
-//            params.put("date" + i, shortArr.get("arriveTime").substring(0, 10) != null ? shortArr.get("arriveTime").substring(0, 10) : "_");
-//            params.put("date" + i, shortArr.get("arriveTime").substring(0, 10) != null ? shortArr.get("arriveTime").substring(0, 10) : "_");
-//            params.put("time" + i, shortArr.get("arriveTime").substring(10, 16) != null ? shortArr.get("arriveTime").substring(10, 16) : "_");
-//            params.put("orders" + i, shortArr.get("name") != null ? shortArr.get("name") : "_");
-//            params.put("doctor" + i, orderMap.get("doctor") != null ? orderMap.get("doctor") : "_");
-//        }
-//
-//        //药品
-//        JSONArray medicalArray = JSONArray.parseArray(orderMap.get("temporaryDrugArr").toString());
-//        List<Map<String, String>> mapList = new LinkedList<>();
-//        for (int i = 1; i <= medicalArray.size(); i++) {
-//            Map<String, Object> longArr = (Map) JSON.parse(medicalArray.get(i - 1).toString());
-//            JSONArray drugArr = JSONArray.parseArray(longArr.get("drugArr").toString());
-//            for (int j = 1; j <= drugArr.size(); j++) {
-//                Map<String, String> map = new LinkedHashMap<>();
-//                Map<String, String> temp = (Map) JSON.parse(drugArr.get(j - 1).toString());
-//                map.put("date", longArr.get("arriveTime").toString().substring(0, 10) != null ? longArr.get("arriveTime").toString().substring(0, 10) : "_");
-//                map.put("time", longArr.get("arriveTime").toString().substring(10, 16) != null ? longArr.get("arriveTime").toString().substring(10, 16) : "_");
-//                map.put("orders", temp.get("name") != null ? temp.get("name") : "_");
-//                map.put("doctor", orderMap.get("doctor") != null ? orderMap.get("doctor").toString() : "_");
-//                mapList.add(map);
-//            }
-//        }
-//        for (int i = 1; i <= mapList.size(); i++) {
-//            int num = number + i;
-//            mapList.get(i - 1);
-//            params.put("date" + num, mapList.get(i - 1).get("date"));
-//            params.put("time" + num, mapList.get(i - 1).get("time"));
-//            params.put("orders" + num, mapList.get(i - 1).get("orders"));
-//            params.put("doctor" + num, mapList.get(i - 1).get("doctor"));
-//        }
-//        params.put("name", applyFormBean.getPatientName() != null ? applyFormBean.getPatientName() : "(空)");
-//        params.put("sex", applyFormBean.getPatientSex() != null ? applyFormBean.getPatientSex() : "(空)");
-//        params.put("age", applyFormBean.getPatientAge() != null ? applyFormBean.getPatientAge() : "(空)");
-//        params.put("remarks", orderMap.get("temporaryArea") != null ? orderMap.get("temporaryArea") : "(空)");
-//
-//        FileUtil.exportWord("tempWord/临时医嘱单模板.docx", "D:/temp", "临时医嘱单.docx", params, request, response);
-//
-//    }
+    @GetMapping(value = "statOrder")
+    public void StatOrder(@NotEmpty @Length(min = 32, max = 32, message = "请求参数有误") String orderId, HttpServletRequest request, HttpServletResponse response) {
+        ApplyFormBean applyFormBean = applyFormService.detailById(orderId);
+        //1.获取会诊报告+医嘱
+        JSONArray jsonArray = JSONObject.parseArray(applyFormBean.getConsultantReport());
+        //2.获取医嘱信息
+        JSONObject doctorEnjoin = jsonArray.getJSONObject(0).getJSONObject("doctorEnjoin");
+        //3.获取临时医嘱信息
+        JSONArray temporaryDrugArr = doctorEnjoin.getJSONArray("temporaryDrugArr");
+        JSONArray temporaryTreatArr = doctorEnjoin.getJSONArray("temporaryTreatArr");
+
+
+        Map<String, Object> params = new HashMap<>();
+        for (int i = 1; i < 25; i++) {
+            params.put("date" + i, "_");
+            params.put("time" + i, "_");
+            params.put("orders" + i, "_");
+            params.put("doctor" + i, "_");
+        }
+
+        //记录诊疗条数
+        int number = temporaryTreatArr.size();
+        //诊疗
+        for (int i = 1; i <= temporaryTreatArr.size(); i++) {
+            JSONObject temporaryTreatObject = temporaryTreatArr.getJSONObject(i - 1);
+
+            params.put("date" + i, temporaryTreatObject.getString("arriveTime").substring(0, 10) != null ? temporaryTreatObject.getString("arriveTime").substring(0, 10) : "_");
+            params.put("date" + i, temporaryTreatObject.getString("arriveTime").substring(0, 10) != null ? temporaryTreatObject.getString("arriveTime").substring(0, 10) : "_");
+            params.put("time" + i, temporaryTreatObject.getString("arriveTime").substring(10) != null ? temporaryTreatObject.getString("arriveTime").substring(10) : "_");
+            params.put("orders" + i, temporaryTreatObject.getString("name") != null ? temporaryTreatObject.getString("name") : "_");
+            params.put("doctor" + i, doctorEnjoin.get("doctor") != null ? doctorEnjoin.get("doctor") : "_");
+        }
+
+        //药品
+        List<Map<String, String>> mapList = new LinkedList<>();
+        for (int i = 1; i <= temporaryDrugArr.size(); i++) {
+            JSONObject temporaryDrugObject = temporaryDrugArr.getJSONObject(i-1);
+            JSONArray drugArr = temporaryDrugObject.getJSONArray("drugArr");
+            for (int j = 1; j <= drugArr.size(); j++) {
+                Map<String, String> map = new LinkedHashMap<>();
+                JSONObject drugObject = drugArr.getJSONObject(j-1);
+                map.put("date", temporaryDrugObject.get("arriveTime").toString().substring(0, 10) != null ? temporaryDrugObject.get("arriveTime").toString().substring(0, 10) : "_");
+                map.put("time", temporaryDrugObject.get("arriveTime").toString().substring(10) != null ? temporaryDrugObject.get("arriveTime").toString().substring(10) : "_");
+                map.put("orders", drugObject.getString("name") != null ? drugObject.getString("name") : "_");
+                map.put("doctor", doctorEnjoin.getString("doctor") != null ? doctorEnjoin.getString("doctor") : "_");
+                mapList.add(map);
+            }
+        }
+        for (int i = 1; i <= mapList.size(); i++) {
+            int num = number + i;
+            mapList.get(i - 1);
+            params.put("date" + num, mapList.get(i - 1).get("date"));
+            params.put("time" + num, mapList.get(i - 1).get("time"));
+            params.put("orders" + num, mapList.get(i - 1).get("orders"));
+            params.put("doctor" + num, mapList.get(i - 1).get("doctor"));
+        }
+        params.put("name", applyFormBean.getPatientName() != null ? applyFormBean.getPatientName() : "(空)");
+        params.put("sex", applyFormBean.getPatientSex() != null ? applyFormBean.getPatientSex() : "(空)");
+        params.put("age", applyFormBean.getPatientAge() != null ? applyFormBean.getPatientAge() : "(空)");
+        params.put("remarks", doctorEnjoin.get("temporaryArea") != null ? doctorEnjoin.get("temporaryArea") : "(空)");
+
+        FileUtil.exportWord("tempWord/临时医嘱单模板.docx", "D:/temp", "临时医嘱单.docx", params, request, response);
+
+    }
 
     /**
      * 长期医嘱下载
@@ -131,12 +134,18 @@ public class PoiWorldController {
      * @param orderId
      * @param request
      * @param response
+     * https://127.0.0.1/download/standingOrders?orderId=3ebd3e2d5cd211e98ede487b6bd31bf7
      */
     @GetMapping(value = "standingOrders")
     public void standingOrders(@NotEmpty @Length(min = 32, max = 32, message = "请求参数有误") String orderId, HttpServletRequest request, HttpServletResponse response) {
         ApplyFormBean applyFormBean = applyFormService.detailById(orderId);
-        Map<String, Object> orderMap = (Map) JSON.parse(applyFormBean.getConsultantReport());
-        JSONArray longArray = JSONArray.parseArray(orderMap.get("longTimeArr").toString());
+        //1.获取会诊报告+医嘱
+        JSONArray jsonArray = JSONObject.parseArray(applyFormBean.getConsultantReport());
+        //2.获取医嘱信息
+        JSONObject doctorEnjoin = jsonArray.getJSONObject(0).getJSONObject("doctorEnjoin");
+        //3.获取长期医嘱信息
+        JSONArray longTimeEnjoinArr = doctorEnjoin.getJSONArray("longTimeArr");
+
         List<Map<String, String>> mapList = new LinkedList<>();
         Map<String, Object> params = new HashMap<>();
         //设置默认占位符
@@ -147,16 +156,17 @@ public class PoiWorldController {
             params.put("doctor" + i, "_");
         }
         //长期医嘱
-        for (int i = 1; i <= longArray.size(); i++) {
-            Map<String, Object> longArr = (Map) JSON.parse(longArray.get(i - 1).toString());
-            JSONArray drugArr = JSONArray.parseArray(longArr.get("drugArr").toString());
+        for (int i = 1; i <= longTimeEnjoinArr.size(); i++) {
+//            Map<String, Object> longArr = (Map) JSON.parse(longTimeEnjoinArr.getJSONObject(i - 1));
+            JSONObject longTimeEnjoinObject = longTimeEnjoinArr.getJSONObject(i - 1);
+            JSONArray drugArr = longTimeEnjoinObject.getJSONArray("drugArr");
             for (int j = 1; j <= drugArr.size(); j++) {
                 Map<String, String> map = new LinkedHashMap<>();
-                Map<String, String> temp = (Map) JSON.parse(drugArr.get(j - 1).toString());
-                map.put("date", longArr.get("startTime").toString().substring(0, 10) != null ? longArr.get("startTime").toString().substring(0, 10) : "_");
-                map.put("time", longArr.get("startTime").toString().substring(11, 16) != null ? longArr.get("startTime").toString().substring(11, 16) : "_");
-                map.put("doctor", orderMap.get("doctor") != null ? orderMap.get("doctor").toString() : "_");
-                map.put("orders", temp.get("name") != null ? temp.get("name") : "_");
+                JSONObject drugObject = drugArr.getJSONObject(j - 1);
+                map.put("date", longTimeEnjoinObject.get("startTime").toString().substring(0, 10) != null ? longTimeEnjoinObject.get("startTime").toString().substring(0, 10) : "_");
+                map.put("time", longTimeEnjoinObject.get("startTime").toString().substring(11, 16) != null ? longTimeEnjoinObject.get("startTime").toString().substring(11, 16) : "_");
+                map.put("doctor", doctorEnjoin.get("doctor") != null ? doctorEnjoin.get("doctor").toString() : "_");
+                map.put("orders", drugObject.getString("name") != null ? drugObject.getString("name") : "_");
                 mapList.add(map);
             }
         }
@@ -169,7 +179,7 @@ public class PoiWorldController {
         params.put("name", applyFormBean.getPatientName() != null ? applyFormBean.getPatientName() : "(空)");
         params.put("sex", applyFormBean.getPatientSex() != null ? applyFormBean.getPatientSex() : "(空)");
         params.put("age", applyFormBean.getPatientAge() != null ? applyFormBean.getPatientAge() : "(空)");
-        params.put("remarks", orderMap.get("longTimeArea") != null ? orderMap.get("longTimeArea") : "(空)");
+        params.put("remarks", doctorEnjoin.get("longTimeArea") != null ? doctorEnjoin.get("longTimeArea") : "(空)");
 
         //这里是我说的一行代码
         FileUtil.exportWord("tempWord/长期医嘱单模板.docx", "D:/temp", "长期医嘱单模板.docx", params, request, response);
@@ -186,12 +196,12 @@ public class PoiWorldController {
     @GetMapping(value = "specificationsOrder")
     public void specificationsOrder(@NotEmpty @Length(min = 32, max = 32, message = "请求参数有误") String orderId, HttpServletRequest request, HttpServletResponse response) {
         ApplyFormBean applyFormBean = applyFormService.detailById(orderId);
+        //1.获取会诊报告+医嘱
         JSONArray jsonArray = JSONObject.parseArray(applyFormBean.getConsultantReport());
+        //2.获取医嘱信息
         JSONObject doctorEnjoin = jsonArray.getJSONObject(0).getJSONObject("doctorEnjoin");
+        //3.获取手术备品信息
         JSONArray surgeryArr = doctorEnjoin.getJSONArray("surgeryArr");
-
-//        Map<String, Object> orderMap = (Map) JSON.parse(applyFormBean.getConsultantReport());
-//        JSONArray surgeryArray = JSONArray.parseArray(orderMap.get("surgeryArr").toString());
         Map<String, Object> params = new HashMap<>();
         for (int i = 1; i < 25; i++) {
             params.put("name" + i, "_");

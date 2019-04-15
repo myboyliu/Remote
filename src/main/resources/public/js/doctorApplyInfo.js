@@ -168,7 +168,7 @@ function renderDoctorEnjoin(doctorEnjoinJsonStr) {
 
     let doctorEnjoinJson = JSON.parse(doctorEnjoinJsonStr)
     if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0) {
-        let _html = '<div class="chunkContent"><h2><span>01</span><p class="chunkType">长期医嘱</p><a class="printBtn no-print" href="">下载</a></h2>\
+        let _html = '<div class="chunkContent"><h2><span>01</span><p class="chunkType">长期医嘱</p><a class="printBtn no-print" href="'+baseUrl+ "/download/standingOrders?orderId=" + applyInfo.id +'">下载</a></h2>\
             <div class="oneList">'
         for (let i = 0; i < doctorEnjoinJson.longTimeArr.length; i++) {
             let twoLevel = doctorEnjoinJson.longTimeArr[i].drugArr;
@@ -192,9 +192,9 @@ function renderDoctorEnjoin(doctorEnjoinJsonStr) {
     if (doctorEnjoinJson.temporaryDrugArr || doctorEnjoinJson.temporaryTreatArr) {
         let _html;
         if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0) {
-            _html = '<div class="chunkContent"><h2><span>02</span><p class="chunkType">临时医嘱</p><a class="printBtn no-print" href="">下载</a></h2><div class="oneList">'
+            _html = '<div class="chunkContent"><h2><span>02</span><p class="chunkType">临时医嘱</p><a class="printBtn no-print" href="'+baseUrl+ "/download/statOrder?orderId=" + applyInfo.id +'">下载</a></h2><div class="oneList">'
         } else {
-            _html = '<div class="chunkContent"><h2><span>01</span><p class="chunkType">临时医嘱</p><a class="printBtn no-print" href="">下载</a></h2><div class="oneList">'
+            _html = '<div class="chunkContent"><h2><span>01</span><p class="chunkType">临时医嘱</p><a class="printBtn no-print" href="'+baseUrl+ "/download/statOrder?orderId=" + applyInfo.id +'">下载</a></h2><div class="oneList">'
         }
         if (doctorEnjoinJson.temporaryDrugArr && doctorEnjoinJson.temporaryDrugArr.length > 0) {
             for (let i = 0; i < doctorEnjoinJson.temporaryDrugArr.length; i++) {
@@ -237,23 +237,23 @@ function renderDoctorEnjoin(doctorEnjoinJsonStr) {
         let _html;
         if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 || doctorEnjoinJson.temporaryDrugArr && doctorEnjoinJson.temporaryDrugArr.length > 0) {
             _html = '<div class="chunkContent">\
-            <h2><span>02</span><p class="chunkType">手术备品</p><a class="printBtn" href="">下载</a></h2>'
+            <h2><span>02</span><p class="chunkType">手术备品</p><a class="printBtn" href="'+baseUrl+ "/download/specificationsOrder?orderId=" + applyInfo.id +'">下载</a></h2>'
         }
         if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 || doctorEnjoinJson.temporaryTreatArr && doctorEnjoinJson.temporaryTreatArr.length > 0) {
             _html = '<div class="chunkContent">\
-                <h2><span>02</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="">下载</a></h2>'
+                <h2><span>02</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="'+baseUrl+ "/download/specificationsOrder?orderId=" + applyInfo.id +'">下载</a></h2>'
         }
         if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 && doctorEnjoinJson.temporaryDrugArr && doctorEnjoinJson.temporaryDrugArr.length > 0) {
             _html = '<div class="chunkContent">\
-            <h2><span>03</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="">下载</a></h2>'
+            <h2><span>03</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="'+baseUrl+ "/download/specificationsOrder?orderId=" + applyInfo.id +'">下载</a></h2>'
         }
         if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 && doctorEnjoinJson.temporaryTreatArr && doctorEnjoinJson.temporaryTreatArr.length > 0) {
             _html = '<div class="chunkContent">\
-                <h2><span>03</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="">下载</a></h2>'
+                <h2><span>03</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="'+baseUrl+ "/download/specificationsOrder?orderId=" + applyInfo.id +'">下载</a></h2>'
         }
         if (!doctorEnjoinJson.longTimeArr && !doctorEnjoinJson.temporaryTreatArr && !doctorEnjoinJson.temporaryDrugArr) {
             _html = '<div class="chunkContent">\
-                <h2><span>01</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="">下载</a></h2>'
+                <h2><span>01</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="'+baseUrl+ "/download/specificationsOrder?orderId=" + applyInfo.id +'">下载</a></h2>'
         }
         _html += '<div class="oneList">\
                     <div class="oneListItem">\

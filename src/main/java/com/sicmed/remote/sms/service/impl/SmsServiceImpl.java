@@ -40,13 +40,16 @@ public class SmsServiceImpl implements SmsService {
      */
 
 
-
     @Override
-    public boolean singleSendByTemplate(String nationCode, String phoneNumber, int templateId, ArrayList<String> param) throws HTTPException, IOException {
+    public boolean singleSendByTemplate(String nationCode, String phoneNumber, int templateId, ArrayList<String> param) {
 
-        SmsSingleSenderResult smsSingleSenderResult = smsSingleSender.sendWithParam(nationCode, phoneNumber, templateId, param, null, null, null);
-
-        log.info("短信发送结果:"+smsSingleSenderResult.toString());
+        SmsSingleSenderResult smsSingleSenderResult = null;
+        try {
+            smsSingleSenderResult = smsSingleSender.sendWithParam(nationCode, phoneNumber, templateId, param, null, null, null);
+        } catch (Exception e) {
+            return false;
+        }
+        log.info("短信发送结果:" + smsSingleSenderResult.toString());
         //判断 短信发送是否成功
         if (smsSingleSenderResult.result == 0) {
             return true;
@@ -69,10 +72,15 @@ public class SmsServiceImpl implements SmsService {
 
 
     @Override
-    public boolean multiSendByTemplate(String nationCode, ArrayList<String> phoneNumbers, int templateId, ArrayList<String> params) throws HTTPException, IOException {
+    public boolean multiSendByTemplate(String nationCode, ArrayList<String> phoneNumbers, int templateId, ArrayList<String> params) {
 
         //发送短信
-        SmsMultiSenderResult smsMultiSenderResult = smsMultiSender.sendWithParam(nationCode, phoneNumbers, templateId, params, null, null, null);
+        SmsMultiSenderResult smsMultiSenderResult = null;
+        try {
+            smsMultiSenderResult = smsMultiSender.sendWithParam(nationCode, phoneNumbers, templateId, params, null, null, null);
+        } catch (Exception e) {
+            return false;
+        }
         //判断 短信发送是否成功
         if (smsMultiSenderResult.result == 0) {
             return true;
@@ -93,9 +101,14 @@ public class SmsServiceImpl implements SmsService {
      */
 
     @Override
-    public boolean singleSend(int type, String nationCode, String phoneNumber, String msg) throws HTTPException, IOException {
+    public boolean singleSend(int type, String nationCode, String phoneNumber, String msg) {
 
-        SmsSingleSenderResult smsSingleSenderResult = smsSingleSender.send(type, nationCode, phoneNumber, msg, null, null);
+        SmsSingleSenderResult smsSingleSenderResult = null;
+        try {
+            smsSingleSenderResult = smsSingleSender.send(type, nationCode, phoneNumber, msg, null, null);
+        } catch (Exception e) {
+            return false;
+        }
         //判断 短信发送是否成功
         if (smsSingleSenderResult.result == 0) {
             return true;
@@ -117,16 +130,14 @@ public class SmsServiceImpl implements SmsService {
      */
 
     @Override
-    public boolean multiSend(int type, String nationCode, ArrayList<String> phoneNumbers, ArrayList<String> params, String msg) throws HTTPException, IOException {
+    public boolean multiSend(int type, String nationCode, ArrayList<String> phoneNumbers, ArrayList<String> params, String msg) {
 
-        SmsMultiSenderResult smsMultiSenderResult = smsMultiSender.send(type, nationCode, phoneNumbers, msg, null, null);
-
-        //判断 短信发送是否成功
-        if (smsMultiSenderResult.result == 0) {
-            return true;
+        try {
+            //判断 短信发送是否成功
+            return smsMultiSender.send(type, nationCode, phoneNumbers, msg, null, null).result == 0 ? true : false;
+        } catch (Exception e) {
+            return false;
         }
-        return false;
     }
-
 
 }

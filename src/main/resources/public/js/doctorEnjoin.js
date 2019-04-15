@@ -187,7 +187,7 @@ function fuzzySearchConsumables(obj, searchText, pageNo, pageSize) {
 // 获取当前时间
 function getNowTime() {
     let _data = new Date();
-    let str = _data.toLocaleDateString() + ' ' + _data.getHours() + ":" + _data.getMinutes();
+    let str = _data.getFullYear() + '/' + double(_data.getMonth() + 1) + '/' + double(_data.getDate()) + ' ' + _data.getHours() + ":" + _data.getMinutes();
     return str;
 }
 
