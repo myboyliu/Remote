@@ -74,10 +74,10 @@ function renderFileListView(baseUrl, url, type, fileName) {
     //                                     <img class="delFileBtn" src="../images/delete_file.png"/><p type="${type}" desc="" class="fileName">${fileName}</p></li>`
     // );
 
-    objParent.append( '<li dataBase="${baseUrl}" filePath="' + fileName + '"  class="fileItem">\
+    objParent.append('<li dataBase="${baseUrl}" filePath="' + fileName + '"  class="fileItem">\
                                        <div style = "background-image: url(&apos;' + url + '&apos;)"></div>\
                                         <img class="delFileBtn" src="../images/delete_file.png"/>\
-                                        <p type="${type}" desc="" class="fileName">' + fileName + '</p>\
+                                        <p type="' + type + '" desc="" class="fileName">' + fileName + '</p>\
                                     </li>');
 
 }
@@ -195,7 +195,7 @@ function buildCaseData() {
     data.append("patientCard", $('#idCard').val());
     data.append("patientPhone", $('#phone').val());
     data.append("detailAddress", $('#address').val());
-    data.append("patientAge",patientAge);
+    data.append("patientAge", patientAge);
     data.append("patientSex", patientSex);
     data.append("patientHeight", $('#high').val());
     data.append("patientWeight", Number($('#weight').val()) * 1000);
@@ -295,6 +295,7 @@ $(function () {
     /**查询病历类型列表*/
     ajaxRequest("GET", getAllCaseContentType, null, true, false, false, renderCaseTypeLeftNavigation, null, null);
 
+    /** 数据渲染*/
     if (JSON.parse(localStorage.getItem('applyInfo'))) {
         applyInfo = JSON.parse(localStorage.getItem('applyInfo'));
         if ("APPLY_CONSULTATION_VIDEO" === applyInfo.applyType) {
@@ -308,7 +309,7 @@ $(function () {
         $('#phone').val(applyInfo.patientPhone)
         $('#address').val(applyInfo.detailAddress)
         let choiceAge = applyInfo.patientAge + "";
-        $('#age').val(choiceAge.substring(0,choiceAge.length - 1));
+        $('#age').val(choiceAge.substring(0, choiceAge.length - 1));
         $('.choiceAge').val(choiceAge.substring(choiceAge.length - 1));
         // $('#age').val(choiceAge);
         // $('.choiceAge').val("岁");
@@ -391,7 +392,6 @@ $(function () {
     }
 
     /*创建病例板块 */
-
     $(".select label").click(function () {
         $(this).siblings("span").addClass("active");
         $(this).parent().siblings("div").find("span").removeClass("active");
@@ -421,7 +421,7 @@ $(function () {
         function removeFileSuccess(result) {
             for (let i = 0; len = fileAllArr.length, i < len; i++) {
                 if (fileAllArr[i].name === filePath) {
-                    fileAllArr.splice(i,1);
+                    fileAllArr.splice(i, 1);
                 }
             }
             $('.fileCount').html(Number($('.fileCount').html()) - 1);
@@ -523,12 +523,12 @@ $(function () {
             // pdf dcm
             $('.bigImgContainer').find('.bigImg').addClass('bgSize');
             if (fileArr[indexFile].type == 'pdf') {
-                PDFObject.embed(imgIp + fileArr[indexFile].filePath, ".bigImg", {
+                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].filePath, ".bigImg", {
                     page: "1"
                 });
             } else {
                 $('.downlodeFile').hide();
-                $('.downlodeFile').children('a').attr('href', imgIp + fileArr[indexFile].filePath);
+                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].filePath);
                 $('.bigImgContainer').find('.bigImg').removeClass('bgSize').html('');
             }
         } else {
@@ -563,7 +563,7 @@ $(function () {
             if (fileArr[indexFile].type == 'pdf') {
                 // pdf 相关操作
                 // 1、往 .bigImg 渲染pdf
-                PDFObject.embed(imgIp + fileArr[indexFile].filePath, ".bigImg", {
+                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].filePath, ".bigImg", {
                     page: "1"
                 });
             } else {
@@ -572,7 +572,7 @@ $(function () {
                 // 2、imgIp + fileArr[indexFile].filePath 下载路径
                 // 3、清空 .bigImg 的内容，显示背景
                 $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', imgIp + fileArr[indexFile].filePath);
+                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].filePath);
                 $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
             }
         } else {
@@ -601,7 +601,7 @@ $(function () {
         if (fileArr[indexFile].type != 'img') {
             $('.bigImgContainer').find('.bigImg').addClass('bgSize');
             if (fileArr[indexFile].type == 'pdf') {
-                PDFObject.embed(imgIp + fileArr[indexFile].filePath, ".bigImg", {
+                PDFObject.embed(baseUrl + "/" + fileArr[indexFile].filePath, ".bigImg", {
                     page: "1"
                 });
             } else {
@@ -610,7 +610,7 @@ $(function () {
                 // 2、imgIp + fileArr[indexFile].filePath 下载路径
                 // 3、清空 .bigImg 的内容，显示背景
                 $('.downlodeFile').show();
-                $('.downlodeFile').children('a').attr('href', imgIp + fileArr[indexFile].filePath);
+                $('.downlodeFile').children('a').attr('href', baseUrl + "/" + fileArr[indexFile].filePath);
                 $('.bigImgContainer').find('.bigImg').addClass('bgSize').html('');
             }
         } else {
