@@ -1667,20 +1667,25 @@ main {
   background: #fff;
   border-radius: 10px;
   padding: 20px 0 0;
-  .attrNameBox{
+
+  .attrNameBox {
     width: 70%;
     float: left;
-    > div{
+
+    > div {
       margin: 10px 0 0 40%;
     }
   }
-  .attrCheckBox{
+
+  .attrCheckBox {
     width: 30%;
     float: right;
-    > div{
+
+    > div {
       margin: 10px 0 0;
     }
   }
+
   > div {
     //text-align: center;
     margin: 10px 0 0;
@@ -1696,7 +1701,7 @@ main {
   }
 
   .btnBox {
-    clear:both;
+    clear: both;
     margin: 120px 0 0;
     text-align: center;
 
@@ -1721,3 +1726,73 @@ main {
     }
   }
 }
+
+#metingAttributeShowBox {
+  display: none;
+  box-sizing: border-box;
+  width: 600px;
+  height: 380px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px 0 0;
+
+  .attrNameBox {
+    width: 100%;
+    float: left;
+    padding-left: 60px;
+    > div {
+      width: 480px;
+      margin-top: 10px;
+    }
+  }
+  .qrcodeBox {
+    clear: both;
+    width: 100%;
+    height: 128px;
+
+
+    text-align: center;
+    .qrcode{
+      width:128px;
+      height:128px;
+      margin-left: 235px;
+    }
+  }
+
+  > div {
+    //text-align: center;
+    margin: 10px 0 0;
+    font-size: 18px;
+
+
+  }
+
+  > p {
+    text-align: center;
+    font-size: 18px;
+    color: #101010;
+  }
+
+  .btnBox {
+    clear: both;
+    margin: 120px 0 0;
+    text-align: center;
+
+    > a {
+      display: inline-block;
+      box-sizing: border-box;
+      width: 200px;
+      height: 40px;
+      line-height: 40px;
+      border: 1px solid #3249c2;
+      text-align: center;
+      color: #000000;
+      border-radius: 10px;
+    }
+
+    .yesBtn {
+      background: #f6c567;
+    }
+  }
+}
+

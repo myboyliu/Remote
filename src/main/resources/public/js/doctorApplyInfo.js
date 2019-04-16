@@ -168,7 +168,7 @@ function renderDoctorEnjoin(doctorEnjoinJsonStr) {
 
     let doctorEnjoinJson = JSON.parse(doctorEnjoinJsonStr)
     if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0) {
-        let _html = '<div class="chunkContent"><h2><span>01</span><p class="chunkType">长期医嘱</p><a class="printBtn no-print" href="'+baseUrl+ "/download/standingOrders?orderId=" + applyInfo.id +'">下载</a></h2>\
+        let _html = '<div class="chunkContent"><h2><span>01</span><p class="chunkType">长期医嘱</p><a class="printBtn no-print" href="' + baseUrl + "/download/standingOrders?orderId=" + applyInfo.id + '">下载</a></h2>\
             <div class="oneList">'
         for (let i = 0; i < doctorEnjoinJson.longTimeArr.length; i++) {
             let twoLevel = doctorEnjoinJson.longTimeArr[i].drugArr;
@@ -192,9 +192,9 @@ function renderDoctorEnjoin(doctorEnjoinJsonStr) {
     if (doctorEnjoinJson.temporaryDrugArr || doctorEnjoinJson.temporaryTreatArr) {
         let _html;
         if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0) {
-            _html = '<div class="chunkContent"><h2><span>02</span><p class="chunkType">临时医嘱</p><a class="printBtn no-print" href="'+baseUrl+ "/download/statOrder?orderId=" + applyInfo.id +'">下载</a></h2><div class="oneList">'
+            _html = '<div class="chunkContent"><h2><span>02</span><p class="chunkType">临时医嘱</p><a class="printBtn no-print" href="' + baseUrl + "/download/statOrder?orderId=" + applyInfo.id + '">下载</a></h2><div class="oneList">'
         } else {
-            _html = '<div class="chunkContent"><h2><span>01</span><p class="chunkType">临时医嘱</p><a class="printBtn no-print" href="'+baseUrl+ "/download/statOrder?orderId=" + applyInfo.id +'">下载</a></h2><div class="oneList">'
+            _html = '<div class="chunkContent"><h2><span>01</span><p class="chunkType">临时医嘱</p><a class="printBtn no-print" href="' + baseUrl + "/download/statOrder?orderId=" + applyInfo.id + '">下载</a></h2><div class="oneList">'
         }
         if (doctorEnjoinJson.temporaryDrugArr && doctorEnjoinJson.temporaryDrugArr.length > 0) {
             for (let i = 0; i < doctorEnjoinJson.temporaryDrugArr.length; i++) {
@@ -237,23 +237,23 @@ function renderDoctorEnjoin(doctorEnjoinJsonStr) {
         let _html;
         if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 || doctorEnjoinJson.temporaryDrugArr && doctorEnjoinJson.temporaryDrugArr.length > 0) {
             _html = '<div class="chunkContent">\
-            <h2><span>02</span><p class="chunkType">手术备品</p><a class="printBtn" href="'+baseUrl+ "/download/specificationsOrder?orderId=" + applyInfo.id +'">下载</a></h2>'
+            <h2><span>02</span><p class="chunkType">手术备品</p><a class="printBtn" href="' + baseUrl + "/download/specificationsOrder?orderId=" + applyInfo.id + '">下载</a></h2>'
         }
         if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 || doctorEnjoinJson.temporaryTreatArr && doctorEnjoinJson.temporaryTreatArr.length > 0) {
             _html = '<div class="chunkContent">\
-                <h2><span>02</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="'+baseUrl+ "/download/specificationsOrder?orderId=" + applyInfo.id +'">下载</a></h2>'
+                <h2><span>02</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="' + baseUrl + "/download/specificationsOrder?orderId=" + applyInfo.id + '">下载</a></h2>'
         }
         if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 && doctorEnjoinJson.temporaryDrugArr && doctorEnjoinJson.temporaryDrugArr.length > 0) {
             _html = '<div class="chunkContent">\
-            <h2><span>03</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="'+baseUrl+ "/download/specificationsOrder?orderId=" + applyInfo.id +'">下载</a></h2>'
+            <h2><span>03</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="' + baseUrl + "/download/specificationsOrder?orderId=" + applyInfo.id + '">下载</a></h2>'
         }
         if (doctorEnjoinJson.longTimeArr && doctorEnjoinJson.longTimeArr.length > 0 && doctorEnjoinJson.temporaryTreatArr && doctorEnjoinJson.temporaryTreatArr.length > 0) {
             _html = '<div class="chunkContent">\
-                <h2><span>03</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="'+baseUrl+ "/download/specificationsOrder?orderId=" + applyInfo.id +'">下载</a></h2>'
+                <h2><span>03</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="' + baseUrl + "/download/specificationsOrder?orderId=" + applyInfo.id + '">下载</a></h2>'
         }
         if (!doctorEnjoinJson.longTimeArr && !doctorEnjoinJson.temporaryTreatArr && !doctorEnjoinJson.temporaryDrugArr) {
             _html = '<div class="chunkContent">\
-                <h2><span>01</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="'+baseUrl+ "/download/specificationsOrder?orderId=" + applyInfo.id +'">下载</a></h2>'
+                <h2><span>01</span><p class="chunkType">手术备品</p><a class="printBtn no-print" href="' + baseUrl + "/download/specificationsOrder?orderId=" + applyInfo.id + '">下载</a></h2>'
         }
         _html += '<div class="oneList">\
                     <div class="oneListItem">\
@@ -332,12 +332,12 @@ function renderViewByRole() {
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".compileReport").show();
-            let  endDate = new  Date(Date.parse(applyTimeList[0].eventEndTime .replace(/-/g,"/")));
+            let endDate = new Date(Date.parse(applyTimeList[0].eventEndTime.replace(/-/g, "/")));
             if (isMainDoctor && endDate > currentDate) {
-                    $("#meetingControlBtn").show();
+                $("#meetingControlBtn").show();
             }
             if (isVideo && endDate > currentDate) {
-                    $(".entrance").show();
+                $(".entrance").show();
             }
         } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
             //待反馈
@@ -699,12 +699,48 @@ $(function () {
 
     $("#entryConsultationRoomBtn").click(function () {
         let meetInfo = JSON.parse(applyInfo.meetJson);
-        //新窗口打开直播页面
+        if (isMainDoctor) {
+            //新窗口打开直播页面
+            $("#qrcode").html("")
+            let qrcode = new QRCode("qrcode", {
+                width: 128,
+                height: 128,
+                colorDark: "#000000",
+                colorLight: "#ffffff"
+            });
+            $("#appointmentNumber").html(meetInfo.appointmentNumber);
+            $("#hostPwd").html(meetInfo.hostPwd);
+            $("#webrtcUrl").html(meetInfo.webrtcUrl);
+            if(applyInfo.meetStart){
+                $("#liveUrl").html(baseUrl + "/#/page/watch-live/" + meetInfo.appointmentId);
+                $("#livePwd").html(meetInfo.livePwd);
+                $("#livePwd").html(123456);
+            }else{
+
+            }
+            qrcode.makeCode(baseUrl + "/#/page/watch-live/" + meetInfo.appointmentId);
+            layer.open({
+                type: 1,
+                title: '',
+                area: ['600px', '380px'],
+                closeBtn: true,
+                shade: [0.7, '#000000'],
+                shadeClose: true,
+                content: _$('#metingAttributeShowBox')
+            });
+            return false;
+        }
         let userInfo = JSON.parse(localStorage.getItem("userInfo"));
         window.open(baseUrl + "/#/webrtc/" + userInfo.userPhone + "/" + meetInfo.appointmentNumber + "/" + meetInfo.hostPwd + "/" + userInfo.userName, "_blank");
         console.log(meetInfo);
-    })
+    });
 
+    $("#metingAttributeShowBoxYesBtn").click(function () {
+        let meetInfo = JSON.parse(applyInfo.meetJson);
+        let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        window.open(baseUrl + "/#/webrtc/" + userInfo.userPhone + "/" + meetInfo.appointmentNumber + "/" + meetInfo.hostPwd + "/" + userInfo.userName, "_blank");
+        console.log(meetInfo);
+    });
 
     /** 直播控制 */
     $("#meetingControlBtn").click(function () {
@@ -715,7 +751,7 @@ $(function () {
 
     function getLiveInfoSuccess(liveInfo) {
         //新窗口打开直播控制功能
-        window.open(baseUrl+"/#/to/" + liveInfo.account + "/meeting-control/" + liveInfo.cid, "_blank");
+        window.open(baseUrl + "/#/to/" + liveInfo.account + "/meeting-control/" + liveInfo.cid, "_blank");
         return false;
         //本窗口悬浮打开直播控制功能
         // $("#liveControlIframe").attr('src', baseUrl + "/#/to/" + liveInfo.account + "/meeting-control/" + liveInfo.cid);

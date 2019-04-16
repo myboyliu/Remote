@@ -17,6 +17,7 @@
     <script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>
     <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="../common/layui/layui.all.js"></script>
+    <script src="../common/js/qrcode.min.js"></script>
     <script src="../common/js/less.js"></script>
     <script src="../common/js/PDFObject.min.js"></script>
     <script src="../common/js/jQuery.print.min.js"></script>
@@ -289,7 +290,8 @@
             <span>临床反馈</span>
         </div>
         <div class="rejectionLayer_buttom">
-            <textarea maxlength="2000" id="consultantFeedbackValue" name="" placeholder="请输入..." class="feedback_Val"></textarea>
+            <textarea maxlength="2000" id="consultantFeedbackValue" name="" placeholder="请输入..."
+                      class="feedback_Val"></textarea>
 
         </div>
         <input type="button" value="暂存" class="feed_TS">
@@ -412,6 +414,21 @@
         <a id="choiceMeetingAttributeBoxYesBtn" class="yesBtn" href="javascript:;">确定</a>
     </div>
 </div>
+<!-- 会议属性 选择弹窗-->
+<div id="metingAttributeShowBox">
+    <div class="attrNameBox">
+        <div><span class="attrName">会议号:<label id="appointmentNumber"></label></span><span style="margin-left: 60px">会议密码:</span><label id="hostPwd"></label></span></div>
+        <div>入会链接:<label id="webrtcUrl"></label></div>
+        <div>直播链接:<label id="liveUrl"></label></div>
+        <div>直播密码:<label id="livePwd"></label></div>
+    </div>
+    <div class="btnBox">
+        <a id="metingAttributeShowBoxYesBtn" class="yesBtn" href="javascript:;">进入视频会诊室</a>
+    </div>
+    <div class="qrcodeBox">
+        <div class="qrcode" id="qrcode"></div>
+    </div>
+</div>
 <!-- 视频会诊时间选择 -->
 <div id="receiveConsultationTimeBox" class="selectTimeContainer clearfix">
     <div class="closeBtnTime clearfix">
@@ -434,7 +451,7 @@
             <a class="clearBtn" href="javascript:;">清空本页</a>
         </div>
         <div class="btnBox">
-            <a id="receiveConsultationTimeBoxYesBtn"  href="javascript:;" class="yesBtn">确定</a>
+            <a id="receiveConsultationTimeBoxYesBtn" href="javascript:;" class="yesBtn">确定</a>
         </div>
     </div>
 </div>
