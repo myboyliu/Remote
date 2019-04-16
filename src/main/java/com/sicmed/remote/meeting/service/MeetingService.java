@@ -12,13 +12,10 @@ import com.sicmed.remote.meeting.entity.RequestMeeting;
 import com.sicmed.remote.meeting.mapper.MeetingMapper;
 import com.sicmed.remote.meeting.util.YqyMeetingUtils;
 import com.sicmed.remote.task.RedisTimerService;
-import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.ApplyTime;
 import com.sicmed.remote.web.entity.CaseConsultant;
-import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.mapper.ApplyFormMapper;
 import com.sicmed.remote.web.mapper.ApplyTimeMapper;
-import com.sicmed.remote.web.mapper.UserDetailMapper;
 import com.sicmed.remote.web.service.CaseConsultantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -81,7 +77,13 @@ public class MeetingService {
 
         //1.创建视频会议
         Meeting meeting = meetingMapper.selectByPrimaryKey(applyTime.getApplyFormId());
-        //meeting.setId(applyTime.getApplyFormId());
+        if (meeting == null) {
+            meeting = new Meeting();
+            meeting.setId(applyTime.getApplyFormId());
+            meeting.setMeetMute(false);
+            meeting.setMeetStart(false);
+            meeting.setMeetRecord(false);
+        }
         meeting.setApplyTime(applyTime);
         log.debug("----------------------调用云启云业务开始------------------------");
         //2.调用云启云视频会议 接口 创建视频会议
@@ -91,9 +93,6 @@ public class MeetingService {
         requestMeeting.setMobile(masterDoctorBean.getDoctorPhone());
         requestMeeting.setRealName(masterDoctorBean.getDoctorName());
         MeetingBean meetingBean = YqyMeetingUtils.createMeeting(requestMeeting);
-        if(meetingBean == null){
-            int i = 1/0;
-        }
         log.debug("----------------------调用云启云业务结束------------------------");
         //3.云启云视频会议 接口 调用 结果处理
         meeting.setMeetingBean(meetingBean);
@@ -120,6 +119,7 @@ public class MeetingService {
      * 根据 视频会诊ID 修改 会议
      */
     public void updateMeeting(String applyFormId) {
+
         //1.查询视频会诊信息
         ApplyTime applyTime = applyTimeMapper.getFinalTime(applyFormId);
         try {
@@ -128,11 +128,18 @@ public class MeetingService {
             e.printStackTrace();
         }
     }
+
     /**
      * 根据 视频会诊ID 修改 会议
      */
     public void updateMeeting(Meeting meeting) {
-        meetingMapper.updateByPrimaryKeySelective(meeting);
+        Meeting m = meetingMapper.selectByPrimaryKey(meeting.getId());
+        if (null == m) {
+            meetingMapper.insertSelective(meeting);
+        } else {
+            meetingMapper.updateByPrimaryKeySelective(meeting);
+        }
+
     }
 
     /**
