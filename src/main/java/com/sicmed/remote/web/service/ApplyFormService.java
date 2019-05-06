@@ -291,4 +291,8 @@ public class ApplyFormService implements BaseService<ApplyForm> {
     public List<String> selectTimeByParam(ScheduledParam scheduledParam) {
         return applyFormMapper.selectTimeByParam(scheduledParam);
     }
+
+    public List<ApplyForm> selectScheduledByParam(ScheduledParam scheduledParam) {
+        return applyFormMapper.selectScheduledByParam(scheduledParam);
+    }
 }

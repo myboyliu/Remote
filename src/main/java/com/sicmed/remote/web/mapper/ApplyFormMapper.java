@@ -79,4 +79,6 @@ public interface ApplyFormMapper {
     MasterDoctorBean getMasterDoctorById(String applyFormId);
 
     int updateReferralStatusToEnd(String applyFormId);
+
+    List<ApplyForm> selectScheduledByParam(ScheduledParam scheduledParam);
 }

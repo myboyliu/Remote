@@ -31,6 +31,62 @@ function renderSecondLevelBranchSelect(branchList){
 }
 
 /**
+ * 渲染日程内容列表
+ */
+function renderScheduledTable(scheduledList) {
+    console.log(scheduledList);
+    // 成功操作
+    dateTempList = []; // 收集的时间段
+    let tempArr = scheduledList;
+    let _html = '';
+    for (let i = 0; i < tempArr.length; i++) {
+        let date = tempArr[i].consultantApplyTime.split(' ')[0];
+        // let date = tempArr[i].time.split(' ')[0];
+        let startDate = tempArr[i].consultantApplyTime.split(' ')[1];
+        let hours = startDate.split(':')[0];
+        let minute = startDate.split(':')[1];
+        let startIndex = (hours * 60 + minute * 1) / 15;
+        let endDate = tempArr[i].consultantApplyTime.split(' ')[1];
+        let endHour = endDate.split(':')[0];
+        let endMinute = endDate.split(':')[1];
+        let endIndex = Math.ceil((endHour * 60 + endMinute * 1) / 15);
+        dateTempList.push({
+            "date": date,
+            "startIndex": startIndex,
+            "endIndex": endIndex - 1,
+        });
+        _html += '<tr name="' + tempArr[i].id + '" inHospitalName="' + tempArr[i].inHospitalName + '" outHospitalName="' + tempArr[i].outHospitalName + '">\
+                      <td style="padding-left:50px;">' + startDate + '</td>\
+                      <td>'
+        if (tempArr[i].applyUrgent == "0") {
+            _html += '<img class="" src="../images/light.png" />'
+        }
+        _html += '</td>\
+                      <td>'
+        if (tempArr[i].applyType == "APPLY_CONSULTATION_VIDEO" ||tempArr[i].applyType == "APPLY_CONSULTATION_IMAGE_TEXT") {
+            _html += '会诊'
+        } else {
+            _html += '转诊'
+        }
+        _html += '</td>\
+                      <td title="' + tempArr[i].inviteSummary  + '">' + tempArr[i].inviteSummary + '</td><td title="' + tempArr[i].applySummary + '">' + tempArr[i].applySummary  + '</td><td>'
+        if (tempArr[i].applyType == "APPLY_CONSULTATION_IMAGE_TEXT") {
+            _html += '图文会诊';
+        } else {
+            _html += '视频会诊';
+        }
+        _html += '</td>\
+                  </tr>'
+    }
+    $('.bodyContent').html(_html);
+    $('#timeUl > li').removeClass('active');
+    for (var i = 0; i < dateTempList.length; i++) {
+        for (var j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
+            $('#timeUl > li').eq(j).addClass('active');
+        }
+    }
+}
+/**
  * 渲染 时间 表 页面
  */
 function renderTimeView(){
@@ -74,8 +130,8 @@ function MouthSection(month) {
     // console.log(_date.getFullYear() + '-' + double(month));
 
     let formData = new FormData();
-    formData.append("month",_date.getFullYear() + '-' + double(month));
-    formData.append("branchId",deptId);
+    formData.append("date",_date.getFullYear() + '-' + double(month));
+    formData.append("branchId",$('.twoDeptSelect').val());
     function findSchedulingSuccess(data) {
         console.log(data);
         markJson = {};
@@ -86,6 +142,7 @@ function MouthSection(month) {
         redrawDate();
     }
     ajaxRequest("POST",findSchedulingUrl,formData,false,false,true,findSchedulingSuccess,null,null);
+
     // $.ajax({
     //     type: 'POST',
     //     url: IP + 'order/deptSchedulingList',
@@ -119,16 +176,19 @@ function MouthSection(month) {
 function redrawDate() {
     $('#timeBox').html('');
     layui.use('laydate', function() {
-        var laydate = layui.laydate;
+        let laydate = layui.laydate;
         //执行一个laydate实例
         laydate.render({
             elem: '#timeBox',
             position: 'static',
             showBottom: false,
             value: dateStr,
+            // min: '2019-5-1',
+            // max: '2022-5-1',
             mark: markJson,
             change: function(value, date) { //监听日期被切换
-                deptScheduling(value + ' 00:00:00', value + ' 23:59:00', value);
+                // deptScheduling(value + ' 00:00:00', value + ' 23:59:00');
+                deptScheduling(value);
                 if (currentMonth != date.month) {
                     currentMonth = date.month;
                     MouthSection(date.month);
@@ -143,96 +203,98 @@ function redrawDate() {
 
 
 // 科室排班查询接口、
-function deptScheduling(startDate, endDate, value) {
-    console.log("222222222");
-    ajaxRequest("GET",getSchedulingListUrl,"",false,false,true,renderFirstLevelBranchSelect,null,null);
+function deptScheduling(date) {
+    let queryParam = new FormData();
+    queryParam.append("date",date);
+    queryParam.append("branchId",$('.twoDeptSelect').val());
+    ajaxRequest("POST",findScheduledUrl,queryParam,false,false,true,renderScheduledTable,null,null);
 
     //查询 排期内容
-    $.ajax({
-        type: 'POST',
-        url: IP + 'order/deptScheduling',
-        dataType: 'json',
-        data: {
-            "deptId": $('.twoDeptSelect').val(),
-            "startDate": startDate,
-            "endDate": endDate,
-        },
-        xhrFields: {
-            withCredentials: true
-        },
-        crossDomain: true,
-        global: false,
-        success: function(data) {
-            console.log(data)
-            if (data.status == 200) {
-                // 成功操作
-                dateTempList = []; // 收集的时间段
-                var tempArr = data.orderFormList;
-                var _html = '';
-                for (var i = 0; i < tempArr.length; i++) {
-                    var date = tempArr[i].time.split(' ')[0];
-                    var startDate = tempArr[i].time.split(' ')[1];
-                    var hours = startDate.split(':')[0];
-                    var minute = startDate.split(':')[1];
-                    var startIndex = (hours * 60 + minute * 1) / 15;
-                    var endDate = tempArr[i].endTime.split(' ')[1];
-                    var endHour = endDate.split(':')[0];
-                    var endMinute = endDate.split(':')[1];
-                    var endIndex = Math.ceil((endHour * 60 + endMinute * 1) / 15);
-                    dateTempList.push({
-                        "date": date,
-                        "startIndex": startIndex,
-                        "endIndex": endIndex - 1,
-                    });
-                    _html += '<tr name="' + tempArr[i].id + '" inHospitalName="' + tempArr[i].inHospitalName + '" outHospitalName="' + tempArr[i].outHospitalName + '">\
-                      <td style="padding-left:50px;">' + startDate + '</td>\
-                      <td>'
-                    if (tempArr[i].isurgent == 1) {
-                        _html += '<img class="" src="/yilaiyiwang/images/light.png" />'
-                    }
-                    _html += '</td>\
-                      <td>'
-                    if (tempArr[i].orderType == 0) {
-                        _html += '会诊'
-                    } else {
-                        _html += '转诊'
-                    }
-                    _html += '</td>\
-                      <td title="' + tempArr[i].inName + ';' + tempArr[i].inTitle + ';' + tempArr[i].inDeptName + ';' + tempArr[i].inHospitalName + '"><' + tempArr[i].inName + ';' + tempArr[i].inTitle + ';' + tempArr[i].inDeptName + ';' + tempArr[i].inHospitalName + '></td><td title="' + tempArr[i].outName + ';' + tempArr[i].outTitle + ';' + tempArr[i].outDeptName + ';' + tempArr[i].outHospitalName + '"><' + tempArr[i].outName + ';' + tempArr[i].outTitle + ';' + tempArr[i].outDeptName + ';' + tempArr[i].outHospitalName + '></td><td>'
-                    if (tempArr[i].manner == '0') {
-                        _html += '图文会诊';
-                    } else {
-                        _html += '视频会诊';
-                    }
-                    _html += '</td>\
-                  </tr>'
-                }
-                $('.bodyContent').html(_html);
-                $('#timeUl > li').removeClass('active');
-                for (var i = 0; i < dateTempList.length; i++) {
-                    for (var j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
-                        $('#timeUl > li').eq(j).addClass('active');
-                    }
-                }
-            } else if (data.status == 250) {
-                // 未登录操作
-                window.location = '/yilaiyiwang/login/login.html';
-            } else if (data.status == 205) {
-                $('.bodyContent').html('<p class="noData">无预约</p>');
-                $('#timeUl > li').removeClass('active');
-                // 其他操作
-            } else if (data.status == 502) {
-                layer.msg('请选择科室');
-            }
-        },
-        error: function(err) {
-            console.log(err);
-
-        },
-    });
+    // $.ajax({
+    //     type: 'POST',
+    //     url: IP + 'order/deptScheduling',
+    //     dataType: 'json',
+    //     data: {
+    //         "deptId": $('.twoDeptSelect').val(),
+    //         "startDate": startDate,
+    //         "endDate": endDate,
+    //     },
+    //     xhrFields: {
+    //         withCredentials: true
+    //     },
+    //     crossDomain: true,
+    //     global: false,
+    //     success: function(data) {
+    //         console.log(data)
+    //         if (data.status == 200) {
+    //             // 成功操作
+    //             dateTempList = []; // 收集的时间段
+    //             var tempArr = data.orderFormList;
+    //             var _html = '';
+    //             for (var i = 0; i < tempArr.length; i++) {
+    //                 var date = tempArr[i].time.split(' ')[0];
+    //                 var startDate = tempArr[i].time.split(' ')[1];
+    //                 var hours = startDate.split(':')[0];
+    //                 var minute = startDate.split(':')[1];
+    //                 var startIndex = (hours * 60 + minute * 1) / 15;
+    //                 var endDate = tempArr[i].endTime.split(' ')[1];
+    //                 var endHour = endDate.split(':')[0];
+    //                 var endMinute = endDate.split(':')[1];
+    //                 var endIndex = Math.ceil((endHour * 60 + endMinute * 1) / 15);
+    //                 dateTempList.push({
+    //                     "date": date,
+    //                     "startIndex": startIndex,
+    //                     "endIndex": endIndex - 1,
+    //                 });
+    //                 _html += '<tr name="' + tempArr[i].id + '" inHospitalName="' + tempArr[i].inHospitalName + '" outHospitalName="' + tempArr[i].outHospitalName + '">\
+    //                   <td style="padding-left:50px;">' + startDate + '</td>\
+    //                   <td>'
+    //                 if (tempArr[i].isurgent == 1) {
+    //                     _html += '<img class="" src="/yilaiyiwang/images/light.png" />'
+    //                 }
+    //                 _html += '</td>\
+    //                   <td>'
+    //                 if (tempArr[i].orderType == 0) {
+    //                     _html += '会诊'
+    //                 } else {
+    //                     _html += '转诊'
+    //                 }
+    //                 _html += '</td>\
+    //                   <td title="' + tempArr[i].inName + ';' + tempArr[i].inTitle + ';' + tempArr[i].inDeptName + ';' + tempArr[i].inHospitalName + '"><' + tempArr[i].inName + ';' + tempArr[i].inTitle + ';' + tempArr[i].inDeptName + ';' + tempArr[i].inHospitalName + '></td><td title="' + tempArr[i].outName + ';' + tempArr[i].outTitle + ';' + tempArr[i].outDeptName + ';' + tempArr[i].outHospitalName + '"><' + tempArr[i].outName + ';' + tempArr[i].outTitle + ';' + tempArr[i].outDeptName + ';' + tempArr[i].outHospitalName + '></td><td>'
+    //                 if (tempArr[i].manner == '0') {
+    //                     _html += '图文会诊';
+    //                 } else {
+    //                     _html += '视频会诊';
+    //                 }
+    //                 _html += '</td>\
+    //               </tr>'
+    //             }
+    //             $('.bodyContent').html(_html);
+    //             $('#timeUl > li').removeClass('active');
+    //             for (var i = 0; i < dateTempList.length; i++) {
+    //                 for (var j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
+    //                     $('#timeUl > li').eq(j).addClass('active');
+    //                 }
+    //             }
+    //         } else if (data.status == 250) {
+    //             // 未登录操作
+    //             window.location = '/yilaiyiwang/login/login.html';
+    //         } else if (data.status == 205) {
+    //             $('.bodyContent').html('<p class="noData">无预约</p>');
+    //             $('#timeUl > li').removeClass('active');
+    //             // 其他操作
+    //         } else if (data.status == 502) {
+    //             layer.msg('请选择科室');
+    //         }
+    //     },
+    //     error: function(err) {
+    //         console.log(err);
+    //
+    //     },
+    // });
 }
 $(function() {
-
+    //1.加载两级联动科室数据
     ajaxRequest("GET",getTwoLevelLinkageBranchUrl,"",false,false,true,renderFirstLevelBranchSelect,null,null);
 
     $('.oneDeptSelect').change(function() {
@@ -249,8 +311,8 @@ $(function() {
 
 
     $('.twoDeptSelect').change(function() {
-        deptId = $(this).val();
-        deptScheduling(dateStr + ' 00:00:00', dateStr + ' 23:59:00', deptId);
+        // deptScheduling(dateStr + ' 00:00:00', dateStr + ' 23:59:00');
+        deptScheduling(dateStr);
         MouthSection(currentMonth);
         // 渲染日历控件
         redrawDate();

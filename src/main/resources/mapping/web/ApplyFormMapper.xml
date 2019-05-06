@@ -1254,22 +1254,6 @@
         </if>
         group by dates
     </select>
-    <select id="selectTimeByParam" parameterType="com.sicmed.remote.web.bean.ScheduledParam"
-            resultType="java.lang.String">
-        select
-        DATE_FORMAT(applyTime.event_start_time,'%Y-%m-%d')
-        from apply_form applyForm
-        LEFT JOIN apply_time applyTime ON applyTime.apply_form_id = applyForm.id AND applyTime.del_flag = '0'
-        <where>
-            applyForm.del_flag = '0'
-            AND (applyForm.apply_branch_id = #{branchId,jdbcType=VARCHAR}
-            OR applyForm.invite_branch_id = #{branchId,jdbcType=VARCHAR})
-            AND (applyForm.apply_hospital_id = #{hospitalId,jdbcType=VARCHAR}
-            OR applyForm.invite_hospital_id = #{hospitalId,jdbcType=VARCHAR})
-            AND DATE_FORMAT(applyTime.event_start_time,'%Y-%m') = #{date,jdbcType=VARCHAR}
-        </where>
-        group by DATE_FORMAT(applyTime.event_start_time,'%Y-%m-%d')
-    </select>
     <select id="getMasterDoctorById" parameterType="java.lang.String"
             resultType="com.sicmed.remote.meeting.bean.MasterDoctorBean">
         select
@@ -1282,8 +1266,6 @@
             applyForm.id = #{id,jdbcType=VARCHAR}
         </where>
     </select>
-
-
     <update id="updateReferralStatusToEnd" parameterType="java.lang.String">
        update apply_form
         set
@@ -1292,5 +1274,42 @@
         where id = #{id,jdbcType=VARCHAR}
         AND apply_status = "INQUIRY_DATETIME_LOCKED"
     </update>
+    <!-- 查询排期时间 -->
+    <select id="selectTimeByParam" parameterType="com.sicmed.remote.web.bean.ScheduledParam"
+            resultType="java.lang.String">
+        select
+        DATE_FORMAT(applyTime.event_start_time,'%Y-%m-%d')
+        from apply_form applyForm
+        LEFT JOIN apply_time applyTime ON applyTime.apply_form_id = applyForm.id AND applyTime.del_flag = '0'
+        <where>
+            applyForm.del_flag = '0'
+            AND (applyForm.apply_branch_id = #{branchId,jdbcType=VARCHAR}
+            OR applyForm.invite_branch_id = #{branchId,jdbcType=VARCHAR})
+            AND (applyForm.apply_hospital_id = #{hospitalId,jdbcType=VARCHAR}
+            OR applyForm.invite_hospital_id = #{hospitalId,jdbcType=VARCHAR})
+            <if test="date != null and date != ''">
+                AND DATE_FORMAT(applyTime.event_start_time,'%Y-%m') = #{date,jdbcType=VARCHAR}
+            </if>
+        </where>
+        group by DATE_FORMAT(applyTime.event_start_time,'%Y-%m-%d')
+    </select>
+
+    <select id="selectScheduledByParam" parameterType="com.sicmed.remote.web.bean.ScheduledParam" resultMap="BaseResultMap">
+        select applyForm.id id,case_summary, apply_summary, invite_summary,consultant_apply_time,applyForm.apply_status apply_status,case_record_id,
+        apply_type, apply_remark,apply_urgent
+        from apply_form applyForm
+        LEFT JOIN apply_time applyTime ON applyTime.apply_form_id = applyForm.id AND applyTime.del_flag = '0'
+        <where>
+            applyForm.del_flag = '0'
+            AND (applyForm.apply_branch_id = #{branchId,jdbcType=VARCHAR}
+            OR applyForm.invite_branch_id = #{branchId,jdbcType=VARCHAR})
+            AND (applyForm.apply_hospital_id = #{hospitalId,jdbcType=VARCHAR}
+            OR applyForm.invite_hospital_id = #{hospitalId,jdbcType=VARCHAR})
+            <if test="date != null and date != ''">
+                AND DATE_FORMAT(applyTime.event_start_time,'%Y-%m-%d') = #{date,jdbcType=VARCHAR}
+            </if>
+        </where>
+        group by applyForm.id
+    </select>
 </mapper>
 

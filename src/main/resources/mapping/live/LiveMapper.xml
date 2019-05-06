@@ -474,7 +474,9 @@
             del_flag = '0'
             AND live_branch = #{branchId,jdbcType=VARCHAR}
             AND live_hospital = #{hospitalId,jdbcType=VARCHAR}
-            AND DATE_FORMAT(live_start_time,'%Y-%m') = #{date,jdbcType=VARCHAR}
+            <if test="date != null and date != ''">
+                AND DATE_FORMAT(live_start_time,'%Y-%m') = #{date,jdbcType=VARCHAR}
+            </if>
         </where>
         group by  DATE_FORMAT(live_start_time,'%Y-%m-%d')
     </select>

@@ -107,12 +107,14 @@ public class SmsServiceImpl implements SmsService {
         try {
             smsSingleSenderResult = smsSingleSender.send(type, nationCode, phoneNumber, msg, null, null);
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
         //判断 短信发送是否成功
         if (smsSingleSenderResult.result == 0) {
             return true;
         }
+        System.out.println(smsSingleSenderResult.errMsg);
         return false;
     }
 
