@@ -699,6 +699,7 @@ $(function () {
 
     $("#entryConsultationRoomBtn").click(function () {
         let meetInfo = JSON.parse(applyInfo.meetJson);
+        let userInfo = JSON.parse(localStorage.getItem("userInfo"));
         if (isMainDoctor) {
             //新窗口打开直播页面
             $("#qrcode").html("")
@@ -710,19 +711,19 @@ $(function () {
             });
             $("#appointmentNumber").html(meetInfo.appointmentNumber);
             $("#hostPwd").html(meetInfo.hostPwd);
-            $("#webrtcUrl").html(meetInfo.webrtcUrl);
+            $("#webrtcUrl").html(baseUrl + "/#/webrtc/" + userInfo.userPhone + "/" + meetInfo.appointmentNumber + "/" + meetInfo.hostPwd + "/" + userInfo.userName);
             if(applyInfo.meetStart){
-                $("#liveUrl").html(baseUrl + "/#/page/watch-live/" + meetInfo.appointmentId);
+                $("#liveUrl").html(baseUrl + "/#/watch-live/" + meetInfo.appointmentId);
                 $("#livePwd").html(meetInfo.livePwd);
                 $("#livePwd").html(123456);
             }else{
 
             }
-            qrcode.makeCode(baseUrl + "/#/page/watch-live/" + meetInfo.appointmentId);
+            qrcode.makeCode(baseUrl + "/#/watch-live/" + meetInfo.appointmentId);
             layer.open({
                 type: 1,
                 title: '',
-                area: ['600px', '380px'],
+                area: ['800px', '480px'],
                 closeBtn: true,
                 shade: [0.7, '#000000'],
                 shadeClose: true,
@@ -730,7 +731,6 @@ $(function () {
             });
             return false;
         }
-        let userInfo = JSON.parse(localStorage.getItem("userInfo"));
         window.open(baseUrl + "/#/webrtc/" + userInfo.userPhone + "/" + meetInfo.appointmentNumber + "/" + meetInfo.hostPwd + "/" + userInfo.userName, "_blank");
         console.log(meetInfo);
     });
