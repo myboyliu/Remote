@@ -80,5 +80,5 @@ public interface ApplyFormMapper {
 
     int updateReferralStatusToEnd(String applyFormId);
 
-    List<ApplyForm> selectScheduledByParam(ScheduledParam scheduledParam);
+    List<ApplyFormBean> selectScheduledByParam(ScheduledParam scheduledParam);
 }

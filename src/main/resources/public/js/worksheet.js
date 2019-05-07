@@ -3,7 +3,6 @@
  * @param branchList
  */
 function renderFirstLevelBranchSelect(branchList){
-    console.log(branchList);
     let tempArr = branchList;
     let _html = '<option value="">请选择</option>';
     for (let i = 0; i < tempArr.length; i++) {
@@ -34,19 +33,18 @@ function renderSecondLevelBranchSelect(branchList){
  * 渲染日程内容列表
  */
 function renderScheduledTable(scheduledList) {
-    console.log(scheduledList);
     // 成功操作
     dateTempList = []; // 收集的时间段
     let tempArr = scheduledList;
     let _html = '';
     for (let i = 0; i < tempArr.length; i++) {
-        let date = tempArr[i].consultantApplyTime.split(' ')[0];
+        let date = tempArr[i].consultantStartTime.split(' ')[0];
         // let date = tempArr[i].time.split(' ')[0];
-        let startDate = tempArr[i].consultantApplyTime.split(' ')[1];
+        let startDate = tempArr[i].consultantStartTime.split(' ')[1];
         let hours = startDate.split(':')[0];
         let minute = startDate.split(':')[1];
         let startIndex = (hours * 60 + minute * 1) / 15;
-        let endDate = tempArr[i].consultantApplyTime.split(' ')[1];
+        let endDate = tempArr[i].consultantEndTime.split(' ')[1];
         let endHour = endDate.split(':')[0];
         let endMinute = endDate.split(':')[1];
         let endIndex = Math.ceil((endHour * 60 + endMinute * 1) / 15);
@@ -80,8 +78,8 @@ function renderScheduledTable(scheduledList) {
     }
     $('.bodyContent').html(_html);
     $('#timeUl > li').removeClass('active');
-    for (var i = 0; i < dateTempList.length; i++) {
-        for (var j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
+    for (let i = 0; i < dateTempList.length; i++) {
+        for (let j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
             $('#timeUl > li').eq(j).addClass('active');
         }
     }
@@ -133,7 +131,6 @@ function MouthSection(month) {
     formData.append("date",_date.getFullYear() + '-' + double(month));
     formData.append("branchId",$('.twoDeptSelect').val());
     function findSchedulingSuccess(data) {
-        console.log(data);
         markJson = {};
         let tempArr = data;
         for (let i = 0; i < tempArr.length; i++) {
@@ -320,6 +317,7 @@ $(function() {
 
     // 科室日历筛选出的订单列表操作
     $('.bodyContent').delegate('tr', 'click', function() {
+        console.log($(this).attr("name"))
         if ($(this).attr("inHospitalName") == localStorage.getItem('hospitalName')) {
             selectOrderById($(this).attr("name"),0,1);
         } else if ($(this).attr("outHospitalName") == localStorage.getItem('hospitalName')) {

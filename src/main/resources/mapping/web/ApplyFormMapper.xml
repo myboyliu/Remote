@@ -1293,18 +1293,31 @@
         </where>
         group by DATE_FORMAT(applyTime.event_start_time,'%Y-%m-%d')
     </select>
+    <resultMap id="ScheduledResultMap" type="com.sicmed.remote.web.bean.ApplyFormBean">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="apply_summary" jdbcType="VARCHAR" property="applySummary"/>
+        <result column="invite_summary" jdbcType="VARCHAR" property="inviteSummary"/>
+        <result column="apply_type" jdbcType="VARCHAR" property="applyType"/>
+        <result column="apply_urgent" jdbcType="VARCHAR" property="applyUrgent"/>
+        <result column="event_start_time" jdbcType="VARCHAR" property="consultantStartTime"/>
+        <result column="event_end_time" jdbcType="VARCHAR" property="consultantEndTime"/>
 
-    <select id="selectScheduledByParam" parameterType="com.sicmed.remote.web.bean.ScheduledParam" resultMap="BaseResultMap">
-        select applyForm.id id,case_summary, apply_summary, invite_summary,consultant_apply_time,applyForm.apply_status apply_status,case_record_id,
-        apply_type, apply_remark,apply_urgent
+    </resultMap>
+    <select id="selectScheduledByParam" parameterType="com.sicmed.remote.web.bean.ScheduledParam" resultMap="ScheduledResultMap">
+        select applyForm.id id, apply_summary, invite_summary,
+        apply_type,apply_urgent,event_start_time ,event_end_time
         from apply_form applyForm
         LEFT JOIN apply_time applyTime ON applyTime.apply_form_id = applyForm.id AND applyTime.del_flag = '0'
         <where>
             applyForm.del_flag = '0'
+            AND (applyForm.apply_status = "CONSULTATION_BEGIN"
+              OR applyForm.apply_status = "CONSULTATION_REPORT_SUBMITTED"
+              OR applyForm.apply_status = "CONSULTATION_FEEDBACK_SUBMITTED"
+              OR applyForm.apply_status = "CONSULTATION_END")
             AND (applyForm.apply_branch_id = #{branchId,jdbcType=VARCHAR}
-            OR applyForm.invite_branch_id = #{branchId,jdbcType=VARCHAR})
+              OR applyForm.invite_branch_id = #{branchId,jdbcType=VARCHAR})
             AND (applyForm.apply_hospital_id = #{hospitalId,jdbcType=VARCHAR}
-            OR applyForm.invite_hospital_id = #{hospitalId,jdbcType=VARCHAR})
+              OR applyForm.invite_hospital_id = #{hospitalId,jdbcType=VARCHAR})
             <if test="date != null and date != ''">
                 AND DATE_FORMAT(applyTime.event_start_time,'%Y-%m-%d') = #{date,jdbcType=VARCHAR}
             </if>

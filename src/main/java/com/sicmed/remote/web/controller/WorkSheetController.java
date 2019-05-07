@@ -2,6 +2,7 @@ package com.sicmed.remote.web.controller;
 
 import com.sicmed.remote.common.util.UserTokenManager;
 import com.sicmed.remote.live.service.LiveService;
+import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ScheduledParam;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.service.ApplyFormService;
@@ -52,7 +53,7 @@ public class WorkSheetController extends BaseController {
     public Object findScheduled(ScheduledParam scheduledParam){
         scheduledParam.setHospitalId(UserTokenManager.getCurrentUser().getHospitalId());
 
-        List<ApplyForm> applyFormList = applyFormService.selectScheduledByParam(scheduledParam);
+        List<ApplyFormBean> applyFormList = applyFormService.selectScheduledByParam(scheduledParam);
 //        List<String> liveList = liveService.selectScheduledByParam(scheduledParam);
 
 

@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.bean;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.ApplyNode;
@@ -36,9 +37,10 @@ public class ApplyFormBean extends ApplyForm implements Serializable {
     private Integer patientWeight;
     private String caseDiagnosis;
 
-
-    private Date consultantStartTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date consultantEndTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date consultantStartTime;
     private String consultantReport;
     private String consultantFeedback;
     private BigDecimal consultantPrice;
