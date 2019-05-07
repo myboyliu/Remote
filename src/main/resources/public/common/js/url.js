@@ -258,5 +258,7 @@ const lookGroupMessageUrl = "/message/lookGroupMessage";                 //取�
  * 科室日历
  */
 
+const doctorFindSchedulingUrl = "/worksheet/doctorFindScheduling"
 const findSchedulingUrl = "/worksheet/findScheduling"
 const findScheduledUrl = "/worksheet/findScheduled"
+const doctorFindScheduledUrl = "/worksheet/doctorFindScheduled"

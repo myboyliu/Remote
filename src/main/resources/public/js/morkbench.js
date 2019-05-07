@@ -96,18 +96,45 @@ function MouthSection(month) {
     _date.setDate(0);
     const endDate = _date.getFullYear() + '-' + double(month) + '-' + _date.getDate() + ' 23:59:59';
 
+    let formData = new FormData();
+    formData.append("date",_date.getFullYear() + '-' + double(month));
+    function findSchedulingSuccess(data) {
+        markJson = {};
+        let tempArr = data;
+        for (let i = 0; i < tempArr.length; i++) {
+            markJson[tempArr[i]] = '';
+        }
+        redrawDate();
+    }
+    ajaxRequest("POST",doctorFindSchedulingUrl,formData,false,false,true,findSchedulingSuccess,null,null);
+
 }
 
 /* 医生当天内容 */
-function doctorScheduling(startDate, endDate) {
-
+function doctorScheduling(date) {
+    let formData = new FormData();
+    formData.append("date",date);
+    function findSchedulingSuccess(result){
+        let tempArr = result;
+        let _html = '';
+        for (let i = 0; i < tempArr.length; i++) {
+            let time = tempArr[i].consultantStartTime.split(' ')[1];
+            _html += '<li class="wordItem" name="' + tempArr[i].id + '">\
+						<p><span class="timeText">' + time + '</span>已排期/视频会诊</p>\
+						<div class="contentBox">\
+							<p title="' + tempArr[i].caseSummary + '">' + tempArr[i].caseSummary + '</p>\
+							<p title="收件人：' + tempArr[i].inviteSummary + '">收件人：' + tempArr[i].inviteSummary  + '</p><p title="发件人：' + tempArr[i].applySummary  + '">发件人：' + tempArr[i].applySummary + '</p></div></li>';
+        }
+        $('.workUl').append(_html);
+    }
+    ajaxRequest("POST",doctorFindScheduledUrl,formData,false,false,true,findSchedulingSuccess,null,null);
 }
 
 /**日期插件数据刷新*/
 function redrawDate() {
     $('#test-n1').html('');
     layui.use('laydate', function () {
-        const laydate = layui.laydate;
+        let laydate = layui.laydate;
         //执行一个laydate实例
         laydate.render({
             elem: '#test-n1',
@@ -117,7 +144,8 @@ function redrawDate() {
             mark: markJson,
             change: function (value, date) { //监听日期被切换
                 $('.workUl').html('');
-                doctorScheduling(value + ' 00:00:00', value + ' 23:59:00');
+                doctorScheduling(value);
+
                 if (currentMonth != date.month) {
                     dateStr = date.year + '-' + date.month + '-' + date.date;
                     currentMonth = date.month;
@@ -584,10 +612,8 @@ $(function () {
             });
         }
     });
-
-    MouthSection(currentMonth);
-
-    doctorScheduling(dateStr + ' 00:00:00', dateStr + ' 23:59:00')
     // 渲染日历控件
-    redrawDate();
+    MouthSection(currentMonth);
+    doctorScheduling(dateStr)
+    // redrawDate();
 })

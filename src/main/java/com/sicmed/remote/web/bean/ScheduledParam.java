@@ -9,5 +9,7 @@ public class ScheduledParam {
 
     private String branchId;
 
+    private String doctorId;
+
     private String date;
 }

@@ -26,6 +26,7 @@ public class WorkSheetController extends BaseController {
     @Autowired
     private ApplyFormService applyFormService;
     /**
+     * 医政角色接口
      * Query the scheduled list of dates through the branchId and month
      * @param scheduledParam
      * @return
@@ -45,6 +46,7 @@ public class WorkSheetController extends BaseController {
     }
 
     /**
+     * 医政角色接口
      * Query the live and consultation list through the branchId and date
      * @param scheduledParam
      * @return
@@ -56,6 +58,45 @@ public class WorkSheetController extends BaseController {
         List<ApplyFormBean> applyFormList = applyFormService.selectScheduledByParam(scheduledParam);
 //        List<String> liveList = liveService.selectScheduledByParam(scheduledParam);
 
+
+//        liveTimeList.addAll(consultationTimeList);
+
+        return succeedRequest(applyFormList);
+
+    }
+
+    /**
+     * 医生角色接口
+     * Query the scheduled list of dates through the branchId and month
+     * @param scheduledParam
+     * @return
+     */
+    @PostMapping("doctorFindScheduling")
+    public Object findSchedulingByDoctor(ScheduledParam scheduledParam){
+        scheduledParam.setDoctorId(UserTokenManager.getCurrentUserId());
+
+//        List<String> liveTimeList = liveService.selectTimeByParam(scheduledParam);
+
+        List<String> consultationTimeList = applyFormService.selectTimeByParam(scheduledParam);
+
+//        liveTimeList.addAll(consultationTimeList);
+
+        return succeedRequest(consultationTimeList);
+
+    }
+
+    /**
+     * 医生角色接口
+     * Query the live and consultation list through the branchId and date
+     * @param scheduledParam
+     * @return
+     */
+    @PostMapping("doctorFindScheduled")
+    public Object doctorFindScheduled(ScheduledParam scheduledParam){
+        scheduledParam.setDoctorId(UserTokenManager.getCurrentUserId());
+
+        List<ApplyFormBean> applyFormList = applyFormService.selectScheduledByParam(scheduledParam);
+//        List<String> liveList = liveService.selectScheduledByParam(scheduledParam);
 
 //        liveTimeList.addAll(consultationTimeList);
 
