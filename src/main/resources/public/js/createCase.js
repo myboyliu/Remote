@@ -21,7 +21,7 @@ let isDraft = false;
 let casePatientId = "";
 let caseRecordId = "";
 let draftId = "";
-
+let isAudit = true;
 /** 渲染 病历页面 左侧导航 */
 function renderCaseTypeLeftNavigation(data) {
     let _html = '<li class="oneLevelItem patientInfo active">\
@@ -585,7 +585,11 @@ function createVideoApplyData(caseId, caseSummary) {
     }
     // 选择时间数组
     data.append('startEndTime', JSON.stringify(dateList));
-    ajaxRequest("POST", createVideoApplyUrl, data, false, false, true, createVideoApplySuccess, requestField, null);
+    if (isAudit){
+        ajaxRequest("POST", createVideoApplyAuditUrl, data, false, false, true, createVideoApplySuccess, requestField, null);
+    } else{
+        ajaxRequest("POST", createVideoApplyUrl, data, false, false, true, createVideoApplySuccess, requestField, null);
+    }
 
     function createVideoApplySuccess(result) {
         localStorage.setItem('sendOrderData', JSON.stringify(result));
@@ -1613,7 +1617,21 @@ $(function () {
     $('.videoContent .noBtn').click(function () {
         layer.closeAll();
     });
-
+    $('.auditBox .noBtn').click(function () {
+        isAudit = false;
+        if (isDraft) {
+            updateCaseData(createVideoApplyData);
+        } else {
+            buildCaseData(createVideoApplyData);
+        }
+    });
+    $('.auditBox .yesBtn').click(function () {
+        if (isDraft) {
+            updateCaseData(createVideoApplyData);
+        } else {
+            buildCaseData(createVideoApplyData);
+        }
+    });
     $('.videoContent .yesBtn').click(function () {
         dateList = [];
         for (let i = 0; i < dateTempList.length; i++) {
@@ -1636,12 +1654,15 @@ $(function () {
             }, 3000);
             return false;
         }
-        if (isDraft) {
-            updateCaseData(createVideoApplyData);
-        } else {
-            buildCaseData(createVideoApplyData);
-
-        }
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['500px', '200px'],
+            closeBtn: false,
+            shade: [0.1, '#000000'],
+            shadeClose: false,
+            content: _$('.auditBox'),
+        });
     });
 
 // 填病例底部取消按钮

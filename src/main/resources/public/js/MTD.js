@@ -8,6 +8,7 @@ let applyTimeList = [];
 let isMainDoctor = false;
 let deptId = "";
 let applyFormId;
+let _$ = layui.jquery;
 
 /** 渲染 医生页面 左侧导航 */
 function renderDoctorNavigation(data) {
@@ -419,7 +420,7 @@ $(function () {
         $('.mdt_Btn').show();
     }
     $('.mdt_BtnPic').click(function () {
-        let _$ = layui.jquery;
+
         layer.open({
             type: 1,
             title: '',
@@ -438,6 +439,31 @@ $(function () {
     })
 
     $("#consultationTimeBoxYesBtn").click(function () {
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['400px', '200px'],
+            closeBtn: false,
+            shade: [0.1, '#000000'],
+            shadeClose: false,
+            content: _$('#choiceMeetingAttributeBox'),
+        });
+        return false;
+
+        return false;
+    })
+    $("#choiceMeetingAttributeBoxYesBtn").click(function () {
+
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['500px', '200px'],
+            closeBtn: false,
+            shade: [0.1, '#000000'],
+            shadeClose: false,
+            content: _$('#videoApplyAuditBox'),
+        });
+        let data = new FormData();
         dateList = [];
         for (let i = 0; i < newDateTimeList.length; i++) {
             if (newDateTimeList[i].startIndex <= newDateTimeList[i].endIndex) {
@@ -453,9 +479,7 @@ $(function () {
             }
 
         }
-        /**主会诊医生 修改 会诊排期*/
         if (dateList.length === 0) {
-            let _$ = layui.jquery;
             layer.open({
                 type: 1,
                 title: '',
@@ -470,7 +494,6 @@ $(function () {
                 $('.noDate').hide()
             }, 1000)
         } else {
-            let data = new FormData();
             let doctorList = [];
             let consultantReport = [];
             price = Number(inviteDoctorArray[0].hospitalVideoPrice)
@@ -517,24 +540,35 @@ $(function () {
             data.append('consultantUserList', JSON.stringify(doctorList));
             data.append("consultantPrice", price); // 费用
             data.append("applyFormId", applyFormId);
-            ajaxRequest("POST", allocationDoctorTime, data, false, false, true, sirUpdateDateSuccess, null, null)
-            function sirUpdateDateSuccess(result) {
-                let _$ = layui.jquery;
-                layer.open({
-                    type: 1,
-                    title: '',
-                    area: ['300px', '80px'],
-                    closeBtn: false,
-                    shade: [0.1, '#000000'],
-                    shadeClose: false,
-                    time: 1000,
-                    content: _$('.receiveSuccess'),
-                });
-                setTimeout(function () {
-                    window.location = '../page/morkbench.html'
-                }, 1000);
-            }
+            data.append("meetMute", $("#meetMute").is(':checked'));
+            data.append("meetRecord", $("#meetRecord").is(':checked'));
+            data.append("meetStart", $("#meetStart").is(':checked'));
+
         }
+        $("#videoApplyAuditBox .yesBtn").click(function () {
+            ajaxRequest("POST", allocationDoctorTimeAuditUrl, data, false, false, true, sirUpdateDateSuccess, null, null)
+
+        })
+        $("#videoApplyAuditBox .noBtn").click(function () {
+            ajaxRequest("POST", allocationDoctorTime, data, false, false, true, sirUpdateDateSuccess, null, null)
+
+        })
+        function sirUpdateDateSuccess(result) {
+            layer.open({
+                type: 1,
+                title: '',
+                area: ['300px', '80px'],
+                closeBtn: false,
+                shade: [0.1, '#000000'],
+                shadeClose: false,
+                time: 1000,
+                content: _$('.receiveSuccess'),
+            });
+            setTimeout(function () {
+                window.location = '../page/morkbench.html'
+            }, 1000);
+        }
+
         return false;
     })
 

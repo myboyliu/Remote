@@ -3,6 +3,7 @@ package com.sicmed.remote.web.service;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
+import com.sicmed.remote.common.util.UserTokenManager;
 import com.sicmed.remote.web.bean.*;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.CaseRecord;
@@ -294,5 +295,27 @@ public class ApplyFormService implements BaseService<ApplyForm> {
 
     public List<ApplyFormBean> selectScheduledByParam(ScheduledParam scheduledParam) {
         return applyFormMapper.selectScheduledByParam(scheduledParam);
+    }
+
+    /**
+     * 查询会诊相关医院科室人员信息
+     */
+    public ApplyFormInfoBean getApplyFormInfo(String applyFormId){
+
+        return applyFormMapper.getApplyFormInfo(applyFormId);
+    }
+
+    /**
+     * 根据ID修改状态
+     *
+     * @param applyFormId
+     * @param applyStatus
+     */
+    public int updateStatus(String applyFormId, String applyStatus) {
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setId(applyFormId);
+        applyForm.setUpdateUser(UserTokenManager.getCurrentUserId());
+        applyForm.setApplyStatus(applyStatus);
+       return applyFormMapper.updateByPrimaryKeySelective(applyForm);
     }
 }

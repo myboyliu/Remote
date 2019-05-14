@@ -1342,5 +1342,51 @@
         </where>
         group by applyForm.id
     </select>
+
+    <!--查询会诊相关医院科室人员信息-->
+    <select id="getApplyFormInfo" parameterType="java.lang.String"
+            resultType="com.sicmed.remote.web.bean.ApplyFormInfoBean">
+        select
+        applyForm.case_summary caseSummary,
+        applyHospital.hospital_name applyHospitalName,
+        applyBranch.custom_name applyBranchName,
+        applyUserDetail.user_name applyUserName,
+        applyUser.user_phone applyUserPhone,
+        applyAdmin.user_phone applyAdminPhone,
+        inviteHospital.hospital_name inviteHospitalName,
+        inviteBranch.custom_name inviteBranchName,
+        inviteUserDetail.user_name inviteUserName,
+        inviteUser.user_phone inviteUserPhone,
+        inviteAdmin.user_phone inviteAdminPhone,
+        applyTime.event_start_time meetingStartTime
+
+        from apply_form applyForm
+        left join base_hospital applyHospital on applyHospital.id = applyForm.apply_hospital_id
+        left join custom_branch applyBranch on applyBranch.id = applyForm.apply_branch_id
+        left join user_detail applyUserDetail on applyUserDetail.id = applyForm.apply_user_id
+        left join user_account applyUser on applyUser.id = applyForm.apply_user_id
+
+        left join user_role applyAdminUserRole on applyAdminUserRole.role_id = "352905f2455711e98ede487b6bd31bf7"
+        left join user_detail applyAdminUserDetail on applyAdminUserDetail.id = applyAdminUserRole.user_id
+        left join user_account applyAdmin on applyAdmin.id = applyAdminUserDetail.id
+
+        left join base_hospital inviteHospital on inviteHospital.id = applyForm.invite_hospital_id
+        left join custom_branch inviteBranch on inviteBranch.id = applyForm.invite_branch_id
+        left join user_detail inviteUserDetail on inviteUserDetail.id = applyForm.invite_user_id
+        left join user_account inviteUser on inviteUser.id = applyForm.invite_user_id
+
+        left join user_role inviteAdminUserRole on inviteAdminUserRole.role_id = "352905f2455711e98ede487b6bd31bf7"
+        left join user_detail inviteAdminUserDetail on inviteAdminUserDetail.id = inviteAdminUserRole.user_id
+        left join user_account inviteAdmin on inviteAdmin.id = inviteAdminUserDetail.id
+
+        left join apply_time applyTime on applyTime.id = applyForm.id
+
+        where applyForm.id = #{id}
+         AND applyForm.del_flag= "0"
+         AND applyAdminUserDetail.hospital_id = applyForm.apply_hospital_id
+         AND inviteAdminUserDetail.hospital_id = applyForm.invite_hospital_id
+        GROUP BY applyForm.id
+    </select>
+
 </mapper>
 

@@ -366,16 +366,34 @@ $(function () {
             shadeClose: false,
             content: _$('#choiceMeetingAttributeBox'),
         });
-        $("#choiceMeetingAttributeBoxYesBtn").click(function () {
-            data.append("meetMute", $("#meetMute").is(':checked'));
-            data.append("meetRecord", $("#meetRecord").is(':checked'));
-            data.append("meetStart", $("#meetStart").is(':checked'));
-            //2.修改时间
+        $("#videoApplyAuditBox .noBtn").click(function () {
             if (isMainDoctor) {
                 ajaxRequest("POST", mainDoctorAccede, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
             } else if (isBranchDoctor) {
                 ajaxRequest("POST", doctorAcceptOther, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
             }
+        })
+        $("#videoApplyAuditBox .yesBtn").click(function () {
+            if (isMainDoctor) {
+                ajaxRequest("POST", mainDoctorAccedeAuditUrl, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
+            } else if (isBranchDoctor) {
+                ajaxRequest("POST", doctorAcceptOther, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
+            }
+        })
+        $("#choiceMeetingAttributeBoxYesBtn").click(function () {
+            data.append("meetMute", $("#meetMute").is(':checked'));
+            data.append("meetRecord", $("#meetRecord").is(':checked'));
+            data.append("meetStart", $("#meetStart").is(':checked'));
+            layer.open({
+                type: 1,
+                title: '',
+                area: ['500px', '200px'],
+                closeBtn: false,
+                shade: [0.1, '#000000'],
+                shadeClose: false,
+                content: _$('#videoApplyAuditBox'),
+            });
+            return false;
         })
     })
 

@@ -1,6 +1,7 @@
 package com.sicmed.remote.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.sicmed.remote.sms.service.SmsService;
 import com.sicmed.remote.task.RedisTimerService;
 import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.PageEntity;
@@ -42,6 +43,8 @@ public abstract class BaseController {
 
     @Autowired
     public RedisTimerService redisTimerService;
+    @Autowired
+    public SmsService smsService;
 
     private Map<String, Object> responseMap;
 

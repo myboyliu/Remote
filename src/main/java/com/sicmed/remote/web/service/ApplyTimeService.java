@@ -2,6 +2,8 @@ package com.sicmed.remote.web.service;
 
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
+import com.sicmed.remote.common.util.UserTokenManager;
+import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
 import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ApplyTimeBean;
 import com.sicmed.remote.web.entity.ApplyTime;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Service
@@ -67,5 +71,19 @@ public class ApplyTimeService implements BaseService<ApplyTime> {
     @Override
     public List<ApplyTime> findByDynamicParam(ApplyTime applyTime) {
         return null;
+    }
+
+    public int updateReferralTime(String applyFormId, String inquiryDatetime,String applyStatus) {
+        applyTimeMapper.delByApplyForm(applyFormId);
+        //4.添加新的转诊时间
+        Date date = YtDateUtils.stringToDate(inquiryDatetime);
+        LinkedHashMap<String, String> resultMap = new LinkedHashMap<>();
+        resultMap.put(YtDateUtils.dateToString(YtDateUtils.parmDateBegin(date)), YtDateUtils.dateToString(YtDateUtils.intradayEnd(date)));
+        ApplyTimeBean applyTimeBean = new ApplyTimeBean();
+        applyTimeBean.setApplyFormId(applyFormId);
+        applyTimeBean.setCreateUser(UserTokenManager.getCurrentUserId());
+        applyTimeBean.setStartEndTime(resultMap);
+        applyTimeBean.setApplyStatus(applyStatus);
+        return applyTimeMapper.insertStartEndTimes(applyTimeBean);
     }
 }

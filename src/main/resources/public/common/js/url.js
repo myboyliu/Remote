@@ -1,3 +1,4 @@
+
 /**
  * 统一接口管理JS
  * @type {string}
@@ -76,14 +77,72 @@ const getDoctorListByBranchIdUrl = "/user/addressBook";
 
 const uploadFileUrl = "/file/upload";
 
+
+/**
+ * 转诊流程接口
+ */
+const createReferralApplyAuditUrl = "/apply/referral/create/audit";     //发起医生 创建转诊申请
+const createReferralApplyUrl = "/apply/referral/create";                //发起医生 创建转诊申请
+
+const sirTransferCheckAccede = "/apply/referral/accept";                //发起医政 审核发布申请
+
+const doctorTransDateCheck = "/apply/referral/receive/audit";           //受邀医生 接收转诊申请
+const doctorTransDateSure = "/apply/referral/receive";                  //受邀医生 接收转诊申请
+const doctorTransferReject = "/apply/referral/doctor/reject";           //发起医生 拒收转诊申请
+
+
+const sirTransferMasterAccede = "/apply/referral/sir/accept";           //受邀医政 接收转诊申请
+const sirTransferMasterReject = "/apply/referral/sir/reject";           //受邀医政 拒绝转诊申请
+
+const sirTransferDateCheckAccede = "/apply/referral/sir/accept";        //受邀医政 接收转诊申请
+const sirTransferDateCheckReject = "/apply/referral/sir/reject";        //受邀医政 拒绝转诊申请
+
+const sirTransferCheckReject = "/apply/referral/reject";                //发起医政 审核退回申请
+/**
+ * 视频会诊流程接口
+ */
+const createVideoApplyAuditUrl = "/apply/video/create/audit";           //发起医生 创建视频会诊申请
+const createVideoApplyUrl = "/apply/video/create";                      //发起医生 创建视频会诊申请
+
+const sirSendCheckAccede = "/apply/video/accept";                       //发起医政 审核发布视频会诊申请
+const sirSendCheckReject = "/apply/video/reject";                       //发起医政 审核退回视频会诊申请
+
+/** 主会诊医生 操作接口 */
+const mainDoctorAccedeAuditUrl = "/apply/video/doctor/accept/audit";       //受邀医生 接受视频会诊申请 需要审核
+const allocationDoctorTimeAuditUrl = "/apply/video/doctor/accept/audit";      //受邀医生 接受视频会诊申请 需要审核
+
+const mainDoctorAccede = "/apply/video/doctor/accept";                  //受邀医生 接受视频会诊申请 不需要审核
+const allocationDoctorTime = "/apply/video/doctor/accept";              //受邀医生 接受视频会诊申请 不需要审核
+
+const sirReceiveMasterAccede = "/apply/video/sir/accept";               //受邀医政 接收视频会诊申请
+const sirReceiveDateCheckAccede = "/apply/video/sir/accept";            //受邀医政 接收视频会诊申请
+const sirReceiveHarmonizeAccede = "/apply/video/sir/accept";            //受邀医政 接收视频会诊申请
+
+const doctorReceiveReject = "/apply/video/doctor/reject";               //受邀医生 拒绝视频会诊申请 会诊中状态以及会诊中状态之前状态申请 拒收
+
+const sirReceiveMasterReject = "/apply/video/sir/reject";               //受邀医政 拒绝视频会诊申请 会诊中状态以及会诊中状态之前状态申请 拒收
+
+
+/** 受邀同科室医生操作接口 */
+const doctorAcceptOther = "/apply/dispose/doctorAcceptOther";
+/**
+ * 图文会诊流程接口
+ */
+const createPictureApplyAuditUrl = "/apply/picture/picture/audit";      //发起医生 创建图文会诊申请
+const createPictureApplyUrl = "/apply/picture/picture";                 //发起医生 创建图文会诊申请
+
+const mainDoctorAccedePictureAudit = "/apply/picture/doctor/accept/audit";         //受邀医生 接受图文会诊申请
+const allocationDoctorTimePictureAudit = "/apply/picture/doctor/accept/audit";     //受邀医生 接受图文会诊申请
+
+const mainDoctorAccedePicture = "/apply/picture/doctor/accept";         //受邀医生 接受图文会诊申请
+const allocationDoctorTimePicture = "/apply/picture/doctor/accept";     //受邀医生 接受图文会诊申请
+
 /** 创建病历模块 */
 const createCaseUrl = "/case/insertNewCase";                                            //创建病历接口
 const insertHalfCase = "/case/insertHalfCase";                                          //创建不完整病历接口
 const createDraft = "/apply/draft";                                                     //创建草稿
 const updateDraftCase = "/draft/saveDraft";                                             //修改草稿病历
-const createReferralApplyUrl = "/apply/transfer";                                       //创建转诊
-const createPictureApplyUrl = "/apply/picture";                                         //创建图文会诊
-const createVideoApplyUrl = "/apply/video";                                             //创建视频会诊
+
 
 const getApplyInfoUrl = "/apply/detailById"                                             // 查询会诊详情信息
 /** 医政 管理页面 接口*/
@@ -125,28 +184,13 @@ const sirReceiveEnd = "/apply/consultation/sirReceiveEnd";                      
 /** 首诊医生 操作接口*/
 const doctorSendFeedbackReportMoment = "/apply/dispose/doctorSendFeedbackReportMoment"; //医生 发出会诊 带反馈 编辑临床反馈 暂存 /医生 受邀会诊 会诊中 编辑会诊报告 暂存
 const doctorSendFeedbackReport = "/apply/dispose/doctorSendFeedbackReport";             //医生 发出会诊 带反馈 编辑临床反馈 暂存 /医生 受邀会诊 会诊中 编辑会诊报告 提交
-const doctorReceiveReject = "/apply/dispose/doctor";                                    //会诊中状态以及会诊中状态之前状态申请 拒收
-/** 主会诊医生 操作接口 */
-const mainDoctorAccede = "/apply/dispose/mainDoctorAccede";
-const mainDoctorAccedePicture = "/apply/dispose/mainDoctorAccedePicture";
-const allocationDoctorTime = "/apply/dispose/allocationDoctorTime";
-const allocationDoctorTimePicture = "/apply/dispose/allocationDoctorTimePicture";
-/** 受邀同科室医生操作接口 */
-const doctorAcceptOther = "/apply/dispose/doctorAcceptOther";
-/**首诊医政操作接口*/
 
-const sirSendCheckAccede = "/apply/dispose/sirSendCheckAccede";                         //通过会诊申请接口
-const sirSendCheckReject = "/apply/dispose/sirSendCheckReject";                         //回退会诊申请接口
+/**首诊医政操作接口*/
 const sirSendUpdateDate = "/apply/dispose/sirSendUpdateDate";                           //修改排期
 const softDelPicture = "/case/softDelPicture";                                          //删除图片
 const sirUpdateCase = "/case/sirUpdateCase";                                            //修改病例
 
 /** 会诊医政操作接口*/
-
-const sirReceiveMasterAccede = "/apply/dispose/sirReceiveMasterAccede";                 //待收诊状态申请 接收
-const sirReceiveDateCheckAccede = "/apply/dispose/sirReceiveDateCheckAccede";           //排期审核状态申请 接收
-const sirReceiveHarmonizeAccede = "/apply/dispose/sirReceiveHarmonizeAccede";           //专家协调状态申请 接收
-const sirReceiveMasterReject = "/apply/dispose/sirReceiveMasterReject";                 //会诊中状态以及会诊中状态之前状态申请 拒收
 const sirUpdateDate = "/apply/dispose/sirUpdateDate";                                   //选择排期
 const sirUpdateDoctor = "/apply/dispose/sirUpdateDoctor";                               //选择医生
 
@@ -167,20 +211,13 @@ const sirInquiryReject = "/apply/transfer/sirInquiryReject";                    
 const sirInquiryEnd = "/apply/transfer/sirInquiryEnd";                                  //已结束
 
 /** 转诊医生操作接口 */
-const doctorTransferReject = "/apply/dispose/doctorTransferReject";                     //代收诊   拒绝
-const doctorTransDateCheck = "/apply/dispose/doctorTransDateCheck";                     //代收诊   接收到排期审核
-const doctorTransDateSure = "/apply/dispose/doctorTransDateSure";                       //代收诊   接收到已排期
+
 
 /** 转诊医政操作接口 */
-const sirTransferCheckAccede = "/apply/dispose/sirTransferCheckAccede";                 //首诊审核 通过
-const sirTransferCheckReject = "/apply/dispose/sirTransferCheckReject";                 //首诊审核 退回
+
 const sirTransferAmendDor = "/apply/dispose/sirTransferAmendDor";                       //首诊 修改医生
 const sirTransferAmendTime = "/apply/dispose/sirTransferAmendTime";                     //首诊 修改排期
 
-const sirTransferMasterAccede = "/apply/dispose/sirTransferMasterAccede";               //代收诊   同意
-const sirTransferMasterReject = "/apply/dispose/sirTransferMasterReject";               //代收诊   拒绝
-const sirTransferDateCheckAccede = "/apply/dispose/sirTransferDateCheckAccede";         //排期审核 同意
-const sirTransferDateCheckReject = "/apply/dispose/sirTransferDateCheckReject";         //排期审核 拒绝
 
 /** 草稿接口 */
 const selectByUser = "/draft/selectByUser";                                             //想草稿列表

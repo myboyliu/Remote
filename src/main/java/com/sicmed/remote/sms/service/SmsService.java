@@ -14,6 +14,14 @@ public interface SmsService {
     /**
      * 指定模板单发短信
      */
+    /**
+     *
+     * @param nationCode 短信地区码 中国 86
+     * @param phoneNumber 手机号码
+     * @param templateId 模版ID
+     * @param param 模版参数
+     * @return
+     */
     boolean singleSendByTemplate(String nationCode, String phoneNumber, int templateId, ArrayList<String> param);
 
     /**

@@ -1,5 +1,6 @@
 package com.sicmed.remote.web.service;
 
+import com.sicmed.remote.common.util.UserTokenManager;
 import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
@@ -8,6 +9,7 @@ import com.sicmed.remote.web.mapper.CaseConsultantMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -88,5 +90,15 @@ public class CaseConsultantService implements BaseService<CaseConsultant> {
 
     public int updateInviteDoctorByPrimaryKeySelective(CaseConsultant caseConsultant) {
         return caseConsultantMapper.updateInviteDoctorByPrimaryKeySelective(caseConsultant);
+    }
+
+    public int updateDoctorAndTime(String applyFormId, String consultantUserList, String consultantReport, BigDecimal consultantPrice) {
+        CaseConsultant caseConsultant = new CaseConsultant();
+        caseConsultant.setId(applyFormId);
+        caseConsultant.setConsultantUserList(consultantUserList);
+        caseConsultant.setConsultantReport(consultantReport);
+        caseConsultant.setConsultantPrice(consultantPrice);
+        caseConsultant.setUpdateUser(UserTokenManager.getCurrentUserId());
+        return caseConsultantMapper.updateByPrimaryKeySelective(caseConsultant);
     }
 }
