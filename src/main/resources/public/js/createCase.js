@@ -524,7 +524,11 @@ function createPictureApplyData(caseId, caseSummary) {
         data.append('inviteBranchId', hospitalInfo.branchId);
         data.append('hospitalPrice', hospitalInfo.hospitalImgPrice); // 医院图文基本价格
     }
-    ajaxRequest("POST", createPictureApplyUrl, data, false, false, true, createPictureApplySuccess, requestField, null);
+    if (isAudit){
+        ajaxRequest("POST", createPictureApplyAuditUrl, data, false, false, true, createPictureApplySuccess, requestField, null);
+    } else{
+        ajaxRequest("POST", createPictureApplyUrl, data, false, false, true, createPictureApplySuccess, requestField, null);
+    }
 
     function createPictureApplySuccess(result) {
 
@@ -1399,10 +1403,6 @@ $(function () {
 // 图文会诊、
     $('.graphicGroup').click(function () {
         /* 判断信息是否填写完整 */
-        // let isIncomplete = checkCaseInfo();
-        // if (isIncomplete) {
-        //     return false;
-        // }
         let isIncorrect = checkCase();
         if (isIncorrect) {
             return false;
@@ -1485,13 +1485,33 @@ $(function () {
 
 // 图文的确认弹窗确定按钮事件
     $('.imagebtnBox .yesBtn').click(function () {
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['500px', '200px'],
+            closeBtn: false,
+            shade: [0.1, '#000000'],
+            shadeClose: false,
+            content: _$('.pictureAuditBox'),
+        });
+        return false;
+
+    });
+    $(".pictureAuditBox .yesBtn").click(function () {
         if (isDraft) {
             updateCaseData(createPictureApplyData);
         } else {
             buildCaseData(createPictureApplyData);
         }
-    });
-
+    })
+    $(".pictureAuditBox .noBtn").click(function () {
+        isAudit = false;
+        if (isDraft) {
+            updateCaseData(createPictureApplyData);
+        } else {
+            buildCaseData(createPictureApplyData);
+        }
+    })
     let dateTempList = [];
     const myDate = new Date();
     var flag = true;

@@ -4,6 +4,7 @@ import com.sicmed.remote.common.ApplyNodeConstant;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.util.UserTokenManager;
+import com.sicmed.remote.web.bean.ApplyFormInfoBean;
 import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.CaseConsultant;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -54,7 +56,7 @@ public class ApplyPictureController extends ApplyController {
      * @return
      */
     @Transactional
-    @PostMapping(value = "picture/audit")
+    @PostMapping(value = "create/audit")
     public Map pictureConsultation(@Validated ApplyForm applyForm, BindingResult applyFormBr, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport,
                                    String draftId) {
 
@@ -115,7 +117,7 @@ public class ApplyPictureController extends ApplyController {
      * @return
      */
     @Transactional
-    @PostMapping(value = "picture")
+    @PostMapping(value = "create")
     public Map pictureConsultation2(@Validated ApplyForm applyForm, BindingResult applyFormBr, String consultantUserList, BigDecimal consultantPrice, BigDecimal hospitalPrice, String consultantReport,
                                     String draftId) {
 
@@ -172,7 +174,7 @@ public class ApplyPictureController extends ApplyController {
      * @return
      */
     @Transactional
-    @PostMapping(value = "doctor/accept/audit")
+    @PostMapping(value = "doctor/accept")
     public Map allocationDoctorTimePicture(String applyFormId, String inviteSummary, String consultantUserList, BigDecimal consultantPrice, String consultantReport) {
         //1.参数校验
         if (StringUtils.isBlank(applyFormId)) {
@@ -202,7 +204,40 @@ public class ApplyPictureController extends ApplyController {
         }
         //4.
         applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
+
+        ArrayList<String> smsContext = new ArrayList<>();
+        ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyFormId);
+        smsContext.add(applyFormInfoBean.getCaseSummary());
+        smsContext.add(applyFormInfoBean.getMeetingStartTime().toString());
+        smsService.singleSendByTemplate("86", applyFormInfoBean.getApplyUserPhone(), 326112, smsContext);
         return succeedRequest("操作成功");
     }
 
+
+    /**
+     *
+     * 受邀医政 接受图文会诊申请
+     *
+     * @param applyFormId
+     * @return
+     */
+    @Transactional
+    @PostMapping(value = "sir/accept")
+    public Map sirReceiveHarmonizeAccede(String applyFormId) {
+
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setUpdateUser(UserTokenManager.getCurrentUserId());
+        applyForm.setId(applyFormId);
+        applyForm.setApplyStatus(String.valueOf(ConsultationStatus.CONSULTATION_BEGIN));
+        applyFormService.updateByPrimaryKeySelective(applyForm);
+
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
+
+        ArrayList<String> smsContext = new ArrayList<>();
+        ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyFormId);
+        smsContext.add(applyFormInfoBean.getCaseSummary());
+        smsContext.add(applyFormInfoBean.getMeetingStartTime().toString());
+        smsService.singleSendByTemplate("86", applyFormInfoBean.getApplyUserPhone(), 326112, smsContext);
+        return succeedRequest("受邀医政接收图文会诊申请成功");
+    }
 }

@@ -124,7 +124,11 @@ $(function () {
         }
         let data = new FormData();
         data.append("applyFormId", applyFormId);
-        ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, receiveSuccess, statusIsChange, null);
+        if (isVideo) {
+            ajaxRequest("POST", sirReceiveApplyVideoUrl, data, false, false, true, receiveSuccess, statusIsChange, null);
+        } else {
+            ajaxRequest("POST", sirReceiveApplyPictureUrl, data, false, false, true, receiveSuccess, statusIsChange, null);
+        }
     });
     /** 会诊医政  专家协调状态 接收确认按钮*/
     $("#MDTConsultationBoxYesBtn").click(function () {
@@ -157,10 +161,10 @@ $(function () {
         }
         let data = new FormData();
         data.append("applyFormId", applyFormId);
-        if (applyInfo.applyStatus === "CONSULTATION_APPLY_ACCEDE") {
-            ajaxRequest("POST", sirReceiveMasterAccede, data, false, false, true, receiveSuccess, statusIsChange, null);
-        } else {
-            ajaxRequest("POST", sirReceiveHarmonizeAccede, data, false, false, true, receiveSuccess, statusIsChange, null);
+        if(isVideo){
+            ajaxRequest("POST", sirReceiveApplyVideoUrl, data, false, false, true, receiveSuccess, statusIsChange, null);
+        }else{
+            ajaxRequest("POST", sirReceiveApplyPictureUrl, data, false, false, true, receiveSuccess, statusIsChange, null);
         }
     });
     /** 会诊医政  排期审核状态  接收确认按钮*/
@@ -194,7 +198,7 @@ $(function () {
         }
         let data = new FormData();
         data.append("applyFormId", applyFormId);
-        ajaxRequest("POST", sirReceiveDateCheckAccede, data, false, false, true, receiveSuccess, statusIsChange, null);
+        ajaxRequest("POST", sirReceiveApplyVideoUrl, data, false, false, true, receiveSuccess, statusIsChange, null);
     });
 
     /** MDT协调/确认协调 弹窗*/

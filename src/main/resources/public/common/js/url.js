@@ -114,9 +114,7 @@ const allocationDoctorTimeAuditUrl = "/apply/video/doctor/accept/audit";      //
 const mainDoctorAccede = "/apply/video/doctor/accept";                  //受邀医生 接受视频会诊申请 不需要审核
 const allocationDoctorTime = "/apply/video/doctor/accept";              //受邀医生 接受视频会诊申请 不需要审核
 
-const sirReceiveMasterAccede = "/apply/video/sir/accept";               //受邀医政 接收视频会诊申请
-const sirReceiveDateCheckAccede = "/apply/video/sir/accept";            //受邀医政 接收视频会诊申请
-const sirReceiveHarmonizeAccede = "/apply/video/sir/accept";            //受邀医政 接收视频会诊申请
+const sirReceiveApplyVideoUrl = "/apply/video/sir/accept";               //受邀医政 接收视频会诊申请
 
 const doctorReceiveReject = "/apply/video/doctor/reject";               //受邀医生 拒绝视频会诊申请 会诊中状态以及会诊中状态之前状态申请 拒收
 
@@ -128,14 +126,16 @@ const doctorAcceptOther = "/apply/dispose/doctorAcceptOther";
 /**
  * 图文会诊流程接口
  */
-const createPictureApplyAuditUrl = "/apply/picture/picture/audit";      //发起医生 创建图文会诊申请
-const createPictureApplyUrl = "/apply/picture/picture";                 //发起医生 创建图文会诊申请
+const createPictureApplyAuditUrl = "/apply/picture/create/audit";      //发起医生 创建图文会诊申请
+const createPictureApplyUrl = "/apply/picture/create";                 //发起医生 创建图文会诊申请
 
 const mainDoctorAccedePictureAudit = "/apply/picture/doctor/accept/audit";         //受邀医生 接受图文会诊申请
 const allocationDoctorTimePictureAudit = "/apply/picture/doctor/accept/audit";     //受邀医生 接受图文会诊申请
 
-const mainDoctorAccedePicture = "/apply/picture/doctor/accept";         //受邀医生 接受图文会诊申请
-const allocationDoctorTimePicture = "/apply/picture/doctor/accept";     //受邀医生 接受图文会诊申请
+const mainDoctorAccedePicture = "/apply/picture/doctor/accept";           //受邀医生 接受图文会诊申请
+const allocationDoctorTimePicture = "/apply/picture/doctor/accept";       //受邀医生 接受图文会诊申请
+const sirReceiveApplyPictureUrl = "/apply/picture/sir/accept";            //受邀医政 接收图文会诊申请
+
 
 /** 创建病历模块 */
 const createCaseUrl = "/case/insertNewCase";                                            //创建病历接口

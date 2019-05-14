@@ -466,48 +466,6 @@ public class ApplyVideoController extends ApplyController {
     /**
      * 医政 受邀会诊 MDT协调 确认协调
      */
-//    @Transactional
-//    @PostMapping(value = "sirReceiveHarmonizeAccede")
-//    public Map sirReceiveHarmonizeAccede(String applyFormId) {
-//
-//        String applyType = applyFormService.getByPrimaryKey(applyFormId).getApplyType();
-//        String applyStatus = "";
-//
-//        // 视频会诊状态变为会诊时间已选定
-//        if (ApplyType.APPLY_CONSULTATION_VIDEO.toString().equals(applyType)) {
-//            applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
-//            applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
-//        }
-//        // 图文会诊砖家协调后立刻变为会诊中
-//        if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyType)) {
-//            applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
-//            applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
-//        }
-//
-//        String userId = getRequestToken();
-//
-//        ApplyForm applyForm = new ApplyForm();
-//        applyForm.setUpdateUser(userId);
-//        applyForm.setId(applyFormId);
-//        applyForm.setApplyStatus(applyStatus);
-//        int i = applyFormService.updateByPrimaryKeySelective(applyForm);
-//        if (i < 1) {
-//            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-//            return badRequestOfArguments("已被接收");
-//        }
-//
-//        ApplyTime applyTime = new ApplyTime();
-//        applyTime.setApplyStatus(applyStatus);
-//        applyTime.setApplyFormId(applyFormId);
-//        applyTime.setUpdateUser(userId);
-//        applyTimeService.updateStatus(applyTime);
-//
-//        if (applyType.equals(String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO))) {
-//            meetingService.createMeeting(applyFormId);
-//        }
-//
-//        return succeedRequest(applyForm);
-//    }
 
     /**
      * 发起医政 发出会诊 待审核 退回
