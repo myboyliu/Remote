@@ -129,12 +129,10 @@ const doctorAcceptOther = "/apply/dispose/doctorAcceptOther";
 const createPictureApplyAuditUrl = "/apply/picture/create/audit";      //发起医生 创建图文会诊申请
 const createPictureApplyUrl = "/apply/picture/create";                 //发起医生 创建图文会诊申请
 
-const mainDoctorAccedePictureAudit = "/apply/picture/doctor/accept/audit";         //受邀医生 接受图文会诊申请
-const allocationDoctorTimePictureAudit = "/apply/picture/doctor/accept/audit";     //受邀医生 接受图文会诊申请
 
-const mainDoctorAccedePicture = "/apply/picture/doctor/accept";           //受邀医生 接受图文会诊申请
-const allocationDoctorTimePicture = "/apply/picture/doctor/accept";       //受邀医生 接受图文会诊申请
-const sirReceiveApplyPictureUrl = "/apply/picture/sir/accept";            //受邀医政 接收图文会诊申请
+const mainDoctorAccedePicture = "/apply/picture/doctor/accept";         //受邀医生 接受图文会诊申请
+const allocationDoctorTimePicture = "/apply/picture/doctor/accept";     //受邀医生 接受图文会诊申请
+const sirReceiveApplyPictureUrl = "/apply/picture/sir/accept";          //受邀医政 接收图文会诊申请
 
 
 /** 创建病历模块 */

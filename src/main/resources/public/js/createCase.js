@@ -627,7 +627,11 @@ function createReferralApplyData(caseId, caseSummary) {
         data.append('inviteHospitalId', hospitalInfo.id);
         data.append('inviteBranchId', hospitalInfo.branchId);
     }
-    ajaxRequest("POST", createReferralApplyUrl, data, false, false, true, createReferralApplySuccess, requestField, null);
+    if(isAudit){
+        ajaxRequest("POST", createReferralApplyAuditUrl, data, false, false, true, createReferralApplySuccess, requestField, null);
+    }else{
+        ajaxRequest("POST", createReferralApplyUrl, data, false, false, true, createReferralApplySuccess, requestField, null);
+    }
 
     function createReferralApplySuccess(result) {
         localStorage.setItem('sendOrderData', JSON.stringify(result));
@@ -1860,6 +1864,28 @@ $(function () {
             }, 3000);
             return false;
         }
+
+        layer.open({
+            type: 1,
+            title: '',
+            area: ['500px', '200px'],
+            closeBtn: false,
+            shade: [0.1, '#000000'],
+            shadeClose: false,
+            content: _$('.referralAuditBox'),
+        });
+
+    })
+
+    $('.referralAuditBox .yesBtn').click(function () {
+        if (isDraft) {
+            updateCaseData(createReferralApplyData);
+        } else {
+            buildCaseData(createReferralApplyData);
+        }
+    })
+    $('.referralAuditBox .noBtn').click(function () {
+        isAudit = false;
         if (isDraft) {
             updateCaseData(createReferralApplyData);
         } else {
