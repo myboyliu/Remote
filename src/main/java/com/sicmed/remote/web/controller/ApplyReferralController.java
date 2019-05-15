@@ -9,6 +9,7 @@ import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.common.util.UserTokenManager;
 import com.sicmed.remote.web.YoonaLtUtils.OrderNumUtils;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
+import com.sicmed.remote.web.bean.ApplyFormInfoBean;
 import com.sicmed.remote.web.bean.ApplyTimeBean;
 import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.ApplyForm;
@@ -26,10 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 转诊流程接口
@@ -185,6 +183,13 @@ public class ApplyReferralController extends ApplyController {
         if (j < 1) {
             return badRequestOfArguments("添加申请时间失败");
         }
+
+        ArrayList<String> smsContext = new ArrayList<>();
+        ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyForm.getId());
+        smsContext.add(applyFormInfoBean.getApplyHospitalName());
+        smsContext.add(applyFormInfoBean.getApplyBranchName());
+        smsContext.add(applyFormInfoBean.getApplyUserName());
+        smsService.singleSendByTemplate("86", applyFormInfoBean.getInviteUserPhone(), 326111, smsContext);
         return succeedRequest(applyForm);
     }
 
@@ -219,6 +224,13 @@ public class ApplyReferralController extends ApplyController {
 
         applyForm = applyFormService.getByPrimaryKey(applyFormId);
         applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.发起转诊.toString(), applyForm.getApplySummary());
+
+        ArrayList<String> smsContext = new ArrayList<>();
+        ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyFormId);
+        smsContext.add(applyFormInfoBean.getApplyHospitalName());
+        smsContext.add(applyFormInfoBean.getApplyBranchName());
+        smsContext.add(applyFormInfoBean.getApplyUserName());
+        smsService.singleSendByTemplate("86", applyFormInfoBean.getInviteUserPhone(), 326111, smsContext);
         return succeedRequest(applyForm);
     }
 
@@ -273,7 +285,12 @@ public class ApplyReferralController extends ApplyController {
 
         //5.添加转诊流程操作节点
         applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已排期.toString(), getApplySummary());
-
+        ArrayList<String> smsContext = new ArrayList<>();
+        ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyFormId);
+        log.debug(applyFormInfoBean.toString());
+        smsContext.add(applyFormInfoBean.getCaseSummary());
+        smsContext.add(applyFormInfoBean.getMeetingStartTime().toString());
+        smsService.singleSendByTemplate("86", applyFormInfoBean.getApplyUserPhone(), 326112, smsContext);
         return succeedRequest("接收成功");
     }
 
@@ -344,6 +361,12 @@ public class ApplyReferralController extends ApplyController {
 
         //6.添加转诊流程操作节点
         applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
+
+        ArrayList<String> smsContext = new ArrayList<>();
+        ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyFormId);
+        smsContext.add(applyFormInfoBean.getCaseSummary());
+        smsContext.add(applyFormInfoBean.getMeetingStartTime().toString());
+        smsService.singleSendByTemplate("86", applyFormInfoBean.getApplyUserPhone(), 326112, smsContext);
         return succeedRequest("接收成功");
     }
 

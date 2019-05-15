@@ -12,10 +12,10 @@ function showDateView() {
     // 打开转诊选时间面板
     layer.open({
         type: 1,
-        content: $('#checkDateBox'),
+        content: _$('#checkDateBox'),
         title: false,
         area: ['600px', '580px'],
-        closeBtn: 0,
+        closeBtn: 1,
         skin: 'noBackground'
     })
 

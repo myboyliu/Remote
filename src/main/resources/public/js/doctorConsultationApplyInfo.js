@@ -302,7 +302,7 @@ $(function () {
 
     // MDT协调按钮     MDTBtn
     $('.MDTBtn').click(function () {
-        window.location = '../page/MTD.html';
+        window.location = '../page/mdt.html';
     })
 
     //受邀医生接收 会诊申请按钮点击事件

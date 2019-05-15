@@ -1450,10 +1450,10 @@ $(function () {
         } else {
             layer.open({
                 type: 1,
-                content: $('.selectTimeContainer'),
+                content: _$('.selectTimeContainer'),
                 title: false,
                 area: ['1060px', '630px'],
-                closeBtn: 0,
+                closeBtn: 1,
                 skin: 'noBackground'
             })
             dateTempList = [];
@@ -1813,10 +1813,10 @@ $(function () {
             // 打开转诊选时间面板
             layer.open({
                 type: 1,
-                content: $('.referralTimeSelect'),
+                content: _$('.referralTimeSelect'),
                 title: false,
                 area: ['600px', '580px'],
-                closeBtn: 0,
+                closeBtn: 1,
                 skin: 'noBackground'
             })
         }

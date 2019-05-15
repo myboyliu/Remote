@@ -205,11 +205,7 @@ public class ApplyPictureController extends ApplyController {
         //4.
         applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
 
-        ArrayList<String> smsContext = new ArrayList<>();
-        ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyFormId);
-        smsContext.add(applyFormInfoBean.getCaseSummary());
-        smsContext.add(applyFormInfoBean.getMeetingStartTime().toString());
-        smsService.singleSendByTemplate("86", applyFormInfoBean.getApplyUserPhone(), 326112, smsContext);
+
         return succeedRequest("操作成功");
     }
 
@@ -233,11 +229,6 @@ public class ApplyPictureController extends ApplyController {
 
         applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
 
-        ArrayList<String> smsContext = new ArrayList<>();
-        ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyFormId);
-        smsContext.add(applyFormInfoBean.getCaseSummary());
-        smsContext.add(applyFormInfoBean.getMeetingStartTime().toString());
-        smsService.singleSendByTemplate("86", applyFormInfoBean.getApplyUserPhone(), 326112, smsContext);
         return succeedRequest("受邀医政接收图文会诊申请成功");
     }
 }

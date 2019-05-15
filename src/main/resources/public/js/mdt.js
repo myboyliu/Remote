@@ -225,7 +225,7 @@ function sub() {
         console.log(result);
         // 成功操作
         layer.closeAll();
-        $('.selectTimeContainer').hide();
+        // $('.selectTimeContainer').hide();
         window.location = '../page/morkbench.html';
         // localStorage.setItem('applyFormId', result.id);
     }
@@ -449,11 +449,8 @@ $(function () {
             content: _$('#choiceMeetingAttributeBox'),
         });
         return false;
-
-        return false;
     })
     $("#choiceMeetingAttributeBoxYesBtn").click(function () {
-
         layer.open({
             type: 1,
             title: '',
@@ -575,7 +572,7 @@ $(function () {
     // 确认接收取消按钮
     $('.submitBoxPic').find('.noBtn').click(function () {
         layer.closeAll();
-        $('.selectTimeContainer').hide();
+        // $('.selectTimeContainer').hide();
         $('.promptText,.submitBox').hide();
     })
     // 图文确认接收确定按钮

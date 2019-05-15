@@ -93,7 +93,7 @@ function showTimeView(applyTimeList) {
         content: _$('.selectTimeContainer'),
         title: '',
         area: ['1060px', '630px'],
-        closeBtn: 0,
+        closeBtn: 1,
         skin: 'noBackground',
     });
     dateTempList = [];

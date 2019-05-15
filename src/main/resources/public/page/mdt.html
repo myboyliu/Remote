@@ -9,9 +9,9 @@
     <title>专家协调-远程会诊平台</title>
     <link rel="stylesheet" href="../common/css/reset.css">
     <link rel="stylesheet/less" href="../common/css/nav.less">
-    <link rel="stylesheet/less" type="text/css" href="../css/MTD.less"/>
-    <link rel="stylesheet/less" href="../common/css/datePlugin.less">
     <link rel="stylesheet" href="../common/layui/css/layui.css">
+    <!--<link rel="stylesheet/less" href="../common/css/datePlugin.less">-->
+    <link rel="stylesheet/less" type="text/css" href="../css/mdt.less"/>
     <script src="../common/js/jquery.js"></script>
     <script src="../common/layui/layui.all.js"></script>
     <script src="../common/js/less.js"></script>
@@ -21,7 +21,7 @@
     <script src="../common/js/url.js" charset="utf-8"></script>
     <script src="../common/js/timePlugin.js"></script>
     <script src="../common/js/ajaxRequestUtils.js" charset="utf-8"></script>
-    <script src="../js/MTD.js"></script>
+    <script src="../js/mdt.js"></script>
     <!--[if lt IE9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -141,11 +141,8 @@
 </div>
 
 <!-- 视频会诊时间选择 -->
-<div id="consultationTimeBox" class="selectTimeContainer clearfix">
-    <div class="closeBtnTime clearfix">
-        <span>关闭</span>
-        <img src="../images/close.png" alt="">
-    </div>
+<div class="selectTimeContainer clearfix">
+
     <div class="selectTimeContent clearfix">
         <div class="leftContent">
             <h3>发送视频会诊
@@ -158,6 +155,9 @@
         <ul class="rightContent clearfix" id="timeUl">
 
         </ul>
+        <div class="clearBox">
+            <a class="clearBtn" href="javascript:;">清空本页</a>
+        </div>
         <div id="consultationTimeBoxYesBtn" class="btnBox">
             <a href="javascript:;" class="yesBtn">确定</a>
         </div>

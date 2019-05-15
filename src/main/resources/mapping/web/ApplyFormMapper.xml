@@ -1379,7 +1379,7 @@
         left join user_detail inviteAdminUserDetail on inviteAdminUserDetail.id = inviteAdminUserRole.user_id
         left join user_account inviteAdmin on inviteAdmin.id = inviteAdminUserDetail.id
 
-        left join apply_time applyTime on applyTime.id = applyForm.id
+        left join apply_time applyTime on applyTime.apply_form_id = applyForm.id
 
         where applyForm.id = #{id}
          AND applyForm.del_flag= "0"
