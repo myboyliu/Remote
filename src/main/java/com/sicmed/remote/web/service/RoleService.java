@@ -1,7 +1,7 @@
-package com.sicmed.remote.rbac.service;
+package com.sicmed.remote.web.service;
 
-import com.sicmed.remote.rbac.entity.Role;
-import com.sicmed.remote.rbac.mapper.RoleMapper;
+import com.sicmed.remote.web.entity.Role;
+import com.sicmed.remote.web.mapper.RoleMapper;
 import com.sicmed.remote.web.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,5 +42,10 @@ public class RoleService implements BaseService<Role> {
     @Override
     public List<Role> findByDynamicParam(Role role) {
         return null;
+    }
+
+    public List<Role> getRoleList() {
+
+        return roleMapper.getRoleList();
     }
 }

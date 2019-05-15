@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.sicmed.remote.rbac.mapper.UserRoleMapper">
-  <resultMap id="BaseResultMap" type="com.sicmed.remote.rbac.entity.UserRole">
+<mapper namespace="com.sicmed.remote.web.mapper.UserRoleMapper">
+  <resultMap id="BaseResultMap" type="com.sicmed.remote.web.entity.UserRole">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
     <result column="role_id" jdbcType="VARCHAR" property="roleId" />
@@ -27,7 +27,11 @@
     delete from user_role
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.sicmed.remote.rbac.entity.UserRole">
+  <delete id="deleteByUser" parameterType="java.lang.String">
+    delete from user_role
+    where user_id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sicmed.remote.web.entity.UserRole">
     insert into user_role (id, user_id, role_id, 
       create_user, create_time, update_user, 
       update_time, delete_user, delete_time, 
@@ -37,7 +41,7 @@
       #{updateTime,jdbcType=TIMESTAMP}, #{deleteUser,jdbcType=VARCHAR}, #{deleteTime,jdbcType=TIMESTAMP}, 
       #{delFlag,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.sicmed.remote.rbac.entity.UserRole">
+  <insert id="insertSelective" parameterType="com.sicmed.remote.web.entity.UserRole">
     <selectKey keyProperty="id" resultType="java.lang.String"
                order="BEFORE">
       select replace(uuid(),'-','') from dual
@@ -108,7 +112,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.rbac.entity.UserRole">
+  <update id="updateByPrimaryKeySelective" parameterType="com.sicmed.remote.web.entity.UserRole">
     update user_role
     <set>
       <if test="userId != null">
@@ -141,7 +145,7 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.rbac.entity.UserRole">
+  <update id="updateByPrimaryKey" parameterType="com.sicmed.remote.web.entity.UserRole">
     update user_role
     set user_id = #{userId,jdbcType=VARCHAR},
       role_id = #{roleId,jdbcType=VARCHAR},
@@ -161,7 +165,7 @@
     where role_id = #{id,jdbcType=VARCHAR}
     group by user_id
   </select>
-  <select id="getUserByParam" parameterType="com.sicmed.remote.rbac.entity.UserRole" resultType="java.lang.String">
+  <select id="getUserByParam" parameterType="com.sicmed.remote.web.entity.UserRole" resultType="java.lang.String">
     select
     user_id
     from user_role userRole

@@ -1,4 +1,4 @@
-package com.sicmed.remote.rbac.entity;
+package com.sicmed.remote.web.entity;
 
 import lombok.Data;
 
@@ -6,14 +6,16 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class UserRole implements Serializable {
+public class Role implements Serializable {
     private String id;
 
-    private String userId;
+    private String parentId;
 
-    private String roleId;
+    private String roleName;
 
-    private String createUser;
+    private String description;
+
+    private String crrateUser;
 
     private Date createTime;
 

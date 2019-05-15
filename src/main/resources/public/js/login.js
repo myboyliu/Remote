@@ -38,13 +38,10 @@ $(function () {
                 localStorage.setItem('userInfo', JSON.stringify(responseJson));
                 localStorage.setItem('token', responseJson.id);
                 layer.close(index);
-                if (responseJson.telephone === "18888888888" || responseJson.telephone === "17777777777") {
-                    localStorage.setItem('rolesName', "医政");
-                    window.location.href = '/page/administrator.html';
-                } else {
-                    localStorage.setItem('rolesName', "医生");
-                    layer.closeAll();
+                if (typeof(responseJson.roleDescription) == "undefined") {
                     window.location.href = '/page/morkbench.html';
+                }else{
+                    window.location.href = responseJson.roleDescription;
                 }
             }
         }

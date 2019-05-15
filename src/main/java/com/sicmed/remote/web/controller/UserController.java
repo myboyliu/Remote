@@ -5,9 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.DoctorCertified;
+import com.sicmed.remote.common.util.UserTokenManager;
 import com.sicmed.remote.meeting.util.YqyMeetingUtils;
 import com.sicmed.remote.message.service.MessageService;
-import com.sicmed.remote.rbac.service.UserRoleService;
+import com.sicmed.remote.web.entity.UserRole;
+import com.sicmed.remote.web.service.UserRoleService;
 import com.sicmed.remote.socket.service.NewMessageService;
 import com.sicmed.remote.web.bean.*;
 import com.sicmed.remote.web.entity.UserAccount;
@@ -417,13 +419,12 @@ public class UserController extends BaseController {
     @Transactional
     @PostMapping(value = "managementUpdateUser")
     public Map managementUpdateUser(UserDetail userDetail, String userDetailId, String accountNum,
-                                    String idTypeName, String signature, String doctorCardFront) {
+                                    String idTypeName, String signature, String doctorCardFront,String roleId) {
 
         if (StringUtils.isBlank(userDetailId)) {
             return badRequestOfArguments("被修改用户id为空");
         }
 
-        String userId = getRequestToken();
 
         // 修改UserAccount账户
         if (StringUtils.isNotBlank(accountNum)) {
@@ -439,7 +440,7 @@ public class UserController extends BaseController {
             String encryptionPassWord = DigestUtils.md5DigestAsHex((newPsd + salt).getBytes());
             userAccount.setUserPhone(accountNum);
             userAccount.setId(userDetailId);
-            userAccount.setUpdateUser(userId);
+            userAccount.setUpdateUser(UserTokenManager.getCurrentUserId());
             userAccount.setSalt(salt);
             userAccount.setUserPassword(encryptionPassWord);
             int i = userAccountService.updateByPrimaryKeySelective(userAccount);
@@ -451,7 +452,7 @@ public class UserController extends BaseController {
         // 修改UserSign
         if (StringUtils.isNotBlank(signature) || StringUtils.isNotBlank(doctorCardFront)) {
             UserSign userSign = new UserSign();
-            userSign.setUpdateUser(userId);
+            userSign.setUpdateUser(UserTokenManager.getCurrentUserId());
             if (StringUtils.isNotBlank(signature)) {
                 userSign.setSignature(signature);
             }
@@ -510,14 +511,14 @@ public class UserController extends BaseController {
         }
 
         // 修改UserDetail
-        userDetail.setUpdateUser(userId);
+        userDetail.setUpdateUser(UserTokenManager.getCurrentUserId());
         userDetail.setId(userDetailId);
-        int j = userDetailService.updateByPrimaryKeySelective(userDetail);
-        if (j < 1) {
-            throw new RuntimeException();
+        userDetailService.updateByPrimaryKeySelective(userDetail);
 
-        }
-
+        UserRole userRole = new UserRole();
+        userRole.setUserId(userDetail.getId());
+        userRole.setRoleId(roleId);
+        userRoleService.updateUserRoleByUser(userRole);
         return succeedRequest("修改成功");
     }
 

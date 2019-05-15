@@ -1,6 +1,8 @@
-package com.sicmed.remote.rbac.mapper;
+package com.sicmed.remote.web.mapper;
 
-import com.sicmed.remote.rbac.entity.Role;
+import com.sicmed.remote.web.entity.Role;
+
+import java.util.List;
 
 public interface RoleMapper {
 
@@ -15,4 +17,6 @@ public interface RoleMapper {
     int updateByPrimaryKeySelective(Role record);
 
     int updateByPrimaryKey(Role record);
+
+    List<Role> getRoleList();
 }

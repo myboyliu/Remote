@@ -6,7 +6,14 @@ function renderHospitalSeleted(array) {
     }
     $('.quiz1').html(_html);
 };
+function renderRoleSeleted(roleList) {
+    let _html = '<option value="">请选择权限类型</option>';
+    for (let i = 0; i < roleList.length; i++) {
+        _html += '<option value="' + roleList[i].id + '">' + roleList[i].roleName + '</option>';
+    }
+    $('.quiz2').html(_html);
 
+}
 /**渲染科室下拉列表*/
 function renderBranchSeleted(array) {
     var _html = '<option value="">请选择科室</option>';
@@ -105,6 +112,7 @@ $(function () {
     ajaxRequest("GET", getAllHospital, null, true, false, true, renderHospitalSeleted, null, null);
     /**查询病历类型列表*/
     ajaxRequest("GET", getAllCaseContentType, null, true, false, true, renderCaseContentView, null, null);
+
     // 专家类型切换 修改 诊费
     $('.quiz4').change(function () {
         $('.money').val($(this).find('option:selected').attr('money'));
@@ -231,7 +239,7 @@ $(function () {
             data.append("userPassword", $('.registerPassWord').val());
             data.append("telephone", $('.phone').val());
             data.append("hospitalId", $('.quiz1').val());
-            data.append("rolesId", $('.quiz2').val());
+            data.append("roleId", $('.quiz2').val());
             data.append("branchId", $('.quiz3').val());
             data.append("titleName", $('.quiz5').val());
             data.append("specialistTypeId", $('.quiz4').val());

@@ -1,9 +1,7 @@
-package com.sicmed.remote.rbac.service;
+package com.sicmed.remote.web.service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.sicmed.remote.common.util.UserTokenManager;
-import com.sicmed.remote.rbac.entity.UserRole;
-import com.sicmed.remote.rbac.mapper.UserRoleMapper;
+import com.sicmed.remote.web.entity.UserRole;
+import com.sicmed.remote.web.mapper.UserRoleMapper;
 import com.sicmed.remote.web.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,5 +42,10 @@ public class UserRoleService implements BaseService<UserRole> {
     @Override
     public List<UserRole> findByDynamicParam(UserRole userRole) {
         return null;
+    }
+
+    public int updateUserRoleByUser(UserRole userRole) {
+        userRoleMapper.deleteByUser(userRole.getUserId());
+       return userRoleMapper.insertSelective(userRole);
     }
 }

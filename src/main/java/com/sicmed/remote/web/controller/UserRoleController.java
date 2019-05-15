@@ -1,9 +1,7 @@
-package com.sicmed.remote.rbac.controller;
+package com.sicmed.remote.web.controller;
 
-import com.alibaba.fastjson.JSONArray;
-import com.sicmed.remote.rbac.entity.UserRole;
-import com.sicmed.remote.rbac.service.UserRoleService;
-import com.sicmed.remote.web.controller.BaseController;
+import com.sicmed.remote.web.entity.UserRole;
+import com.sicmed.remote.web.service.UserRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -491,6 +491,7 @@ where ud.id = #{userId} and ud.del_flag = "0"
         <result column="branchName" jdbcType="VARCHAR" property="branchName"/>
         <result column="hospitalName" jdbcType="VARCHAR" property="hospitalName"/>
         <result column="specialistTypeName" jdbcType="VARCHAR" property="specialistTypeName"/>
+        <result column="roleDescription" jdbcType="VARCHAR" property="roleDescription"/>
     </resultMap>
     <sql id="CurrentUser_Column_List">
         user.id userId, user.user_name userName, user.user_age userAge, user.user_sex userSex, user.user_address userAddress,
@@ -501,7 +502,8 @@ where ud.id = #{userId} and ud.del_flag = "0"
         hospital.hospital_name hospitalName,
         branch.custom_name branchName,
         baseBranch.id baseBranchId,
-        st.specialist_name specialistTypeName
+        st.specialist_name specialistTypeName,
+        role.description roleDescription
     </sql>
     <select id="selectCurrentUser" parameterType="java.lang.String" resultMap="CurrentUserResultMap">
         select
@@ -511,6 +513,8 @@ where ud.id = #{userId} and ud.del_flag = "0"
         LEFT JOIN custom_branch branch ON branch.id = user.branch_id
         LEFT JOIN base_branch baseBranch ON baseBranch.id = branch.branch_id
         LEFT JOIN specialist_type st ON st.id = user.specialist_type_id
+        LEFT JOIN user_role userRole ON userRole.user_id = user.id
+        LEFT JOIN role role ON role.id = userRole.role_id
         where user.id = #{id,jdbcType=VARCHAR}
     </select>
 

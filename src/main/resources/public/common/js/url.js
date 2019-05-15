@@ -28,6 +28,9 @@ const getAllHospital = "/hospital/select";                                      
 const getBranchByHospitalIdUrl = "/custom/branch/getByHospitalId";              //查询所有科室列表
 
 const getAllCaseContentType = "/casecontenttype/selectall";                     //查询所有病历类型列表
+const getRoleListUrl = "/role/getRoleList";                                     //查询所有病历类型列表
+
+
 
 const registrationUrl = "/user/register";                                       //注册接口
 

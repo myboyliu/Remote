@@ -104,7 +104,7 @@ function renderSpecialistTypeView(array) {
                     </tr>'
     }
     $('.expertTypeTbody').html(_html);
-    renderSpecialistTypeSelect(array);
+    // renderSpecialistTypeSelect(array);
 }
 
 /** 渲染医生列表左侧下拉列表*/
@@ -157,7 +157,7 @@ function renderDoctorListView(array) {
 function renderRolesSelect(result) {
     var _html = '<option value="">请选择</option>';
     for (var i = 0; i < result.length; i++) {
-        _html += '<option value="' + result[i].id + '">' + result[i].remarks + '</option>'
+        _html += '<option value="' + result[i].id + '">' + result[i].roleName + '</option>'
     }
     $('.powerSelect').html(_html);
 }
@@ -174,11 +174,11 @@ function renderBranchSelect(result) {
         }
     }
     $('.deptSelect').html(_html);
-
 }
 
 /** 渲染医生信息页面专家类型下拉列表*/
 function renderSpecialistTypeSelect(array) {
+    console.log(array);
     var _html = '';
     var _html = '<option value="" money="" moneyVideo="">请选择</option>';
     for (var i = 0; i < array.length; i++) {
@@ -190,6 +190,7 @@ function renderSpecialistTypeSelect(array) {
 /** 渲染医生信息页面*/
 function renderDoctorInfoView(result) {
     doctorInfo = result;
+    console.log(doctorInfo);
     renderCaseView(baseCaseTypeList);
     // AUTHENTICATION_CREATE_SUCCESS未审核 AUTHENTICATION_ACCEDE通过 2拒绝 3不完整
     if (result.approveStatus == "AUTHENTICATION_CREATE_SUCCESS") {
@@ -303,12 +304,17 @@ $(function () {
             case 1:
                 /** 获取科室列表信息 */
                 ajaxRequest("GET", getBranchListByCurrentUserUrl, null, false, false, true, renderBranchListView, emptyResult, null);
+
                 break;
             case 2:
                 /** 查询医生管理页面左侧导航医生列表 */
                 ajaxRequest("GET", getDoctorListByCurrentUserUrl, null, false, false, true, renderDoctorListView, emptyResult, null);
                 /**获取医生信息页面科室下拉列表数据*/
                 ajaxRequest("GET", getBranchListByCurrentUserUrl, null, false, false, true, renderBranchSelect, emptyResult, null);
+                /** 查询角色列表 */
+                ajaxRequest("GET", getRoleListUrl, null, true, false, true, renderRolesSelect, null, null);
+                /** 查询专家类型列表 */
+                ajaxRequest("GET", getSpecialistTypeByCurrentUser, null, false, false, true, renderSpecialistTypeSelect, emptyResult, null);
                 break;
             case 3:
                 $('.doctorTitleList').css('height', $('body,html').height() - $('.doctorTitleList').offset().top - 70)
@@ -846,6 +852,7 @@ $(function () {
             formData.append("titleName", $('.titleSelect').val());
             formData.append("specialistTypeId", $('.expertSelect').val());
             formData.append("branchId", $('.deptSelect').val());
+            formData.append("roleId", $('.powerSelect').val());
             formData.append("userDetailId", $('#userId').val());
             ajaxRequest("POST", managementUpdateUser, formData, false, false, true, updateDoctorDetailSuccess, updateDoctorDetailFailed, null);
 
