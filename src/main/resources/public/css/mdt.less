@@ -890,9 +890,9 @@ main {
   margin-right: 10px;
 }
 
-.layui-layer-setwin .layui-layer-close2 {
-  background: none;
-}
+//.layui-layer-setwin .layui-layer-close2 {
+//  background: none;
+//}
 
 .rejectionLayer_top {
   height: 60px;
@@ -1020,41 +1020,16 @@ main {
   }
 }
 
-
-// 日期选择
-
 .selectTimeContainer {
   display: none;
   width: 1060px;
   height: 630px;
-  .closeBtnTime {
-    // height: 50px;
-    display: inline-block;
-    text-align: right;
-    font-size: 18px;
-    color: #ffffff;
-    line-height: 32px;
-    right: 0;
-    position: absolute;
-    top: -35px;
-
-    img {
-      float: right;
-      margin: 3px 5px 0 0;
-      cursor: pointer;
-    }
-
-    span {
-      float: right;
-      cursor: pointer;
-    }
-  }
 
   .selectTimeContent {
+    width: 1060px;
+    height: 630px;
     box-sizing: border-box;
     background: #f4f4f4;
-    height: 630px;
-    width: 1060px;
     border-radius: 10px;
     padding: 10px;
     // 时间选择左侧部分
@@ -1094,6 +1069,7 @@ main {
         margin: 25px 20px 0;
       }
     }
+
     // 时间选择右侧部分
     .rightContent {
       float: right;
@@ -1145,7 +1121,7 @@ main {
       float: left;
       width: 100%;
       // 确定按钮
-      .yesBtn {
+      .yesBtn, .acceptBtn {
         display: block;
         margin: 30px auto 0;
         box-sizing: border-box;
@@ -1162,6 +1138,7 @@ main {
     }
   }
 }
+
 #choiceMeetingAttributeBox {
   display: none;
   box-sizing: border-box;
@@ -1269,3 +1246,4 @@ main {
     }
   }
 }
+

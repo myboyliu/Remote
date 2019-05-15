@@ -90,10 +90,11 @@ function showTimeView(applyTimeList) {
     let _$ = layui.jquery;
     layer.open({
         type: 1,
-        content: _$('.selectTimeContainer'),
-        title: '',
-        area: ['1060px', '630px'],
         closeBtn: 1,
+        content: _$('.selectTimeContainer'),
+        title: false,
+        area: ['1060px', '630px'],
+        shade: [0.1, '#000000'],
         skin: 'noBackground',
     });
     dateTempList = [];
