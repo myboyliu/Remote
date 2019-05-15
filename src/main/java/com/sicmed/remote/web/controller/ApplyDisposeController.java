@@ -163,8 +163,6 @@ public class ApplyDisposeController extends ApplyController {
         return succeedRequest(applyTimeBean);
     }
 
-    // 医政 工作台 修改价格 数据库暂无表格
-
     /**
      * 转诊 修改接收人
      */
@@ -371,81 +369,5 @@ public class ApplyDisposeController extends ApplyController {
 
         return succeedRequest(applyForm);
     }
-
-
-
-
-    /**
-     * 医政 会诊 转诊 更新申请状态
-     *
-     * @param applyFormId
-     * @param applyStatus
-     * @param msg1
-     * @param msg2
-     */
-    public Map updateStatus(String applyFormId, String orderNumber, String applyStatus, String msg1,
-                            String msg2, String refuseRemark) {
-
-        if (StringUtils.isBlank(applyFormId)) {
-            return badRequestOfArguments("applyFormId is null");
-        }
-
-        String userId = getRequestToken();
-        Date date = new Date();
-
-        ApplyForm applyForm = new ApplyForm();
-        applyForm.setId(applyFormId);
-
-        // 判断applyForm属性applyStatus,做不同操作
-        if (InquiryStatus.INQUIRY_APPLY_REJECT.toString().equals(applyStatus)) {
-            // 转诊申请审核已拒绝,病例状态变为草稿,并删除与之对应apply_time相关
-            applyForm.setApplyType(ApplyType.APPLY_DRAFT.toString());
-            int j = applyTimeService.delByApplyForm(applyFormId);
-            if (j < 1) {
-                return badRequestOfArguments(msg2);
-            }
-        }
-        if (ConsultationStatus.CONSULTATION_APPLY_ACCEDE.toString().equals(applyStatus)) {
-            // 会诊申请审核通过,添加申请时间
-            applyForm.setConsultantApplyTime(date);
-        }
-        if (StringUtils.isNotBlank(refuseRemark)) {
-            // 备注不为空,添加备注
-            applyForm.setRefuseRemark(refuseRemark);
-        }
-        if (StringUtils.isNotBlank(orderNumber)) {
-            applyForm.setApplyNumber(orderNumber);
-        }
-        int i = applyFormService.updateStatus(applyForm, applyStatus, userId);
-        if (i < 1) {
-            return badRequestOfArguments(msg1);
-        }
-
-        // 非图文会诊需要更新与之相关的apply_time中的 apply_status属性
-        applyForm = applyFormService.getByPrimaryKey(applyFormId);
-        if (!ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyForm.getApplyType())) {
-            ApplyTime applyTime = new ApplyTime();
-            applyTime.setApplyFormId(applyForm.getId());
-            applyTime.setApplyStatus(applyStatus);
-            applyTime.setUpdateUser(userId);
-            int j = applyTimeService.updateStatus(applyTime);
-            if (j < 1) {
-                return badRequestOfArguments(msg2);
-            }
-        }
-
-        // 由apply_status添加对应的时间节点
-        if (applyStatus == ConsultationStatus.CONSULTATION_SLAVE_ACCEDE.toString()) {
-            applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已接诊.toString());
-        } else if (applyStatus == "CONSULTATION_DATETIME_LOCKED") {
-            meetingService.createMeeting(applyFormId);
-            applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已排期.toString());
-        } else if (applyStatus == ConsultationStatus.CONSULTATION_MASTER_REJECT.toString()) {
-            applyNodeService.insertByStatus(applyForm.getId(), ApplyNodeConstant.已拒收.toString());
-        }
-
-        return succeedRequest(applyForm);
-    }
-
 
 }

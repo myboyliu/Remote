@@ -188,6 +188,9 @@ $(function () {
     $('.enroll_button').click(function () {
         if (!RegExpObj.Reg_mobilePhone.test(Name.val())) {
             layer.msg('请检查用户名');
+        }
+        if ($("#smsCode").val() == "") {
+            layer.msg('注册验证码错误');
         } else if (!RegExpObj.Reg_PassWord.test(passWord.val())) {
             layer.msg('请检查密码');
         } else if (passWord.val() != passwords.val()) {
@@ -223,6 +226,7 @@ $(function () {
             }
 
             data.append("userName", $('.name').val());
+            data.append("smsCode", $("#smsCode").val());
             data.append("userPhone", $('#registerUserName').val());
             data.append("userPassword", $('.registerPassWord').val());
             data.append("telephone", $('.phone').val());
@@ -241,10 +245,26 @@ $(function () {
                 data.append("signature", signature);
             }
 
-            ajaxRequest("POST", registrationUrl, data, false, false, true, renderRegistrationSuccessful, function () {
-                $('.tip1').html('* 手机号码已经注册过了!');
-            }, null);
+            ajaxRequest("POST", registrationUrl, data, false, false, true, renderRegistrationSuccessful, registerFailed, null);
 
         }
     });
+
+    function registerFailed(result) {
+        layer.msg(result);
+    }
+
+    $("#smsCodeBtn").click(function () {
+        if (!RegExpObj.Reg_mobilePhone.test($("#registerUserName").val())) {
+            layer.msg('请检查手机号是否正确!');
+            return false;
+        }
+        let codeForm = new FormData();
+        codeForm.append("phone", $("#registerUserName").val());
+        ajaxRequest("POST", sendSignCodeUrl, codeForm, false, false, true, getCodeSuccess, null, null);
+    })
+
+    function getCodeSuccess(result) {
+        console.log(result)
+    }
 });

@@ -9,10 +9,7 @@ import com.sicmed.remote.meeting.util.YqyMeetingUtils;
 import com.sicmed.remote.message.service.MessageService;
 import com.sicmed.remote.rbac.service.UserRoleService;
 import com.sicmed.remote.socket.service.NewMessageService;
-import com.sicmed.remote.web.bean.BranchBean;
-import com.sicmed.remote.web.bean.CurrentUserBean;
-import com.sicmed.remote.web.bean.UserBean;
-import com.sicmed.remote.web.bean.UserControllerBean;
+import com.sicmed.remote.web.bean.*;
 import com.sicmed.remote.web.entity.UserAccount;
 import com.sicmed.remote.web.entity.UserDetail;
 import com.sicmed.remote.web.entity.UserSign;
@@ -36,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author YoonaLt
@@ -98,14 +96,17 @@ public class UserController extends BaseController {
     @PostMapping(value = "register")
     public Map userRegister(@Validated UserAccount userAccount, BindingResult brOfUserAccount,
                             @Validated UserDetail userDetail, BindingResult brOfUserDet,
-                            UserSign userSign, String idTypeName, HttpServletRequest httpServletRequest) {
+                            UserSign userSign, String idTypeName,String smsCode, HttpServletRequest httpServletRequest) {
 
         if (brOfUserAccount.hasErrors()) {
             return fieldErrorsBuilder(brOfUserAccount);
         } else if (brOfUserDet.hasErrors()) {
             return fieldErrorsBuilder(brOfUserDet);
         }
-
+        String signCode = redisTemplate.opsForValue().get(userAccount.getUserPhone());
+        if(StringUtils.isBlank(signCode) || !signCode.equals(smsCode)){
+            return badRequestOfArguments("验证码已过期!");
+        }
         String userPhone = userAccount.getUserPhone();
         int q = userAccountService.selectCountPhone(userPhone);
         if (q != 0) {
@@ -148,11 +149,9 @@ public class UserController extends BaseController {
 
         }
 
-
         // 添加UserDetail
         userDetail.setId(userId);
         userDetailService.insertSelective(userDetail);
-
 
         // 添加UserSign
         userSign.setId(userId);
@@ -602,5 +601,17 @@ public class UserController extends BaseController {
             return succeedRequest("修改密码成功");
         }
         return badRequestOfArguments("修改密码失败");
+    }
+
+
+    @PostMapping("sendSignCode")
+    public Object sendSignCode(String phone){
+        ArrayList<String> smsContext = new ArrayList<>();
+        String signCode = RandomStringUtils.randomNumeric(6);
+        smsContext.add(signCode);
+        smsContext.add("5");
+        redisTemplate.opsForValue().set(phone,signCode,300, TimeUnit.SECONDS);
+        smsService.singleSendByTemplate("86",phone,331466, smsContext);
+        return succeedRequest("发送成功");
     }
 }

@@ -8,7 +8,7 @@ const baseUrl = NETWORK_PROTOCOL + window.location.host; //服务地址
 /**
  * 公共接口
  */
-
+const sendSignCodeUrl = "/user/sendSignCode";
 /** 个人中心接口 */
 const getPersonalInfoUrl = "/user/dorPersonalCenter";                           //查询医生详细信息
 const modifyPassword = "/user/modifyPassword";                                  //跟据旧密码修改密码
