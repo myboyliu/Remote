@@ -4,7 +4,6 @@ import com.sicmed.remote.common.ApplyNodeConstant;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.util.UserTokenManager;
-import com.sicmed.remote.web.bean.ApplyFormInfoBean;
 import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.CaseConsultant;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -70,7 +68,7 @@ public class ApplyPictureController extends ApplyController {
 
         String userId = getRequestToken();
         CurrentUserBean currentUserBean = getCurrentUser();
-        applyForm.setApplySummary(getApplySummary());
+        applyForm.setApplySummary(getCurrentUserSummary());
         // 添加 图文会诊 申请表
         applyForm.setApplyUserId(userId);
         applyForm.setApplyBranchId(currentUserBean.getBranchId());
@@ -130,7 +128,7 @@ public class ApplyPictureController extends ApplyController {
         }
 
         CurrentUserBean currentUserBean = UserTokenManager.getCurrentUser();
-        applyForm.setApplySummary(getApplySummary());
+        applyForm.setApplySummary(getCurrentUserSummary());
         // 添加 图文会诊 申请表
         applyForm.setApplyUserId(UserTokenManager.getCurrentUserId());
         applyForm.setApplyBranchId(currentUserBean.getBranchId());
@@ -211,7 +209,6 @@ public class ApplyPictureController extends ApplyController {
 
 
     /**
-     *
      * 受邀医政 接受图文会诊申请
      *
      * @param applyFormId
@@ -230,5 +227,32 @@ public class ApplyPictureController extends ApplyController {
         applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
 
         return succeedRequest("受邀医政接收图文会诊申请成功");
+    }
+
+
+    /**
+     * 同科室医生 接收图文会诊申请
+     *
+     * @param applyFormId
+     * @return
+     */
+    @Transactional
+    @PostMapping(value = "branch/doctor/accept")
+    public Map doctorAcceptOther(String applyFormId) {
+        //1.参数校验
+        if (StringUtils.isBlank(applyFormId)) {
+            return badRequestOfArguments("参数错误");
+        }
+        //2.修改会诊申请
+        applyFormService.updateInviteDoctorAndStatus(applyFormId, String.valueOf(ConsultationStatus.CONSULTATION_BEGIN), getCurrentUserSummary());
+
+        //4.修改 会诊记录信息 更新caseConsultant相关,接收人改变,与之相关需要更新
+        caseConsultantService.updateInviteDoctor(applyFormId, getCurrentUserSummary(), String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT));
+        //5.添加视频会诊流程节点
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
+
+//      TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+
+        return succeedRequest("已接收");
     }
 }

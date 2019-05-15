@@ -1,8 +1,5 @@
 package com.sicmed.remote.web.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
-import com.alibaba.fastjson.parser.Feature;
 import com.sicmed.remote.common.ApplyNodeConstant;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
@@ -32,7 +29,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * 视频会诊 流程接口
@@ -90,7 +89,7 @@ public class ApplyVideoController extends ApplyController {
         applyForm.setApplyUserId(userId);
         applyForm.setApplyType(String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO));
         applyForm.setApplyStatus(String.valueOf(ConsultationStatus.CONSULTATION_APPLY_CREATE_SUCCESS));
-        applyForm.setApplySummary(getApplySummary());
+        applyForm.setApplySummary(getCurrentUserSummary());
         applyForm.setCreateUser(userId);
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
@@ -168,7 +167,7 @@ public class ApplyVideoController extends ApplyController {
         applyForm.setApplyUserId(UserTokenManager.getCurrentUserId());
         applyForm.setApplyType(String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO));
         applyForm.setApplyStatus(String.valueOf(ConsultationStatus.CONSULTATION_APPLY_ACCEDE));
-        applyForm.setApplySummary(getApplySummary());
+        applyForm.setApplySummary(getCurrentUserSummary());
         applyForm.setCreateUser(UserTokenManager.getCurrentUserId());
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
@@ -295,7 +294,7 @@ public class ApplyVideoController extends ApplyController {
         //4.修改会诊记录信息
         if (StringUtils.isNotBlank(inviteSummary) && StringUtils.isNotBlank(consultantUserList) && StringUtils.isNotBlank(consultantReport) && consultantPrice != null) {
             applyForm.setInviteSummary(inviteSummary);
-            caseConsultantService.updateDoctorAndTime(applyFormId,consultantUserList,consultantReport,consultantPrice);
+            caseConsultantService.updateDoctorAndTime(applyFormId, consultantUserList, consultantReport, consultantPrice);
         }
         applyFormService.inviteeConsent(applyForm);
 
@@ -341,25 +340,17 @@ public class ApplyVideoController extends ApplyController {
 
         //2.修改 视频会诊 状态
         ApplyForm applyForm = new ApplyForm();
-        applyForm.setApplyStatus(ConsultationStatus.CONSULTATION_DATETIME_LOCKED.toString());
+        applyForm.setApplyStatus(String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED));
         applyForm.setId(applyFormId);
         applyForm.setUpdateUser(UserTokenManager.getCurrentUserId());
 
 
         //3.修改 视频会诊时间
         log.info(applyFormId + ":修改会诊申请时间");
-        ConsultationTimeBean consultationTimeBean = applyTimeJsonToConsultationTimeBean(startEndTime);
-        applyTimeService.delByApplyForm(applyFormId);
-        Map<String, String> resultMap = applyTimeJson(startEndTime);
-        ApplyTimeBean applyTimeBean = new ApplyTimeBean();
-        applyTimeBean.setApplyFormId(applyFormId);
-        applyTimeBean.setCreateUser(UserTokenManager.getCurrentUserId());
-        applyTimeBean.setStartEndTime(resultMap);
-        applyTimeBean.setApplyStatus(ConsultationStatus.CONSULTATION_DATETIME_LOCKED.toString());
-        applyTimeService.insertStartEndTimes(applyTimeBean);
+        applyTimeService.updateMeetingTime(applyFormId, applyTimeJson(startEndTime), String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED));
         //4.修改会诊记录信息
         if (StringUtils.isNotBlank(inviteSummary) && StringUtils.isNotBlank(consultantUserList) && StringUtils.isNotBlank(consultantReport) && consultantPrice != null) {
-            caseConsultantService.updateDoctorAndTime(applyFormId,consultantUserList,consultantReport,consultantPrice);
+            caseConsultantService.updateDoctorAndTime(applyFormId, consultantUserList, consultantReport, consultantPrice);
             applyForm.setInviteSummary(inviteSummary);
         }
         applyFormService.inviteeConsent(applyForm);
@@ -377,6 +368,7 @@ public class ApplyVideoController extends ApplyController {
         ArrayList<String> smsContext = new ArrayList<>();
         ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyFormId);
         smsContext.add(applyFormInfoBean.getCaseSummary());
+        ConsultationTimeBean consultationTimeBean = applyTimeJsonToConsultationTimeBean(startEndTime);
         smsContext.add(consultationTimeBean.getStartTime());
         smsService.singleSendByTemplate("86", applyFormInfoBean.getApplyUserPhone(), 326105, smsContext);
         smsService.singleSendByTemplate("86", applyFormInfoBean.getInviteUserPhone(), 326106, smsContext);
@@ -386,50 +378,6 @@ public class ApplyVideoController extends ApplyController {
         log.info("不需要审核流程 主会诊医生接收视频会诊结束=====================================================");
         return succeedRequest("操作成功");
     }
-
-    /**
-     * 受邀医政 接收视频会诊申请
-     *
-     * @param applyFormId
-     * @return
-     */
-//    @Transactional
-//    @PostMapping(value = "sirReceiveMasterAccede")
-//    public Map sirConsultationMasterAccede(String applyFormId) {
-//        if (StringUtils.isBlank(applyFormId)) {
-//            return badRequestOfArguments("参数错误");
-//        }
-////        String applyType = applyFormService.getByPrimaryKey(applyFormId).getApplyType();
-//
-//        // 视频会诊状态变为会诊时间已选定
-////        if (ApplyType.APPLY_CONSULTATION_VIDEO.toString().equals(applyType)) {
-////            applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
-////            applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED);
-////        }
-//        // 图文会诊接收后立刻变为会诊中
-////        if (ApplyType.APPLY_CONSULTATION_IMAGE_TEXT.toString().equals(applyType)) {
-////            applyStatus = String.valueOf(ConsultationStatus.CONSULTATION_BEGIN);
-////            applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
-////        }
-//
-//        int i = applyFormService.updateStatus(applyFormId,String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED));
-//        if (i < 1) {
-//            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-//            return badRequestOfArguments("已被接收");
-//        }
-//
-//        ApplyTime applyTime = new ApplyTime();
-//        applyTime.setApplyFormId(applyFormId);
-//        applyTime.setApplyStatus(String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED));
-//        applyTime.setUpdateUser(UserTokenManager.getCurrentUserId());
-//        applyTimeService.updateStatus(applyTime);
-//
-//        meetingService.createMeeting(applyFormId);
-//
-//        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
-//
-//        return succeedRequest("接收成功");
-//    }
 
     /**
      * 医政 受邀会诊  排期审核 接收
@@ -457,15 +405,9 @@ public class ApplyVideoController extends ApplyController {
         smsService.singleSendByTemplate("86", applyFormInfoBean.getApplyUserPhone(), 326105, smsContext);
         smsService.singleSendByTemplate("86", applyFormInfoBean.getInviteUserPhone(), 326106, smsContext);
         applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
-        //7.发送短信提醒医政审核视频会诊订单
 
         return succeedRequest("接收成功");
     }
-
-
-    /**
-     * 医政 受邀会诊 MDT协调 确认协调
-     */
 
     /**
      * 发起医政 发出会诊 待审核 退回
@@ -499,9 +441,6 @@ public class ApplyVideoController extends ApplyController {
     }
 
     /**
-     * 医生 受邀会诊 代收诊 拒收
-     */
-    /**
      * 受邀医生 拒收视频会诊申请
      *
      * @param applyFormId
@@ -532,9 +471,6 @@ public class ApplyVideoController extends ApplyController {
         return succeedRequest(applyForm);
     }
 
-    /**
-     * 医政 受邀会诊 拒收
-     */
     /**
      * 受邀医政 拒绝视频会诊申请
      *
@@ -577,5 +513,94 @@ public class ApplyVideoController extends ApplyController {
         return succeedRequest("操作成功!");
     }
 
+
+    /**
+     * 同科室医生 接收视频会诊申请
+     *
+     * @param applyFormId
+     * @param startEndTime
+     * @param meeting
+     * @return
+     */
+    @Transactional
+    @PostMapping(value = "branch/doctor/accept/audit")
+    public Map doctorAcceptOther(String applyFormId, String startEndTime, Meeting meeting) {
+        //1.参数校验
+        if (StringUtils.isBlank(applyFormId)) {
+            return badRequestOfArguments("参数错误");
+        }
+        //2.修改视频会诊申请状态
+        applyFormService.updateInviteDoctorAndStatus(applyFormId, String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE), getCurrentUserSummary());
+
+        //3.修改视频会诊时间
+        applyTimeService.updateMeetingTime(applyFormId, applyTimeJson(startEndTime), String.valueOf(ConsultationStatus.CONSULTATION_SLAVE_ACCEDE));
+        //4.保存视频会议属性
+        meeting.setId(applyFormId);
+        meetingService.createMeeting(meeting);
+
+        //5.修改 会诊记录信息
+        caseConsultantService.updateInviteDoctor(applyFormId, getCurrentUserSummary(),String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO));
+        //6.添加视频会诊流程节点
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
+
+        //6.发送短信提醒医政审核视频会诊订单
+        ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyFormId);
+        ArrayList<String> smsContext = new ArrayList<>();
+        smsContext.add(applyFormInfoBean.getInviteBranchName());
+        smsContext.add(applyFormInfoBean.getInviteUserName());
+        smsService.singleSendByTemplate("86", applyFormInfoBean.getInviteAdminPhone(), 326102, smsContext);
+//        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+
+        return succeedRequest("已接收");
+    }
+
+
+    /**
+     * 同科室医生 接收视频会诊申请
+     *
+     * @param applyFormId
+     * @param startEndTime
+     * @param meeting
+     * @return
+     */
+    @Transactional
+    @PostMapping(value = "branch/doctor/accept")
+    public Map doctorAcceptOther2(String applyFormId, String startEndTime, Meeting meeting) {
+        //1.参数校验
+        if (StringUtils.isBlank(applyFormId)) {
+            return badRequestOfArguments("参数错误");
+        }
+        //2.修改视频会诊申请状态
+        applyFormService.updateInviteDoctorAndStatus(applyFormId, String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED), getCurrentUserSummary());
+        //3.修改视频会诊时间
+        applyTimeService.updateMeetingTime(applyFormId, applyTimeJson(startEndTime), String.valueOf(ConsultationStatus.CONSULTATION_DATETIME_LOCKED));
+        //4.保存视频会议属性
+        meeting.setId(applyFormId);
+        meetingService.createMeeting(meeting);
+
+        //5.修改 会诊记录信息
+        caseConsultantService.updateInviteDoctor(applyFormId, getCurrentUserSummary(),String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO));
+
+        //6.添加视频会诊流程节点
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
+
+        //6.发送短信提醒医生进行视频会诊
+        ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyFormId);
+        ArrayList<String> smsContext = new ArrayList<>();
+        smsContext.add(applyFormInfoBean.getCaseSummary());
+        smsContext.add(applyFormInfoBean.getMeetingStartTime().toString());
+
+        ArrayList<String> phoneNumbers = new ArrayList<>();
+        phoneNumbers.add(applyFormInfoBean.getApplyUserPhone());
+        phoneNumbers.add(applyFormInfoBean.getInviteUserPhone());
+
+        smsService.multiSendByTemplate("86", phoneNumbers, 326105, smsContext);
+
+        meetingService.createMeeting(applyFormId);
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
+        //TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+
+        return succeedRequest("已接收");
+    }
 
 }

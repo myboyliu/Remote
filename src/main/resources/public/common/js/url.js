@@ -122,7 +122,9 @@ const sirReceiveMasterReject = "/apply/video/sir/reject";               //受邀
 
 
 /** 受邀同科室医生操作接口 */
-const doctorAcceptOther = "/apply/dispose/doctorAcceptOther";
+// const doctorAcceptOther = "/apply/dispose/doctorAcceptOther";
+const doctorAcceptOther2 = "/apply/video/branch/doctor/accept/audit";    //同科室医生 接收视频会诊申请 需要审核接口
+const doctorAcceptOther3 = "/apply/video/branch/doctor/accept";          //同科室医生 接收视频会诊申请
 /**
  * 图文会诊流程接口
  */
@@ -133,6 +135,9 @@ const createPictureApplyUrl = "/apply/picture/create";                 //发起�
 const mainDoctorAccedePicture = "/apply/picture/doctor/accept";         //受邀医生 接受图文会诊申请
 const allocationDoctorTimePicture = "/apply/picture/doctor/accept";     //受邀医生 接受图文会诊申请
 const sirReceiveApplyPictureUrl = "/apply/picture/sir/accept";          //受邀医政 接收图文会诊申请
+
+const doctorAcceptOther4 = "/apply/picture/branch/doctor/accept";       //同科室医生 接收图文会诊申请
+
 
 
 /** 创建病历模块 */

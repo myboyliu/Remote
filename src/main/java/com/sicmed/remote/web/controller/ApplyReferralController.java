@@ -72,7 +72,6 @@ public class ApplyReferralController extends ApplyController {
         }
         String userId = getRequestToken();
         CurrentUserBean currentUserBean = getCurrentUser();
-        String applySummary = getApplySummary();
         // 添加 转诊 申请表
         String applyType = String.valueOf(ApplyType.APPLY_REFERRAL);
         String applyStatues = String.valueOf(InquiryStatus.INQUIRY_APPLY_CREATE_SUCCESS);
@@ -82,7 +81,7 @@ public class ApplyReferralController extends ApplyController {
         applyForm.setApplyType(applyType);
         applyForm.setApplyUserId(userId);
         applyForm.setApplyStatus(applyStatues);
-        applyForm.setApplySummary(applySummary);
+        applyForm.setApplySummary(getCurrentUserSummary());
         applyForm.setCreateUser(userId);
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
@@ -150,7 +149,6 @@ public class ApplyReferralController extends ApplyController {
         }
 
         CurrentUserBean currentUserBean = UserTokenManager.getCurrentUser();
-        String applySummary = getApplySummary();
         // 添加 转诊 申请表
         applyForm.setCreateUser(UserTokenManager.getCurrentUserId());
         applyForm.setApplyBranchId(currentUserBean.getBranchId());
@@ -158,7 +156,7 @@ public class ApplyReferralController extends ApplyController {
         applyForm.setApplyType(String.valueOf(ApplyType.APPLY_REFERRAL));
         applyForm.setApplyUserId(UserTokenManager.getCurrentUserId());
         applyForm.setApplyStatus(String.valueOf(InquiryStatus.INQUIRY_APPLY_ACCEDE));
-        applyForm.setApplySummary(applySummary);
+        applyForm.setApplySummary(getCurrentUserSummary());
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("转诊记录保存失败");
@@ -258,7 +256,7 @@ public class ApplyReferralController extends ApplyController {
         applyTimeService.updateReferralTime(applyFormId, inquiryDatetime, String.valueOf(InquiryStatus.INQUIRY_SLAVE_ACCEDE));
 
         //5.添加转诊流程操作节点
-        applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已接诊.toString(), getApplySummary());
+        applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已接诊.toString(), getCurrentUserSummary());
 
         return succeedRequest("接收成功!");
 
@@ -284,7 +282,7 @@ public class ApplyReferralController extends ApplyController {
         redisTimerService.createReferralEndListener(applyFormId, YtDateUtils.dateToString(YtDateUtils.intradayEnd(YtDateUtils.stringToDate(inquiryDatetime))), UserTokenManager.getCurrentUserId());
 
         //5.添加转诊流程操作节点
-        applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已排期.toString(), getApplySummary());
+        applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已排期.toString(), getCurrentUserSummary());
         ArrayList<String> smsContext = new ArrayList<>();
         ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyFormId);
         log.debug(applyFormInfoBean.toString());

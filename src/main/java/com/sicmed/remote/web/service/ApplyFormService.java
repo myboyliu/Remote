@@ -318,4 +318,15 @@ public class ApplyFormService implements BaseService<ApplyForm> {
         applyForm.setApplyStatus(applyStatus);
        return applyFormMapper.updateByPrimaryKeySelective(applyForm);
     }
+
+    public int updateInviteDoctorAndStatus(String applyFormId, String applyStatus,String currentUserSummary) {
+        ApplyForm applyForm = new ApplyForm();
+        applyForm.setId(applyFormId);
+        applyForm.setApplyStatus(applyStatus);
+        applyForm.setInviteUserId(UserTokenManager.getCurrentUserId());
+        applyForm.setInviteSummary(currentUserSummary);
+        applyForm.setUpdateUser(UserTokenManager.getCurrentUserId());
+//        applyFormService.inviteeConsent(applyForm);
+        return applyFormMapper.updateByPrimaryKeySelective(applyForm);
+    }
 }

@@ -135,7 +135,7 @@ public class ApplyController extends BaseController {
 
     }
 
-    public String getApplySummary() {
+    public String getCurrentUserSummary() {
         CurrentUserBean currentUserBean = UserTokenManager.getCurrentUser();
         return "<" + currentUserBean.getUserName() + "/" + currentUserBean.getTitleName() + "/" + currentUserBean.getBranchName() + "/" + currentUserBean.getHospitalName() + ">";
     }

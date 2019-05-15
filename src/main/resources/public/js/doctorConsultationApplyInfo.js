@@ -328,7 +328,7 @@ $(function () {
         if (isMainDoctor) {
             ajaxRequest("POST", mainDoctorAccedePicture, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
         } else if (isBranchDoctor) {
-            ajaxRequest("POST", doctorAcceptOther, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
+            ajaxRequest("POST", doctorAcceptOther4, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
         }
     })
     $("#receiveConsultationTimeBoxYesBtn").click(function () {
@@ -370,14 +370,14 @@ $(function () {
             if (isMainDoctor) {
                 ajaxRequest("POST", mainDoctorAccede, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
             } else if (isBranchDoctor) {
-                ajaxRequest("POST", doctorAcceptOther, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
+                ajaxRequest("POST", doctorAcceptOther3, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
             }
         })
         $("#videoApplyAuditBox .yesBtn").click(function () {
             if (isMainDoctor) {
                 ajaxRequest("POST", mainDoctorAccedeAuditUrl, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
             } else if (isBranchDoctor) {
-                ajaxRequest("POST", doctorAcceptOther, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
+                ajaxRequest("POST", doctorAcceptOther2, data, false, false, true, sirUpdateDateSuccess, operationFailid, null)
             }
         })
         $("#choiceMeetingAttributeBoxYesBtn").click(function () {

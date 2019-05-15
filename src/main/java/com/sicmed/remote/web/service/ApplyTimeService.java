@@ -1,20 +1,18 @@
 package com.sicmed.remote.web.service;
 
 import com.sicmed.remote.common.ConsultationStatus;
-import com.sicmed.remote.common.InquiryStatus;
 import com.sicmed.remote.common.util.UserTokenManager;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
-import com.sicmed.remote.web.bean.ApplyFormBean;
 import com.sicmed.remote.web.bean.ApplyTimeBean;
 import com.sicmed.remote.web.entity.ApplyTime;
 import com.sicmed.remote.web.mapper.ApplyTimeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ApplyTimeService implements BaseService<ApplyTime> {
@@ -73,7 +71,7 @@ public class ApplyTimeService implements BaseService<ApplyTime> {
         return null;
     }
 
-    public int updateReferralTime(String applyFormId, String inquiryDatetime,String applyStatus) {
+    public int updateReferralTime(String applyFormId, String inquiryDatetime, String applyStatus) {
         applyTimeMapper.delByApplyForm(applyFormId);
         //4.添加新的转诊时间
         Date date = YtDateUtils.stringToDate(inquiryDatetime);
@@ -83,6 +81,16 @@ public class ApplyTimeService implements BaseService<ApplyTime> {
         applyTimeBean.setApplyFormId(applyFormId);
         applyTimeBean.setCreateUser(UserTokenManager.getCurrentUserId());
         applyTimeBean.setStartEndTime(resultMap);
+        applyTimeBean.setApplyStatus(applyStatus);
+        return applyTimeMapper.insertStartEndTimes(applyTimeBean);
+    }
+
+    public int updateMeetingTime(String applyFormId, Map<String, String> meetingTimeMap,String applyStatus) {
+        applyTimeMapper.delByApplyForm(applyFormId);
+        ApplyTimeBean applyTimeBean = new ApplyTimeBean();
+        applyTimeBean.setApplyFormId(applyFormId);
+        applyTimeBean.setStartEndTime(meetingTimeMap);
+        applyTimeBean.setCreateUser(UserTokenManager.getCurrentUserId());
         applyTimeBean.setApplyStatus(applyStatus);
         return applyTimeMapper.insertStartEndTimes(applyTimeBean);
     }

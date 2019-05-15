@@ -1,7 +1,10 @@
 package com.sicmed.remote.web.service;
 
+import com.alibaba.fastjson.JSON;
+import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.util.UserTokenManager;
 import com.sicmed.remote.web.bean.ApplyFormBean;
+import com.sicmed.remote.web.bean.ConsultantReportBean;
 import com.sicmed.remote.web.bean.ConsultationStatusBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.CaseConsultant;
@@ -10,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CaseConsultantService implements BaseService<CaseConsultant> {
@@ -99,6 +105,45 @@ public class CaseConsultantService implements BaseService<CaseConsultant> {
         caseConsultant.setConsultantReport(consultantReport);
         caseConsultant.setConsultantPrice(consultantPrice);
         caseConsultant.setUpdateUser(UserTokenManager.getCurrentUserId());
+        return caseConsultantMapper.updateByPrimaryKeySelective(caseConsultant);
+    }
+
+    public int updateInviteDoctor(String applyFormId, String currentUserSummary, String applyType) {
+
+        ConsultantReportBean consultantReportBean = new ConsultantReportBean();
+        consultantReportBean.setDoctorName(UserTokenManager.getCurrentUser().getUserName());
+        consultantReportBean.setDoctorId(UserTokenManager.getCurrentUserId());
+        consultantReportBean.setReport("");
+        consultantReportBean.setReportStatus("1");
+        List<ConsultantReportBean> consultantReportBeanList = new LinkedList<>();
+        consultantReportBeanList.add(consultantReportBean);
+        String jsonReport = JSON.toJSONString(consultantReportBeanList);
+
+        Map<String, String> userMap = new LinkedHashMap<>();
+        userMap.put("doctorName", currentUserSummary);
+        userMap.put("doctorId", UserTokenManager.getCurrentUserId());
+        String doctorPrice;
+        if (String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO).equals(applyType)) {
+            doctorPrice = UserTokenManager.getCurrentUser().getConsultationVideoPrice();
+            userMap.put("price", UserTokenManager.getCurrentUser().getConsultationVideoPrice());
+        } else {
+            doctorPrice = UserTokenManager.getCurrentUser().getConsultationPicturePrice();
+            userMap.put("price", UserTokenManager.getCurrentUser().getConsultationPicturePrice());
+        }
+        List<Map> userList = new LinkedList<>();
+        userList.add(userMap);
+        String jsonUser = JSON.toJSONString(userList);
+        CaseConsultant caseConsultant = getByPrimaryKey(applyFormId);
+        BigDecimal hospitalPrice = caseConsultant.getHospitalPrice();
+        BigDecimal resultDoctorPrice = new BigDecimal(doctorPrice);
+        BigDecimal consultantPrice = hospitalPrice.add(resultDoctorPrice);
+        caseConsultant.setId(applyFormId);
+        caseConsultant.setInviteUserId(UserTokenManager.getCurrentUserId());
+        caseConsultant.setConsultantUserList(jsonUser);
+        caseConsultant.setConsultantReport(jsonReport);
+        caseConsultant.setUpdateUser(UserTokenManager.getCurrentUserId());
+        caseConsultant.setConsultantPrice(consultantPrice);
+
         return caseConsultantMapper.updateByPrimaryKeySelective(caseConsultant);
     }
 }
