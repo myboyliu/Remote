@@ -95,13 +95,10 @@
         </logger>
     </springProfile>
 
-
     <root level="ERROR">
         <!--<appender-ref ref="SQL_CONSOLE_LOG"/>-->
         <!--<appender-ref ref="fileInfoLog"/>-->
         <!--<appender-ref ref="fileErrorLog"/>-->
     </root>
-
-
 
 </configuration>

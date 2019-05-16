@@ -53,7 +53,7 @@ function renderCaseContentView(caseContentList) {
 
 /**渲染注册成功窗口*/
 function renderRegistrationSuccessful() {
-    var _$ = layui.jquery;
+    let _$ = layui.jquery;
     layer.open({
         type: 1,
         title: '',
@@ -196,9 +196,6 @@ $(function () {
     $('.enroll_button').click(function () {
         if (!RegExpObj.Reg_mobilePhone.test(Name.val())) {
             layer.msg('请检查用户名');
-        }
-        if ($("#smsCode").val() == "") {
-            layer.msg('注册验证码错误');
         } else if (!RegExpObj.Reg_PassWord.test(passWord.val())) {
             layer.msg('请检查密码');
         } else if (passWord.val() != passwords.val()) {
@@ -246,10 +243,10 @@ $(function () {
             data.append("userStrong", $("#textAdaotion").val());
             data.append("consultationPicturePrice", $("#consultationPicturePrice").val());
             data.append("consultationVideoPrice", $("#consultationVideoPrice").val());
-            if (doctorCardFront.length > 16) {
+            if (doctorCardFront.length > 1) {
                 data.append('doctorCardFront', doctorCardFront);
             }
-            if (signature.length > 16) {
+            if (signature.length > 1) {
                 data.append("signature", signature);
             }
 
@@ -258,8 +255,8 @@ $(function () {
         }
     });
 
-    function registerFailed(result) {
-        layer.msg(result);
+    function registerFailed() {
+        layer.msg("注册失败");
     }
 
     $("#smsCodeBtn").click(function () {
