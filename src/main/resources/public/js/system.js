@@ -872,9 +872,9 @@ $(function () {
                     time: 2000,
                     content: _$('.successBox'),
                 });
-                setTimeout(function () {
-                    $('.successBox').hide();
-                }, 2000);
+                // setTimeout(function () {
+                //     $('.successBox').hide();
+                // }, 2000);
                 $('.threeLevelItem.active').attr("stateflag", '1').find('img').hide();
             }
 
