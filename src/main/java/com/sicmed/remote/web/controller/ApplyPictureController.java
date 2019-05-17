@@ -4,6 +4,7 @@ import com.sicmed.remote.common.ApplyNodeConstant;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.util.UserTokenManager;
+import com.sicmed.remote.web.YoonaLtUtils.OrderNumUtils;
 import com.sicmed.remote.web.bean.CurrentUserBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.CaseConsultant;
@@ -136,7 +137,7 @@ public class ApplyPictureController extends ApplyController {
         applyForm.setApplyType(String.valueOf(ApplyType.APPLY_CONSULTATION_IMAGE_TEXT));
         applyForm.setApplyStatus(String.valueOf(ConsultationStatus.CONSULTATION_APPLY_ACCEDE));
         applyForm.setCreateUser(UserTokenManager.getCurrentUserId());
-
+        applyForm.setApplyNumber(OrderNumUtils.getOrderNo(redisTemplate));
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("图文会诊记录保存失败");

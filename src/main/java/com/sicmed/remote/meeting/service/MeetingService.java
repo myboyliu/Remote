@@ -47,13 +47,14 @@ public class MeetingService {
     /**
      * 根据 视频会诊ID 创建 会议
      */
-    public void createMeeting(String applyFormId) {
+    public boolean createMeeting(String applyFormId) {
         //1.查询视频会诊信息
         ApplyTime applyTime = applyTimeMapper.getFinalTime(applyFormId);
         try {
-            this.createMeeting(applyTime);
+           return this.createMeeting(applyTime);
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -69,7 +70,7 @@ public class MeetingService {
     /**
      * 根据 视频会诊记录 创建 会议
      */
-    public void createMeeting(ApplyTime applyTime){
+    public boolean createMeeting(ApplyTime applyTime){
         log.debug("----------------------创建视频会议开始------------------------");
 
         //查询 主会诊医生信息
@@ -93,6 +94,9 @@ public class MeetingService {
         requestMeeting.setMobile(masterDoctorBean.getDoctorPhone());
         requestMeeting.setRealName(masterDoctorBean.getDoctorName());
         MeetingBean meetingBean = YqyMeetingUtils.createMeeting(requestMeeting);
+        if(null == meetingBean){
+            return false;
+        }
         log.debug("----------------------调用云启云业务结束------------------------");
         //3.云启云视频会议 接口 调用 结果处理
         meeting.setMeetingBean(meetingBean);
@@ -113,6 +117,7 @@ public class MeetingService {
         redisTimerService.createMeetingRemind(applyTime.getApplyFormId(), applyTime.getEventStartTime(), jsonArray);
         log.debug("----------------------创建定时任务结束------------------------");
         log.debug("----------------------创建视频会议结束------------------------");
+        return true;
     }
 
     /**

@@ -533,7 +533,7 @@ function alertMessage() {
 
 /** 订单状态 变化 导致 操作失败 */
 function operationFailid(data) {
-    $("#alertText").html("订单状态已改变!");
+    $("#alertText").html(data.result);
     alertMessage();
     setTimeout(function () {
         window.location = '../page/morkbench.html'
@@ -712,11 +712,11 @@ $(function () {
             $("#appointmentNumber").html(meetInfo.appointmentNumber);
             $("#hostPwd").html(meetInfo.hostPwd);
             $("#webrtcUrl").html(baseUrl + "/#/webrtc/" + userInfo.userPhone + "/" + meetInfo.appointmentNumber + "/" + meetInfo.hostPwd + "/" + userInfo.userName);
-            if(applyInfo.meetStart){
+            if (applyInfo.meetStart) {
                 $("#liveUrl").html(baseUrl + "/#/watch-live/" + meetInfo.appointmentId);
                 $("#livePwd").html(meetInfo.livePwd);
                 $("#livePwd").html(123456);
-            }else{
+            } else {
 
             }
             qrcode.makeCode(baseUrl + "/#/watch-live/" + meetInfo.appointmentId);

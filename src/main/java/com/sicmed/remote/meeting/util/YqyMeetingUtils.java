@@ -34,12 +34,13 @@ public class YqyMeetingUtils {
      * @param requestMeeting
      * @return
      */
-    public static MeetingBean createMeeting(RequestMeeting requestMeeting){
+    public static MeetingBean createMeeting(RequestMeeting requestMeeting) {
         //获取token
         String accessToken = getToken(requestMeeting.getMobile(), requestMeeting.getRealName());
 
         //调用云起云创建会议接口
         String res = svocCreateInterface(accessToken, requestMeeting.getAppointmentName(), requestMeeting.getStartTime(), requestMeeting.getEndTime(), requestMeeting.isLive(), requestMeeting.isMute(), requestMeeting.isRecord(), requestMeeting.getConcurrentNum());
+        log.debug("云启云视频会议创建结果:" + res);
         return responseObject(res);
     }
 
@@ -200,11 +201,10 @@ public class YqyMeetingUtils {
      * @return
      */
 
-    private static MeetingBean responseObject(String resultJson){
+    private static MeetingBean responseObject(String resultJson) {
         Map<String, Object> response = (Map) JSON.parse(resultJson);
         if (response.get("code") != null && "200".equals(response.get("code").toString())) {
-            return JSON.parseObject(response.get("data").toString(), new TypeReference<MeetingBean>() {
-            });
+            return JSON.parseObject(response.get("data").toString(), new TypeReference<MeetingBean>() {});
         } else {
             log.error(resultJson);
             log.error(String.valueOf(response.get("code")));

@@ -8,10 +8,10 @@ function receiveSuccess() {
     }, 2000)
 }
 
-//接收 成功回调
-function statusIsChange() {
+//接收 失败回调
+function statusIsChange(data) {
     $('.submitBox').hide();
-    $("#alertText").html("订单状态已改变!");
+    $("#alertText").html(data.result);
     alertMessage();
     setTimeout(function () {
         window.location = '../page/administrator.html'

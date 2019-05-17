@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -169,6 +170,7 @@ public class ApplyVideoController extends ApplyController {
         applyForm.setApplyStatus(String.valueOf(ConsultationStatus.CONSULTATION_APPLY_ACCEDE));
         applyForm.setApplySummary(getCurrentUserSummary());
         applyForm.setCreateUser(UserTokenManager.getCurrentUserId());
+        applyForm.setApplyNumber(OrderNumUtils.getOrderNo(redisTemplate));
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("视频会诊记录保存失败");
@@ -364,6 +366,14 @@ public class ApplyVideoController extends ApplyController {
         //6.添加视频会诊流程节点
         log.info(applyFormId + ":添加操作流程节点");
         applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
+
+
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
+        boolean result = meetingService.createMeeting(applyFormId);
+        if (!result) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return badRequestOfUpdate("创建视频会议失败");
+        }
         //7.发送短信提醒医政审核视频会诊订单
         ArrayList<String> smsContext = new ArrayList<>();
         ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyFormId);
@@ -373,8 +383,6 @@ public class ApplyVideoController extends ApplyController {
         smsService.singleSendByTemplate("86", applyFormInfoBean.getApplyUserPhone(), 326105, smsContext);
         smsService.singleSendByTemplate("86", applyFormInfoBean.getInviteUserPhone(), 326106, smsContext);
 
-        meetingService.createMeeting(applyFormId);
-        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
         log.info("不需要审核流程 主会诊医生接收视频会诊结束=====================================================");
         return succeedRequest("操作成功");
     }
@@ -396,7 +404,12 @@ public class ApplyVideoController extends ApplyController {
         applyTime.setUpdateUser(UserTokenManager.getCurrentUserId());
         applyTimeService.updateStatus(applyTime);
 
-        meetingService.createMeeting(applyFormId);
+        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
+        boolean result = meetingService.createMeeting(applyFormId);
+        if(!result){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return badRequestOfUpdate("视频会议创建失败!");
+        }
 
         ArrayList<String> smsContext = new ArrayList<>();
         ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyFormId);
@@ -404,7 +417,6 @@ public class ApplyVideoController extends ApplyController {
         smsContext.add(applyFormInfoBean.getMeetingStartTime().toString());
         smsService.singleSendByTemplate("86", applyFormInfoBean.getApplyUserPhone(), 326105, smsContext);
         smsService.singleSendByTemplate("86", applyFormInfoBean.getInviteUserPhone(), 326106, smsContext);
-        applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已排期.toString());
 
         return succeedRequest("接收成功");
     }
@@ -539,7 +551,7 @@ public class ApplyVideoController extends ApplyController {
         meetingService.createMeeting(meeting);
 
         //5.修改 会诊记录信息
-        caseConsultantService.updateInviteDoctor(applyFormId, getCurrentUserSummary(),String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO));
+        caseConsultantService.updateInviteDoctor(applyFormId, getCurrentUserSummary(), String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO));
         //6.添加视频会诊流程节点
         applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());
 
@@ -579,7 +591,7 @@ public class ApplyVideoController extends ApplyController {
         meetingService.createMeeting(meeting);
 
         //5.修改 会诊记录信息
-        caseConsultantService.updateInviteDoctor(applyFormId, getCurrentUserSummary(),String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO));
+        caseConsultantService.updateInviteDoctor(applyFormId, getCurrentUserSummary(), String.valueOf(ApplyType.APPLY_CONSULTATION_VIDEO));
 
         //6.添加视频会诊流程节点
         applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已接诊.toString());

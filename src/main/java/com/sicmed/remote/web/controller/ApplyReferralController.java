@@ -157,6 +157,7 @@ public class ApplyReferralController extends ApplyController {
         applyForm.setApplyUserId(UserTokenManager.getCurrentUserId());
         applyForm.setApplyStatus(String.valueOf(InquiryStatus.INQUIRY_APPLY_ACCEDE));
         applyForm.setApplySummary(getCurrentUserSummary());
+        applyForm.setApplyNumber(OrderNumUtils.getOrderNo(redisTemplate));
         int i = applyFormService.insertSelective(applyForm);
         if (i < 1) {
             return badRequestOfArguments("转诊记录保存失败");
@@ -206,13 +207,12 @@ public class ApplyReferralController extends ApplyController {
 
         String applyStatus = String.valueOf(InquiryStatus.INQUIRY_APPLY_ACCEDE);
         String userId = getRequestToken();
-        String orderNumber = OrderNumUtils.getOrderNo(redisTemplate);
 
         ApplyForm applyForm = new ApplyForm();
         applyForm.setId(applyFormId);
         applyForm.setApplyStatus(applyStatus);
         applyForm.setUpdateUser(userId);
-        applyForm.setApplyNumber(orderNumber);
+        applyForm.setApplyNumber(OrderNumUtils.getOrderNo(redisTemplate));
         applyForm.setConsultantApplyTime(new Date());
 
         int i = applyFormService.updateByPrimaryKeySelective(applyForm);
