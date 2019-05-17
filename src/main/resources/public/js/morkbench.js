@@ -462,6 +462,7 @@ function selectDraftById(orderId) {
 }
 
 $(function () {
+    localStorage.setItem('rolesName',"医生");
     getDraftsCount();
     getInviteCount();
     pageCount = $("#INVITE_ACCEPT").html();

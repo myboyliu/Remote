@@ -509,6 +509,7 @@ function selectOrderById(orderId, type, readFlag) {
 
 
 $(function () {
+    localStorage.setItem('rolesName',"医政");
     getInviteCount()
     pageCount = $("#INVITE_ACCEPT").html();
 
