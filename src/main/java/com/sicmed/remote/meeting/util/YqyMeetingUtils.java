@@ -99,12 +99,13 @@ public class YqyMeetingUtils {
      * @return
      */
     private static String getToken(String phone, String realName) {
+        //{"msg":"Access token expired","code":11018,"data":{}}
         Object authToken = redisTemplate.opsForValue().get("yqy:" + phone);
         String token;
         if (authToken == null) {
             token = HttpClientUtils.getMethod(phone, realName);
             //存入redis数据库
-            redisTemplate.opsForValue().set("yqy:" + phone, token, Constant.EXPIRATION_DATE, TimeUnit.MILLISECONDS);
+            redisTemplate.opsForValue().set("yqy:" + phone, token, Constant.EXPIRATION_DATE, TimeUnit.SECONDS);
         } else {
             token = authToken.toString();
         }

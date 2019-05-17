@@ -52,7 +52,7 @@ public class Constant {
     /**
      * 过期时间90分钟的毫秒值
      */
-    public static final int EXPIRATION_DATE = 3400000;
+    public static final int EXPIRATION_DATE = 1200;
 
     /**
      *  群发消息标记

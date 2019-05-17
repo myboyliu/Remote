@@ -75,10 +75,11 @@ public class MeetingService {
 
         //查询 主会诊医生信息
         MasterDoctorBean masterDoctorBean = applyFormMapper.getMasterDoctorById(applyTime.getApplyFormId());
-
+        boolean hasInited = true;
         //1.创建视频会议
         Meeting meeting = meetingMapper.selectByPrimaryKey(applyTime.getApplyFormId());
         if (meeting == null) {
+            hasInited = false;
             meeting = new Meeting();
             meeting.setId(applyTime.getApplyFormId());
             meeting.setMeetMute(false);
@@ -101,7 +102,11 @@ public class MeetingService {
         //3.云启云视频会议 接口 调用 结果处理
         meeting.setMeetingBean(meetingBean);
         //4.视频会议信息插入数据库
-        meetingMapper.updateByPrimaryKeySelective(meeting);
+        if (hasInited){
+            meetingMapper.updateByPrimaryKeySelective(meeting);
+        }else{
+            meetingMapper.insertSelective(meeting);
+        }
         log.debug("----------------------创建定时任务开始------------------------");
         //5.调用 定时 提醒服务
         CaseConsultant caseConsultant = caseConsultantService.getByPrimaryKey(applyTime.getApplyFormId());
