@@ -170,8 +170,10 @@ where ud.id = #{userId} and ud.del_flag = "0"
         us.approve_status us_as
         from user_detail ud
         left join user_sign us on us.id = ud.id
+        left join user_role ur on  ur.user_id=ud.id
         where
         ud.del_flag = "0" and us.approve_status = "AUTHENTICATION_ACCEDE"
+        and ur.role_id = "5595a97e455711e98ede487b6bd31bf7"
         AND ud.branch_id = #{branchId}
     </select>
 
