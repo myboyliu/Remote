@@ -22,6 +22,7 @@ let casePatientId = "";
 let caseRecordId = "";
 let draftId = "";
 let isAudit = true;
+
 /** 渲染 病历页面 左侧导航 */
 function renderCaseTypeLeftNavigation(data) {
     let _html = '<li class="oneLevelItem patientInfo active">\
@@ -40,9 +41,9 @@ function renderCaseTypeLeftNavigation(data) {
         }
         _html += '</ul>\
                             </li>'
-    })
+    });
     _html += '</ul>\
-            </li>'
+            </li>';
     $('.oneLevelUl').html(_html);
     $('.oneLevelItem').eq(0).addClass('active').find('.twoLevelUl').show().find('.twoLevelItem').eq(0).addClass('active').find('.tthreeLevelUl').slideDown();
     $('.oneLevelUl').css({
@@ -85,7 +86,7 @@ function renderDoctorNavigation(data) {
         for (let j = 0; j < sectionArr.length; j++) {
             _html += '<li class="sectionItem">\
                                 <p class="sectionName" title="' + sectionArr[j].branchName + '">' + sectionArr[j].branchName + '</p>\
-                                <ul class="deptUl">'
+                                <ul class="deptUl">';
             let deptArr = sectionArr[j].customBranchList;
             for (let x = 0; x < deptArr.length; x++) {
                 _html += '<li id="' + deptArr[x].id + '" name="' + deptArr[x].id + '" class="deptItem" title="' + deptArr[x].customName + '">' + deptArr[x].customName + '</li>'
@@ -443,7 +444,7 @@ function createDraftApplyData(caseId, caseSummary) {
                 "doctorId": inviteDoctorArray[i].doctorId,
                 "report": "",
                 "reportStatus": "1"
-            })
+            });
             inviteSummary += inviteDoctor + ";";
         }
         data.append("inviteSummary", inviteSummary);
@@ -512,7 +513,7 @@ function createPictureApplyData(caseId, caseSummary) {
                 "doctorId": inviteDoctorArray[i].doctorId,
                 "report": "",
                 "reportStatus": "1"
-            })
+            });
             inviteSummary += inviteDoctor + ";";
         }
         data.append("inviteSummary", inviteSummary);
@@ -524,9 +525,9 @@ function createPictureApplyData(caseId, caseSummary) {
         data.append('inviteBranchId', hospitalInfo.branchId);
         data.append('hospitalPrice', hospitalInfo.hospitalImgPrice); // 医院图文基本价格
     }
-    if (isAudit){
+    if (isAudit) {
         ajaxRequest("POST", createPictureApplyAuditUrl, data, false, false, true, createPictureApplySuccess, requestField, null);
-    } else{
+    } else {
         ajaxRequest("POST", createPictureApplyUrl, data, false, false, true, createPictureApplySuccess, requestField, null);
     }
 
@@ -575,7 +576,7 @@ function createVideoApplyData(caseId, caseSummary) {
                 "doctorId": inviteDoctorArray[i].doctorId,
                 "report": "",
                 "reportStatus": "1"
-            })
+            });
             inviteSummary += inviteDoctor + ";";
         }
         data.append("inviteSummary", inviteSummary);
@@ -589,9 +590,9 @@ function createVideoApplyData(caseId, caseSummary) {
     }
     // 选择时间数组
     data.append('startEndTime', JSON.stringify(dateList));
-    if (isAudit){
+    if (isAudit) {
         ajaxRequest("POST", createVideoApplyAuditUrl, data, false, false, true, createVideoApplySuccess, requestField, null);
-    } else{
+    } else {
         ajaxRequest("POST", createVideoApplyUrl, data, false, false, true, createVideoApplySuccess, requestField, null);
     }
 
@@ -627,9 +628,9 @@ function createReferralApplyData(caseId, caseSummary) {
         data.append('inviteHospitalId', hospitalInfo.id);
         data.append('inviteBranchId', hospitalInfo.branchId);
     }
-    if(isAudit){
+    if (isAudit) {
         ajaxRequest("POST", createReferralApplyAuditUrl, data, false, false, true, createReferralApplySuccess, requestField, null);
-    }else{
+    } else {
         ajaxRequest("POST", createReferralApplyUrl, data, false, false, true, createReferralApplySuccess, requestField, null);
     }
 
@@ -687,52 +688,52 @@ function checkCase() {
     if (!RegExpObj.Reg_Name.test($('#username').val())) {
         $("#failedParamMessage").html("患者姓名错误!");
         isFailedParam = true;
-        showFailedParamMessage()
+        showFailedParamMessage();
         return true;
     } else if (!RegExpObj.Reg_IDCardNo.test($('#idCard').val())) {
         $("#failedParamMessage").html("身份证号格式错误!");
         isFailedParam = true;
-        showFailedParamMessage()
+        showFailedParamMessage();
         return true;
     } else if (!RegExpObj.Reg_age.test($('#age').val())) {
         $("#failedParamMessage").html("年龄错误!");
         isFailedParam = true;
-        showFailedParamMessage()
+        showFailedParamMessage();
         return true;
     } else if (!RegExpObj.Reg_hight.test($('#high').val())) {
         $("#failedParamMessage").html("身高错误!");
         isFailedParam = true;
-        showFailedParamMessage()
+        showFailedParamMessage();
         return true;
     } else if (!RegExpObj.Reg_weight.test($('#weight').val())) {
         $("#failedParamMessage").html("体重错误!");
         isFailedParam = true;
-        showFailedParamMessage()
+        showFailedParamMessage();
         return true;
     } else if (!RegExpObj.Reg_mobilePhone.test($('#phone').val())) {
         $("#failedParamMessage").html("电话号码错误!");
         isFailedParam = true;
-        showFailedParamMessage()
+        showFailedParamMessage();
         return true;
     } else if (!RegExpObj.Reg_address.test($('#address').val())) {
         $("#failedParamMessage").html("常住城市错误!");
         isFailedParam = true;
-        showFailedParamMessage()
+        showFailedParamMessage();
         return true;
     } else if ($('#createCase_textDiagnose').val() === '') {
         $("#failedParamMessage").html("初步诊断不能为空!");
         isFailedParam = true;
-        showFailedParamMessage()
+        showFailedParamMessage();
         return true;
     } else if ($('#createCase_textGola').val() === '') {
         $("#failedParamMessage").html("会/转诊目的不能为空!");
         isFailedParam = true;
-        showFailedParamMessage()
+        showFailedParamMessage();
         return true;
     } else if (fileAllArr.length === 0) {
         $("#failedParamMessage").html("电子病历附件不能为空!");
         isFailedParam = true;
-        showFailedParamMessage()
+        showFailedParamMessage();
         return true;
     }
     return isFailedParam;
@@ -756,12 +757,12 @@ function renderDraftInfo(draftInfo) {
 
     casePatientId = draftInfo.patientId;
     caseRecordId = draftInfo.caseRecordId;
-    $('#username').val(draftInfo.patientName)
-    $('#idCard').val(draftInfo.patientCard)
-    $('#phone').val(draftInfo.patientPhone)
-    $('#address').val(draftInfo.detailAddress)
+    $('#username').val(draftInfo.patientName);
+    $('#idCard').val(draftInfo.patientCard);
+    $('#phone').val(draftInfo.patientPhone);
+    $('#address').val(draftInfo.detailAddress);
     let choiceAge = draftInfo.patientAge + "";
-    $('#age').val(choiceAge.substring(0,choiceAge.length - 1));
+    $('#age').val(choiceAge.substring(0, choiceAge.length - 1));
     $('.choiceAge').val(choiceAge.substring(choiceAge.length - 1));
     $('#high').val(draftInfo.patientHeight);
     if (draftInfo.patientWeight) {
@@ -844,7 +845,7 @@ function renderDraftInfo(draftInfo) {
 
     if (draftInfo.inviteUserId) {
         if (draftInfo.consultantUserList) {
-            let consultantUserList = JSON.parse(draftInfo.consultantUserList)
+            let consultantUserList = JSON.parse(draftInfo.consultantUserList);
             for (let item of consultantUserList) {
                 console.log(item);
                 let inviteDoctorArr = item.doctorName.replace("<", "").replace(">", "").split("/");
@@ -926,7 +927,7 @@ $(function () {
         $(this).find('.sectionUl').stop(true).slideToggle();
         $(this).siblings('.hospitalItem').find('.sectionUl').stop(true).slideUp();
 
-    })
+    });
     $('.hospitalUl').delegate('.sectionItem', 'click', function () {
         if ($(this).find('.deptUl').css('display') === 'none') {
             $(this).addClass('active').siblings('.sectionItem').removeClass('active');
@@ -936,7 +937,7 @@ $(function () {
         $(this).find('.deptUl').stop(true, true).slideToggle();
         $(this).siblings('.sectionItem').find('.deptUl').stop(true, true).slideUp();
         return false;
-    })
+    });
     $('.hospitalUl').delegate('.deptItem', 'click', function () {
         $('.hospitalUl').find('.deptItem').removeClass('active');
 
@@ -970,7 +971,7 @@ $(function () {
                 "right": "0"
             }).show();
         }
-    })
+    });
     // 选医生鼠标移出收起详情
     $('.doctorUl').delegate('.doctorChunk', 'mouseleave', function (event) {
         $(this).find('.present').hide();
@@ -1036,15 +1037,14 @@ $(function () {
         $('html, body').animate({
             scrollTop: x - 100,
         }, 300);
-    };
-
+    }
     // 病历信息一级按钮
     $('.oneLevelUl').delegate('.oneLevelItem', 'click', function () {
         $(this).addClass('active').siblings('.oneLevelItem').removeClass('active');
         $(this).find('.twoLevelUl').stop(true).slideToggle();
         $(this).siblings('.oneLevelItem').find('.twoLevelUl').stop(true).slideUp();
         scrollTo($('.hosp').not('.hosp:hidden').eq($(this).index()).offset().top);
-    })
+    });
     // 病历信息二级按钮
     $('.oneLevelUl').delegate('.twoLevelItem', 'click', function () {
         if ($(this).find('.threeLevelUl').css('display') === 'none') {
@@ -1055,7 +1055,7 @@ $(function () {
         $(this).find('.threeLevelUl').stop(true, true).slideToggle();
         $(this).siblings('.twoLevelItem').find('.threeLevelUl').stop(true, true).slideUp();
         return false;
-    })
+    });
     // 病历信息三级按钮
     $('.oneLevelUl').delegate('.threeLevelUl', 'click', function () {
         return false;
@@ -1149,7 +1149,7 @@ $(function () {
 
         $(this).parent('.fileItem').remove();
         return false;
-    })
+    });
 
 // 图片点击查看大图
     $('.upfileUl').delegate('.fileItem', 'click', function () {
@@ -1183,7 +1183,7 @@ $(function () {
             "top": 0,
             "left": 0,
             "transform": "scale(1)",
-        })
+        });
         if (fileArr[indexFile].type != 'img') {
             // pdf dcm
             $('.bigImgContainer').find('.bigImg').addClass('bgSize');
@@ -1249,19 +1249,18 @@ $(function () {
             // 图片的相关操作
             $('.downlodeFile').hide();
             $('.bigImgContainer').find('.bigImg').removeClass('bgSize').html(' ');
-            ;
         }
         $('.bigImgContainer').find('.bigImg').css({
             "top": 0,
             "left": 0,
             "transform": "scale(1)",
-        })
+        });
         scaleNum = 10;
         $('.bigImgContainer').find('.bigImg').css('backgroundImage', fileArr[indexFile].src);
         $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
         $('.bigImgContainer').find('.descText').val(fileArr[indexFile].desc);
 
-    })
+    });
 // 下一个
     $('.switchBox .next').click(function () {
         if (indexFile >= fileArr.length - 1) {
@@ -1295,7 +1294,7 @@ $(function () {
             "top": 0,
             "left": 0,
             "transform": "scale(1)",
-        })
+        });
         scaleNum = 10;
         $('.bigImgContainer').find('.bigImg').css('backgroundImage', fileArr[indexFile].src);
         $('.bigImgContainer').find('.fileName').html(fileArr[indexFile].name);
@@ -1313,7 +1312,7 @@ $(function () {
             <p class="fileName">添加文件</p>\
         </li>';
         for (let i = 0; i < fileArr.length; i++) {
-            _html += '<li class="fileItem">'
+            _html += '<li class="fileItem">';
             if (fileArr[i].type != 'img') {
                 _html += `<div class="bgSize" style='background-image:${fileArr[i].src};'></div>`
             } else {
@@ -1367,13 +1366,13 @@ $(function () {
                 });
             })
         }
-    })
+    });
     $('.bigImgBox').on('mouseup', function (e) {
         $('.bigImgBox').unbind('mousemove');
-    })
+    });
     $('.bigImgBox').on('mouseleave', function () {
         $('.bigImgBox').unbind('mousemove');
-    })
+    });
 // 图片缩放 拖拽 结束
 
     // 保存草稿
@@ -1455,7 +1454,7 @@ $(function () {
                 area: ['1060px', '630px'],
                 closeBtn: 1,
                 skin: 'noBackground'
-            })
+            });
             dateTempList = [];
             redrawDate();
         }
@@ -1478,14 +1477,14 @@ $(function () {
             }
         }
         $('.rightContent').html(_html)
-    })
+    });
 
     $('.noBtn').click(function () {
         $('.imgContent').hide();
         $('.videoContent').hide();
         $('.selectTimeContainer').css('display', 'none');
         layer.closeAll();
-    })
+    });
 
 // 图文的确认弹窗确定按钮事件
     $('.imagebtnBox .yesBtn').click(function () {
@@ -1507,7 +1506,7 @@ $(function () {
         } else {
             buildCaseData(createPictureApplyData);
         }
-    })
+    });
     $(".pictureAuditBox .noBtn").click(function () {
         isAudit = false;
         if (isDraft) {
@@ -1515,10 +1514,10 @@ $(function () {
         } else {
             buildCaseData(createPictureApplyData);
         }
-    })
+    });
     let dateTempList = [];
     const myDate = new Date();
-    var flag = true;
+    let flag = true;
     let startIndex = 0;
     let endIndex = 0;
     let dateStr = myDate.getFullYear() + '-' + double(myDate.getMonth() + 1) + '-' + double(myDate.getDate());
@@ -1547,11 +1546,11 @@ $(function () {
                     for (let i = 0; i < dateTempList.length; i++) {
                         if (dateStr === dateTempList[i].date) {
                             if (dateTempList[i].startIndex <= dateTempList[i].endIndex) {
-                                for (var j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
+                                for (let j = dateTempList[i].startIndex; j <= dateTempList[i].endIndex; j++) {
                                     $('#timeUl > li').eq(j).addClass('active');
                                 }
                             } else {
-                                for (var j = dateTempList[i].endIndex; j <= dateTempList[i].startIndex; j++) {
+                                for (let j = dateTempList[i].endIndex; j <= dateTempList[i].startIndex; j++) {
                                     $('#timeUl > li').eq(j).addClass('active');
                                 }
                             }
@@ -1567,17 +1566,17 @@ $(function () {
         if (flag) {
             $(this).addClass('active').siblings('li').removeClass('active');
             flag = false;
-            startIndex = $(this).attr('index');
+            startIndex = Number($(this).attr('index'));
         } else {
             $(this).addClass('active');
             flag = true;
-            endIndex = $(this).attr('index');
+            endIndex = Number($(this).attr('index'));
             if (startIndex <= endIndex) {
-                for (var i = startIndex; i < endIndex; i++) {
+                for (let i = startIndex; i < endIndex; i++) {
                     $('#timeUl > li').eq(i).addClass('active');
                 }
             } else {
-                for (var i = endIndex; i < startIndex; i++) {
+                for (let i = endIndex; i < startIndex; i++) {
                     $('#timeUl > li').eq(i).addClass('active');
                 }
             }
@@ -1611,13 +1610,13 @@ $(function () {
         }
         $('#timeUl > li').removeClass('active');
         redrawDate();
-    })
+    });
 // 关闭事件
     $('.closeBtnTime').click(function () {
         dateTempList = [];
         layer.closeAll();
         $('.selectTimeContainer').hide();
-    })
+    });
 //发送视频会诊 确定事件 === 发送视频会诊
     $('.selectTimeContainer .selectTimeContent .btnBox .yesBtn').click(function () {
         layer.open({
@@ -1759,7 +1758,7 @@ $(function () {
                 value: dateStr,
                 mark: markReferralJson,
                 change: function (value, date) { //监听日期被切换
-                    console.log(date)
+                    console.log(date);
                     if (date.date === initDay && date.month != initMonth || date.year != initYear) {
 
                     } else {
@@ -1783,7 +1782,7 @@ $(function () {
                 }
             });
         });
-    };
+    }
     referraSelectRender();
 // 底部转诊按钮事件
     $(".referralBtn").click(function () {
@@ -1820,12 +1819,12 @@ $(function () {
                 skin: 'noBackground'
             })
         }
-    })
+    });
 // 转诊选择时间清空按钮
     $(".referralTimeSelect").find(".clearBtn").click(function () {
         markReferralJson = {};
         referraSelectRender();
-    })
+    });
 // 转诊选完时间，确认事件，调出 确认 提示
 
     $(".referralTimeSelect").find(".yesBtn").click(function () {
@@ -1853,7 +1852,7 @@ $(function () {
         } else {
             layer.msg("请选择时间")
         }
-    })
+    });
 // 选完时间后的确认框
 // 确认事件
     $(".referralContent").find(".yesBtn").click(function () {
@@ -1875,7 +1874,7 @@ $(function () {
             content: _$('.referralAuditBox'),
         });
 
-    })
+    });
 
     $('.referralAuditBox .yesBtn').click(function () {
         if (isDraft) {
@@ -1883,7 +1882,7 @@ $(function () {
         } else {
             buildCaseData(createReferralApplyData);
         }
-    })
+    });
     $('.referralAuditBox .noBtn').click(function () {
         isAudit = false;
         if (isDraft) {
@@ -1891,13 +1890,13 @@ $(function () {
         } else {
             buildCaseData(createReferralApplyData);
         }
-    })
+    });
 // 取消事件
     $(".referralContent").find(".noBtn").click(function () {
         layer.closeAll();
         $(".referralContent").hide();
         $(".referralTimeSelect").hide();
-    })
+    });
 
     /**
      * 表单数据校验
@@ -1948,7 +1947,7 @@ $(function () {
             shadeClose: false,
             content: _$('#deleteDraftBox'),
         });
-    })
+    });
     //删除草稿 确认按钮事件
     $("#deleteDraftBoxYesBtn").click(function () {
 
@@ -1958,7 +1957,7 @@ $(function () {
         function draftDelSuccess(result) {
             window.location = '../page/morkbench.html';
         }
-    })
+    });
 
     // 滚动事件
     $(window).scroll(function () {
@@ -1981,7 +1980,7 @@ $(function () {
         $('.oneLevelUl').css({
             'width': '145px',
             'position': 'fixed',
-        })
+        });
         if ($(document).scrollTop() >= $(document).height() - $(window).height() - $('.footer').height()) {
             $('.twoLevelUl').css({
                 'height': $(window).height() - 300 - $('.oneLevelUl .oneLevelItem').length * $('.oneLevelName').height(),
@@ -2028,4 +2027,4 @@ $(function () {
         }
     });
 
-})
+});
