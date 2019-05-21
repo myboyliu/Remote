@@ -439,6 +439,65 @@ $(function () {
     })
 
     $("#consultationTimeBoxYesBtn").click(function () {
+        dateList = [];
+        for (let i = 0; i < newDateTimeList.length; i++) {
+            if (newDateTimeList[i].startIndex <= newDateTimeList[i].endIndex) {
+                dateList.push({
+                    'startTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].startIndex).html() + ':00',
+                    'endTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].endIndex).html() + ':00'
+                });
+            } else {
+                dateList.push({
+                    'startTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].endIndex).html() + ':00',
+                    'endTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].startIndex).html() + ':00'
+                });
+            }
+
+        }
+        if (dateList.length === 0) {
+            layer.open({
+                type: 1,
+                title: '',
+                area: ['300px', '80px'],
+                closeBtn: 0,
+                shade: [0.1, '#000000'],
+                shadeClose: false,
+                time: 1500,
+                content: _$('.noDate'),
+            });
+        } else if (dateList.length === 1) {
+            let startDate = dateList[0].startTime;
+            startDate = startDate.replace(new RegExp("-", "gm"), "/");
+            let startDateM = (new Date(startDate)).getTime(); //得到毫秒数
+            let currentDate = new Date(); //得到普通的时间了
+            let currentDateM = currentDate.getTime();
+            startDateM -= 960000;
+            if (startDateM < currentDateM) {
+                layer.open({
+                    type: 1,
+                    title: '',
+                    area: ['500px', '160px'],
+                    closeBtn: 0,
+                    shade: [0.1, '#000000'],
+                    shadeClose: false,
+                    time: 1500,
+                    content: _$('#timeSmall'),
+                });
+                return false;
+            }
+        } else if (dateList.length > 1) {
+            layer.open({
+                type: 1,
+                title: '',
+                area: ['500px', '160px'],
+                closeBtn: 0,
+                shade: [0.1, '#000000'],
+                shadeClose: false,
+                time: 1500,
+                content: _$('#timeTooMuch'),
+            });
+            return false;
+        }
         layer.open({
             type: 1,
             title: '',
@@ -461,95 +520,65 @@ $(function () {
             content: _$('#videoApplyAuditBox'),
         });
         let data = new FormData();
-        dateList = [];
-        for (let i = 0; i < newDateTimeList.length; i++) {
-            if (newDateTimeList[i].startIndex <= newDateTimeList[i].endIndex) {
-                dateList.push({
-                    'startTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].startIndex).html() + ':00',
-                    'endTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].endIndex).attr('enddate') + ':00'
-                });
-            } else {
-                dateList.push({
-                    'startTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].endIndex).html() + ':00',
-                    'endTime': newDateTimeList[i].date + ' ' + $('#timeUl > li').eq(newDateTimeList[i].startIndex).attr('enddate') + ':00'
-                });
-            }
 
-        }
-        if (dateList.length === 0) {
-            layer.open({
-                type: 1,
-                title: '',
-                area: ['300px', '80px'],
-                closeBtn: 0,
-                shade: [0.1, '#000000'],
-                shadeClose: false,
-                time: 1000,
-                content: _$('.noDate'),
-            });
-            setTimeout(function () {
-                $('.noDate').hide()
-            }, 1000)
-        } else {
-            let doctorList = [];
-            let consultantReport = [];
-            price = Number(inviteDoctorArray[0].hospitalVideoPrice)
+        let doctorList = [];
+        let consultantReport = [];
+        price = Number(inviteDoctorArray[0].hospitalVideoPrice)
 
-            let inviteSummary = "";
-            for (let i = 0; i < inviteDoctorArray.length; i++) {
-                let inviteDoctor = "<" + inviteDoctorArray[i].doctorName + "/" + inviteDoctorArray[i].doctorTitleName + "/" + inviteDoctorArray[i].branchName + "/" + inviteDoctorArray[i].hospitalName + ">";
-                if (isVideo) {
-                    doctorList.push({
-                        "doctorName": inviteDoctor,
-                        "doctorId": inviteDoctorArray[i].doctorId,
-                        "price": inviteDoctorArray[i].doctorVideoPrice,
-                        "branchId": inviteDoctorArray[i].branchId,
-                        "doctorPicturePrice": inviteDoctorArray[i].doctorPicturePrice,
-                        "doctorVideoPrice": inviteDoctorArray[i].doctorVideoPrice,
-                        "hospitalImgPrice": inviteDoctorArray[i].hospitalImgPrice,
-                        "hospitalVideoPrice": inviteDoctorArray[i].hospitalVideoPrice,
-                    });
-                    price += Number(inviteDoctorArray[i].doctorVideoPrice);
-                } else {
-                    doctorList.push({
-                        "doctorName": inviteDoctor,
-                        "doctorId": inviteDoctorArray[i].doctorId,
-                        "price": inviteDoctorArray[i].doctorPicturePrice,
-                        "branchId": inviteDoctorArray[i].branchId,
-                        "doctorPicturePrice": inviteDoctorArray[i].doctorPicturePrice,
-                        "doctorVideoPrice": inviteDoctorArray[i].doctorVideoPrice,
-                        "hospitalImgPrice": inviteDoctorArray[i].hospitalImgPrice,
-                        "hospitalVideoPrice": inviteDoctorArray[i].hospitalVideoPrice,
-                    });
-                    price += Number(inviteDoctorArray[i].doctorPicturePrice);
-                }
-                consultantReport.push({
-                    "doctorName": inviteDoctorArray[i].doctorName,
+        let inviteSummary = "";
+        for (let i = 0; i < inviteDoctorArray.length; i++) {
+            let inviteDoctor = "<" + inviteDoctorArray[i].doctorName + "/" + inviteDoctorArray[i].doctorTitleName + "/" + inviteDoctorArray[i].branchName + "/" + inviteDoctorArray[i].hospitalName + ">";
+            if (isVideo) {
+                doctorList.push({
+                    "doctorName": inviteDoctor,
                     "doctorId": inviteDoctorArray[i].doctorId,
-                    "report": "",
-                    "reportStatus": "1"
-                })
-                inviteSummary += inviteDoctor + ";";
+                    "price": inviteDoctorArray[i].doctorVideoPrice,
+                    "branchId": inviteDoctorArray[i].branchId,
+                    "doctorPicturePrice": inviteDoctorArray[i].doctorPicturePrice,
+                    "doctorVideoPrice": inviteDoctorArray[i].doctorVideoPrice,
+                    "hospitalImgPrice": inviteDoctorArray[i].hospitalImgPrice,
+                    "hospitalVideoPrice": inviteDoctorArray[i].hospitalVideoPrice,
+                });
+                price += Number(inviteDoctorArray[i].doctorVideoPrice);
+            } else {
+                doctorList.push({
+                    "doctorName": inviteDoctor,
+                    "doctorId": inviteDoctorArray[i].doctorId,
+                    "price": inviteDoctorArray[i].doctorPicturePrice,
+                    "branchId": inviteDoctorArray[i].branchId,
+                    "doctorPicturePrice": inviteDoctorArray[i].doctorPicturePrice,
+                    "doctorVideoPrice": inviteDoctorArray[i].doctorVideoPrice,
+                    "hospitalImgPrice": inviteDoctorArray[i].hospitalImgPrice,
+                    "hospitalVideoPrice": inviteDoctorArray[i].hospitalVideoPrice,
+                });
+                price += Number(inviteDoctorArray[i].doctorPicturePrice);
             }
-            data.append("startEndTime", JSON.stringify(dateList));
-            data.append("inviteSummary", inviteSummary);
-            data.append("consultantReport", JSON.stringify(consultantReport));
-            data.append('consultantUserList', JSON.stringify(doctorList));
-            data.append("consultantPrice", price); // 费用
-            data.append("applyFormId", applyFormId);
-            data.append("meetMute", $("#meetMute").is(':checked'));
-            data.append("meetRecord", $("#meetRecord").is(':checked'));
-            data.append("meetStart", $("#meetStart").is(':checked'));
-
+            consultantReport.push({
+                "doctorName": inviteDoctorArray[i].doctorName,
+                "doctorId": inviteDoctorArray[i].doctorId,
+                "report": "",
+                "reportStatus": "1"
+            })
+            inviteSummary += inviteDoctor + ";";
         }
+        data.append("startEndTime", JSON.stringify(dateList));
+        data.append("inviteSummary", inviteSummary);
+        data.append("consultantReport", JSON.stringify(consultantReport));
+        data.append('consultantUserList', JSON.stringify(doctorList));
+        data.append("consultantPrice", price); // 费用
+        data.append("applyFormId", applyFormId);
+        data.append("meetMute", $("#meetMute").is(':checked'));
+        data.append("meetRecord", $("#meetRecord").is(':checked'));
+        data.append("meetStart", $("#meetStart").is(':checked'));
+
         $("#videoApplyAuditBox .yesBtn").click(function () {
             ajaxRequest("POST", allocationDoctorTimeAuditUrl, data, false, false, true, sirUpdateDateSuccess, null, null)
 
         })
         $("#videoApplyAuditBox .noBtn").click(function () {
             ajaxRequest("POST", allocationDoctorTime, data, false, false, true, sirUpdateDateSuccess, null, null)
-
         })
+
         function sirUpdateDateSuccess(result) {
             layer.open({
                 type: 1,

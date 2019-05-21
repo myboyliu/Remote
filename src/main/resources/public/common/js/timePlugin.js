@@ -124,11 +124,11 @@ $(function () {
         if (flag) {
             $(this).addClass('active').siblings('li').removeClass('active');
             flag = false;
-            startIndex = $(this).attr('index');
+            startIndex = Number($(this).attr('index'));
         } else {
             $(this).addClass('active');
             flag = true;
-            endIndex = $(this).attr('index');
+            endIndex = Number($(this).attr('index'));
             if (startIndex <= endIndex) {
                 for (let i = startIndex; i < endIndex; i++) {
                     $('#timeUl > li').eq(i).addClass('active');
@@ -201,15 +201,14 @@ $(function () {
             if (dateTempList[i].startIndex <= dateTempList[i].endIndex) {
                 dateList.push({
                     'startTime': dateTempList[i].date + ' ' + $('#timeUl > li').eq(dateTempList[i].startIndex).html() + ':00',
-                    'endTime': dateTempList[i].date + ' ' + $('#timeUl > li').eq(dateTempList[i].endIndex).attr('enddate') + ':00'
+                    'endTime': dateTempList[i].date + ' ' + $('#timeUl > li').eq(dateTempList[i].endIndex).html() + ':00'
                 });
             } else {
                 dateList.push({
                     'startTime': dateTempList[i].date + ' ' + $('#timeUl > li').eq(dateTempList[i].endIndex).html() + ':00',
-                    'endTime': dateTempList[i].date + ' ' + $('#timeUl > li').eq(dateTempList[i].startIndex).attr('enddate') + ':00'
+                    'endTime': dateTempList[i].date + ' ' + $('#timeUl > li').eq(dateTempList[i].startIndex).html() + ':00'
                 });
             }
-
         }
         updateApplyTime(dateList);
     })
