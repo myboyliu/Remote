@@ -351,6 +351,23 @@ $(function () {
             $("#alertText").html("请选择排期时间!");
             alertMessage();
             return false;
+        }else if (dateList.length === 1) {
+            let startDate = dateList[0].startTime;
+            startDate = startDate.replace(new RegExp("-", "gm"), "/");
+            let startDateM = (new Date(startDate)).getTime(); //得到毫秒数
+            let currentDate = new Date(); //得到普通的时间了
+            let currentDateM = currentDate.getTime();
+            startDateM -= 960000;
+            if (startDateM < currentDateM) {
+                $("#alertText").html("请选择大于当前时间15分钟的时间!");
+                alertMessage();
+                return false;
+            }
+        } else if (dateList.length > 1) {
+            $("#alertText").html("只能选择一段会诊时间!");
+            alertMessage();
+
+            return false;
         }
         let data = new FormData();
         data.append("applyFormId", applyFormId);

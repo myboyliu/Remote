@@ -7,12 +7,12 @@ import com.sicmed.remote.common.ApplyNodeConstant;
 import com.sicmed.remote.common.ApplyType;
 import com.sicmed.remote.common.ConsultationStatus;
 import com.sicmed.remote.common.InquiryStatus;
-import com.sicmed.remote.common.util.UserTokenManager;
 import com.sicmed.remote.meeting.entity.Meeting;
 import com.sicmed.remote.meeting.service.MeetingService;
-import com.sicmed.remote.web.YoonaLtUtils.OrderNumUtils;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
-import com.sicmed.remote.web.bean.*;
+import com.sicmed.remote.web.bean.ApplyFormInfoBean;
+import com.sicmed.remote.web.bean.ApplyTimeBean;
+import com.sicmed.remote.web.bean.ConsultantReportBean;
 import com.sicmed.remote.web.entity.ApplyForm;
 import com.sicmed.remote.web.entity.ApplyTime;
 import com.sicmed.remote.web.entity.CaseConsultant;
@@ -20,7 +20,6 @@ import com.sicmed.remote.web.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -350,11 +349,14 @@ public class ApplyDisposeController extends ApplyController {
         }
 
         // 添加操作时间节点
+        ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyFormId);
+        ArrayList<String> smsContext = new ArrayList<>();
+        smsContext.add(applyFormInfoBean.getCaseSummary());
         if (applyStatus == ConsultationStatus.CONSULTATION_REPORT_SUBMITTED.toString()) {
             applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已提交会诊报告.toString());
+            smsService.singleSendByTemplate("86", applyFormInfoBean.getApplyUserPhone(), 326107, smsContext);
         } else if (applyStatus == ConsultationStatus.CONSULTATION_END.toString()) {
             applyNodeService.insertByStatus(applyFormId, ApplyNodeConstant.已反馈.toString());
-
             consultationPriceRecordService.insertList(caseConsultantService.getByPrimaryKey(applyFormId), applyForm);
             new Thread(() -> {
                 try {
@@ -366,7 +368,7 @@ public class ApplyDisposeController extends ApplyController {
                 Thread.currentThread().interrupt();
             }).start();
         }
-
+        smsService.singleSendByTemplate("86", applyFormInfoBean.getInviteUserPhone(), 326109, smsContext);
         return succeedRequest(applyForm);
     }
 
