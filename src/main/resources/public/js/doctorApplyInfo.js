@@ -332,12 +332,14 @@ function renderViewByRole() {
             $(".progressBar li:nth-child(2)").addClass("libg");
             $(".progressBar li:nth-child(3)").addClass("libg");
             $(".compileReport").show();
-            let endDate = new Date(Date.parse(applyTimeList[0].eventEndTime.replace(/-/g, "/")));
-            if (isMainDoctor && endDate > currentDate) {
-                $("#meetingControlBtn").show();
-            }
-            if (isVideo && endDate > currentDate) {
-                $(".entrance").show();
+            if (isVideo){
+                let endDate = new Date(Date.parse(applyTimeList[0].eventEndTime.replace(/-/g, "/")));
+                if (isMainDoctor && endDate > currentDate) {
+                    $("#meetingControlBtn").show();
+                }
+                if (endDate > currentDate) {
+                    $(".entrance").show();
+                }
             }
         } else if (applyStatus === "CONSULTATION_REPORT_SUBMITTED") {
             //待反馈
