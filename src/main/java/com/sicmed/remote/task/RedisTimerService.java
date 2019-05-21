@@ -4,21 +4,21 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.sicmed.remote.common.util.UserTokenManager;
 import com.sicmed.remote.message.bean.MessageConstant;
+import com.sicmed.remote.socket.service.NewMessageService;
 import com.sicmed.remote.web.YoonaLtUtils.YtDateUtils;
 import com.sicmed.remote.web.bean.CurrentUserBean;
+import com.sicmed.remote.web.service.UserAccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
 public class RedisTimerService {
-
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
 
 
     /**

@@ -32,14 +32,11 @@
 
     <!-- 查询我的消息 -->
     <select id="findMyMessage" resultMap="NewMessageMap" parameterType="com.sicmed.remote.socket.entity.NewMessage">
-    SELECT id,msg_details,read_sign,msg_title,msg_type ,create_time,apply_form_id
-    FROM (
         SELECT id,msg_details,read_sign,msg_title,msg_type,msg_id,create_time,apply_form_id
         FROM new_message
-        WHERE invite_user_id =  #{inviteUserId,jdbcType=VARCHAR} OR invite_user_id = 'all'
-        ORDER BY create_time DESC ) s
-    GROUP BY s.msg_id ORDER BY s.create_time DESC
-    limit #{pageNo,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+        WHERE invite_user_id =  #{inviteUserId,jdbcType=VARCHAR}
+        ORDER BY create_time DESC
+        limit #{pageNo,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
   </select>
 
     <!-- 根据id查询新消息 -->
@@ -60,22 +57,17 @@
     <!-- 根据条件查询新消息数量 -->
     <select id="getMyMessageCount" resultType="java.lang.String"
             parameterType="com.sicmed.remote.socket.entity.NewMessage">
-        SELECT COUNT(s.id)
-         FROM (SELECT id
-                FROM new_message
-                WHERE invite_user_id =  #{inviteUserId,jdbcType=VARCHAR} OR invite_user_id = 'all'
-                GROUP BY msg_id ) s
+        SELECT COUNT(id)
+         FROM new_message
+         WHERE invite_user_id =  #{inviteUserId,jdbcType=VARCHAR}
 
     </select>
     <!-- 查询未读消息数量 -->
     <select id="getUnReadMsgCount" resultType="java.lang.String"
             parameterType="com.sicmed.remote.socket.entity.NewMessage">
-        SELECT COUNT(s.id)
-         FROM (SELECT id,read_sign,invite_user_id
-                FROM new_message
-                WHERE invite_user_id =  #{inviteUserId,jdbcType=VARCHAR} OR invite_user_id = 'all'
-                GROUP BY msg_id ) s
-        WHERE read_sign = '0' AND (invite_user_id =  #{inviteUserId,jdbcType=VARCHAR} OR invite_user_id = 'all')
+        SELECT COUNT(id)
+        FROM new_message
+        WHERE read_sign = '0' AND invite_user_id =  #{inviteUserId,jdbcType=VARCHAR}
     </select>
     <!-- 修改未读标记 -->
     <update id="updateUnreadMark" parameterType="com.sicmed.remote.socket.entity.NewMessage">

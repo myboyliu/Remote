@@ -19,9 +19,6 @@ public class MessageSendService {
     @Autowired
     private SimpMessagingTemplate template;
 
-    @Autowired
-    private NewMessageMapper messageMapper;
-
     /**
      * 发送消息给指定用户
      */
@@ -51,7 +48,7 @@ public class MessageSendService {
             template.convertAndSend("/topic/sendTopic", jsonObject.toJSONString());
         }
         //4.添加消息记录
-        messageMapper.insertSelectiveByJSONObject(jsonObject);
+//        messageMapper.insertSelectiveByJSONObject(jsonObject);
         log.debug("===============================发送消息给用户结束===========================================");
 
     }
@@ -86,7 +83,5 @@ public class MessageSendService {
         log.debug(jsonObject.toJSONString());
         //1.发送在线消息
         template.convertAndSend("/topic/sendTopic", jsonObject.get("title"));
-        //2.存储离线消息
-        messageMapper.insertPushMsgByJSONObject(jsonObject);
     }
 }

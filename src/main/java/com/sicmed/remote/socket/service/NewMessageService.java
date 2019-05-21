@@ -1,7 +1,6 @@
 package com.sicmed.remote.socket.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.sicmed.remote.common.Constant;
 import com.sicmed.remote.socket.bean.NewMessageBean;
 import com.sicmed.remote.socket.entity.NewMessage;
 import com.sicmed.remote.socket.mapper.NewMessageMapper;
@@ -116,27 +115,10 @@ public class NewMessageService implements BaseService<NewMessage> {
      * @return
      */
     public int lookGroupMessage(String id, String userId) {
-        //根据id查询消息
-        NewMessage msg = newMessageMapper.findMsgById(id);
-        int i = 0;
-        //判断如果是发给所有人
-        if (Constant.MESSAGE_GRADE.equals(msg.getInviteUserId())) {
-            msg.setMsgId(msg.getMsgId());
-            msg.setInviteUserId(userId);
-            //判断如果没有记录,添一条已读标记的新消息,防止重复操作创建多条
-            NewMessage newsByNews = newMessageMapper.findNewsByNews(msg);
-            System.out.println(newsByNews);
-            if (newsByNews == null) {
-                msg.setReadSign("1");
-                msg.setId(null);
-                msg.setCreateTime(new Date());
-                i = newMessageMapper.insertMessage(msg);
-            }
-        } else {
-            msg.setReadSign("1");
-            i = newMessageMapper.updateUnreadMark(msg);
-        }
-        return i;
+        NewMessage msg = new NewMessage();
+        msg.setId(id);
+        msg.setReadSign("1");
+        return newMessageMapper.updateUnreadMark(msg);
     }
 
     public String getMyMessageCount(String id) {

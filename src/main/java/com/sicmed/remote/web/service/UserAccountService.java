@@ -88,4 +88,9 @@ public class UserAccountService implements BaseService<UserAccount> {
     public List<UserAccount> findByDynamicParam(UserAccount userAccount) {
         return userAccountMapper.findByDynamicParam(userAccount);
     }
+
+    public List<String> getAllUserId() {
+
+        return userAccountMapper.getAllUserId();
+    }
 }

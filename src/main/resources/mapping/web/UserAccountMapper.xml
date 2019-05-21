@@ -257,4 +257,9 @@
       del_flag = #{delFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+    <select id="getAllUserId" resultType="java.lang.String">
+        select id from user_account
+    </select>
+
 </mapper>

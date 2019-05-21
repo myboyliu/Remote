@@ -4,10 +4,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.sicmed.remote.live.service.CurriculumScheduleService;
 import com.sicmed.remote.socket.MessageSendService;
+import com.sicmed.remote.socket.service.NewMessageService;
+import com.sicmed.remote.web.service.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.listener.KeyExpirationEventMessageListener;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+
+import java.util.List;
 
 /**
  * redis过期key回调函数
@@ -20,7 +24,10 @@ public class RedisTimerListener extends KeyExpirationEventMessageListener {
     private CurriculumScheduleService curriculumScheduleService;
     @Autowired
     private TaskService taskService;
-
+    @Autowired
+    private UserAccountService userAccountService;
+    @Autowired
+    private NewMessageService newMessageService;
     public RedisTimerListener(RedisMessageListenerContainer listenerContainer) {
         super(listenerContainer);
     }
@@ -50,13 +57,17 @@ public class RedisTimerListener extends KeyExpirationEventMessageListener {
                     case "LIVE_ALERT_MESSAGE":
                         JSONArray jsonArray = curriculumScheduleService.findByCurriculumId(jsonObject.getString("aboutId"));
                         jsonObject.put("userList", jsonArray);
+                        newMessageService.insertSelectiveByJSONObject(jsonObject);
                         messageSendService.send(jsonObject);
                         break;
                     case "LIVE_PUSH_MESSAGE":
-                        jsonObject.put("userList", null);
+                        List<String> userList = userAccountService.getAllUserId();
+                        jsonObject.put("userList", userList);
+                        newMessageService.insertSelectiveByJSONObject(jsonObject);
                         messageSendService.sendTopic(jsonObject);
                         break;
                     default:
+                        newMessageService.insertSelectiveByJSONObject(jsonObject);
                         messageSendService.send(jsonObject);
                         break;
                 }

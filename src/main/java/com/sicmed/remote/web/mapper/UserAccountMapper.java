@@ -24,4 +24,6 @@ public interface UserAccountMapper {
     UserAccount selectSaltPw(String userPhone);
 
     UserAccount selectByUserPhone(String userPhone);
+
+    List<String> getAllUserId();
 }
