@@ -31,7 +31,7 @@ $(function () {
                 type: 1,
                 title: '',
                 area: ['1060px', '480px'],
-                closeBtn: false,
+                closeBtn: 1,
                 shade: [0.7, '#000000'],
                 shadeClose: false,
                 content: _$('#consultantReportIframe')
