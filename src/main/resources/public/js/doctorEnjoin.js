@@ -539,8 +539,8 @@ function doctorEnjoinBuilder(feedBackFunction) {
             return a.timeNum < b.timeNum ? -1 : 1;
         });
         dataJson["longTimeArr"] = oneTempArr;
-        if ($(".longTimeAreaObj").html().length <= 200) {
-            dataJson["longTimeArea"] = $(".longTimeAreaObj").html();// 长期医嘱备注
+        if ($(".longTimeAreaObj").html().replace(/<[^>]+>/g,"").length <= 200) {
+            dataJson["longTimeArea"] = $(".longTimeAreaObj").html().replace(/<[^>]+>/g,"");// 长期医嘱备注
         } else {
             layer.msg("备注限200字以内");
             return false;
@@ -579,8 +579,8 @@ function doctorEnjoinBuilder(feedBackFunction) {
         }
         dataJson["temporaryTreatArr"] = oneTempArr;
     }
-    if ($(".temporaryAreaObj").html().length <= 200) {
-        dataJson["temporaryArea"] = $(".temporaryAreaObj").html();// 临时医嘱备注
+    if ($(".temporaryAreaObj").html().replace(/<[^>]+>/g,"").length <= 200) {
+        dataJson["temporaryArea"] = $(".temporaryAreaObj").html().replace(/<[^>]+>/g,"");// 临时医嘱备注
     } else {
         layer.msg("备注限200字以内");
         return false;
@@ -597,8 +597,8 @@ function doctorEnjoinBuilder(feedBackFunction) {
             })
         }
         dataJson["surgeryArr"] = oneTempArr;
-        if ($(".surgeryAreaObj").html().length <= 200) {
-            dataJson["surgeryArea"] = $(".surgeryAreaObj").html();// 器械备注
+        if ($(".surgeryAreaObj").html().replace(/<[^>]+>/g,"").length <= 200) {
+            dataJson["surgeryArea"] = $(".surgeryAreaObj").html().replace(/<[^>]+>/g,"");// 器械备注
         } else {
             layer.msg("备注限200字以内");
             return false;
@@ -1052,28 +1052,28 @@ $(function () {
 
     // 器械备注 输入高度自适应 - start
     $(".longTimeAreaObj")[0].oninput = function () {
-        if ($(this).html().length > 200) {
+        if ($(this).html().replace(/<[^>]+>/g,"").length > 200) {
             $(this).parents(".remarkBox").addClass("noLength");
         } else {
             $(this).parents(".remarkBox").removeClass("noLength");
         }
-        $(".longTimeAreaNum").html($(this).html().length);
+        $(".longTimeAreaNum").html($(this).html().replace(/<[^>]+>/g,"").length);
     };
     $(".temporaryAreaObj")[0].oninput = function () {
-        if ($(this).html().length > 200) {
+        if ($(this).html().replace(/<[^>]+>/g,"").length > 200) {
             $(this).parents(".remarkBox").addClass("noLength");
         } else {
             $(this).parents(".remarkBox").removeClass("noLength");
         }
-        $(".temporaryAreaNum").html($(this).html().length);
+        $(".temporaryAreaNum").html($(this).html().replace(/<[^>]+>/g,"").length);
     };
     $(".surgeryAreaObj")[0].oninput = function () {
-        if ($(this).html().length > 200) {
+        if ($(this).html().replace(/<[^>]+>/g,"").length > 200) {
             $(this).parents(".remarkBox").addClass("noLength");
         } else {
             $(this).parents(".remarkBox").removeClass("noLength");
         }
-        $(".surgeryAreaNum").html($(this).html().length);
+        $(".surgeryAreaNum").html($(this).html().replace(/<[^>]+>/g,"").length);
     };
     // 器械备注 输入高度自适应 - end
 
@@ -1144,7 +1144,7 @@ $(function () {
         }
     });
 
-    // 子医嘱 - start
+    // 子医嘱
     // 小行选择
     $(".temporaryDrugBox .dataUl,.longTimeBox .dataUl").delegate("li .listBottomBox .listItem", "click", function () {
         $(".dataUl > li").removeClass("active");
@@ -1173,6 +1173,7 @@ $(function () {
         }
         return false;
     });
+
     // 设置子医嘱 事件
     $(".setBtn").click(function () {
         if (!$(this).hasClass("noClick")) {
@@ -1187,69 +1188,6 @@ $(function () {
                             <option value="ug">ug</option>\
                             <option value="ml">ml</option>\
                         </select>\
-                    </div>';
-            if ($(".listItem.active").parents(".itemBox").index() == 0) {
-                objHtml += '<div class="layui-input-inline" style="width:116px;margin-right: 20px;">\
-                                <select class="mustValue frequencyObj" lay-verify="" lay-search="">\
-                                    <option value="">每日用次</option>\
-                                    <option value="q.1/2h">q.1/2h</option>\
-                                    <option value="q.h">q.h</option>\
-                                    <option value="q.2h">q.2h</option>\
-                                    <option value="q.3h">q.3h</option>\
-                                    <option value="q.4h">q.4h</option>\
-                                    <option value="q.6h">q.6h</option>\
-                                    <option value="q.8h">q.8h</option>\
-                                    <option value="q.12h">q.12h</option>\
-                                    <option value="q.72h.">q.72h.</option>\
-                                    <option value="q.d.">q.d.</option>\
-                                    <option value="b.i.d.">b.i.d.</option>\
-                                    <option value="t.i.d.">t.i.d.</option>\
-                                    <option value="q.i.d.">q.i.d.</option>\
-                                    <option value="Quingid">Quingid</option>\
-                                    <option value="q.n.">q.n.</option>\
-                                    <option value="q.o.d.">q.o.d.</option>\
-                                    <option value="q.3d">q.3d</option>\
-                                    <option value="q.w.">q.w.</option>\
-                                    <option value="Biw">Biw</option>\
-                                    <option value="Tiw">Tiw</option>\
-                                    <option value="q.o.w.">q.o.w.</option>\
-                                    <option value="2W">2W</option>\
-                                    <option value="3W">3W</option>\
-                                    <option value="4W">4W</option>\
-                                    <option value="q.m.">q.m.</option>\
-                                    <option value="b.i.m.">b.i.m.</option>\
-                                    <option value="once">once</option>\
-                                    <option value="St.">St.</option>\
-                                    <option value="p.r.n.">p.r.n.</option>\
-                                    <option value="s.o.s.">s.o.s.</option>\
-                                    <option value="DC">DC</option>\
-                                    <option value="12n">12n</option>\
-                                    <option value="12mn">12mn</option>\
-                                    <option value="a.c.">a.c.</option>\
-                                    <option value="p.c.">p.c.</option>\
-                                    <option value="t.i.d. a.c.">t.i.d. a.c.</option>\
-                                    <option value="hs">hs</option>\
-                                </select>\
-                            </div>'
-            }
-                 objHtml += '<div class="layui-input-inline" style="width:116px;margin-right: 20px;">\
-                                <select name="" class="mustValue meansObj" lay-verify="" lay-search="">\
-                                    <option value="">给药途径</option>\
-                                    <option value="gtt">gtt</option>\
-                                    <option value="id">id</option>\
-                                    <option value="ih">ih</option>\
-                                    <option value="im/m.">im/m.</option>\
-                                    <option value="iv">iv</option>\
-                                    <option value="ip">ip</option>\
-                                    <option value="ivgtt">ivgtt</option>\
-                                    <option value="p.o.">p.o.</option>\
-                                    <option value="ad us.int.">ad us.int.</option>\
-                                    <option value="ad us.ext.">ad us.ext.</option>\
-                                    <option value="lnhal">lnhal</option>\
-                                    <option value="ig">ig</option>\
-                                </select>\
-                            </div>\
-                        </div>\
                     </div>';
             $(".listItem.active").parents(".dataItem").prev("li.dataItem").find(".listBottomBox").append(objHtml);
             if ($(".listItem.active").parents(".listBottomBox").children().length > 2) {
@@ -1409,7 +1347,6 @@ $(function () {
             $(".cancelBtn").addClass("noClick");
         }
     });
-    // 子医嘱 - end
 
     // 暂存 按钮
     $(".saveBtn").click(function () {
