@@ -426,81 +426,28 @@ function render() {
         }
     }
     if (doctorEnjoinJson.surgeryArr && doctorEnjoinJson.surgeryArr.length > 0) {
+        console.log(doctorEnjoinJson);
         $(".surgeryBox").find(".dataUl").show();
         $(".surgeryBox").find(".remarkBox").show();
         $(".surgeryBox").find(".noData").hide();
         $(".surgeryAreaObj").html(doctorEnjoinJson.surgeryArea);
         $(".surgeryAreaNum").html(doctorEnjoinJson.surgeryArea.length);
         let _html = '';
-        // for (let x = 0; x < doctorEnjoinJson.surgeryArr.length; x++) {
-        //     let tempObj = doctorEnjoinJson.surgeryArr[x];
-        //     $.ajax({
-        //         type: 'POST',
-        //         url: IP + 'consumables/findSpecificationsById',
-        //         dataType: 'json',
-        //         data: {
-        //             "id": doctorEnjoinJson.surgeryArr[x].surgeryId,
-        //         },
-        //         async: false,
-        //         xhrFields: {
-        //             withCredentials: true
-        //         },
-        //         crossDomain: true,
-        //         success: function (data) {
-        //             console.log(data)
-        //             if (data.code == 1) {
-        //                 if (data.data.length > 0) {
-        //                     let _html = '<option value=""></option>';
-        //                     for (let i = 0; i < data.data.length; i++) {
-        //                         if (tempObj.surgerySize == data.data[i].specificationsName) {
-        //                             _html += '<option selected value="' + data.data[i].specificationsName + '">' + data.data[i].specificationsName + '</option>'
-        //                         } else {
-        //                             _html += '<option value="' + data.data[i].specificationsName + '">' + data.data[i].specificationsName + '</option>'
-        //                         }
-        //                     }
-        //                     let tempHtml = '<li class="dataItem">\
-        //                                     <div class="listBottomBox">\
-        //                                         <div class="listItem">\
-        //                                             <span class="drugName surgeryNameObj" name="'+ tempObj.surgeryId + '">' + tempObj.surgeryName + '</span>\
-        //                                             <div class="drugRule">\
-        //                                                 <div class="layui-input-inline" style="width: 300px;">\
-        //                                                     <select class="mustValue surgerySizeObj" name="">'+ _html + '</select>\
-        //                                                 </div>\
-        //                                                 <input type="text" class="mustValue surgeryNumObj" value="'+ tempObj.surgeryNum + '" oninput="value=value.replace(/[^\\d]/g,\'\')" placeholder="数量" style="margin-right: 20px;">\
-        //                                             </div>\
-        //                                         </div>\
-        //                                     </div>\
-        //                                 </li>';
-        //                 } else {
-        //                     let tempHtml = '<li class="dataItem">\
-        //                             <div class="listBottomBox">\
-        //                                 <div class="listItem">\
-        //                                     <span class="drugName surgeryNameObj" name="'+ tempObj.surgeryId + '">' + tempObj.surgeryName + '</span>\
-        //                                     <div class="drugRule">\
-        //                                         <div class="layui-input-inline" style="width: 300px;">\
-        //                                             <select class="mustValue surgerySizeObj" name=""><option value="--">--</option></select>\
-        //                                         </div>\
-        //                                         <input type="text" class="mustValue surgeryNumObj" value="'+ tempObj.surgeryNum + '" oninput="value=value.replace(/[^\\d]/g,\'\')" placeholder="数量" style="margin-right: 20px;">\
-        //                                     </div>\
-        //                                 </div>\
-        //                             </div>\
-        //                         </li>';
-        //                 }
-        //                 $(".surgeryBox").find(".dataUl").append(tempHtml);
-        //                 $(".surgerySearchContent").hide();
-        //                 layerRender();
-        //             } else if (data.code == 250) {
-        //                 // 未登录操作
-        //                 window.location = '/yilaiyiwang/login/login.html';
-        //             } else {
-        //                 // 其他操作
-        //             }
-        //         },
-        //         error: function (err) {
-        //             console.log(err);
-        //         },
-        //     });
-        // }
+        for (let i = 0; i < doctorEnjoinJson.surgeryArr.length; i++) {
+            let tempHtml = '<li class="dataItem">\
+                        <div class="listBottomBox">\
+                            <div class="listItem">\
+                                <span class="drugName surgeryNameObj" name="' + doctorEnjoinJson.surgeryArr[i].surgeryId + '">' + doctorEnjoinJson.surgeryArr[i].surgeryName + '</span>\
+                                <div class="drugRule">\
+                                    <input type="text" class="mustValue surgeryNumObj" value="' + doctorEnjoinJson.surgeryArr[i].surgeryNum + '" oninput="value=value.replace(/[^\\d]/g,\'\')" placeholder="数量" style="margin-right: 20px;">\
+                                </div>\
+                            </div>\
+                        </div>\
+                    </li>';
+            $(".surgeryBox").find(".dataUl").append(tempHtml);
+        }
+        $(".surgerySearchContent").hide();
+        layerRender();
     } else {
         $(".surgeryBox").find(".noData").show();
         $(".surgeryBox").find(".dataUl").hide();
@@ -539,8 +486,8 @@ function doctorEnjoinBuilder(feedBackFunction) {
             return a.timeNum < b.timeNum ? -1 : 1;
         });
         dataJson["longTimeArr"] = oneTempArr;
-        if ($(".longTimeAreaObj").html().replace(/<[^>]+>/g,"").length <= 200) {
-            dataJson["longTimeArea"] = $(".longTimeAreaObj").html().replace(/<[^>]+>/g,"");// 长期医嘱备注
+        if ($(".longTimeAreaObj").html().replace(/<[^>]+>/g, "").length <= 200) {
+            dataJson["longTimeArea"] = $(".longTimeAreaObj").html().replace(/<[^>]+>/g, "");// 长期医嘱备注
         } else {
             layer.msg("备注限200字以内");
             return false;
@@ -579,8 +526,8 @@ function doctorEnjoinBuilder(feedBackFunction) {
         }
         dataJson["temporaryTreatArr"] = oneTempArr;
     }
-    if ($(".temporaryAreaObj").html().replace(/<[^>]+>/g,"").length <= 200) {
-        dataJson["temporaryArea"] = $(".temporaryAreaObj").html().replace(/<[^>]+>/g,"");// 临时医嘱备注
+    if ($(".temporaryAreaObj").html().replace(/<[^>]+>/g, "").length <= 200) {
+        dataJson["temporaryArea"] = $(".temporaryAreaObj").html().replace(/<[^>]+>/g, "");// 临时医嘱备注
     } else {
         layer.msg("备注限200字以内");
         return false;
@@ -597,8 +544,8 @@ function doctorEnjoinBuilder(feedBackFunction) {
             })
         }
         dataJson["surgeryArr"] = oneTempArr;
-        if ($(".surgeryAreaObj").html().replace(/<[^>]+>/g,"").length <= 200) {
-            dataJson["surgeryArea"] = $(".surgeryAreaObj").html().replace(/<[^>]+>/g,"");// 器械备注
+        if ($(".surgeryAreaObj").html().replace(/<[^>]+>/g, "").length <= 200) {
+            dataJson["surgeryArea"] = $(".surgeryAreaObj").html().replace(/<[^>]+>/g, "");// 器械备注
         } else {
             layer.msg("备注限200字以内");
             return false;
@@ -1052,28 +999,28 @@ $(function () {
 
     // 器械备注 输入高度自适应 - start
     $(".longTimeAreaObj")[0].oninput = function () {
-        if ($(this).html().replace(/<[^>]+>/g,"").length > 200) {
+        if ($(this).html().replace(/<[^>]+>/g, "").length > 200) {
             $(this).parents(".remarkBox").addClass("noLength");
         } else {
             $(this).parents(".remarkBox").removeClass("noLength");
         }
-        $(".longTimeAreaNum").html($(this).html().replace(/<[^>]+>/g,"").length);
+        $(".longTimeAreaNum").html($(this).html().replace(/<[^>]+>/g, "").length);
     };
     $(".temporaryAreaObj")[0].oninput = function () {
-        if ($(this).html().replace(/<[^>]+>/g,"").length > 200) {
+        if ($(this).html().replace(/<[^>]+>/g, "").length > 200) {
             $(this).parents(".remarkBox").addClass("noLength");
         } else {
             $(this).parents(".remarkBox").removeClass("noLength");
         }
-        $(".temporaryAreaNum").html($(this).html().replace(/<[^>]+>/g,"").length);
+        $(".temporaryAreaNum").html($(this).html().replace(/<[^>]+>/g, "").length);
     };
     $(".surgeryAreaObj")[0].oninput = function () {
-        if ($(this).html().replace(/<[^>]+>/g,"").length > 200) {
+        if ($(this).html().replace(/<[^>]+>/g, "").length > 200) {
             $(this).parents(".remarkBox").addClass("noLength");
         } else {
             $(this).parents(".remarkBox").removeClass("noLength");
         }
-        $(".surgeryAreaNum").html($(this).html().replace(/<[^>]+>/g,"").length);
+        $(".surgeryAreaNum").html($(this).html().replace(/<[^>]+>/g, "").length);
     };
     // 器械备注 输入高度自适应 - end
 
