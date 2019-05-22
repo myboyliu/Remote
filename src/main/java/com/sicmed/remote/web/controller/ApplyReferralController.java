@@ -182,6 +182,8 @@ public class ApplyReferralController extends ApplyController {
         if (j < 1) {
             return badRequestOfArguments("添加申请时间失败");
         }
+        //6.添加转诊申请 流程节点
+        applyNodeService.insertByNodeOperator(applyForm.getId(), ApplyNodeConstant.发起转诊.toString(), applyForm.getApplySummary());
 
         ArrayList<String> smsContext = new ArrayList<>();
         ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyForm.getId());
@@ -234,7 +236,6 @@ public class ApplyReferralController extends ApplyController {
 
 
     /**
-     *
      * 受邀医生 接受转诊申请 需要医政审核接口
      *
      * @param applyFormId
@@ -280,9 +281,18 @@ public class ApplyReferralController extends ApplyController {
 
         //4.添加转诊提醒
         redisTimerService.createReferralEndListener(applyFormId, YtDateUtils.dateToString(YtDateUtils.intradayEnd(YtDateUtils.stringToDate(inquiryDatetime))), UserTokenManager.getCurrentUserId());
-
         //5.添加转诊流程操作节点
-        applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已排期.toString(), getCurrentUserSummary());
+        String currentUserSummary = getCurrentUserSummary();
+        applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已接诊.toString(), currentUserSummary);
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+                applyNodeService.insertByNodeOperator(applyFormId, ApplyNodeConstant.已排期.toString(), currentUserSummary);
+            } catch (Exception e) {
+                Thread.currentThread().interrupt();
+            }
+            Thread.currentThread().interrupt();
+        }).start();
         ArrayList<String> smsContext = new ArrayList<>();
         ApplyFormInfoBean applyFormInfoBean = applyFormService.getApplyFormInfo(applyFormId);
         log.debug(applyFormInfoBean.toString());
@@ -329,7 +339,6 @@ public class ApplyReferralController extends ApplyController {
     }
 
     /**
-     *
      * 受邀医政 接收转诊申请
      *
      * @param applyFormId
@@ -370,7 +379,6 @@ public class ApplyReferralController extends ApplyController {
 
 
     /**
-     *
      * 受邀医政拒绝 转诊申请 接口
      *
      * @param applyFormId
