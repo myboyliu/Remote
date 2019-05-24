@@ -111,7 +111,7 @@ function showTimeView(applyTimeList) {
         dateTempList.push({
             "date": date,
             "startIndex": startIndex,
-            "endIndex": endIndex - 1,
+            "endIndex": endIndex,
         })
     }
     renderDateRightContent();
