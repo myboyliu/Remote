@@ -276,7 +276,7 @@
         <include refid="Bean_Left_Join"/>
         <where>
             parentBranch.del_flag = "0"
-            AND parentBranch.parent_id is null
+            AND parentBranch.parent_id = "0"
             <if test="branchName != null">
                 AND parentBranch.branch_name = #{branchName,jdbcType=VARCHAR}
             </if>
@@ -297,7 +297,7 @@
         from base_branch
         <where>
             del_flag = "0"
-            AND parent_id is null
+            AND parent_id = "0"
         </where>
     </select>
     <select id="getSecondList" parameterType="com.sicmed.remote.web.entity.Branch" resultMap="BaseResultMap">
@@ -306,7 +306,7 @@
         from base_branch
         <where>
             del_flag = "0"
-            AND parent_id is not null
+            AND parent_id != "0"
         </where>
     </select>
 </mapper>
